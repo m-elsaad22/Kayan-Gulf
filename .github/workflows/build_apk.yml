@@ -28,7 +28,7 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: "8.14.0"
+          gradle-version: "8.10"
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -45,7 +45,7 @@ jobs:
       - name: Ensure Android Gradle wrapper exists
         run: |
           if [ ! -x android/gradlew ]; then
-            gradle wrapper --gradle-version 8.14.0 --distribution-type bin --project-dir android
+            gradle wrapper --gradle-version 8.10 --distribution-type bin --project-dir android
           fi
 
       - name: Build release APK
