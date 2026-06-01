@@ -87,7 +87,7 @@ class GlassPanel extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry padding;
   final EdgeInsetsGeometry? margin;
-  final BorderRadiusGeometry borderRadius;
+  final BorderRadiusGeometry? borderRadius;
   final Gradient? gradient;
   final Color? borderColor;
 
@@ -96,17 +96,19 @@ class GlassPanel extends StatelessWidget {
     required this.child,
     this.padding = const EdgeInsets.all(16),
     this.margin,
-    this.borderRadius = AppBorderRadius.card,
+    this.borderRadius,
     this.gradient,
     this.borderColor,
   });
 
   @override
   Widget build(BuildContext context) {
+    final effectiveBorderRadius = borderRadius ?? AppBorderRadius.card;
+
     return Container(
       margin: margin,
       child: ClipRRect(
-        borderRadius: borderRadius,
+        borderRadius: effectiveBorderRadius,
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
           child: Container(
@@ -122,7 +124,7 @@ class GlassPanel extends StatelessWidget {
                       AppColors.whiteOp(0.04),
                     ],
                   ),
-              borderRadius: borderRadius,
+              borderRadius: effectiveBorderRadius,
               border: Border.all(color: borderColor ?? AppColors.whiteOp(0.14)),
               boxShadow: const [
                 BoxShadow(

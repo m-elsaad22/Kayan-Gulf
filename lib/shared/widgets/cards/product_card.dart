@@ -12,13 +12,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_gradients.dart';
-import '../../core/theme/app_text_styles.dart';
-import '../../core/theme/app_border_radius.dart';
-import '../../core/theme/app_spacing.dart';
-import '../../features/home/data/models/home_models.dart';
-import '../widgets/loaders/shimmer_loader.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_gradients.dart';
+import '../../../core/theme/app_text_styles.dart';
+import '../../../core/theme/app_border_radius.dart';
+import '../../../core/theme/app_spacing.dart';
+import '../../../features/home/data/models/home_models.dart';
+import '../loaders/shimmer_loader.dart';
 
 class ProductCard extends StatefulWidget {
   final ProductCardModel product;
