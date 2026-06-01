@@ -25,6 +25,7 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
+        coreLibraryDesugaringEnabled true
     }
     kotlinOptions {
         jvmTarget = "17"
@@ -101,6 +102,7 @@ flutter {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.22"
     implementation "androidx.multidex:multidex:2.0.1"
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.0.4"
 }
 
 configurations.all {
@@ -109,5 +111,6 @@ configurations.all {
         force "androidx.core:core-ktx:1.15.0"
         force "androidx.activity:activity:1.9.3"
         force "androidx.activity:activity-ktx:1.9.3"
+        force "androidx.browser:browser:1.8.0"
     }
 }
