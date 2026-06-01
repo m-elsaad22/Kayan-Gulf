@@ -1,0 +1,110 @@
+name: kayan
+description: KAYAN Super App — GCC E-commerce, Services & Classifieds
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+  flutter: '>=3.19.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # ─── State Management ────────────────────────────────────────
+  flutter_riverpod: ^2.5.1
+  hooks_riverpod: ^2.5.1
+  flutter_hooks: ^0.20.5
+
+  # ─── Navigation ──────────────────────────────────────────────
+  go_router: ^13.2.0
+
+  # ─── Network ─────────────────────────────────────────────────
+  dio: ^5.4.3
+  pretty_dio_logger: ^1.3.1
+  connectivity_plus: ^6.0.3
+
+  # ─── Storage ─────────────────────────────────────────────────
+  flutter_secure_storage: ^9.0.0
+  shared_preferences: ^2.2.3
+  hive_flutter: ^1.1.0
+  hive: ^2.2.3
+
+  # ─── UI / Widgets ─────────────────────────────────────────────
+  flutter_svg: ^2.0.10+1
+  cached_network_image: ^3.3.1
+  shimmer: ^3.0.0
+  lottie: ^3.1.2
+  photo_view: ^0.14.0
+  smooth_page_indicator: ^1.2.0+3
+  flutter_rating_bar: ^4.0.1
+  badges: ^3.1.2
+  pinput: ^5.0.0
+  country_code_picker: ^3.0.0
+  intl_phone_field: ^3.2.0
+  flutter_staggered_grid_view: ^0.7.0
+  expandable: ^5.0.1
+  readmore: ^3.0.0
+  timeline_tile: ^2.0.0
+  percent_indicator: ^4.2.3
+  fl_chart: ^0.67.0
+
+  # ─── Location & Maps ─────────────────────────────────────────
+  geolocator: ^11.0.0
+  flutter_map: ^6.1.0
+  latlong2: ^0.9.1
+
+  # ─── Media ───────────────────────────────────────────────────
+  image_picker: ^1.1.2
+  file_picker: ^8.0.6
+
+  # ─── Auth ────────────────────────────────────────────────────
+  local_auth: ^2.2.0
+
+  # ─── Firebase ────────────────────────────────────────────────
+  # TODO: استبدل google-services.json بملف Firebase حقيقي قبل البناء
+  firebase_core: ^2.30.0
+  firebase_messaging: ^14.9.0
+  firebase_analytics: ^10.10.0
+  firebase_crashlytics: ^3.5.0
+
+  # ─── Utils ───────────────────────────────────────────────────
+  intl: ^0.19.0
+  equatable: ^2.0.5
+  logger: ^2.2.0
+  url_launcher: ^6.3.0
+  share_plus: ^9.0.0
+  package_info_plus: ^8.0.0
+  device_info_plus: ^10.1.0
+  permission_handler: ^11.3.1
+  flutter_local_notifications: ^17.1.2
+  vibration: ^2.0.0
+
+  # ─── Fonts (runtime via Google Fonts) ────────────────────────
+  # NotoKufiArabic و Inter يُحمَّلان تلقائياً عبر google_fonts
+  google_fonts: ^6.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  build_runner: ^2.4.9
+  hive_generator: ^2.0.1
+
+flutter:
+  uses-material-design: true
+
+  # ─── Assets ──────────────────────────────────────────────────
+  # أضف الملفات الفعلية داخل هذه المجلدات قبل البناء
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/lottie/
+    - assets/svg/
+    - assets/fonts/
+
+  # ─── Fonts ───────────────────────────────────────────────────
+  # لا توجد خطوط محلية — كل الخطوط عبر google_fonts package
+  # لتفعيل خطوط محلية: ضع ملفات .ttf في assets/fonts/ وأضفها هنا

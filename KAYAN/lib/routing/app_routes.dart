@@ -1,0 +1,230 @@
+// ============================================================
+// KAYAN Super App — Route Constants
+// lib/routing/app_routes.dart
+//
+// Single source of truth for all route paths.
+// Never hardcode path strings in widgets — always use this.
+//
+// Pattern:
+//   - Static const  → exact path (for GoRoute path:)
+//   - Static method → parametrized path (for context.go())
+// ============================================================
+
+abstract final class AppRoutes {
+  // ──────────────────────────────────────────────────────────
+  // 🚀 ENTRY FLOWS
+  // ──────────────────────────────────────────────────────────
+
+  static const String splash      = '/';
+  static const String onboarding  = '/onboarding';
+
+  // ──────────────────────────────────────────────────────────
+  // 🔐 AUTH
+  // ──────────────────────────────────────────────────────────
+
+  static const String phoneInput   = '/auth/phone';
+  static const String otpVerify    = '/auth/otp';
+  static const String profileSetup = '/auth/profile-setup';
+
+  // ──────────────────────────────────────────────────────────
+  // 🏠 MAIN SHELL TABS (Bottom Navigation)
+  // ──────────────────────────────────────────────────────────
+
+  static const String home        = '/home';
+  static const String shop        = '/shop';
+  static const String services    = '/services';
+  static const String classifieds = '/classifieds';
+  static const String profile     = '/profile';
+
+  // ──────────────────────────────────────────────────────────
+  // 🛒 E-COMMERCE (nested under /shop)
+  // ──────────────────────────────────────────────────────────
+
+  // Relative paths (used inside ShellBranch routes list)
+  static const String _categories       = 'categories';
+  static const String _categoryProducts = 'categories/:categorySlug';
+  static const String _productDetail    = 'products/:productSlug';
+  static const String _search           = 'search';
+  static const String _flashDeals       = 'flash-deals';
+  static const String _vendorProfile    = 'vendors/:vendorSlug';
+  static const String _favorites        = 'favorites';
+
+  // Full absolute paths (used by context.go / context.push)
+  static const String categories       = '/shop/categories';
+  static const String search           = '/shop/search';
+  static const String flashDeals       = '/shop/flash-deals';
+  static const String favorites        = '/shop/favorites';
+
+  // ──────────────────────────────────────────────────────────
+  // 🛍️ CART & CHECKOUT (global, outside shell)
+  // ──────────────────────────────────────────────────────────
+
+  static const String cart           = '/cart';
+  static const String checkout       = '/checkout';
+  static const String paymentScreen  = '/checkout/payment';
+  // orderSuccess built with helper below
+
+  // ──────────────────────────────────────────────────────────
+  // 📦 ORDERS (global)
+  // ──────────────────────────────────────────────────────────
+
+  static const String orders         = '/orders';
+  // orderDetail + orderTracking built with helpers below
+
+  // ──────────────────────────────────────────────────────────
+  // 🔧 SERVICES (nested under /services)
+  // ──────────────────────────────────────────────────────────
+
+  static const String serviceCategories  = '/services/categories';
+  static const String servicesList       = '/services/browse';
+  static const String myBookings         = '/services/my-bookings';
+  static const String bookingConfirm     = '/services/booking/confirm';
+  // serviceDetail, serviceBook, bookingDetail, bookingSuccess,
+  // liveTracking → built with helpers below
+
+  // Relative sub-paths (for GoRoute nesting)
+  static const String _serviceSlug      = ':serviceSlug';
+  static const String _bookSlug         = ':serviceSlug/book';
+  static const String _bookingConfirm   = 'booking/confirm';
+  static const String _bookingSuccessId = 'booking/success/:bookingId';
+  static const String _myBookings       = 'my-bookings';
+  static const String _bookingDetailId  = 'my-bookings/:bookingId';
+  static const String _trackingId       = 'tracking/:bookingId';
+
+  // ──────────────────────────────────────────────────────────
+  // 📢 CLASSIFIEDS (nested under /classifieds)
+  // ──────────────────────────────────────────────────────────
+
+  static const String adsList   = '/classifieds/browse';
+  static const String postAd    = '/classifieds/post';
+  static const String myAds     = '/classifieds/my-ads';
+  // adDetail, editAd, boostAd → helpers
+
+  static const String _adSlug   = ':adSlug';
+  static const String _postAd   = 'post';
+  static const String _editAdId = 'edit/:adId';
+  static const String _boostId  = 'boost/:adId';
+  static const String _myAds    = 'my-ads';
+
+  // ──────────────────────────────────────────────────────────
+  // 💬 CHAT (global)
+  // ──────────────────────────────────────────────────────────
+
+  static const String conversations    = '/chat';
+  // chatRoom → helper
+
+  // ──────────────────────────────────────────────────────────
+  // 👤 PROFILE (nested under /profile)
+  // ──────────────────────────────────────────────────────────
+
+  static const String editProfile      = '/profile/edit';
+  static const String addresses        = '/profile/addresses';
+  static const String addAddress       = '/profile/addresses/add';
+  static const String notifications    = '/profile/notifications';
+  static const String wallet           = '/profile/wallet';
+  static const String loyalty          = '/profile/loyalty';
+  static const String settings         = '/profile/settings';
+
+  // Relative paths
+  static const String _editProfile     = 'edit';
+  static const String _addresses       = 'addresses';
+  static const String _addAddress      = 'addresses/add';
+  static const String _notifications   = 'notifications';
+  static const String _wallet          = 'wallet';
+  static const String _loyalty         = 'loyalty';
+  static const String _settings        = 'settings';
+
+  // ──────────────────────────────────────────────────────────
+  // ⚙️ SETTINGS (nested under /profile/settings)
+  // ──────────────────────────────────────────────────────────
+
+  static const String settingsLanguage = '/profile/settings/language';
+  static const String settingsTheme    = '/profile/settings/theme';
+  static const String settingsNotif    = '/profile/settings/notifications';
+  static const String settingsSecurity = '/profile/settings/security';
+  static const String aboutApp         = '/profile/settings/about';
+  static const String privacyPolicy    = '/profile/settings/privacy';
+  static const String termsOfService   = '/profile/settings/terms';
+
+  // ──────────────────────────────────────────────────────────
+  // 🚨 SYSTEM
+  // ──────────────────────────────────────────────────────────
+
+  static const String notFound    = '/404';
+  static const String noInternet  = '/no-internet';
+  static const String maintenance = '/maintenance';
+
+  // ──────────────────────────────────────────────────────────
+  // 🔗 Relative path constants (used in GoRoute `path:`)
+  //
+  // These are exposed so router can reference them without
+  // duplicating strings. Prefix with $ to indicate "relative".
+  // ──────────────────────────────────────────────────────────
+
+  // E-commerce relative paths
+  static const String $categories       = _categories;
+  static const String $categoryProducts = _categoryProducts;
+  static const String $productDetail    = _productDetail;
+  static const String $search           = _search;
+  static const String $flashDeals       = _flashDeals;
+  static const String $vendorProfile    = _vendorProfile;
+  static const String $favorites        = _favorites;
+
+  // Services relative paths
+  static const String $serviceSlug      = _serviceSlug;
+  static const String $bookSlug         = _bookSlug;
+  static const String $bookingConfirm   = _bookingConfirm;
+  static const String $bookingSuccessId = _bookingSuccessId;
+  static const String $myBookings       = _myBookings;
+  static const String $bookingDetailId  = _bookingDetailId;
+  static const String $trackingId       = _trackingId;
+
+  // Classifieds relative paths
+  static const String $adSlug           = _adSlug;
+  static const String $postAd           = _postAd;
+  static const String $editAdId         = _editAdId;
+  static const String $boostId          = _boostId;
+  static const String $myAds            = _myAds;
+
+  // Profile relative paths
+  static const String $editProfile      = _editProfile;
+  static const String $addresses        = _addresses;
+  static const String $addAddress       = _addAddress;
+  static const String $notifications    = _notifications;
+  static const String $wallet           = _wallet;
+  static const String $loyalty          = _loyalty;
+  static const String $settings         = _settings;
+
+  // ──────────────────────────────────────────────────────────
+  // 🛠️ PATH BUILDER HELPERS
+  //
+  // Use these for context.go() / context.push() calls.
+  // They guarantee correctly formatted paths with params.
+  // ──────────────────────────────────────────────────────────
+
+  // E-commerce
+  static String categoryPath(String slug)   => '/shop/categories/$slug';
+  static String productListPath(String slug) => categoryPath(slug);
+  static String productPath(String slug)    => '/shop/products/$slug';
+  static String vendorPath(String slug)     => '/shop/vendors/$slug';
+
+  // Orders
+  static String orderPath(String id)        => '/orders/$id';
+  static String orderTrackPath(String id)   => '/orders/$id/tracking';
+  static String orderSuccessPath(String id) => '/checkout/success/$id';
+
+  // Services
+  static String servicePath(String slug)        => '/services/$slug';
+  static String serviceBookPath(String slug)    => '/services/$slug/book';
+  static String bookingPath(String id)          => '/services/my-bookings/$id';
+  static String trackingPath(String id)         => '/services/tracking/$id';
+  static String bookingSuccessPath(String id)   => '/services/booking/success/$id';
+
+  // Classifieds
+  static String adPath(String slug)         => '/classifieds/$slug';
+  static String editAdPath(String id)       => '/classifieds/edit/$id';
+  static String boostAdPath(String id)      => '/classifieds/boost/$id';
+
+  // Chat
+  static String chatPath(String convId)     => '/chat/$convId';
+}
