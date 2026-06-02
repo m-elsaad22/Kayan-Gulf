@@ -122,27 +122,31 @@ class _EditProfileState extends ConsumerState<EditProfileScreen> {
             // Gender
             _Label(ar ? 'الجنس' : 'Gender', ar),
             const SizedBox(height: 8),
-            Row(children: [
-              Expanded(child: GestureDetector(onTap: () => setState(() => _gender = 'male'),
-                child: AnimatedContainer(duration: const Duration(milliseconds: 200), padding: const EdgeInsets.symmetric(vertical: 12),
-                  decoration: BoxDecoration(color: _gender == 'male' ? AppColors.royalBlue.withOpacity(0.1) : AppColors.bgCard,
-                    borderRadius: AppBorderRadius.sm, border: Border.all(color: _gender == 'male' ? AppColors.borderActive : AppColors.borderSubtle, width: _gender == 'male' ? 1.5 : 1)),
-                  child: Center(child: Row(mainAxisSize: MainAxisSize.min, children: [
-                    Icon(Icons.male_rounded, size: 18, color: _gender == 'male' ? AppColors.royalBlue : AppColors.textMuted),
-                    const SizedBox(width: 6),
-                    Text(ar ? 'ذكر' : 'Male', style: TextStyle(fontSize: 13, color: _gender == 'male' ? AppColors.royalBlue : AppColors.textSecondary, fontWeight: _gender == 'male' ? FontWeight.w600 : FontWeight.w400)),
-                  ])))),
-              const SizedBox(width: 10),
-              Expanded(child: GestureDetector(onTap: () => setState(() => _gender = 'female'),
-                child: AnimatedContainer(duration: const Duration(milliseconds: 200), padding: const EdgeInsets.symmetric(vertical: 12),
-                  decoration: BoxDecoration(color: _gender == 'female' ? AppColors.error.withOpacity(0.08) : AppColors.bgCard,
-                    borderRadius: AppBorderRadius.sm, border: Border.all(color: _gender == 'female' ? AppColors.error : AppColors.borderSubtle, width: _gender == 'female' ? 1.5 : 1)),
-                  child: Center(child: Row(mainAxisSize: MainAxisSize.min, children: [
-                    Icon(Icons.female_rounded, size: 18, color: _gender == 'female' ? AppColors.error : AppColors.textMuted),
-                    const SizedBox(width: 6),
-                    Text(ar ? 'أنثى' : 'Female', style: TextStyle(fontSize: 13, color: _gender == 'female' ? AppColors.error : AppColors.textSecondary, fontWeight: _gender == 'female' ? FontWeight.w600 : FontWeight.w400)),
-                  ])))),
-            ]),
+            Row(
+              children: [
+                Expanded(
+                  child: _GenderOption(
+                    selected: _gender == 'male',
+                    icon: Icons.male_rounded,
+                    label: ar ? 'ذكر' : 'Male',
+                    activeColor: AppColors.royalBlue,
+                    activeBackground: AppColors.royalBlue.withOpacity(0.1),
+                    onTap: () => setState(() => _gender = 'male'),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: _GenderOption(
+                    selected: _gender == 'female',
+                    icon: Icons.female_rounded,
+                    label: ar ? 'أنثى' : 'Female',
+                    activeColor: AppColors.error,
+                    activeBackground: AppColors.error.withOpacity(0.08),
+                    onTap: () => setState(() => _gender = 'female'),
+                  ),
+                ),
+              ],
+            ),
             const SizedBox(height: 16),
 
             // Bio
@@ -168,3 +172,61 @@ class _EditProfileState extends ConsumerState<EditProfileScreen> {
 }
 
 Widget _Label(String text, bool ar) => Text(text, style: (ar ? AppTextStyles.arabicTitleSmall : AppTextStyles.titleSmall).copyWith(fontSize: 13));
+
+class _GenderOption extends StatelessWidget {
+  final bool selected;
+  final IconData icon;
+  final String label;
+  final Color activeColor;
+  final Color activeBackground;
+  final VoidCallback onTap;
+
+  const _GenderOption({
+    required this.selected,
+    required this.icon,
+    required this.label,
+    required this.activeColor,
+    required this.activeBackground,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        decoration: BoxDecoration(
+          color: selected ? activeBackground : AppColors.bgCard,
+          borderRadius: AppBorderRadius.sm,
+          border: Border.all(
+            color: selected ? activeColor : AppColors.borderSubtle,
+            width: selected ? 1.5 : 1,
+          ),
+        ),
+        child: Center(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
+                size: 18,
+                color: selected ? activeColor : AppColors.textMuted,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: selected ? activeColor : AppColors.textSecondary,
+                  fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

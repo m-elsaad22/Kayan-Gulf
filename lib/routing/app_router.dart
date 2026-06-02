@@ -60,6 +60,7 @@ import '../features/checkout/presentation/screens/order_success_screen.dart';
 // Orders
 import '../features/orders/presentation/screens/orders_list_screen.dart';
 import '../features/orders/presentation/screens/order_detail_screen.dart';
+import '../features/orders/presentation/screens/order_tracking_screen.dart';
 // Services
 import '../features/services/categories/presentation/screens/services_home_screen.dart';
 import '../features/services/browse/presentation/screens/services_list_screen.dart';
@@ -324,7 +325,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               return _buildSlidePage(
                 key:   state.pageKey,
                 child: ChatScreen(
-                  conversationId: state.pathParameters['conversationId']!,
+                  convId: state.pathParameters['conversationId']!,
                   adTitle: extra?['adTitle'] as String?,
                   adImage: extra?['adImage'] as String?,
                 ),
@@ -437,7 +438,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
                       child: VendorProfileScreen(
-                        slug: state.pathParameters['vendorSlug']!,
+                        vendorSlug: state.pathParameters['vendorSlug']!,
                       ),
                     ),
                   ),
@@ -624,7 +625,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
                       child: AdDetailScreen(
-                        slug: state.pathParameters['adSlug']!,
+                        adSlug: state.pathParameters['adSlug']!,
                       ),
                     ),
                   ),

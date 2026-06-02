@@ -41,7 +41,14 @@ final _typingProvider = StateProvider.autoDispose<bool>((_) => false);
 
 class ChatScreen extends ConsumerStatefulWidget {
   final String convId;
-  const ChatScreen({super.key, required this.convId});
+  final String? adTitle;
+  final String? adImage;
+  const ChatScreen({
+    super.key,
+    required this.convId,
+    this.adTitle,
+    this.adImage,
+  });
 
   @override
   ConsumerState<ChatScreen> createState() => _ChatScreenState();

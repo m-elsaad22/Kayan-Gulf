@@ -73,7 +73,9 @@ class SettingsScreen extends ConsumerWidget {
                 valueAr: isArabic ? 'العربية' : 'Arabic',
                 valueEn: isArabic ? 'العربية' : 'Arabic',
                 isArabic: isArabic,
-                onTap: () => ref.read(isArabicProvider.notifier).state = !isArabic,
+                onTap: () => isArabic
+                    ? ref.read(localeProvider.notifier).setEnglish()
+                    : ref.read(localeProvider.notifier).setArabic(),
               ),
               _SettingsTile(
                 icon: Icons.currency_exchange_rounded, color: AppColors.categoryGreen,

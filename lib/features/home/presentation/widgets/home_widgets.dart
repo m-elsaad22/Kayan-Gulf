@@ -360,10 +360,12 @@ class _CategoryItem extends StatelessWidget {
               child: category.iconUrl != null
                   ? ClipRRect(
                       borderRadius: AppBorderRadius.md,
-                      child: CachedNetworkImage(
-                        imageUrl: category.iconUrl!,
-                        fit:      BoxFit.contain,
-                        padding:  const EdgeInsets.all(10),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: CachedNetworkImage(
+                          imageUrl: category.iconUrl!,
+                          fit:      BoxFit.contain,
+                        ),
                       ),
                     )
                   : Center(

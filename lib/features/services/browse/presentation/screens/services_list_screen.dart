@@ -14,8 +14,21 @@ import '../../../../../core/theme/app_spacing.dart';
 import '../../../../../routing/app_routes.dart';
 import '../../../../../shared/providers/locale_provider.dart';
 import '../../../../../shared/widgets/loaders/shimmer_loader.dart';
-import '../../data/models/services_models.dart';
-import '../../presentation/providers/services_providers.dart';
+import '../../data/models/service_models.dart';
+
+final servicesListProvider = FutureProvider.autoDispose
+    .family<List<ServiceDetailModel>, String?>((ref, categoryId) async {
+  await Future.delayed(const Duration(milliseconds: 300));
+  final services = mockServiceCategories
+      .map((category) => mockServiceDetail(category.slug))
+      .toList();
+
+  if (categoryId == null || categoryId.isEmpty) return services;
+  return services
+      .where((service) =>
+          service.slug == categoryId || service.categorySlug == categoryId)
+      .toList();
+});
 
 class ServicesListScreen extends ConsumerWidget {
   final String? categoryId;
@@ -75,7 +88,7 @@ class ServicesListScreen extends ConsumerWidget {
 }
 
 class _ServiceListTile extends StatelessWidget {
-  final ServiceModel service;
+  final ServiceDetailModel service;
   final bool         isArabic;
   final VoidCallback onTap;
   const _ServiceListTile({
@@ -127,10 +140,10 @@ class _ServiceListTile extends StatelessWidget {
                 const SizedBox(width: 8),
                 const Icon(Icons.access_time_rounded, size: 12, color: AppColors.textMuted),
                 const SizedBox(width: 3),
-                Text(service.durationLabel, style: AppTextStyles.caption),
+                Text('${service.estimatedDurationMin} د', style: AppTextStyles.caption),
               ]),
               const SizedBox(height: 6),
-              Text('${service.basePrice.toInt()} ر.س',
+              Text('${service.finalPrice.toInt()} ر.س',
                   style: AppTextStyles.priceMedium),
             ]),
           ),
