@@ -24,6 +24,7 @@ import '../../../../core/theme/app_border_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../routing/app_routes.dart';
 import '../../../../shared/providers/locale_provider.dart';
+import '../../../../shared/services/local_storage_service.dart';
 import '../providers/auth_providers.dart';
 
 // ──────────────────────────────────────────────────────────────
@@ -122,6 +123,13 @@ class _PhoneInputScreenState extends ConsumerState<PhoneInputScreen>
   // ──────────────────────────────────────────────────────────
   // SEND OTP
   // ──────────────────────────────────────────────────────────
+  Future<void> _skipAuth() async {
+    HapticFeedback.selectionClick();
+    await LocalStorageService.markOnboardingSeen();
+    await LocalStorageService.setGuestMode(true);
+    if (mounted) context.go(AppRoutes.home);
+  }
+
   Future<void> _sendOtp() async {
     FocusScope.of(context).unfocus();
     if (!_isValid) {
@@ -302,7 +310,14 @@ class _PhoneInputScreenState extends ConsumerState<PhoneInputScreen>
                         onTap:     _sendOtp,
                       ),
 
-                      const SizedBox(height: 32),
+                      const SizedBox(height: 14),
+
+                      _SkipAuthButton(
+                        isArabic: isArabic,
+                        onTap: _skipAuth,
+                      ),
+
+                      const SizedBox(height: 24),
                     ],
                   ),
                 ),
@@ -429,6 +444,38 @@ class _PhoneInputField extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// ──────────────────────────────────────────────────────────────
+// SKIP AUTH BUTTON
+// ──────────────────────────────────────────────────────────────
+class _SkipAuthButton extends StatelessWidget {
+  final bool isArabic;
+  final VoidCallback onTap;
+
+  const _SkipAuthButton({required this.isArabic, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton.icon(
+      onPressed: onTap,
+      style: TextButton.styleFrom(
+        foregroundColor: AppColors.metallicGold,
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+        shape: RoundedRectangleBorder(borderRadius: AppBorderRadius.pill),
+      ),
+      icon: Icon(
+        isArabic ? Icons.arrow_back_rounded : Icons.arrow_forward_rounded,
+        size: 18,
+        color: AppColors.metallicGold,
+      ),
+      label: Text(
+        isArabic ? 'تخطي' : 'Skip',
+        style: (isArabic ? AppTextStyles.arabicButton : AppTextStyles.buttonMedium)
+            .copyWith(color: AppColors.metallicGold),
       ),
     );
   }

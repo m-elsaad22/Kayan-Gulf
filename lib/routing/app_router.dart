@@ -130,6 +130,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       final isAuthenticated   = authState.isAuthenticated;
       final isProfileComplete = authState.isProfileComplete;
       final hasSeenOnboarding = LocalStorageService.hasSeenOnboarding;
+      final isGuestMode       = LocalStorageService.isGuestMode;
 
       // Always allow splash
       if (location == AppRoutes.splash) return null;
@@ -139,7 +140,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         return AppRoutes.onboarding;
       }
       if (hasSeenOnboarding && location == AppRoutes.onboarding) {
-        return isAuthenticated ? AppRoutes.home : AppRoutes.phoneInput;
+        return (isAuthenticated || isGuestMode) ? AppRoutes.home : AppRoutes.phoneInput;
       }
 
       // Public routes — always allow
@@ -157,10 +158,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       }
 
       // Unauthenticated → send to login
-      if (!isAuthenticated) return AppRoutes.phoneInput;
+      if (!isAuthenticated && !isGuestMode) return AppRoutes.phoneInput;
 
       // Authenticated but profile incomplete → profile setup
-      if (isAuthenticated && !isProfileComplete &&
+      if (isAuthenticated && !isGuestMode && !isProfileComplete &&
           location != AppRoutes.profileSetup) {
         return AppRoutes.profileSetup;
       }
