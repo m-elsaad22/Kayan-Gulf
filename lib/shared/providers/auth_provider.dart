@@ -20,11 +20,13 @@ import '../services/local_storage_service.dart';
 class AuthGuardState {
   final bool isAuthenticated;
   final bool isProfileComplete;
+  final bool isGuest;
   final String? userId;
 
   const AuthGuardState({
     this.isAuthenticated    = false,
     this.isProfileComplete  = false,
+    this.isGuest            = false,
     this.userId,
   });
 
@@ -33,11 +35,19 @@ class AuthGuardState {
     required bool profileComplete,
   })  : isAuthenticated   = true,
         isProfileComplete = profileComplete,
+        isGuest           = false,
         userId            = userId;
+
+  const AuthGuardState.guest()
+      : isAuthenticated   = false,
+        isProfileComplete = false,
+        isGuest           = true,
+        userId            = null;
 
   const AuthGuardState.unauthenticated()
       : isAuthenticated   = false,
         isProfileComplete = false,
+        isGuest           = false,
         userId            = null;
 }
 
@@ -58,7 +68,43 @@ class AuthNotifier extends Notifier<AuthGuardState> {
         profileComplete: LocalStorageService.isProfileComplete,
       );
     }
+    if (LocalStorageService.isGuestMode) {
+      return const AuthGuardState.guest();
+    }
     return const AuthGuardState.unauthenticated();
+  }
+
+  Future<void> loginWithEmail(String email, String password) async {
+    await _completeMockAuth('email-${email.hashCode.abs()}');
+  }
+
+  Future<void> loginWithGoogle() async => _completeMockAuth('google-user');
+  Future<void> loginWithApple() async => _completeMockAuth('apple-user');
+  Future<void> loginWithFacebook() async => _completeMockAuth('facebook-user');
+
+  Future<void> signUp({
+    required String name,
+    required String email,
+    required String phone,
+    required String password,
+  }) async {
+    await _completeMockAuth('signup-${email.hashCode.abs()}');
+  }
+
+  Future<void> continueAsGuest() async {
+    await LocalStorageService.markOnboardingSeen();
+    await LocalStorageService.setGuestMode(true);
+    state = const AuthGuardState.guest();
+  }
+
+  Future<void> _completeMockAuth(String userId) async {
+    await LocalStorageService.markOnboardingSeen();
+    setAuthenticated(
+      userId: userId,
+      accessToken: 'mock-access-$userId',
+      refreshToken: 'mock-refresh-$userId',
+      isProfileComplete: true,
+    );
   }
 
   // Called after successful OTP verification

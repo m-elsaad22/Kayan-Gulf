@@ -24,6 +24,8 @@ abstract class LocalStorageService {
   static const String _keyOnboarding    = 'seen_onboarding';
   static const String _keyGuestMode     = 'guest_mode';
   static const String _keyLocale        = 'locale';
+  static const String _keyCountryCode   = 'country_code';
+  static const String _keyLangRegionDone = 'language_region_done';
   static const String _keyThemeMode     = 'theme_mode';
   static const String _keyFcmToken      = 'fcm_token';
 
@@ -127,6 +129,23 @@ abstract class LocalStorageService {
 
   static Future<void> saveLocale(String code) async =>
       _box.put(_keyLocale, code);
+
+  static String get countryCode =>
+      _box.get(_keyCountryCode, defaultValue: 'SA') as String;
+
+  static bool get hasSelectedLanguageRegion =>
+      _box.get(_keyLangRegionDone, defaultValue: false) as bool;
+
+  static Future<void> saveLanguageRegion({
+    required String languageCode,
+    required String countryCode,
+  }) async {
+    await Future.wait([
+      _box.put(_keyLocale, languageCode),
+      _box.put(_keyCountryCode, countryCode),
+      _box.put(_keyLangRegionDone, true),
+    ]);
+  }
 
   // ──────────────────────────────────────────────────────────
   // THEME MODE

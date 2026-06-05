@@ -95,7 +95,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   Future<void> _finish() async {
     await LocalStorageService.markOnboardingSeen();
-    if (mounted) context.go(AppRoutes.phoneInput);
+    if (mounted) context.go(AppRoutes.login);
   }
 
   @override

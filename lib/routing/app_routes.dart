@@ -17,11 +17,19 @@ abstract final class AppRoutes {
 
   static const String splash      = '/';
   static const String onboarding  = '/onboarding';
+  static const String languageRegion = '/language-region';
+  static const String dashboard   = '/dashboard';
 
   // ──────────────────────────────────────────────────────────
   // 🔐 AUTH
   // ──────────────────────────────────────────────────────────
 
+  static const String login        = '/auth/login';
+  static const String signup       = '/auth/signup';
+  static const String forgotPassword = '/auth/forgot-password';
+  static const String resetPassword = '/auth/reset-password';
+  static const String verificationMethod = '/auth/verify-method';
+  static const String emailPin     = '/auth/email-pin';
   static const String phoneInput   = '/auth/phone';
   static const String otpVerify    = '/auth/otp';
   static const String profileSetup = '/auth/profile-setup';

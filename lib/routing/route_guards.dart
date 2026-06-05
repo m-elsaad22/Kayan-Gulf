@@ -29,6 +29,13 @@ import 'app_routes.dart';
 const Set<String> _publicRoutes = {
   AppRoutes.splash,
   AppRoutes.onboarding,
+  AppRoutes.languageRegion,
+  AppRoutes.login,
+  AppRoutes.signup,
+  AppRoutes.forgotPassword,
+  AppRoutes.resetPassword,
+  AppRoutes.verificationMethod,
+  AppRoutes.emailPin,
   AppRoutes.phoneInput,
   AppRoutes.otpVerify,
   AppRoutes.profileSetup,
@@ -40,6 +47,8 @@ const Set<String> _publicRoutes = {
 /// Routes where an authenticated user should be redirected away from.
 /// (e.g., going back to login screen when already logged in)
 const Set<String> _authOnlyRoutes = {
+  AppRoutes.login,
+  AppRoutes.signup,
   AppRoutes.phoneInput,
   AppRoutes.otpVerify,
 };
@@ -67,7 +76,11 @@ class RouteGuards {
 
     // ── Guard 2: Onboarding ────────────────────────────────
     // First-time launch: show onboarding before auth
+    final hasSelectedRegion = LocalStorageService.hasSelectedLanguageRegion;
     final hasSeenOnboarding = LocalStorageService.hasSeenOnboarding;
+    if (!hasSelectedRegion && location != AppRoutes.languageRegion) {
+      return AppRoutes.languageRegion;
+    }
     if (!hasSeenOnboarding && location != AppRoutes.onboarding) {
       return AppRoutes.onboarding;
     }
@@ -76,18 +89,19 @@ class RouteGuards {
     final authState = ref.read(authStateProvider);
 
     // Not authenticated + trying to access protected route
-    if (!authState.isAuthenticated && !isPublic) {
-      return AppRoutes.phoneInput;
+    if (!authState.isAuthenticated && !LocalStorageService.isGuestMode && !isPublic) {
+      return AppRoutes.login;
     }
 
     // Authenticated + trying to access auth-only routes
-    if (authState.isAuthenticated && _isAuthOnlyRoute(location)) {
-      return AppRoutes.home;
+    if ((authState.isAuthenticated || LocalStorageService.isGuestMode) && _isAuthOnlyRoute(location)) {
+      return AppRoutes.dashboard;
     }
 
     // ── Guard 4: Profile completion ────────────────────────
     // Authenticated but profile not set up yet
     if (authState.isAuthenticated &&
+        !LocalStorageService.isGuestMode &&
         !authState.isProfileComplete &&
         location != AppRoutes.profileSetup) {
       return AppRoutes.profileSetup;

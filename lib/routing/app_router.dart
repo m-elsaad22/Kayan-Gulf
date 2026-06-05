@@ -39,11 +39,19 @@ import '../core/theme/app_text_styles.dart';
 // Splash & Onboarding
 import '../features/splash/presentation/screens/splash_screen.dart';
 import '../features/onboarding/presentation/screens/onboarding_screen.dart';
+import '../features/onboarding/presentation/screens/language_region_screen.dart';
 // Auth
+import '../features/auth/presentation/screens/login_screen.dart';
+import '../features/auth/presentation/screens/signup_screen.dart';
+import '../features/auth/presentation/screens/forgot_password_screen.dart';
+import '../features/auth/presentation/screens/reset_password_screen.dart';
+import '../features/auth/presentation/screens/verification_method_screen.dart';
+import '../features/auth/presentation/screens/email_pin_screen.dart';
 import '../features/auth/presentation/screens/phone_input_screen.dart';
 import '../features/auth/presentation/screens/otp_verification_screen.dart';
 import '../features/auth/presentation/screens/profile_setup_screen.dart';
-// Home
+// Dashboard & Home
+import '../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../features/home/presentation/screens/home_screen.dart';
 // E-commerce
 import '../features/ecommerce/categories/presentation/screens/categories_screen.dart';
@@ -129,36 +137,41 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       final location          = state.uri.path;
       final isAuthenticated   = authState.isAuthenticated;
       final isProfileComplete = authState.isProfileComplete;
+      final hasSelectedRegion = LocalStorageService.hasSelectedLanguageRegion;
       final hasSeenOnboarding = LocalStorageService.hasSeenOnboarding;
       final isGuestMode       = LocalStorageService.isGuestMode;
 
       // Always allow splash
       if (location == AppRoutes.splash) return null;
 
+      if (!hasSelectedRegion && location != AppRoutes.languageRegion) {
+        return AppRoutes.languageRegion;
+      }
+      if (hasSelectedRegion && location == AppRoutes.languageRegion) {
+        return hasSeenOnboarding ? AppRoutes.login : AppRoutes.onboarding;
+      }
+
       // Onboarding guard (first launch)
       if (!hasSeenOnboarding && location != AppRoutes.onboarding) {
         return AppRoutes.onboarding;
       }
       if (hasSeenOnboarding && location == AppRoutes.onboarding) {
-        return (isAuthenticated || isGuestMode) ? AppRoutes.home : AppRoutes.phoneInput;
+        return (isAuthenticated || isGuestMode) ? AppRoutes.dashboard : AppRoutes.login;
       }
 
       // Public routes — always allow
-      const publicPrefixes = ['/auth/', '/onboarding', '/404', '/no-internet'];
+      const publicPrefixes = ['/auth/', '/onboarding', '/language-region', '/404', '/no-internet'];
       final isPublic = publicPrefixes.any((p) => location.startsWith(p));
       if (isPublic) {
         // But if already authenticated, don't show login pages again
-        if (isAuthenticated && location.startsWith('/auth/phone')) {
-          return AppRoutes.home;
-        }
-        if (isAuthenticated && location.startsWith('/auth/otp')) {
-          return AppRoutes.home;
+        if ((isAuthenticated || isGuestMode) && location.startsWith('/auth/')) {
+          return AppRoutes.dashboard;
         }
         return null;
       }
 
       // Unauthenticated → send to login
-      if (!isAuthenticated && !isGuestMode) return AppRoutes.phoneInput;
+      if (!isAuthenticated && !isGuestMode) return AppRoutes.login;
 
       // Authenticated but profile incomplete → profile setup
       if (isAuthenticated && !isGuestMode && !isProfileComplete &&
@@ -191,6 +204,22 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         ),
       ),
 
+      GoRoute(
+        path:        AppRoutes.languageRegion,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key:   state.pageKey,
+          child: const LanguageRegionScreen(),
+        ),
+      ),
+
+      GoRoute(
+        path:        AppRoutes.dashboard,
+        pageBuilder: (context, state) => _buildFadePage(
+          key:   state.pageKey,
+          child: const DashboardScreen(),
+        ),
+      ),
+
       // ════════════════════════════════════════════════════
       // ONBOARDING
       // ════════════════════════════════════════════════════
@@ -205,6 +234,48 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       // ════════════════════════════════════════════════════
       // AUTH FLOW
       // ════════════════════════════════════════════════════
+      GoRoute(
+        path:        AppRoutes.login,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key:   state.pageKey,
+          child: const LoginScreen(),
+        ),
+      ),
+      GoRoute(
+        path:        AppRoutes.signup,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key:   state.pageKey,
+          child: const SignupScreen(),
+        ),
+      ),
+      GoRoute(
+        path:        AppRoutes.forgotPassword,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key:   state.pageKey,
+          child: const ForgotPasswordScreen(),
+        ),
+      ),
+      GoRoute(
+        path:        AppRoutes.resetPassword,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key:   state.pageKey,
+          child: const ResetPasswordScreen(),
+        ),
+      ),
+      GoRoute(
+        path:        AppRoutes.verificationMethod,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key:   state.pageKey,
+          child: const VerificationMethodScreen(),
+        ),
+      ),
+      GoRoute(
+        path:        AppRoutes.emailPin,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key:   state.pageKey,
+          child: EmailPinScreen(email: state.extra as String? ?? ''),
+        ),
+      ),
       GoRoute(
         path:        AppRoutes.phoneInput,
         pageBuilder: (context, state) => _buildSlidePage(
