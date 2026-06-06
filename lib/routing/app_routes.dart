@@ -62,6 +62,10 @@ abstract final class AppRoutes {
   static const String search           = '/shop/search';
   static const String flashDeals       = '/shop/flash-deals';
   static const String favorites        = '/shop/favorites';
+  static const String productReviews    = '/shop/product-reviews';
+  static const String productCompare    = '/shop/product-compare';
+  static const String bestSellers       = '/shop/best-sellers';
+  static const String exclusiveOffers   = '/shop/exclusive-offers';
 
   // ──────────────────────────────────────────────────────────
   // 🛍️ CART & CHECKOUT (global, outside shell)
@@ -70,6 +74,18 @@ abstract final class AppRoutes {
   static const String cart           = '/cart';
   static const String checkout       = '/checkout';
   static const String paymentScreen  = '/checkout/payment';
+  static const String checkoutSelectAddress = '/checkout/select-address';
+  static const String checkoutAddAddress = '/checkout/add-address';
+  static const String checkoutPaymentMethod = '/checkout/payment-method';
+  static const String checkoutAddCard = '/checkout/add-card';
+  static const String orderConfirmation = '/checkout/order-confirmation';
+  static const String codDetails      = '/checkout/cod-details';
+  static const String paypalPayment   = '/checkout/paypal';
+  static const String digitalWallet   = '/checkout/digital-wallet';
+
+  static const String returnSelectProduct = '/returns/select-product';
+  static const String returnDetails   = '/returns/details';
+  static const String returnStatus    = '/returns/status';
   // orderSuccess built with helper below
 
   // ──────────────────────────────────────────────────────────

@@ -60,6 +60,22 @@ import '../features/ecommerce/product/presentation/screens/product_detail_screen
 import '../features/ecommerce/search/presentation/screens/search_screen.dart';
 import '../features/ecommerce/flash_deals/presentation/screens/flash_deals_screen.dart';
 import '../features/ecommerce/vendors/presentation/screens/vendor_profile_screen.dart';
+import '../features/ecommerce/product/presentation/screens/product_reviews_screen.dart';
+import '../features/ecommerce/product/presentation/screens/product_compare_screen.dart';
+import '../features/ecommerce/product/presentation/screens/best_sellers_screen.dart';
+import '../features/ecommerce/product/presentation/screens/exclusive_offers_screen.dart';
+import '../features/checkout/presentation/screens/select_address_screen.dart';
+import '../features/checkout/presentation/screens/add_address_screen.dart' as checkout_address;
+import '../features/checkout/presentation/screens/payment_method_checkout_screen.dart';
+import '../features/checkout/presentation/screens/add_card_checkout_screen.dart';
+import '../features/checkout/presentation/screens/order_confirmation_screen.dart';
+import '../features/checkout/presentation/screens/cod_details_screen.dart';
+import '../features/checkout/presentation/screens/paypal_payment_screen.dart';
+import '../features/checkout/presentation/screens/digital_wallet_screen.dart';
+import '../features/returns/presentation/screens/return_select_product_screen.dart';
+import '../features/returns/presentation/screens/return_details_screen.dart';
+import '../features/returns/presentation/screens/return_status_screen.dart';
+
 // Cart & Checkout
 import '../features/cart/presentation/screens/cart_screen.dart';
 import '../features/checkout/presentation/screens/checkout_screen.dart';
@@ -716,6 +732,128 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildSlidePage(
           key: state.pageKey,
           child: const ServiceQrScreen(),
+        ),
+      ),
+
+
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.productReviews,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ProductReviewsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.productCompare,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ProductCompareScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.bestSellers,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const BestSellersScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.exclusiveOffers,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ExclusiveOffersScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.checkoutSelectAddress,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const SelectAddressScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.checkoutAddAddress,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const checkout_address.CheckoutAddAddressScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.checkoutPaymentMethod,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const PaymentMethodCheckoutScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.checkoutAddCard,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AddCardCheckoutScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.orderConfirmation,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const OrderConfirmationScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.codDetails,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const CodDetailsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.paypalPayment,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const PaypalPaymentScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.digitalWallet,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const DigitalWalletScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.returnSelectProduct,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ReturnSelectProductScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.returnDetails,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ReturnDetailsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.returnStatus,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ReturnStatusScreen(),
         ),
       ),
 
