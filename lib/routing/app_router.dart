@@ -79,6 +79,19 @@ import '../features/services/booking/presentation/screens/booking_success_screen
 import '../features/services/booking/presentation/screens/my_bookings_screen.dart';
 import '../features/services/booking/presentation/screens/booking_detail_screen.dart';
 import '../features/services/tracking/presentation/screens/live_tracking_screen.dart';
+import '../features/services/browse/presentation/screens/advanced_filters_screen.dart';
+import '../features/services/browse/presentation/screens/service_subcategories_screen.dart';
+import '../features/services/booking/presentation/screens/address_entry_screen.dart';
+import '../features/services/booking/presentation/screens/payment_method_screen.dart';
+import '../features/services/booking/presentation/screens/add_card_screen.dart';
+import '../features/services/booking/presentation/screens/payment_success_screen.dart';
+import '../features/services/booking/presentation/screens/urgent_service_screen.dart';
+import '../features/services/booking/presentation/screens/extra_materials_screen.dart';
+import '../features/services/booking/presentation/screens/technician_arrival_screen.dart';
+import '../features/services/booking/presentation/screens/service_completion_screen.dart';
+import '../features/services/booking/presentation/screens/service_invoice_screen.dart';
+import '../features/services/booking/presentation/screens/service_qr_screen.dart';
+
 // Classifieds
 import '../features/classifieds/browse/presentation/screens/ads_list_screen.dart';
 import '../features/classifieds/browse/presentation/screens/classifieds_home_screen.dart';
@@ -605,6 +618,104 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildSlidePage(
           key: state.pageKey,
           child: const PaymentReceiptScreen(),
+        ),
+      ),
+
+
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.advancedServiceFilters,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdvancedFiltersScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.serviceSubcategories,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ServiceSubcategoriesScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.serviceAddressEntry,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AddressEntryScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.servicePaymentMethod,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const PaymentMethodScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.serviceAddCard,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AddCardScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.servicePaymentSuccess,
+        pageBuilder: (context, state) => _buildFadePage(
+          key: state.pageKey,
+          child: const PaymentSuccessScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.urgentService,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const UrgentServiceScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.extraMaterials,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ExtraMaterialsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.technicianArrival,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const TechnicianArrivalScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.serviceCompletion,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ServiceCompletionScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.serviceInvoice,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ServiceInvoiceScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.serviceQr,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ServiceQrScreen(),
         ),
       ),
 

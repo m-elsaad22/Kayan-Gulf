@@ -87,6 +87,18 @@ abstract final class AppRoutes {
   static const String servicesList       = '/services/browse';
   static const String myBookings         = '/services/my-bookings';
   static const String bookingConfirm     = '/services/booking/confirm';
+  static const String advancedServiceFilters = '/services/filters';
+  static const String serviceSubcategories  = '/services/subcategories';
+  static const String serviceAddressEntry   = '/services/booking/address';
+  static const String servicePaymentMethod  = '/services/booking/payment-method';
+  static const String serviceAddCard        = '/services/booking/add-card';
+  static const String servicePaymentSuccess = '/services/booking/payment-success';
+  static const String urgentService         = '/services/urgent';
+  static const String extraMaterials        = '/services/booking/extra-materials';
+  static const String technicianArrival     = '/services/booking/technician-arrival';
+  static const String serviceCompletion     = '/services/booking/completion';
+  static const String serviceInvoice        = '/services/booking/invoice';
+  static const String serviceQr             = '/services/booking/qr';
   // serviceDetail, serviceBook, bookingDetail, bookingSuccess,
   // liveTracking → built with helpers below
 
