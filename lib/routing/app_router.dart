@@ -95,6 +95,29 @@ import '../features/profile/presentation/screens/profile_screen.dart';
 import '../features/profile/presentation/screens/edit_profile_screen.dart';
 import '../features/profile/presentation/screens/addresses_screen.dart';
 import '../features/profile/presentation/screens/add_address_screen.dart';
+import '../features/profile/presentation/screens/help_support_screen.dart';
+import '../features/profile/presentation/screens/live_chat_screen.dart';
+import '../features/profile/presentation/screens/rate_app_screen.dart';
+import '../features/profile/presentation/screens/about_kayan_screen.dart';
+import '../features/profile/presentation/screens/security_screen.dart';
+import '../features/profile/presentation/screens/two_fa_setup_screen.dart';
+import '../features/profile/presentation/screens/two_fa_verify_screen.dart';
+import '../features/profile/presentation/screens/connected_devices_screen.dart';
+import '../features/profile/presentation/screens/privacy_policy_screen.dart';
+import '../features/profile/presentation/screens/terms_screen.dart';
+import '../features/profile/presentation/screens/faq_general_screen.dart';
+import '../features/profile/presentation/screens/contact_support_screen.dart';
+import '../features/profile/presentation/screens/loyalty_cards_screen.dart';
+import '../features/profile/presentation/screens/referrals_screen.dart';
+import '../features/profile/presentation/screens/subscriptions_screen.dart';
+import '../features/profile/presentation/screens/manage_subscription_screen.dart';
+import '../features/wallet/presentation/screens/transfer_points_screen.dart';
+import '../features/wallet/presentation/screens/earn_points_screen.dart';
+import '../features/wallet/presentation/screens/redeem_points_screen.dart';
+import '../features/wallet/presentation/screens/withdraw_earnings_screen.dart';
+import '../features/wallet/presentation/screens/earnings_history_screen.dart';
+import '../features/wallet/presentation/screens/payment_receipt_screen.dart';
+
 // Notifications
 import '../features/notifications/presentation/screens/notifications_screen.dart';
 // Wallet
@@ -405,6 +428,184 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             },
           ),
         ],
+      ),
+
+
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.helpSupport,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const HelpSupportScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.liveChat,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const LiveChatScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.rateApp,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const RateAppScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.aboutKayan,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AboutKayanScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.profileSecurity,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const SecurityScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.twoFASetup,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const TwoFaSetupScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.twoFAVerify,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const TwoFaVerifyScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.connectedDevices,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ConnectedDevicesScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.profilePrivacy,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const PrivacyPolicyScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.profileTerms,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const TermsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.faqGeneral,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const FaqGeneralScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.contactSupport,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ContactSupportScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.loyaltyCards,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const LoyaltyCardsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.referrals,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ReferralsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.subscriptions,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const SubscriptionsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.manageSubscription,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ManageSubscriptionScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.transferPoints,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const TransferPointsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.earnPoints,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const EarnPointsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.redeemPoints,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const RedeemPointsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.withdrawEarnings,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const WithdrawEarningsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.earningsHistory,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const EarningsHistoryScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.paymentReceipt,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const PaymentReceiptScreen(),
+        ),
       ),
 
       // ════════════════════════════════════════════════════

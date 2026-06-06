@@ -132,6 +132,29 @@ abstract final class AppRoutes {
   static const String wallet           = '/profile/wallet';
   static const String loyalty          = '/profile/loyalty';
   static const String settings         = '/profile/settings';
+  static const String helpSupport      = '/profile/help-support';
+  static const String liveChat         = '/profile/live-chat';
+  static const String rateApp          = '/profile/rate-app';
+  static const String aboutKayan       = '/profile/about-kayan';
+  static const String profileSecurity  = '/profile/security';
+  static const String twoFASetup       = '/profile/security/2fa-setup';
+  static const String twoFAVerify      = '/profile/security/2fa-verify';
+  static const String connectedDevices = '/profile/security/devices';
+  static const String profilePrivacy   = '/profile/privacy';
+  static const String profileTerms     = '/profile/terms';
+  static const String faqGeneral       = '/profile/faq';
+  static const String contactSupport   = '/profile/contact-support';
+  static const String loyaltyCards     = '/profile/loyalty/cards';
+  static const String referrals        = '/profile/referrals';
+  static const String subscriptions    = '/profile/subscriptions';
+  static const String manageSubscription = '/profile/subscriptions/manage';
+
+  static const String transferPoints   = '/profile/wallet/transfer-points';
+  static const String earnPoints       = '/profile/wallet/earn-points';
+  static const String redeemPoints     = '/profile/wallet/redeem-points';
+  static const String withdrawEarnings = '/profile/wallet/withdraw-earnings';
+  static const String earningsHistory  = '/profile/wallet/earnings-history';
+  static const String paymentReceipt   = '/profile/wallet/payment-receipt';
 
   // Relative paths
   static const String _editProfile     = 'edit';
