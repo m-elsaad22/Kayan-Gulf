@@ -85,6 +85,7 @@ dependencies:
   # ─── Fonts (runtime via Google Fonts) ────────────────────────
   # NotoKufiArabic و Inter يُحمَّلان تلقائياً عبر google_fonts
   google_fonts: ^6.2.1
+  cupertino_icons: ^1.0.8
   google_sign_in: ^7.2.0
   flutter_facebook_auth: ^7.1.0
   sign_in_with_apple: ^8.1.0
@@ -109,5 +110,8 @@ flutter:
     - assets/fonts/
 
   # ─── Fonts ───────────────────────────────────────────────────
-  # لا توجد خطوط محلية — كل الخطوط عبر google_fonts package
-  # لتفعيل خطوط محلية: ضع ملفات .ttf في assets/fonts/ وأضفها هنا
+  fonts:
+    - family: CupertinoIcons
+      fonts:
+        - asset: packages/cupertino_icons/assets/CupertinoIcons.ttf
+  # NotoKufiArabic و Inter عبر google_fonts — خطوط محلية في assets/fonts/
