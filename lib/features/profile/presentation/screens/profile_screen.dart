@@ -981,9 +981,30 @@ class _LogoutButton extends ConsumerWidget {
 // ──────────────────────────────────────────────────────────────
 // VERSION FOOTER
 // ──────────────────────────────────────────────────────────────
-class _VersionFooter extends StatelessWidget {
+class _VersionFooter extends StatefulWidget {
   final bool isArabic;
   const _VersionFooter({required this.isArabic});
+
+  @override
+  State<_VersionFooter> createState() => _VersionFooterState();
+}
+
+class _VersionFooterState extends State<_VersionFooter> {
+  int _tapCount = 0;
+  DateTime? _lastTap;
+
+  void _onVersionTap() {
+    final now = DateTime.now();
+    if (_lastTap == null || now.difference(_lastTap!) > const Duration(seconds: 2)) {
+      _tapCount = 0;
+    }
+    _lastTap = now;
+    _tapCount++;
+    if (_tapCount >= 5) {
+      _tapCount = 0;
+      context.push(AppRoutes.adminLogin);
+    }
+  }
 
   @override
   Widget build(BuildContext context) => Column(
@@ -1002,9 +1023,12 @@ class _VersionFooter extends StatelessWidget {
         ),
       ),
       const SizedBox(height: 4),
-      Text(
-        'v1.0.0 • ${isArabic ? 'تسوق ملكي في الخليج' : 'Royal Shopping in the Gulf'}',
-        style: AppTextStyles.caption.copyWith(color: AppColors.textDisabled),
+      GestureDetector(
+        onTap: _onVersionTap,
+        child: Text(
+          'v1.0.0 • ${widget.isArabic ? 'تسوق ملكي في الخليج' : 'Royal Shopping in the Gulf'}',
+          style: AppTextStyles.caption.copyWith(color: AppColors.textDisabled),
+        ),
       ),
     ],
   );

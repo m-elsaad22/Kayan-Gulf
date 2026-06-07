@@ -132,6 +132,13 @@ import '../shared/screens/quick_switch_screen.dart';
 import '../shared/screens/fullscreen_gallery_screen.dart';
 import '../shared/widgets/no_internet_widget.dart';
 import '../shared/widgets/welcome_offer_screen.dart';
+import '../features/admin/presentation/screens/admin_login_screen.dart';
+import '../features/admin/presentation/screens/admin_dashboard_screen.dart';
+import '../features/admin/presentation/screens/admin_products_screen.dart';
+import '../features/admin/presentation/screens/admin_categories_screen.dart';
+import '../features/admin/presentation/screens/admin_services_screen.dart';
+import '../features/admin/presentation/screens/admin_ads_screen.dart';
+import '../features/admin/presentation/screens/admin_settings_screen.dart';
 // Chat
 import '../features/chat/presentation/screens/conversations_screen.dart';
 import '../features/chat/presentation/screens/chat_screen.dart';
@@ -249,6 +256,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         '/quick-switch',
         '/gallery',
         '/welcome-offer',
+        '/admin/',
       ];
       final isPublic = publicPrefixes.any((p) => location.startsWith(p));
       if (isPublic) {
@@ -1446,6 +1454,59 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildSlidePage(
           key:   state.pageKey,
           child: const WelcomeOfferScreen(),
+        ),
+      ),
+
+      // ════════════════════════════════════════════════════
+      // ADMIN PANEL
+      // ════════════════════════════════════════════════════
+      GoRoute(
+        path: AppRoutes.adminLogin,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdminLoginScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminDashboard,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdminDashboardScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminProducts,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdminProductsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminCategories,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdminCategoriesScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminServices,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdminServicesScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminAds,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdminAdsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminSettings,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdminSettingsScreen(),
         ),
       ),
       GoRoute(

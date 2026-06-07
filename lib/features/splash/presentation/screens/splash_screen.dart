@@ -12,7 +12,6 @@
 //         metallic shimmer sweep, subtle particle dots
 // ============================================================
 
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -140,8 +139,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   // ──────────────────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
-
     return Scaffold(
       backgroundColor: AppColors.bgScaffold,
       body: Stack(
@@ -152,9 +149,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
               gradient: AppGradients.splash,
             ),
           ),
-
-          // ── Decorative particles ─────────────────────────
-          ...List.generate(12, (i) => _ParticleDot(index: i, size: size)),
 
           // ── Blue glow behind logo ────────────────────────
           Center(
@@ -184,14 +178,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                   opacity: _logoFade,
                   child: ScaleTransition(
                     scale: _logoScale,
-                    child: Column(
-                      children: [
-                        // ── K Lettermark ──────────────────
-                        _KayanLogoMark(shimmer: _shimmerAnim),
-                        const SizedBox(height: 24),
-                        // ── KAYAN Wordmark ─────────────────
-                        _KayanWordmark(shimmer: _shimmerAnim),
-                      ],
+                    child: Image.asset(
+                      'assets/images/kayan_logo.png',
+                      width: 200,
+                      height: 200,
+                      fit: BoxFit.contain,
                     ),
                   ),
                 ),
@@ -276,196 +267,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-// ──────────────────────────────────────────────────────────────
-// K LETTERMARK
-// ──────────────────────────────────────────────────────────────
-class _KayanLogoMark extends StatelessWidget {
-  final Animation<double> shimmer;
-  const _KayanLogoMark({required this.shimmer});
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: shimmer,
-      builder: (_, __) {
-        return Container(
-          width:  90,
-          height: 90,
-          decoration: BoxDecoration(
-            gradient:     AppGradients.primaryButton,
-            borderRadius: BorderRadius.circular(24),
-            border:       Border.all(
-              color: AppColors.borderGold,
-              width: 1.5,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color:      AppColors.royalBlue.withOpacity(0.4),
-                blurRadius: 30,
-                spreadRadius: 0,
-                offset:     const Offset(0, 8),
-              ),
-              BoxShadow(
-                color:      AppColors.metallicGold.withOpacity(
-                    0.15 * shimmer.value,
-                ),
-                blurRadius: 40,
-                spreadRadius: 4,
-              ),
-            ],
-          ),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              // Gold shimmer overlay during animation
-              if (shimmer.value > 0)
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(22),
-                  child: Opacity(
-                    opacity: shimmer.value * 0.3,
-                    child: ShaderMask(
-                      shaderCallback: (bounds) {
-                        return LinearGradient(
-                          begin: Alignment(-1.5 + shimmer.value * 3, 0),
-                          end:   Alignment(shimmer.value * 3, 0),
-                          colors: const [
-                            Colors.transparent,
-                            Colors.white,
-                            Colors.transparent,
-                          ],
-                        ).createShader(bounds);
-                      },
-                      child: Container(color: Colors.white),
-                    ),
-                  ),
-                ),
-              // K Letter
-              const Text(
-                'K',
-                style: TextStyle(
-                  fontFamily:  'Inter',
-                  fontSize:    48,
-                  fontWeight:  FontWeight.w800,
-                  color:       Colors.white,
-                  height:      1.0,
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
-
-// ──────────────────────────────────────────────────────────────
-// KAYAN WORDMARK — Gold shimmer text
-// ──────────────────────────────────────────────────────────────
-class _KayanWordmark extends StatelessWidget {
-  final Animation<double> shimmer;
-  const _KayanWordmark({required this.shimmer});
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: shimmer,
-      builder: (_, __) {
-        return ShaderMask(
-          shaderCallback: (bounds) {
-            final sweep = shimmer.value;
-            return LinearGradient(
-              begin: Alignment(-2 + sweep * 4, 0),
-              end:   Alignment(-1 + sweep * 4, 0),
-              colors: const [
-                AppColors.metallicGold,
-                AppColors.goldLight,
-                AppColors.luxuryGold,
-                AppColors.metallicGold,
-              ],
-              stops: const [0.0, 0.35, 0.65, 1.0],
-            ).createShader(bounds);
-          },
-          child: Text(
-            'KAYAN',
-            style: AppTextStyles.logoText.copyWith(
-              fontSize:    36,
-              letterSpacing: 10,
-              foreground: Paint()
-                ..color = AppColors.metallicGold,
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
-// ──────────────────────────────────────────────────────────────
-// DECORATIVE PARTICLE DOT
-// ──────────────────────────────────────────────────────────────
-class _ParticleDot extends StatefulWidget {
-  final int   index;
-  final Size  size;
-  const _ParticleDot({required this.index, required this.size});
-
-  @override
-  State<_ParticleDot> createState() => _ParticleDotState();
-}
-
-class _ParticleDotState extends State<_ParticleDot>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _ctrl;
-  late final double _x, _y, _dotSize;
-  late final Duration _delay;
-
-  @override
-  void initState() {
-    super.initState();
-    final rng = math.Random(widget.index * 37);
-    _x       = rng.nextDouble() * widget.size.width;
-    _y       = rng.nextDouble() * widget.size.height;
-    _dotSize = 1.5 + rng.nextDouble() * 2.5;
-    _delay   = Duration(milliseconds: rng.nextInt(1500));
-
-    _ctrl = AnimationController(
-      vsync:    this,
-      duration: Duration(milliseconds: 1500 + rng.nextInt(1000)),
-    )..repeat(reverse: true);
-
-    Future.delayed(_delay, () {
-      if (mounted) _ctrl.forward();
-    });
-  }
-
-  @override
-  void dispose() {
-    _ctrl.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      left: _x,
-      top:  _y,
-      child: AnimatedBuilder(
-        animation: _ctrl,
-        builder: (_, __) => Opacity(
-          opacity: 0.1 + _ctrl.value * 0.25,
-          child: Container(
-            width:  _dotSize,
-            height: _dotSize,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppColors.metallicGold,
-            ),
-          ),
-        ),
       ),
     );
   }

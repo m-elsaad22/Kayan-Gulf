@@ -237,6 +237,18 @@ abstract final class AppRoutes {
   static const String welcomeOffer = '/welcome-offer';
 
   // ──────────────────────────────────────────────────────────
+  // 🛡️ ADMIN (hidden)
+  // ──────────────────────────────────────────────────────────
+
+  static const String adminLogin = '/admin/login';
+  static const String adminDashboard = '/admin/dashboard';
+  static const String adminProducts = '/admin/products';
+  static const String adminCategories = '/admin/categories';
+  static const String adminServices = '/admin/services';
+  static const String adminAds = '/admin/ads';
+  static const String adminSettings = '/admin/settings';
+
+  // ──────────────────────────────────────────────────────────
   // 🔗 Relative path constants (used in GoRoute `path:`)
   //
   // These are exposed so router can reference them without
