@@ -134,13 +134,33 @@ abstract final class AppRoutes {
   static const String adsList   = '/classifieds/browse';
   static const String postAd    = '/classifieds/post';
   static const String myAds     = '/classifieds/my-ads';
-  // adDetail, editAd, boostAd → helpers
+  static const String searchAds = '/classifieds/search';
+  static const String adFilters = '/classifieds/filters';
+  static const String featuredAds = '/classifieds/featured';
+  static const String savedAds  = '/classifieds/saved';
+  static const String recentViews = '/classifieds/recent-views';
+  static const String classifiedsNotifications = '/classifieds/notifications';
+  static const String pendingAds = '/classifieds/my-ads/pending';
+  static const String rejectedAds = '/classifieds/my-ads/rejected';
+  // adDetail, editAd, boostAd, seller, report, similar, stats → helpers
 
   static const String _adSlug   = ':adSlug';
   static const String _postAd   = 'post';
   static const String _editAdId = 'edit/:adId';
   static const String _boostId  = 'boost/:adId';
   static const String _myAds    = 'my-ads';
+  static const String _searchAds = 'search';
+  static const String _adFilters = 'filters';
+  static const String _featuredAds = 'featured';
+  static const String _savedAds = 'saved';
+  static const String _recentViews = 'recent-views';
+  static const String _classifiedsNotif = 'notifications';
+  static const String _pendingAds = 'my-ads/pending';
+  static const String _rejectedAds = 'my-ads/rejected';
+  static const String _adStatsId = 'my-ads/stats/:adId';
+  static const String _sellerId = 'seller/:sellerId';
+  static const String _reportAdSlug = 'report/:adSlug';
+  static const String _similarAdSlug = 'similar/:adSlug';
 
   // ──────────────────────────────────────────────────────────
   // 💬 CHAT (global)
@@ -212,6 +232,9 @@ abstract final class AppRoutes {
   static const String notFound    = '/404';
   static const String noInternet  = '/no-internet';
   static const String maintenance = '/maintenance';
+  static const String quickSwitch = '/quick-switch';
+  static const String fullscreenGallery = '/gallery';
+  static const String welcomeOffer = '/welcome-offer';
 
   // ──────────────────────────────────────────────────────────
   // 🔗 Relative path constants (used in GoRoute `path:`)
@@ -244,6 +267,18 @@ abstract final class AppRoutes {
   static const String $editAdId         = _editAdId;
   static const String $boostId          = _boostId;
   static const String $myAds            = _myAds;
+  static const String $searchAds        = _searchAds;
+  static const String $adFilters        = _adFilters;
+  static const String $featuredAds      = _featuredAds;
+  static const String $savedAds         = _savedAds;
+  static const String $recentViews      = _recentViews;
+  static const String $classifiedsNotif = _classifiedsNotif;
+  static const String $pendingAds       = _pendingAds;
+  static const String $rejectedAds      = _rejectedAds;
+  static const String $adStatsId        = _adStatsId;
+  static const String $sellerId         = _sellerId;
+  static const String $reportAdSlug     = _reportAdSlug;
+  static const String $similarAdSlug    = _similarAdSlug;
 
   // Profile relative paths
   static const String $editProfile      = _editProfile;
@@ -283,6 +318,11 @@ abstract final class AppRoutes {
   static String adPath(String slug)         => '/classifieds/$slug';
   static String editAdPath(String id)       => '/classifieds/edit/$id';
   static String boostAdPath(String id)      => '/classifieds/boost/$id';
+  static String sellerPath(String sellerId) => '/classifieds/seller/$sellerId';
+  static String reportAdPath(String slug)   => '/classifieds/report/$slug';
+  static String similarAdsPath(String slug) => '/classifieds/similar/$slug';
+  static String adStatsPath(String adId)    => '/classifieds/my-ads/stats/$adId';
+  static String galleryPath()               => '/gallery';
 
   // Chat
   static String chatPath(String convId)     => '/chat/$convId';

@@ -115,6 +115,23 @@ import '../features/classifieds/ad_detail/presentation/screens/ad_detail_screen.
 import '../features/classifieds/post_ad/presentation/screens/post_ad_screen.dart';
 import '../features/classifieds/post_ad/presentation/screens/boost_ad_screen.dart';
 import '../features/classifieds/my_ads/presentation/screens/my_ads_screen.dart';
+import '../features/classifieds/browse/presentation/screens/search_ads_screen.dart';
+import '../features/classifieds/browse/presentation/screens/ad_filters_screen.dart';
+import '../features/classifieds/browse/presentation/screens/featured_ads_screen.dart';
+import '../features/classifieds/ad_detail/presentation/screens/seller_info_screen.dart';
+import '../features/classifieds/ad_detail/presentation/screens/report_ad_screen.dart';
+import '../features/classifieds/ad_detail/presentation/screens/similar_ads_screen.dart';
+import '../features/classifieds/my_ads/presentation/screens/ad_stats_screen.dart';
+import '../features/classifieds/my_ads/presentation/screens/pending_ads_screen.dart';
+import '../features/classifieds/my_ads/presentation/screens/rejected_ads_screen.dart';
+import '../features/classifieds/my_ads/presentation/screens/edit_ad_screen.dart';
+import '../features/classifieds/saved_ads/presentation/screens/saved_ads_screen.dart';
+import '../features/classifieds/saved_ads/presentation/screens/recent_views_screen.dart';
+import '../features/classifieds/saved_ads/presentation/screens/classifieds_notifications_screen.dart';
+import '../shared/screens/quick_switch_screen.dart';
+import '../shared/screens/fullscreen_gallery_screen.dart';
+import '../shared/widgets/no_internet_widget.dart';
+import '../shared/widgets/welcome_offer_screen.dart';
 // Chat
 import '../features/chat/presentation/screens/conversations_screen.dart';
 import '../features/chat/presentation/screens/chat_screen.dart';
@@ -187,51 +204,73 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     // Called on every navigation event.
     redirect: (context, state) {
       final location          = state.uri.path;
+      final matched           = state.matchedLocation;
       final isAuthenticated   = authState.isAuthenticated;
       final isProfileComplete = authState.isProfileComplete;
       final hasSelectedRegion = LocalStorageService.hasSelectedLanguageRegion;
       final hasSeenOnboarding = LocalStorageService.hasSeenOnboarding;
       final isGuestMode       = LocalStorageService.isGuestMode;
 
+      /// Avoid redirect loops by never re-redirecting to the current route.
+      String? go(String target) {
+        if (matched == target) return null;
+        return target;
+      }
+
       // Always allow splash
       if (location == AppRoutes.splash) return null;
 
-      if (!hasSelectedRegion && location != AppRoutes.languageRegion) {
-        return AppRoutes.languageRegion;
+      // Language / region must be chosen before onboarding or auth
+      if (!hasSelectedRegion) {
+        return go(AppRoutes.languageRegion);
       }
       if (hasSelectedRegion && location == AppRoutes.languageRegion) {
-        return hasSeenOnboarding ? AppRoutes.login : AppRoutes.onboarding;
+        return go(hasSeenOnboarding ? AppRoutes.login : AppRoutes.onboarding);
       }
 
-      // Onboarding guard (first launch)
-      if (!hasSeenOnboarding && location != AppRoutes.onboarding) {
-        return AppRoutes.onboarding;
+      // Onboarding guard (only after language/region is set)
+      if (hasSelectedRegion && !hasSeenOnboarding) {
+        return go(AppRoutes.onboarding);
       }
       if (hasSeenOnboarding && location == AppRoutes.onboarding) {
-        return (isAuthenticated || isGuestMode) ? AppRoutes.dashboard : AppRoutes.login;
+        return go((isAuthenticated || isGuestMode)
+            ? AppRoutes.dashboard
+            : AppRoutes.login);
       }
 
       // Public routes — always allow
-      const publicPrefixes = ['/auth/', '/onboarding', '/language-region', '/404', '/no-internet'];
+      const publicPrefixes = [
+        '/auth/',
+        '/onboarding',
+        '/language-region',
+        '/404',
+        '/no-internet',
+        '/maintenance',
+        '/quick-switch',
+        '/gallery',
+        '/welcome-offer',
+      ];
       final isPublic = publicPrefixes.any((p) => location.startsWith(p));
       if (isPublic) {
-        // But if already authenticated, don't show login pages again
         if ((isAuthenticated || isGuestMode) && location.startsWith('/auth/')) {
-          return AppRoutes.dashboard;
+          return go(AppRoutes.dashboard);
         }
         return null;
       }
 
       // Unauthenticated → send to login
-      if (!isAuthenticated && !isGuestMode) return AppRoutes.login;
-
-      // Authenticated but profile incomplete → profile setup
-      if (isAuthenticated && !isGuestMode && !isProfileComplete &&
-          location != AppRoutes.profileSetup) {
-        return AppRoutes.profileSetup;
+      if (!isAuthenticated && !isGuestMode) {
+        return go(AppRoutes.login);
       }
 
-      // All checks passed — allow
+      // Authenticated but profile incomplete → profile setup
+      if (isAuthenticated &&
+          !isGuestMode &&
+          !isProfileComplete &&
+          location != AppRoutes.profileSetup) {
+        return go(AppRoutes.profileSetup);
+      }
+
       return null;
     },
 
@@ -1121,13 +1160,106 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                       child: const MyAdsScreen(),
                     ),
                   ),
+                  // Phase 5 — browse & saved
+                  GoRoute(
+                    path:        AppRoutes.$searchAds,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const SearchAdsScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$adFilters,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const AdFiltersScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$featuredAds,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const FeaturedAdsScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$savedAds,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const SavedAdsScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$recentViews,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const RecentViewsScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$classifiedsNotif,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const ClassifiedsNotificationsScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$pendingAds,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const PendingAdsScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$rejectedAds,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const RejectedAdsScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$adStatsId,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: AdStatsScreen(
+                        adId: state.pathParameters['adId']!,
+                      ),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$sellerId,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: SellerInfoScreen(
+                        sellerId: state.pathParameters['sellerId']!,
+                      ),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$reportAdSlug,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: ReportAdScreen(
+                        adSlug: state.pathParameters['adSlug']!,
+                      ),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$similarAdSlug,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: SimilarAdsScreen(
+                        adSlug: state.pathParameters['adSlug']!,
+                      ),
+                    ),
+                  ),
                   // Edit existing ad
                   GoRoute(
                     path:        AppRoutes.$editAdId,
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
-                      child: PostAdScreen(
-                        editAdId: state.pathParameters['adId'],
+                      child: EditAdScreen(
+                        adId: state.pathParameters['adId']!,
                       ),
                     ),
                   ),
@@ -1302,6 +1434,41 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           child: const _MaintenanceScreen(),
         ),
       ),
+      GoRoute(
+        path:        AppRoutes.quickSwitch,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key:   state.pageKey,
+          child: const QuickSwitchScreen(),
+        ),
+      ),
+      GoRoute(
+        path:        AppRoutes.welcomeOffer,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key:   state.pageKey,
+          child: const WelcomeOfferScreen(),
+        ),
+      ),
+      GoRoute(
+        path:        AppRoutes.fullscreenGallery,
+        pageBuilder: (context, state) {
+          final extra = state.extra;
+          final urls = extra is List<String>
+              ? extra
+              : extra is Map<String, dynamic>
+                  ? (extra['urls'] as List<String>? ?? const [])
+                  : const <String>[];
+          final index = extra is Map<String, dynamic>
+              ? (extra['index'] as int? ?? 0)
+              : 0;
+          return _buildFadePage(
+            key:   state.pageKey,
+            child: FullscreenGalleryScreen(
+              imageUrls: urls,
+              initialIndex: index,
+            ),
+          );
+        },
+      ),
     ],
   );
 });
@@ -1462,25 +1629,9 @@ class _NoInternetScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bgScaffold,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.wifi_off_rounded,
-                size: 80, color: AppColors.textMuted.withOpacity(0.5)),
-            const SizedBox(height: 20),
-            Text('لا يوجد اتصال بالإنترنت',
-                style: AppTextStyles.arabicTitleMedium),
-            const SizedBox(height: 4),
-            Text('Check your connection and try again',
-                style: AppTextStyles.bodySmall),
-            const SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: () => context.go(AppRoutes.home),
-              child: const Text('إعادة المحاولة'),
-            ),
-          ],
-        ),
+      body: NoInternetWidget(
+        isArabic: true,
+        onRetry: () => context.go(AppRoutes.dashboard),
       ),
     );
   }
