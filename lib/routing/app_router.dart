@@ -39,11 +39,19 @@ import '../core/theme/app_text_styles.dart';
 // Splash & Onboarding
 import '../features/splash/presentation/screens/splash_screen.dart';
 import '../features/onboarding/presentation/screens/onboarding_screen.dart';
+import '../features/onboarding/presentation/screens/language_region_screen.dart';
 // Auth
+import '../features/auth/presentation/screens/login_screen.dart';
+import '../features/auth/presentation/screens/signup_screen.dart';
+import '../features/auth/presentation/screens/forgot_password_screen.dart';
+import '../features/auth/presentation/screens/reset_password_screen.dart';
+import '../features/auth/presentation/screens/verification_method_screen.dart';
+import '../features/auth/presentation/screens/email_pin_screen.dart';
 import '../features/auth/presentation/screens/phone_input_screen.dart';
 import '../features/auth/presentation/screens/otp_verification_screen.dart';
 import '../features/auth/presentation/screens/profile_setup_screen.dart';
-// Home
+// Dashboard & Home
+import '../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../features/home/presentation/screens/home_screen.dart';
 // E-commerce
 import '../features/ecommerce/categories/presentation/screens/categories_screen.dart';
@@ -52,6 +60,22 @@ import '../features/ecommerce/product/presentation/screens/product_detail_screen
 import '../features/ecommerce/search/presentation/screens/search_screen.dart';
 import '../features/ecommerce/flash_deals/presentation/screens/flash_deals_screen.dart';
 import '../features/ecommerce/vendors/presentation/screens/vendor_profile_screen.dart';
+import '../features/ecommerce/product/presentation/screens/product_reviews_screen.dart';
+import '../features/ecommerce/product/presentation/screens/product_compare_screen.dart';
+import '../features/ecommerce/product/presentation/screens/best_sellers_screen.dart';
+import '../features/ecommerce/product/presentation/screens/exclusive_offers_screen.dart';
+import '../features/checkout/presentation/screens/select_address_screen.dart';
+import '../features/checkout/presentation/screens/add_address_screen.dart' as checkout_address;
+import '../features/checkout/presentation/screens/payment_method_checkout_screen.dart';
+import '../features/checkout/presentation/screens/add_card_checkout_screen.dart';
+import '../features/checkout/presentation/screens/order_confirmation_screen.dart';
+import '../features/checkout/presentation/screens/cod_details_screen.dart';
+import '../features/checkout/presentation/screens/paypal_payment_screen.dart';
+import '../features/checkout/presentation/screens/digital_wallet_screen.dart';
+import '../features/returns/presentation/screens/return_select_product_screen.dart';
+import '../features/returns/presentation/screens/return_details_screen.dart';
+import '../features/returns/presentation/screens/return_status_screen.dart';
+
 // Cart & Checkout
 import '../features/cart/presentation/screens/cart_screen.dart';
 import '../features/checkout/presentation/screens/checkout_screen.dart';
@@ -60,6 +84,7 @@ import '../features/checkout/presentation/screens/order_success_screen.dart';
 // Orders
 import '../features/orders/presentation/screens/orders_list_screen.dart';
 import '../features/orders/presentation/screens/order_detail_screen.dart';
+import '../features/orders/presentation/screens/order_tracking_screen.dart';
 // Services
 import '../features/services/categories/presentation/screens/services_home_screen.dart';
 import '../features/services/browse/presentation/screens/services_list_screen.dart';
@@ -70,6 +95,19 @@ import '../features/services/booking/presentation/screens/booking_success_screen
 import '../features/services/booking/presentation/screens/my_bookings_screen.dart';
 import '../features/services/booking/presentation/screens/booking_detail_screen.dart';
 import '../features/services/tracking/presentation/screens/live_tracking_screen.dart';
+import '../features/services/browse/presentation/screens/advanced_filters_screen.dart';
+import '../features/services/browse/presentation/screens/service_subcategories_screen.dart';
+import '../features/services/booking/presentation/screens/address_entry_screen.dart';
+import '../features/services/booking/presentation/screens/payment_method_screen.dart';
+import '../features/services/booking/presentation/screens/add_card_screen.dart';
+import '../features/services/booking/presentation/screens/payment_success_screen.dart';
+import '../features/services/booking/presentation/screens/urgent_service_screen.dart';
+import '../features/services/booking/presentation/screens/extra_materials_screen.dart';
+import '../features/services/booking/presentation/screens/technician_arrival_screen.dart';
+import '../features/services/booking/presentation/screens/service_completion_screen.dart';
+import '../features/services/booking/presentation/screens/service_invoice_screen.dart';
+import '../features/services/booking/presentation/screens/service_qr_screen.dart';
+
 // Classifieds
 import '../features/classifieds/browse/presentation/screens/ads_list_screen.dart';
 import '../features/classifieds/browse/presentation/screens/classifieds_home_screen.dart';
@@ -77,6 +115,23 @@ import '../features/classifieds/ad_detail/presentation/screens/ad_detail_screen.
 import '../features/classifieds/post_ad/presentation/screens/post_ad_screen.dart';
 import '../features/classifieds/post_ad/presentation/screens/boost_ad_screen.dart';
 import '../features/classifieds/my_ads/presentation/screens/my_ads_screen.dart';
+import '../features/classifieds/browse/presentation/screens/search_ads_screen.dart';
+import '../features/classifieds/browse/presentation/screens/ad_filters_screen.dart';
+import '../features/classifieds/browse/presentation/screens/featured_ads_screen.dart';
+import '../features/classifieds/ad_detail/presentation/screens/seller_info_screen.dart';
+import '../features/classifieds/ad_detail/presentation/screens/report_ad_screen.dart';
+import '../features/classifieds/ad_detail/presentation/screens/similar_ads_screen.dart';
+import '../features/classifieds/my_ads/presentation/screens/ad_stats_screen.dart';
+import '../features/classifieds/my_ads/presentation/screens/pending_ads_screen.dart';
+import '../features/classifieds/my_ads/presentation/screens/rejected_ads_screen.dart';
+import '../features/classifieds/my_ads/presentation/screens/edit_ad_screen.dart';
+import '../features/classifieds/saved_ads/presentation/screens/saved_ads_screen.dart';
+import '../features/classifieds/saved_ads/presentation/screens/recent_views_screen.dart';
+import '../features/classifieds/saved_ads/presentation/screens/classifieds_notifications_screen.dart';
+import '../shared/screens/quick_switch_screen.dart';
+import '../shared/screens/fullscreen_gallery_screen.dart';
+import '../shared/widgets/no_internet_widget.dart';
+import '../shared/widgets/welcome_offer_screen.dart';
 // Chat
 import '../features/chat/presentation/screens/conversations_screen.dart';
 import '../features/chat/presentation/screens/chat_screen.dart';
@@ -86,6 +141,29 @@ import '../features/profile/presentation/screens/profile_screen.dart';
 import '../features/profile/presentation/screens/edit_profile_screen.dart';
 import '../features/profile/presentation/screens/addresses_screen.dart';
 import '../features/profile/presentation/screens/add_address_screen.dart';
+import '../features/profile/presentation/screens/help_support_screen.dart';
+import '../features/profile/presentation/screens/live_chat_screen.dart';
+import '../features/profile/presentation/screens/rate_app_screen.dart';
+import '../features/profile/presentation/screens/about_kayan_screen.dart';
+import '../features/profile/presentation/screens/security_screen.dart';
+import '../features/profile/presentation/screens/two_fa_setup_screen.dart';
+import '../features/profile/presentation/screens/two_fa_verify_screen.dart';
+import '../features/profile/presentation/screens/connected_devices_screen.dart';
+import '../features/profile/presentation/screens/privacy_policy_screen.dart';
+import '../features/profile/presentation/screens/terms_screen.dart';
+import '../features/profile/presentation/screens/faq_general_screen.dart';
+import '../features/profile/presentation/screens/contact_support_screen.dart';
+import '../features/profile/presentation/screens/loyalty_cards_screen.dart';
+import '../features/profile/presentation/screens/referrals_screen.dart';
+import '../features/profile/presentation/screens/subscriptions_screen.dart';
+import '../features/profile/presentation/screens/manage_subscription_screen.dart';
+import '../features/wallet/presentation/screens/transfer_points_screen.dart';
+import '../features/wallet/presentation/screens/earn_points_screen.dart';
+import '../features/wallet/presentation/screens/redeem_points_screen.dart';
+import '../features/wallet/presentation/screens/withdraw_earnings_screen.dart';
+import '../features/wallet/presentation/screens/earnings_history_screen.dart';
+import '../features/wallet/presentation/screens/payment_receipt_screen.dart';
+
 // Notifications
 import '../features/notifications/presentation/screens/notifications_screen.dart';
 // Wallet
@@ -126,45 +204,73 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     // Called on every navigation event.
     redirect: (context, state) {
       final location          = state.uri.path;
+      final matched           = state.matchedLocation;
       final isAuthenticated   = authState.isAuthenticated;
       final isProfileComplete = authState.isProfileComplete;
+      final hasSelectedRegion = LocalStorageService.hasSelectedLanguageRegion;
       final hasSeenOnboarding = LocalStorageService.hasSeenOnboarding;
+      final isGuestMode       = LocalStorageService.isGuestMode;
+
+      /// Avoid redirect loops by never re-redirecting to the current route.
+      String? go(String target) {
+        if (matched == target) return null;
+        return target;
+      }
 
       // Always allow splash
       if (location == AppRoutes.splash) return null;
 
-      // Onboarding guard (first launch)
-      if (!hasSeenOnboarding && location != AppRoutes.onboarding) {
-        return AppRoutes.onboarding;
+      // Language / region must be chosen before onboarding or auth
+      if (!hasSelectedRegion) {
+        return go(AppRoutes.languageRegion);
+      }
+      if (hasSelectedRegion && location == AppRoutes.languageRegion) {
+        return go(hasSeenOnboarding ? AppRoutes.login : AppRoutes.onboarding);
+      }
+
+      // Onboarding guard (only after language/region is set)
+      if (hasSelectedRegion && !hasSeenOnboarding) {
+        return go(AppRoutes.onboarding);
       }
       if (hasSeenOnboarding && location == AppRoutes.onboarding) {
-        return isAuthenticated ? AppRoutes.home : AppRoutes.phoneInput;
+        return go((isAuthenticated || isGuestMode)
+            ? AppRoutes.dashboard
+            : AppRoutes.login);
       }
 
       // Public routes — always allow
-      const publicPrefixes = ['/auth/', '/onboarding', '/404', '/no-internet'];
+      const publicPrefixes = [
+        '/auth/',
+        '/onboarding',
+        '/language-region',
+        '/404',
+        '/no-internet',
+        '/maintenance',
+        '/quick-switch',
+        '/gallery',
+        '/welcome-offer',
+      ];
       final isPublic = publicPrefixes.any((p) => location.startsWith(p));
       if (isPublic) {
-        // But if already authenticated, don't show login pages again
-        if (isAuthenticated && location.startsWith('/auth/phone')) {
-          return AppRoutes.home;
-        }
-        if (isAuthenticated && location.startsWith('/auth/otp')) {
-          return AppRoutes.home;
+        if ((isAuthenticated || isGuestMode) && location.startsWith('/auth/')) {
+          return go(AppRoutes.dashboard);
         }
         return null;
       }
 
       // Unauthenticated → send to login
-      if (!isAuthenticated) return AppRoutes.phoneInput;
-
-      // Authenticated but profile incomplete → profile setup
-      if (isAuthenticated && !isProfileComplete &&
-          location != AppRoutes.profileSetup) {
-        return AppRoutes.profileSetup;
+      if (!isAuthenticated && !isGuestMode) {
+        return go(AppRoutes.login);
       }
 
-      // All checks passed — allow
+      // Authenticated but profile incomplete → profile setup
+      if (isAuthenticated &&
+          !isGuestMode &&
+          !isProfileComplete &&
+          location != AppRoutes.profileSetup) {
+        return go(AppRoutes.profileSetup);
+      }
+
       return null;
     },
 
@@ -189,6 +295,22 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         ),
       ),
 
+      GoRoute(
+        path:        AppRoutes.languageRegion,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key:   state.pageKey,
+          child: const LanguageRegionScreen(),
+        ),
+      ),
+
+      GoRoute(
+        path:        AppRoutes.dashboard,
+        pageBuilder: (context, state) => _buildFadePage(
+          key:   state.pageKey,
+          child: const DashboardScreen(),
+        ),
+      ),
+
       // ════════════════════════════════════════════════════
       // ONBOARDING
       // ════════════════════════════════════════════════════
@@ -203,6 +325,48 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       // ════════════════════════════════════════════════════
       // AUTH FLOW
       // ════════════════════════════════════════════════════
+      GoRoute(
+        path:        AppRoutes.login,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key:   state.pageKey,
+          child: const LoginScreen(),
+        ),
+      ),
+      GoRoute(
+        path:        AppRoutes.signup,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key:   state.pageKey,
+          child: const SignupScreen(),
+        ),
+      ),
+      GoRoute(
+        path:        AppRoutes.forgotPassword,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key:   state.pageKey,
+          child: const ForgotPasswordScreen(),
+        ),
+      ),
+      GoRoute(
+        path:        AppRoutes.resetPassword,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key:   state.pageKey,
+          child: const ResetPasswordScreen(),
+        ),
+      ),
+      GoRoute(
+        path:        AppRoutes.verificationMethod,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key:   state.pageKey,
+          child: const VerificationMethodScreen(),
+        ),
+      ),
+      GoRoute(
+        path:        AppRoutes.emailPin,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key:   state.pageKey,
+          child: EmailPinScreen(email: state.extra as String? ?? ''),
+        ),
+      ),
       GoRoute(
         path:        AppRoutes.phoneInput,
         pageBuilder: (context, state) => _buildSlidePage(
@@ -324,7 +488,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               return _buildSlidePage(
                 key:   state.pageKey,
                 child: ChatScreen(
-                  conversationId: state.pathParameters['conversationId']!,
+                  convId: state.pathParameters['conversationId']!,
                   adTitle: extra?['adTitle'] as String?,
                   adImage: extra?['adImage'] as String?,
                 ),
@@ -332,6 +496,404 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             },
           ),
         ],
+      ),
+
+
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.helpSupport,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const HelpSupportScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.liveChat,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const LiveChatScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.rateApp,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const RateAppScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.aboutKayan,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AboutKayanScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.profileSecurity,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const SecurityScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.twoFASetup,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const TwoFaSetupScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.twoFAVerify,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const TwoFaVerifyScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.connectedDevices,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ConnectedDevicesScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.profilePrivacy,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const PrivacyPolicyScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.profileTerms,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const TermsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.faqGeneral,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const FaqGeneralScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.contactSupport,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ContactSupportScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.loyaltyCards,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const LoyaltyCardsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.referrals,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ReferralsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.subscriptions,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const SubscriptionsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.manageSubscription,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ManageSubscriptionScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.transferPoints,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const TransferPointsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.earnPoints,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const EarnPointsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.redeemPoints,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const RedeemPointsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.withdrawEarnings,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const WithdrawEarningsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.earningsHistory,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const EarningsHistoryScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.paymentReceipt,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const PaymentReceiptScreen(),
+        ),
+      ),
+
+
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.advancedServiceFilters,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdvancedFiltersScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.serviceSubcategories,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ServiceSubcategoriesScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.serviceAddressEntry,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AddressEntryScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.servicePaymentMethod,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const PaymentMethodScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.serviceAddCard,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AddCardScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.servicePaymentSuccess,
+        pageBuilder: (context, state) => _buildFadePage(
+          key: state.pageKey,
+          child: const PaymentSuccessScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.urgentService,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const UrgentServiceScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.extraMaterials,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ExtraMaterialsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.technicianArrival,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const TechnicianArrivalScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.serviceCompletion,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ServiceCompletionScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.serviceInvoice,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ServiceInvoiceScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.serviceQr,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ServiceQrScreen(),
+        ),
+      ),
+
+
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.productReviews,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ProductReviewsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.productCompare,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ProductCompareScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.bestSellers,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const BestSellersScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.exclusiveOffers,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ExclusiveOffersScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.checkoutSelectAddress,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const SelectAddressScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.checkoutAddAddress,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const checkout_address.CheckoutAddAddressScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.checkoutPaymentMethod,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const PaymentMethodCheckoutScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.checkoutAddCard,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AddCardCheckoutScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.orderConfirmation,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const OrderConfirmationScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.codDetails,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const CodDetailsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.paypalPayment,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const PaypalPaymentScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.digitalWallet,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const DigitalWalletScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.returnSelectProduct,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ReturnSelectProductScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.returnDetails,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ReturnDetailsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.returnStatus,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ReturnStatusScreen(),
+        ),
       ),
 
       // ════════════════════════════════════════════════════
@@ -437,7 +999,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
                       child: VendorProfileScreen(
-                        slug: state.pathParameters['vendorSlug']!,
+                        vendorSlug: state.pathParameters['vendorSlug']!,
                       ),
                     ),
                   ),
@@ -598,13 +1160,106 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                       child: const MyAdsScreen(),
                     ),
                   ),
+                  // Phase 5 — browse & saved
+                  GoRoute(
+                    path:        AppRoutes.$searchAds,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const SearchAdsScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$adFilters,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const AdFiltersScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$featuredAds,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const FeaturedAdsScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$savedAds,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const SavedAdsScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$recentViews,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const RecentViewsScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$classifiedsNotif,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const ClassifiedsNotificationsScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$pendingAds,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const PendingAdsScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$rejectedAds,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const RejectedAdsScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$adStatsId,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: AdStatsScreen(
+                        adId: state.pathParameters['adId']!,
+                      ),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$sellerId,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: SellerInfoScreen(
+                        sellerId: state.pathParameters['sellerId']!,
+                      ),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$reportAdSlug,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: ReportAdScreen(
+                        adSlug: state.pathParameters['adSlug']!,
+                      ),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$similarAdSlug,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: SimilarAdsScreen(
+                        adSlug: state.pathParameters['adSlug']!,
+                      ),
+                    ),
+                  ),
                   // Edit existing ad
                   GoRoute(
                     path:        AppRoutes.$editAdId,
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
-                      child: PostAdScreen(
-                        editAdId: state.pathParameters['adId'],
+                      child: EditAdScreen(
+                        adId: state.pathParameters['adId']!,
                       ),
                     ),
                   ),
@@ -624,7 +1279,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
                       child: AdDetailScreen(
-                        slug: state.pathParameters['adSlug']!,
+                        adSlug: state.pathParameters['adSlug']!,
                       ),
                     ),
                   ),
@@ -778,6 +1433,41 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           key:   state.pageKey,
           child: const _MaintenanceScreen(),
         ),
+      ),
+      GoRoute(
+        path:        AppRoutes.quickSwitch,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key:   state.pageKey,
+          child: const QuickSwitchScreen(),
+        ),
+      ),
+      GoRoute(
+        path:        AppRoutes.welcomeOffer,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key:   state.pageKey,
+          child: const WelcomeOfferScreen(),
+        ),
+      ),
+      GoRoute(
+        path:        AppRoutes.fullscreenGallery,
+        pageBuilder: (context, state) {
+          final extra = state.extra;
+          final urls = extra is List<String>
+              ? extra
+              : extra is Map<String, dynamic>
+                  ? (extra['urls'] as List<String>? ?? const [])
+                  : const <String>[];
+          final index = extra is Map<String, dynamic>
+              ? (extra['index'] as int? ?? 0)
+              : 0;
+          return _buildFadePage(
+            key:   state.pageKey,
+            child: FullscreenGalleryScreen(
+              imageUrls: urls,
+              initialIndex: index,
+            ),
+          );
+        },
       ),
     ],
   );
@@ -939,25 +1629,9 @@ class _NoInternetScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bgScaffold,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.wifi_off_rounded,
-                size: 80, color: AppColors.textMuted.withOpacity(0.5)),
-            const SizedBox(height: 20),
-            Text('لا يوجد اتصال بالإنترنت',
-                style: AppTextStyles.arabicTitleMedium),
-            const SizedBox(height: 4),
-            Text('Check your connection and try again',
-                style: AppTextStyles.bodySmall),
-            const SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: () => context.go(AppRoutes.home),
-              child: const Text('إعادة المحاولة'),
-            ),
-          ],
-        ),
+      body: NoInternetWidget(
+        isArabic: true,
+        onRetry: () => context.go(AppRoutes.dashboard),
       ),
     );
   }

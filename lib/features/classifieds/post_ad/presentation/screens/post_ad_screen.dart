@@ -32,7 +32,8 @@ import '../../../../../shared/providers/locale_provider.dart';
 import '../../../../classifieds/browse/data/models/ad_models.dart';
 
 class PostAdScreen extends ConsumerStatefulWidget {
-  const PostAdScreen({super.key});
+  final String? editAdId;
+  const PostAdScreen({super.key, this.editAdId});
 
   @override
   ConsumerState<PostAdScreen> createState() => _PostAdState();

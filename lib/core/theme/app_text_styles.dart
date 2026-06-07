@@ -350,6 +350,14 @@ abstract class AppTextStyles {
     height: 1.5,
   );
 
+  static const TextStyle arabicHeadlineSmall = TextStyle(
+    fontFamily: _fontArabic,
+    fontSize: 20,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textPrimary,
+    height: 1.5,
+  );
+
   static const TextStyle arabicTitleLarge = TextStyle(
     fontFamily: _fontArabic,
     fontSize: 18,

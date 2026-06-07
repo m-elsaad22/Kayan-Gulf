@@ -231,20 +231,77 @@ class _SDS extends ConsumerState<ServiceDetailScreen> {
               // FAQs
               if (s.faqs.isNotEmpty) ...[
                 _SecHead(ar ? 'أسئلة شائعة' : 'FAQ', ar),
-                Padding(padding: const EdgeInsets.fromLTRB(16, 8, 16, 0), child: Column(children: List.generate(s.faqs.length, (i) {
-                  final faq = s.faqs[i];
-                  final open = _faqOpen == i;
-                  return GestureDetector(onTap: () => setState(() => _faqOpen = open ? -1 : i),
-                    child: Container(margin: const EdgeInsets.only(bottom: 8),
-                      decoration: BoxDecoration(color: AppColors.bgCard, borderRadius: AppBorderRadius.sm, border: Border.all(color: open ? AppColors.borderActive : AppColors.borderSubtle)),
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        Padding(padding: const EdgeInsets.all(12), child: Row(children: [
-                          Expanded(child: Text(ar ? faq.questionAr : faq.questionEn, style: (ar ? AppTextStyles.arabicTitleSmall : AppTextStyles.titleSmall).copyWith(color: open ? AppColors.royalBlue : AppColors.textPrimary))),
-                          Icon(open ? Icons.remove_rounded : Icons.add_rounded, size: 16, color: AppColors.textMuted),
-                        ])),
-                        if (open) Padding(padding: const EdgeInsets.fromLTRB(12, 0, 12, 12), child: Text(ar ? faq.answerAr : faq.answerEn, style: (ar ? AppTextStyles.arabicBodySmall : AppTextStyles.bodySmall).copyWith(color: AppColors.textSecondary, height: 1.5))),
-                      ]));
-                }))),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                  child: Column(
+                    children: List.generate(s.faqs.length, (i) {
+                      final faq = s.faqs[i];
+                      final open = _faqOpen == i;
+                      return GestureDetector(
+                        onTap: () => setState(() => _faqOpen = open ? -1 : i),
+                        child: Container(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          decoration: BoxDecoration(
+                            color: AppColors.bgCard,
+                            borderRadius: AppBorderRadius.sm,
+                            border: Border.all(
+                              color: open
+                                  ? AppColors.borderActive
+                                  : AppColors.borderSubtle,
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        ar ? faq.questionAr : faq.questionEn,
+                                        style: (ar
+                                                ? AppTextStyles.arabicTitleSmall
+                                                : AppTextStyles.titleSmall)
+                                            .copyWith(
+                                          color: open
+                                              ? AppColors.royalBlue
+                                              : AppColors.textPrimary,
+                                        ),
+                                      ),
+                                    ),
+                                    Icon(
+                                      open
+                                          ? Icons.remove_rounded
+                                          : Icons.add_rounded,
+                                      size: 16,
+                                      color: AppColors.textMuted,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              if (open)
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                                  child: Text(
+                                    ar ? faq.answerAr : faq.answerEn,
+                                    style: (ar
+                                            ? AppTextStyles.arabicBodySmall
+                                            : AppTextStyles.bodySmall)
+                                        .copyWith(
+                                      color: AppColors.textSecondary,
+                                      height: 1.5,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
+                ),
               ],
               const SizedBox(height: 100),
             ])),

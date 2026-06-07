@@ -13,6 +13,7 @@ import '../../../../../core/theme/app_border_radius.dart';
 import '../../../../../core/theme/app_spacing.dart';
 import '../../../../../routing/app_routes.dart';
 import '../../../../../shared/providers/locale_provider.dart';
+import '../../../browse/data/models/service_models.dart';
 
 class BookingConfirmationScreen extends ConsumerStatefulWidget {
   final Map<String, dynamic> bookingData;

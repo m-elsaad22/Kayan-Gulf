@@ -111,16 +111,18 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
   void _navigate() {
     final authState = ref.read(authStateProvider);
+    final hasLanguageRegion = LocalStorageService.hasSelectedLanguageRegion;
     final hasOnboarding = LocalStorageService.hasSeenOnboarding;
+    final isGuest = LocalStorageService.isGuestMode;
 
-    if (!hasOnboarding) {
+    if (!hasLanguageRegion) {
+      context.go(AppRoutes.languageRegion);
+    } else if (!hasOnboarding) {
       context.go(AppRoutes.onboarding);
-    } else if (!authState.isAuthenticated) {
-      context.go(AppRoutes.phoneInput);
-    } else if (!authState.isProfileComplete) {
-      context.go(AppRoutes.profileSetup);
+    } else if (authState.isAuthenticated || isGuest) {
+      context.go(AppRoutes.dashboard);
     } else {
-      context.go(AppRoutes.home);
+      context.go(AppRoutes.login);
     }
   }
 

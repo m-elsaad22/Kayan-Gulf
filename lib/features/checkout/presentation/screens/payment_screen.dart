@@ -8,7 +8,8 @@ import '../../../../routing/app_routes.dart';
 import '../../../../shared/providers/locale_provider.dart';
 
 class PaymentScreen extends ConsumerWidget {
-  const PaymentScreen({super.key});
+  final Map<String, dynamic> paymentData;
+  const PaymentScreen({super.key, this.paymentData = const {}});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ar = ref.watch(isArabicProvider);

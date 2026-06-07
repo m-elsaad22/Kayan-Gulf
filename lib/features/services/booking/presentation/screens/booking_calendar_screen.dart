@@ -167,7 +167,6 @@ class _BCS extends ConsumerState<BookingCalendarScreen> {
                     color: sel && !isAdd ? AppColors.royalBlue.withOpacity(0.07) : AppColors.bgCard,
                     borderRadius: AppBorderRadius.sm,
                     border: Border.all(color: sel && !isAdd ? AppColors.borderActiveBold : (isAdd ? AppColors.borderActive : AppColors.borderSubtle), width: sel ? 1.5 : 1),
-                    borderRadius: isAdd ? AppBorderRadius.sm : AppBorderRadius.sm,
                   ),
                   child: Row(children: [
                     if (!isAdd) AnimatedContainer(duration: const Duration(milliseconds: 200),

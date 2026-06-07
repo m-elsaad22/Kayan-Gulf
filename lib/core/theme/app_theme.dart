@@ -13,6 +13,7 @@
 //   Scrollbar, Drawer, ExpansionTile, PageTransitions
 // ============================================================
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -697,8 +698,8 @@ abstract class AppTheme {
     // ──────────────────────────────────────────────────────
     pageTransitionsTheme: const PageTransitionsTheme(
       builders: {
-        TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-        TargetPlatform.iOS:     CupertinoPageTransitionsBuilder(),
+        TargetPlatform.android: const CupertinoPageTransitionsBuilder(),
+        TargetPlatform.iOS:     const CupertinoPageTransitionsBuilder(),
       },
     ),
 

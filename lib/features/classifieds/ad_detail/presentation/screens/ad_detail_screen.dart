@@ -258,16 +258,47 @@ class _GalleryAppBar extends StatelessWidget {
 
       // Thumbnail row
       if (ad.imageUrls.length > 1)
-        Positioned(bottom: 8, left: 12, right: 12, child: SizedBox(height: 52,
-          child: ListView.builder(scrollDirection: Axis.horizontal, itemCount: ad.imageUrls.length,
-            itemBuilder: (_, i) => GestureDetector(
-              onTap: () => galCtrl.animateToPage(i, duration: const Duration(milliseconds: 300), curve: Curves.easeOut),
-              child: AnimatedContainer(duration: const Duration(milliseconds: 200),
-                width: 52, height: 52, margin: const EdgeInsets.only(right: 6),
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: i == galIdx ? AppColors.metallicGold : Colors.white.withOpacity(0.3), width: 2)),
-                child: ClipRRect(borderRadius: BorderRadius.circular(6),
-                  child: CachedNetworkImage(imageUrl: ad.imageUrls[i], fit: BoxFit.cover)))))),
+        Positioned(
+          bottom: 8,
+          left: 12,
+          right: 12,
+          child: SizedBox(
+            height: 52,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: ad.imageUrls.length,
+              itemBuilder: (_, i) => GestureDetector(
+                onTap: () => galCtrl.animateToPage(
+                  i,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOut,
+                ),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  width: 52,
+                  height: 52,
+                  margin: const EdgeInsets.only(right: 6),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: i == galIdx
+                          ? AppColors.metallicGold
+                          : Colors.white.withOpacity(0.3),
+                      width: 2,
+                    ),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
+                    child: CachedNetworkImage(
+                      imageUrl: ad.imageUrls[i],
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
     ])),
   );
 

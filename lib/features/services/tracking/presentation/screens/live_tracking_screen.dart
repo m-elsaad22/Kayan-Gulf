@@ -24,8 +24,7 @@ import '../../../../../core/theme/app_border_radius.dart';
 import '../../../../../core/theme/app_spacing.dart';
 import '../../../../../routing/app_routes.dart';
 import '../../../../../shared/providers/locale_provider.dart';
-import '../../data/models/services_models.dart';
-import '../../presentation/providers/services_providers.dart';
+import '../../../browse/data/models/service_models.dart';
 
 class LiveTrackingScreen extends ConsumerStatefulWidget {
   final String bookingId;
@@ -111,7 +110,10 @@ class _LiveTrackingScreenState extends ConsumerState<LiveTrackingScreen>
   @override
   Widget build(BuildContext context) {
     final isArabic = ref.watch(isArabicProvider);
-    final booking  = ref.watch(bookingDetailProvider(widget.bookingId));
+    final booking  = mockBookings.firstWhere(
+      (b) => b.id == widget.bookingId,
+      orElse: () => mockBookings.first,
+    );
 
     return Scaffold(
       backgroundColor: AppColors.bgScaffold,
@@ -196,13 +198,9 @@ class _LiveTrackingScreenState extends ConsumerState<LiveTrackingScreen>
                     const SizedBox(height: 16),
 
                     // ── Provider card ─────────────────────
-                    booking.when(
-                      loading: () => const SizedBox.shrink(),
-                      error:   (_, __) => const SizedBox.shrink(),
-                      data: (b) => _ProviderTrackCard(
-                        booking:  b,
-                        isArabic: isArabic,
-                      ),
+                    _ProviderTrackCard(
+                      booking:  booking,
+                      isArabic: isArabic,
                     ),
 
                     const SizedBox(height: 16),
@@ -476,7 +474,9 @@ class _MapPainter extends CustomPainter {
       ..strokeCap   = StrokeCap.round
       ..style       = PaintingStyle.stroke;
 
-    final pathMeasure = PathMetric(path, false);
+    final pathMetrics = path.computeMetrics().toList();
+    if (pathMetrics.isEmpty) return;
+    final pathMeasure = pathMetrics.first;
     final routedPath  = pathMeasure.extractPath(
       0, pathMeasure.length * progress);
     canvas.drawPath(routedPath, routePaint);
@@ -526,8 +526,10 @@ class _MapPainter extends CustomPainter {
   }
 
   Offset _getPoint(Path path, double t, double totalLen) {
-    final m = PathMetric(path, false);
-    final pos = m.getTangentForOffset(totalLen * t.clamp(0.001, 0.999));
+    final metrics = path.computeMetrics().toList();
+    if (metrics.isEmpty) return const Offset(40, 300);
+    final metric = metrics.first;
+    final pos = metric.getTangentForOffset(totalLen * t.clamp(0.001, 0.999));
     return pos?.position ?? const Offset(40, 300);
   }
 
@@ -725,7 +727,7 @@ class _ProviderTrackCard extends StatelessWidget {
           gradient: AppGradients.primaryButton),
         child: Center(
           child: Text(
-            booking.providerName.isNotEmpty ? booking.providerName[0] : '?',
+            (booking.technician?.name.isNotEmpty ?? false) ? booking.technician!.name[0] : '?',
             style: const TextStyle(
               fontSize:   18,
               fontWeight: FontWeight.w800,
@@ -737,7 +739,7 @@ class _ProviderTrackCard extends StatelessWidget {
       const SizedBox(width: 10),
       Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
-          Text(booking.providerName,
+          Text(booking.technician?.name ?? (isArabic ? 'الفني' : 'Technician'),
               style: isArabic ? AppTextStyles.arabicTitleSmall : AppTextStyles.titleSmall),
           const SizedBox(width: 6),
           const Icon(Icons.verified_rounded, size: 14, color: AppColors.royalBlue),

@@ -73,7 +73,9 @@ class SettingsScreen extends ConsumerWidget {
                 valueAr: isArabic ? 'العربية' : 'Arabic',
                 valueEn: isArabic ? 'العربية' : 'Arabic',
                 isArabic: isArabic,
-                onTap: () => ref.read(isArabicProvider.notifier).state = !isArabic,
+                onTap: () => isArabic
+                    ? ref.read(localeProvider.notifier).setEnglish()
+                    : ref.read(localeProvider.notifier).setArabic(),
               ),
               _SettingsTile(
                 icon: Icons.currency_exchange_rounded, color: AppColors.categoryGreen,
@@ -165,12 +167,12 @@ class SettingsScreen extends ConsumerWidget {
               _SettingsTile(
                 icon: Icons.policy_outlined, color: AppColors.categoryTeal,
                 labelAr: 'سياسة الخصوصية', labelEn: 'Privacy Policy',
-                isArabic: isArabic, onTap: () => context.push(AppRoutes.privacyPolicy),
+                isArabic: isArabic, onTap: () => context.push(AppRoutes.profilePrivacy),
               ),
               _SettingsTile(
                 icon: Icons.description_outlined, color: AppColors.textSecondary,
                 labelAr: 'الشروط والأحكام', labelEn: 'Terms of Service',
-                isArabic: isArabic, onTap: () => context.push(AppRoutes.termsOfService),
+                isArabic: isArabic, onTap: () => context.push(AppRoutes.profileTerms),
               ),
             ],
           ),
