@@ -5,6 +5,7 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/models/product_models.dart';
+import '../../../../../core/services/admin_data_service.dart';
 import '../../../../../features/home/data/models/home_models.dart';
 
 // ──────────────────────────────────────────────────────────────
@@ -126,19 +127,25 @@ final productListProvider =
 });
 
 List<ProductCardModel> _mockProducts(ProductFilter f) {
-  final all = List.generate(24, (i) => ProductCardModel(
-    id:            'p$i',
-    slug:          'product-$i',
-    nameAr:        _arabicNames[i % _arabicNames.length],
-    nameEn:        'Product ${i + 1}',
-    price:         (100 + i * 45).toDouble(),
-    originalPrice: i % 3 == 0 ? (150 + i * 45).toDouble() : null,
-    imageUrl:      'https://picsum.photos/300/300?random=${i + 60}',
-    rating:        3.5 + (i % 5) * 0.3,
-    reviewCount:   20 + i * 7,
-    isFeatured:    i % 5 == 0,
-    stock:         i % 7 == 0 ? 0 : 10 + i,
-  ));
+  final adminProducts = AdminDataService.instance.getProducts();
+  final all = adminProducts
+      .where((p) => p.isActive)
+      .map(
+        (p) => ProductCardModel(
+          id: p.id,
+          slug: p.id,
+          nameAr: p.titleAr,
+          nameEn: p.titleEn,
+          price: p.salePrice,
+          originalPrice: p.originalPrice > p.salePrice ? p.originalPrice : null,
+          imageUrl: p.imageUrl,
+          rating: p.rating,
+          reviewCount: 20 + p.id.hashCode.abs() % 200,
+          isFeatured: p.isFeatured,
+          stock: 10 + p.id.hashCode.abs() % 50,
+        ),
+      )
+      .toList();
 
   var filtered = all.where((p) {
     if (f.minPrice != null && p.price < f.minPrice!) return false;
@@ -146,6 +153,13 @@ List<ProductCardModel> _mockProducts(ProductFilter f) {
     if (f.inStockOnly && p.isOutOfStock) return false;
     if (f.onSaleOnly && p.originalPrice == null) return false;
     if (f.minRating != null && p.rating < f.minRating!) return false;
+    if (f.categorySlug != null && f.categorySlug!.isNotEmpty) {
+      final product = adminProducts.firstWhere(
+        (ap) => ap.id == p.id,
+        orElse: () => adminProducts.first,
+      );
+      if (product.categoryId != f.categorySlug) return false;
+    }
     if (f.search != null && f.search!.isNotEmpty) {
       final q = f.search!.toLowerCase();
       if (!p.nameAr.contains(q) && !p.nameEn.toLowerCase().contains(q)) {
@@ -189,10 +203,59 @@ const _arabicNames = [
 final productDetailProvider = FutureProvider.autoDispose
     .family<ProductDetailModel, String>((ref, slug) async {
   await Future.delayed(const Duration(milliseconds: 700));
-  return _mockProductDetail(slug);
+  return _productDetailFromAdmin(slug);
 });
 
-ProductDetailModel _mockProductDetail(String slug) => ProductDetailModel(
+ProductDetailModel _productDetailFromAdmin(String slug) {
+  final products = AdminDataService.instance.getProducts();
+  final match = products.where((p) => p.id == slug).firstOrNull;
+  if (match != null) {
+    final reviewCount = 20 + match.id.hashCode.abs() % 200;
+    return ProductDetailModel(
+      id: match.id,
+      slug: match.id,
+      nameAr: match.titleAr,
+      nameEn: match.titleEn,
+      descriptionAr: match.descriptionAr,
+      descriptionEn: match.titleEn,
+      price: match.salePrice,
+      compareAtPrice:
+          match.originalPrice > match.salePrice ? match.originalPrice : null,
+      currency: 'SAR',
+      stock: 10 + match.id.hashCode.abs() % 50,
+      isFeatured: match.isFeatured,
+      freeShipping: match.salePrice >= 200,
+      deliveryDays: 2,
+      rating: match.rating,
+      totalRatings: reviewCount,
+      ratingSummary: RatingSummary(
+        avgRating: match.rating,
+        totalReviews: reviewCount,
+        breakdown: {
+          5: (reviewCount * 0.7).round(),
+          4: (reviewCount * 0.2).round(),
+          3: (reviewCount * 0.07).round(),
+          2: (reviewCount * 0.02).round(),
+          1: (reviewCount * 0.01).round(),
+        },
+      ),
+      images: [
+        ProductImage(
+          id: '1',
+          url: match.imageUrl,
+          isMain: true,
+          sortOrder: 0,
+        ),
+      ],
+      vendorName: 'متجر كيان',
+      vendorSlug: 'kayan-store',
+      tags: [match.categoryId],
+    );
+  }
+  return _fallbackProductDetail(slug);
+}
+
+ProductDetailModel _fallbackProductDetail(String slug) => ProductDetailModel(
   id:            'detail-$slug',
   slug:          slug,
   nameAr:        'سماعات سوني WH-1000XM5 اللاسلكية بإلغاء الضوضاء',

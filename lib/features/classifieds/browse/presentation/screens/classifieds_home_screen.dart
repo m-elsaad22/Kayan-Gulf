@@ -25,12 +25,13 @@ import '../../../../../core/theme/app_spacing.dart';
 import '../../../../../routing/app_routes.dart';
 import '../../../../../shared/providers/locale_provider.dart';
 import '../../../../../shared/widgets/loaders/shimmer_loader.dart';
+import '../../../../../core/services/admin_data_service.dart';
 import '../../data/models/ad_models.dart';
 
 final _classifiedsProvider = FutureProvider.autoDispose<List<AdModel>>(
   (ref) async {
     await Future.delayed(const Duration(milliseconds: 400));
-    return mockAds;
+    return AdminDataService.instance.getClassifiedAds();
   },
 );
 

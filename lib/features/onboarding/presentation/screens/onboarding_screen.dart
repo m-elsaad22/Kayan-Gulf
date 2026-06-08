@@ -233,6 +233,13 @@ class _OnboardPageView extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Image.asset(
+                'assets/images/kayan_logo.png',
+                width: 96,
+                height: 96,
+                fit: BoxFit.contain,
+              ),
+              const SizedBox(height: 24),
               // Emoji icon in gold circle
               Container(
                 width: 120, height: 120,

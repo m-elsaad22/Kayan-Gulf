@@ -20,7 +20,7 @@ def hasReleaseSigning = localProperties.getProperty("storeFile") &&
 android {
     namespace "sa.kayan.app"
     compileSdk 35
-    ndkVersion "26.3.11579264"
+    ndkVersion "28.2.13676358"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
@@ -28,7 +28,7 @@ android {
         coreLibraryDesugaringEnabled true
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = '17'
     }
 
     sourceSets {
@@ -37,7 +37,7 @@ android {
 
     defaultConfig {
         applicationId "sa.kayan.app"
-        minSdk 23
+        minSdkVersion flutter.minSdkVersion
         targetSdk 35
         versionCode localProperties.getProperty("flutter.versionCode")?.toInteger() ?: 1
         versionName localProperties.getProperty("flutter.versionName") ?: "1.0.0"

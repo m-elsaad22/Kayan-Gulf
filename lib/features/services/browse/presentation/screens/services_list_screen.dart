@@ -14,20 +14,13 @@ import '../../../../../core/theme/app_spacing.dart';
 import '../../../../../routing/app_routes.dart';
 import '../../../../../shared/providers/locale_provider.dart';
 import '../../../../../shared/widgets/loaders/shimmer_loader.dart';
+import '../../../../../core/services/admin_data_service.dart';
 import '../../data/models/service_models.dart';
 
 final servicesListProvider = FutureProvider.autoDispose
     .family<List<ServiceDetailModel>, String?>((ref, categoryId) async {
   await Future.delayed(const Duration(milliseconds: 300));
-  final services = mockServiceCategories
-      .map((category) => mockServiceDetail(category.slug))
-      .toList();
-
-  if (categoryId == null || categoryId.isEmpty) return services;
-  return services
-      .where((service) =>
-          service.slug == categoryId || service.categorySlug == categoryId)
-      .toList();
+  return AdminDataService.instance.getServiceDetails(categorySlug: categoryId);
 });
 
 class ServicesListScreen extends ConsumerWidget {
