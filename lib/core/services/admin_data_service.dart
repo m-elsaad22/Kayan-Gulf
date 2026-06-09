@@ -1,6 +1,7 @@
 // TODO: connect to real backend
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/mock/mock_products.dart';
@@ -106,6 +107,7 @@ class AdminAdItem {
 
 class AdminSettings {
   final String appName;
+  final String logoUrl;
   final List<String> bannerUrls;
   final List<String> featuredProductIds;
   final String welcomeOfferText;
@@ -115,6 +117,7 @@ class AdminSettings {
 
   const AdminSettings({
     this.appName = 'كيان KAYAN',
+    this.logoUrl = 'assets/images/kayan_logo.png',
     this.bannerUrls = const [],
     this.featuredProductIds = const [],
     this.welcomeOfferText = 'خصم 15% على أول طلب',
@@ -125,6 +128,7 @@ class AdminSettings {
 
   Map<String, dynamic> toJson() => {
         'appName': appName,
+        'logoUrl': logoUrl,
         'bannerUrls': bannerUrls,
         'featuredProductIds': featuredProductIds,
         'welcomeOfferText': welcomeOfferText,
@@ -135,6 +139,7 @@ class AdminSettings {
 
   factory AdminSettings.fromJson(Map<String, dynamic> j) => AdminSettings(
         appName: j['appName'] as String? ?? 'كيان KAYAN',
+        logoUrl: j['logoUrl'] as String? ?? 'assets/images/kayan_logo.png',
         bannerUrls: (j['bannerUrls'] as List<dynamic>?)
                 ?.map((e) => e as String)
                 .toList() ??
@@ -152,6 +157,7 @@ class AdminSettings {
 
   AdminSettings copyWith({
     String? appName,
+    String? logoUrl,
     List<String>? bannerUrls,
     List<String>? featuredProductIds,
     String? welcomeOfferText,
@@ -161,12 +167,65 @@ class AdminSettings {
   }) =>
       AdminSettings(
         appName: appName ?? this.appName,
+        logoUrl: logoUrl ?? this.logoUrl,
         bannerUrls: bannerUrls ?? this.bannerUrls,
         featuredProductIds: featuredProductIds ?? this.featuredProductIds,
         welcomeOfferText: welcomeOfferText ?? this.welcomeOfferText,
         welcomeOfferCode: welcomeOfferCode ?? this.welcomeOfferCode,
         contactPhone: contactPhone ?? this.contactPhone,
         contactEmail: contactEmail ?? this.contactEmail,
+      );
+}
+
+class AdminThemeColors {
+  final String primaryHex;
+  final String accentHex;
+  final String goldHex;
+  final String turquoiseHex;
+
+  const AdminThemeColors({
+    this.primaryHex = '#0A2B5E',
+    this.accentHex = '#0033A0',
+    this.goldHex = '#F4D03F',
+    this.turquoiseHex = '#00A8A8',
+  });
+
+  Map<String, dynamic> toJson() => {
+        'primaryHex': primaryHex,
+        'accentHex': accentHex,
+        'goldHex': goldHex,
+        'turquoiseHex': turquoiseHex,
+      };
+
+  factory AdminThemeColors.fromJson(Map<String, dynamic> j) => AdminThemeColors(
+        primaryHex: j['primaryHex'] as String? ?? '#0A2B5E',
+        accentHex: j['accentHex'] as String? ?? '#0033A0',
+        goldHex: j['goldHex'] as String? ?? '#F4D03F',
+        turquoiseHex: j['turquoiseHex'] as String? ?? '#00A8A8',
+      );
+}
+
+class AdminFontSettings {
+  final double titleScale;
+  final double bodyScale;
+  final double captionScale;
+
+  const AdminFontSettings({
+    this.titleScale = 1.0,
+    this.bodyScale = 1.0,
+    this.captionScale = 1.0,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'titleScale': titleScale,
+        'bodyScale': bodyScale,
+        'captionScale': captionScale,
+      };
+
+  factory AdminFontSettings.fromJson(Map<String, dynamic> j) => AdminFontSettings(
+        titleScale: (j['titleScale'] as num?)?.toDouble() ?? 1.0,
+        bodyScale: (j['bodyScale'] as num?)?.toDouble() ?? 1.0,
+        captionScale: (j['captionScale'] as num?)?.toDouble() ?? 1.0,
       );
 }
 
@@ -179,6 +238,9 @@ class AdminDataService {
   static const _kServices = 'admin_services_v1';
   static const _kAds = 'admin_ads_v1';
   static const _kSettings = 'admin_settings_v1';
+  static const _kThemeColors = 'admin_theme_colors_v1';
+  static const _kFontSettings = 'admin_font_settings_v1';
+  static const _kScreenVisibility = 'admin_screen_visibility_v1';
   static const _kLoggedIn = 'admin_logged_in_v1';
 
   SharedPreferences? _prefs;
@@ -187,9 +249,15 @@ class AdminDataService {
   List<AdminServiceItem>? _services;
   List<AdminAdItem>? _ads;
   AdminSettings? _settings;
+  AdminThemeColors? _themeColors;
+  AdminFontSettings? _fontSettings;
+  Map<String, bool>? _screenVisibility;
   bool _loggedIn = false;
+  int _revision = 0;
+  final ValueNotifier<int> revisionNotifier = ValueNotifier<int>(0);
 
   bool get isAdminLoggedIn => _loggedIn;
+  int get revision => _revision;
 
   Future<void> initialize() async {
     _prefs = await SharedPreferences.getInstance();
@@ -226,6 +294,27 @@ class AdminDataService {
             featuredProductIds:
                 mockProducts.take(5).map((p) => p.id).toList(),
           );
+    final colorsRaw = _prefs?.getString(_kThemeColors);
+    _themeColors = colorsRaw != null
+        ? AdminThemeColors.fromJson(
+            jsonDecode(colorsRaw) as Map<String, dynamic>,
+          )
+        : const AdminThemeColors();
+    final fontsRaw = _prefs?.getString(_kFontSettings);
+    _fontSettings = fontsRaw != null
+        ? AdminFontSettings.fromJson(
+            jsonDecode(fontsRaw) as Map<String, dynamic>,
+          )
+        : const AdminFontSettings();
+    final visRaw = _prefs?.getString(_kScreenVisibility);
+    _screenVisibility = visRaw != null
+        ? Map<String, bool>.from(jsonDecode(visRaw) as Map)
+        : <String, bool>{};
+  }
+
+  void _bumpRevision() {
+    _revision++;
+    revisionNotifier.value = _revision;
   }
 
   List<T> _readList<T>(
@@ -262,6 +351,48 @@ class AdminDataService {
   List<AdminAdItem> getAds() => List<AdminAdItem>.from(_ads ?? _defaultAds());
 
   AdminSettings getSettings() => _settings ?? const AdminSettings();
+
+  AdminThemeColors getThemeColors() =>
+      _themeColors ?? const AdminThemeColors();
+
+  AdminFontSettings getFontSettings() =>
+      _fontSettings ?? const AdminFontSettings();
+
+  bool isScreenVisible(String routeKey) =>
+      _screenVisibility?[routeKey] ?? true;
+
+  Future<void> saveThemeColors(AdminThemeColors colors) async {
+    _themeColors = colors;
+    await _prefs?.setString(_kThemeColors, jsonEncode(colors.toJson()));
+    _bumpRevision();
+  }
+
+  Future<void> saveFontSettings(AdminFontSettings fonts) async {
+    _fontSettings = fonts;
+    await _prefs?.setString(_kFontSettings, jsonEncode(fonts.toJson()));
+    _bumpRevision();
+  }
+
+  Future<void> saveScreenVisibility(Map<String, bool> visibility) async {
+    _screenVisibility = Map<String, bool>.from(visibility);
+    await _prefs?.setString(_kScreenVisibility, jsonEncode(visibility));
+    _bumpRevision();
+  }
+
+  Future<void> saveBanners(List<String> urls) async {
+    final s = getSettings().copyWith(bannerUrls: urls);
+    await saveSettings(s);
+    _bumpRevision();
+  }
+
+  List<String> getBannerUrls() => getSettings().bannerUrls;
+
+  String getAppName() => getSettings().appName;
+
+  String getLogoPath() {
+    final url = getSettings().logoUrl;
+    return url.startsWith('http') ? url : url;
+  }
 
   Future<bool> login(String username, String password) async {
     if (username == 'admin' && password == 'kayan@admin') {
@@ -329,6 +460,7 @@ class AdminDataService {
   Future<void> saveSettings(AdminSettings settings) async {
     _settings = settings;
     await _prefs?.setString(_kSettings, jsonEncode(settings.toJson()));
+    _bumpRevision();
   }
 
   int get userCount => 1284;

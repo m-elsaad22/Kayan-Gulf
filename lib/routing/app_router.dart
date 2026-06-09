@@ -139,6 +139,34 @@ import '../features/admin/presentation/screens/admin_categories_screen.dart';
 import '../features/admin/presentation/screens/admin_services_screen.dart';
 import '../features/admin/presentation/screens/admin_ads_screen.dart';
 import '../features/admin/presentation/screens/admin_settings_screen.dart';
+import '../features/admin/presentation/screens/admin_banners_screen.dart';
+import '../features/admin/presentation/screens/admin_colors_screen.dart';
+import '../features/admin/presentation/screens/admin_fonts_screen.dart';
+import '../features/admin/presentation/screens/admin_screens_screen.dart';
+import '../features/orders/presentation/screens/unified_orders_screen.dart';
+import '../features/profile/presentation/screens/unified_wishlist_screen.dart';
+import '../features/services/browse/presentation/screens/search_services_screen.dart';
+import '../features/services/booking/presentation/screens/cancel_booking_screen.dart';
+import '../features/services/booking/presentation/screens/reschedule_booking_screen.dart';
+import '../features/services/booking/presentation/screens/report_issue_screen.dart';
+import '../features/services/notifications/presentation/screens/service_notifications_screen.dart';
+import '../features/ecommerce/search/presentation/screens/product_filters_screen.dart';
+import '../features/ecommerce/notifications/presentation/screens/shop_notifications_screen.dart';
+import '../features/classifieds/ad_detail/presentation/screens/contact_seller_screen.dart';
+import '../features/classifieds/post_ad/presentation/screens/post_ad_success_screen.dart';
+import '../features/profile/presentation/screens/change_password_screen.dart';
+import '../features/profile/presentation/screens/delete_account_screen.dart';
+import '../features/wallet/presentation/screens/points_refund_screen.dart';
+import '../shared/screens/call_screen.dart';
+import '../shared/screens/cancel_otp_screen.dart';
+import '../shared/screens/review_reply_screen.dart';
+import '../shared/screens/virtual_tour_screen.dart';
+import '../shared/screens/whats_new_screen.dart';
+import '../shared/screens/app_permissions_screen.dart';
+import '../shared/screens/empty_state_screen.dart';
+import '../shared/screens/advanced_search_results_screen.dart';
+import '../shared/screens/map_location_picker_screen.dart';
+import '../shared/screens/qr_display_screen.dart';
 // Chat
 import '../features/chat/presentation/screens/conversations_screen.dart';
 import '../features/chat/presentation/screens/chat_screen.dart';
@@ -1509,6 +1537,58 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           child: const AdminSettingsScreen(),
         ),
       ),
+      GoRoute(
+        path: AppRoutes.adminBanners,
+        pageBuilder: (c, s) => _buildSlidePage(
+          key: s.pageKey,
+          child: const AdminBannersScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminColors,
+        pageBuilder: (c, s) => _buildSlidePage(
+          key: s.pageKey,
+          child: const AdminColorsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminFonts,
+        pageBuilder: (c, s) => _buildSlidePage(
+          key: s.pageKey,
+          child: const AdminFontsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminScreens,
+        pageBuilder: (c, s) => _buildSlidePage(
+          key: s.pageKey,
+          child: const AdminScreensScreen(),
+        ),
+      ),
+      GoRoute(path: AppRoutes.unifiedOrders, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const UnifiedOrdersScreen())),
+      GoRoute(path: AppRoutes.unifiedWishlist, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const UnifiedWishlistScreen())),
+      GoRoute(path: AppRoutes.searchServices, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const SearchServicesScreen())),
+      GoRoute(path: AppRoutes.cancelBooking, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const CancelBookingScreen())),
+      GoRoute(path: AppRoutes.rescheduleBooking, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const RescheduleBookingScreen())),
+      GoRoute(path: AppRoutes.reportIssue, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const ReportIssueScreen())),
+      GoRoute(path: AppRoutes.serviceNotifications, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const ServiceNotificationsScreen())),
+      GoRoute(path: AppRoutes.shopFilters, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const ProductFiltersScreen())),
+      GoRoute(path: AppRoutes.shopNotifications, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const ShopNotificationsScreen())),
+      GoRoute(path: AppRoutes.contactSeller, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const ContactSellerScreen())),
+      GoRoute(path: AppRoutes.postAdSuccess, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const PostAdSuccessScreen())),
+      GoRoute(path: AppRoutes.whatsNew, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const WhatsNewScreen())),
+      GoRoute(path: AppRoutes.appPermissions, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const AppPermissionsScreen())),
+      GoRoute(path: AppRoutes.emptyState, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const EmptyStateScreen())),
+      GoRoute(path: AppRoutes.advancedSearch, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const AdvancedSearchResultsScreen())),
+      GoRoute(path: AppRoutes.mapPicker, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const MapLocationPickerScreen())),
+      GoRoute(path: AppRoutes.qrDisplay, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const QrDisplayScreen())),
+      GoRoute(path: AppRoutes.callScreen, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const CallScreen())),
+      GoRoute(path: AppRoutes.cancelOtp, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const CancelOtpScreen())),
+      GoRoute(path: AppRoutes.reviewReply, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const ReviewReplyScreen())),
+      GoRoute(path: AppRoutes.virtualTour, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const VirtualTourScreen())),
+      GoRoute(path: AppRoutes.changePassword, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const ChangePasswordScreen())),
+      GoRoute(path: AppRoutes.deleteAccount, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const DeleteAccountScreen())),
+      GoRoute(path: AppRoutes.pointsRefund, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const PointsRefundScreen())),
       GoRoute(
         path:        AppRoutes.fullscreenGallery,
         pageBuilder: (context, state) {

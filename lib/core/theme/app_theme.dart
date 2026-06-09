@@ -17,6 +17,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../services/admin_data_service.dart';
 import 'app_colors.dart';
 import 'app_gradients.dart';
 import 'app_text_styles.dart';
@@ -717,6 +718,34 @@ abstract class AppTheme {
   // 🌕 LIGHT THEME (Optional fallback)
   // ──────────────────────────────────────────────────────────
 
+  static ThemeData lightWithAdmin(AdminThemeColors? colors) {
+    final primary = colors != null
+        ? AppColors.fromHex(colors.primaryHex.replaceFirst('#', ''))
+        : AppColors.royalBlue;
+    final accent = colors != null
+        ? AppColors.fromHex(colors.accentHex.replaceFirst('#', ''))
+        : AppColors.pepsiBlue;
+    return light.copyWith(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: primary,
+        brightness: Brightness.light,
+        primary: primary,
+        secondary: accent,
+      ),
+      primaryColor: primary,
+    );
+  }
+
+  static ThemeData darkWithAdmin(AdminThemeColors? colors) {
+    final primary = colors != null
+        ? AppColors.fromHex(colors.primaryHex.replaceFirst('#', ''))
+        : AppColors.royalBlue;
+    return dark.copyWith(
+      colorScheme: dark.colorScheme.copyWith(primary: primary),
+      primaryColor: primary,
+    );
+  }
+
   static ThemeData get light => ThemeData(
     useMaterial3:       true,
     brightness:         Brightness.light,
@@ -724,10 +753,10 @@ abstract class AppTheme {
       seedColor:  AppColors.royalBlue,
       brightness: Brightness.light,
       primary:    AppColors.royalBlue,
-      secondary:  AppColors.metallicGold,
+      secondary:  AppColors.pepsiBlue,
     ),
-    scaffoldBackgroundColor: const Color(0xFFF0F4FF),
-    canvasColor: Colors.white,
+    scaffoldBackgroundColor: AppColors.lightBg,
+    canvasColor: AppColors.pureWhite,
     fontFamily: GoogleFonts.inter().fontFamily,
     textTheme: AppTextStyles.textTheme.apply(
       bodyColor:    const Color(0xFF1E293B),

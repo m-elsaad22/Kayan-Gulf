@@ -15,17 +15,20 @@ abstract class AppColors {
   // 🔵 CORE BRAND — الألوان الأساسية للبراند
   // ──────────────────────────────────────────────────────────
 
-  /// #0A1F3B — الأزرق الملكي العميق (الخلفية الرئيسية)
+  /// #0A1F3B — الأزرق الملكي العميق (legacy navy)
   static const Color royalNavy = Color(0xFF0A1F3B);
 
-  /// #4169E1 — الأزرق الملكي (الزر الأساسي، العناصر التفاعلية)
-  static const Color royalBlue = Color(0xFF4169E1);
+  /// #0A2B5E — Royal Blue (brand primary — prompt spec)
+  static const Color royalBlue = Color(0xFF0A2B5E);
+
+  /// #4169E1 — Interactive accent blue (buttons, links)
+  static const Color accentBlue = Color(0xFF4169E1);
 
   /// #004B93 — الأزرق العميق (الهيدرات، الرؤوس)
   static const Color deepBlue = Color(0xFF004B93);
 
-  /// #005CB9 — Pepsi Blue for high-trust commerce surfaces.
-  static const Color pepsiBlue = Color(0xFF005CB9);
+  /// #0033A0 — Pepsi Blue (prompt spec)
+  static const Color pepsiBlue = Color(0xFF0033A0);
 
   /// Alias used by legacy feature code; keep centralized in the palette.
   static const Color gold = metallicGold;
@@ -33,8 +36,41 @@ abstract class AppColors {
   /// Neutral premium foreground alias used by legacy feature code.
   static const Color text = textPrimary;
 
-  /// #60A5FA — الأزرق السماوي المعدني (التظليلات، الروابط)
-  static const Color skyBlue = Color(0xFF60A5FA);
+  /// #00B4D8 — Sky Blue (prompt spec)
+  static const Color skyBlue = Color(0xFF00B4D8);
+
+  /// #00A8A8 — Turquoise accent (services)
+  static const Color turquoise = Color(0xFF00A8A8);
+
+  /// #C0C0C0 — Silver metallic
+  static const Color silver = Color(0xFFC0C0C0);
+
+  /// #FFFFFF — Pure white
+  static const Color pureWhite = Color(0xFFFFFFFF);
+
+  // ── Light theme surfaces (prompt spec) ──
+  static const Color lightBg = Color(0xFFFFFFFF);
+  static const Color lightCardBg = Color(0xFFF8F9FA);
+  static const Color lightText = Color(0xFF0A2B5E);
+  static const Color lightSubtext = Color(0xFF6C757D);
+
+  // ── Dark theme surfaces (prompt spec) ──
+  static const Color darkBg = Color(0xFF0A2B5E);
+  static const Color darkCardBg = Color(0xFF1A2A3A);
+  static const Color darkText = Color(0xFFFFFFFF);
+  static const Color darkSubtext = Color(0xFFB3E5FC);
+
+  /// #F4D03F — Light gold (stars, highlights)
+  static const Color lightGold = Color(0xFFF4D03F);
+
+  /// #D4AF37 — Dark gold (premium badges)
+  static const Color darkGold = Color(0xFFD4AF37);
+
+  /// #25D366 — WhatsApp green
+  static const Color whatsappGreen = Color(0xFF25D366);
+
+  /// #2196F3 — Call blue
+  static const Color callBlue = Color(0xFF2196F3);
 
   // ──────────────────────────────────────────────────────────
   // 🌟 METALLIC GOLD PALETTE — لوحة الذهب المعدني
@@ -156,26 +192,26 @@ abstract class AppColors {
   // 🚦 SEMANTIC COLORS — الألوان الدلالية
   // ──────────────────────────────────────────────────────────
 
-  // Success
-  static const Color success      = Color(0xFF10B981);
+  // Success (prompt: #28A745)
+  static const Color success      = Color(0xFF28A745);
   static const Color successLight = Color(0xFF34D399);
   static const Color successDark  = Color(0xFF059669);
   static const Color successBg    = Color(0x1A10B981);
 
-  // Warning
-  static const Color warning      = Color(0xFFF59E0B);
+  // Warning (prompt: #FD7E14)
+  static const Color warning      = Color(0xFFFD7E14);
   static const Color warningLight = Color(0xFFFBBF24);
   static const Color warningDark  = Color(0xFFD97706);
   static const Color warningBg    = Color(0x1AF59E0B);
 
-  // Error
-  static const Color error        = Color(0xFFEF4444);
+  // Error (prompt: #DC3545)
+  static const Color error        = Color(0xFFDC3545);
   static const Color errorLight   = Color(0xFFF87171);
   static const Color errorDark    = Color(0xFFDC2626);
   static const Color errorBg      = Color(0x1AEF4444);
 
-  // Info
-  static const Color info         = Color(0xFF3B82F6);
+  // Info (prompt: #17A2B8)
+  static const Color info         = Color(0xFF17A2B8);
   static const Color infoLight    = Color(0xFF60A5FA);
   static const Color infoBg       = Color(0x1A3B82F6);
 
@@ -207,7 +243,7 @@ abstract class AppColors {
   // ⭐ RATING — النجوم
   // ──────────────────────────────────────────────────────────
 
-  static const Color starFilled = Color(0xFFD4AF37);
+  static const Color starFilled = Color(0xFFF4D03F);
   static const Color starEmpty  = Color(0xFF3D5270);
 
   // ──────────────────────────────────────────────────────────

@@ -13,6 +13,7 @@ class AdminSettingsScreen extends StatefulWidget {
 class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
   late AdminSettings _settings;
   late TextEditingController _appName;
+  late TextEditingController _logoUrl;
   late TextEditingController _banners;
   late TextEditingController _featured;
   late TextEditingController _offerText;
@@ -25,6 +26,7 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
     super.initState();
     _settings = AdminDataService.instance.getSettings();
     _appName = TextEditingController(text: _settings.appName);
+    _logoUrl = TextEditingController(text: _settings.logoUrl);
     _banners = TextEditingController(text: _settings.bannerUrls.join('\n'));
     _featured = TextEditingController(text: _settings.featuredProductIds.join(', '));
     _offerText = TextEditingController(text: _settings.welcomeOfferText);
@@ -36,6 +38,7 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
   @override
   void dispose() {
     _appName.dispose();
+    _logoUrl.dispose();
     _banners.dispose();
     _featured.dispose();
     _offerText.dispose();
@@ -48,6 +51,7 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
   Future<void> _save() async {
     final updated = AdminSettings(
       appName: _appName.text,
+      logoUrl: _logoUrl.text.trim(),
       bannerUrls: _banners.text.split('\n').where((s) => s.trim().isNotEmpty).toList(),
       featuredProductIds: _featured.text.split(',').map((s) => s.trim()).where((s) => s.isNotEmpty).toList(),
       welcomeOfferText: _offerText.text,
@@ -71,6 +75,7 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
         padding: const EdgeInsets.all(16),
         children: [
           TextField(controller: _appName, decoration: const InputDecoration(labelText: 'اسم التطبيق')),
+          TextField(controller: _logoUrl, decoration: const InputDecoration(labelText: 'رابط الشعار أو assets/images/kayan_logo.png')),
           TextField(controller: _banners, maxLines: 3, decoration: const InputDecoration(labelText: 'روابط البانر (سطر لكل صورة)')),
           TextField(controller: _featured, decoration: const InputDecoration(labelText: 'معرفات المنتجات المميزة')),
           TextField(controller: _offerText, decoration: const InputDecoration(labelText: 'نص عرض الترحيب')),

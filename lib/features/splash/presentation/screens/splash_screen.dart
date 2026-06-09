@@ -21,6 +21,7 @@ import '../../../../core/theme/app_gradients.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../routing/app_routes.dart';
 import '../../../../shared/providers/auth_provider.dart';
+import '../../../../core/services/admin_data_service.dart';
 import '../../../../shared/services/local_storage_service.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -179,10 +180,18 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                   child: ScaleTransition(
                     scale: _logoScale,
                     child: Image.asset(
-                      'assets/images/kayan_logo.png',
+                      AdminDataService.instance.getLogoPath().startsWith('http')
+                          ? 'assets/images/kayan_logo.png'
+                          : AdminDataService.instance.getLogoPath(),
                       width: 200,
                       height: 200,
                       fit: BoxFit.contain,
+                      errorBuilder: (_, __, ___) => Image.asset(
+                        'assets/images/kayan_logo.png',
+                        width: 200,
+                        height: 200,
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
                 ),

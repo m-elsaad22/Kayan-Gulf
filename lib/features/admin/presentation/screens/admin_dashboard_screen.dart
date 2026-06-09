@@ -25,6 +25,10 @@ class AdminDashboardScreen extends StatelessWidget {
       ('إدارة الفئات', AppRoutes.adminCategories, Icons.category_outlined),
       ('إدارة الخدمات المنزلية', AppRoutes.adminServices, Icons.home_repair_service_outlined),
       ('إدارة الإعلانات', AppRoutes.adminAds, Icons.ads_click_outlined),
+      ('إدارة البانرات', AppRoutes.adminBanners, Icons.view_carousel_outlined),
+      ('إعدادات الألوان', AppRoutes.adminColors, Icons.palette_outlined),
+      ('إعدادات الخطوط', AppRoutes.adminFonts, Icons.text_fields_outlined),
+      ('إدارة الشاشات', AppRoutes.adminScreens, Icons.dashboard_customize_outlined),
       ('الإعدادات العامة', AppRoutes.adminSettings, Icons.settings_outlined),
     ];
 

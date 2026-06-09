@@ -247,6 +247,37 @@ abstract final class AppRoutes {
   static const String adminServices = '/admin/services';
   static const String adminAds = '/admin/ads';
   static const String adminSettings = '/admin/settings';
+  static const String adminBanners = '/admin/banners';
+  static const String adminColors = '/admin/colors';
+  static const String adminFonts = '/admin/fonts';
+  static const String adminScreens = '/admin/screens';
+
+  // ── Additional documented screens ──
+  static const String unifiedOrders = '/orders-unified';
+  static const String unifiedWishlist = '/wishlist';
+  static const String searchServices = '/services/search';
+  static const String cancelBooking = '/services/cancel-booking';
+  static const String rescheduleBooking = '/services/reschedule-booking';
+  static const String reportIssue = '/services/report-issue';
+  static const String serviceNotifications = '/services/notifications';
+  static const String shopFilters = '/shop/filters';
+  static const String shopNotifications = '/shop/notifications';
+  static const String contactSeller = '/classifieds/contact-seller';
+  static const String postAdSuccess = '/classifieds/post/success';
+  static const String whatsNew = '/whats-new';
+  static const String appPermissions = '/permissions';
+  static const String emptyState = '/empty-state';
+  static const String advancedSearch = '/search/advanced';
+  static const String mapPicker = '/map-picker';
+  static const String qrDisplay = '/qr';
+  static const String callScreen = '/call';
+  static const String cancelOtp = '/cancel-confirm-otp';
+  static const String reviewReply = '/review-reply';
+  static const String virtualTour = '/virtual-tour';
+  static const String changePassword = '/profile/security/change-password';
+  static const String deleteAccount = '/profile/security/delete-account';
+  static const String pointsRefund = '/profile/wallet/points-refund';
+  static const String languageSettings = '/profile/settings/language';
 
   // ──────────────────────────────────────────────────────────
   // 🔗 Relative path constants (used in GoRoute `path:`)

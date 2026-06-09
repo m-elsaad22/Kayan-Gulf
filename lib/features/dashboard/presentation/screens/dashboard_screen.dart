@@ -1,5 +1,6 @@
 // TODO: connect to real backend
 import 'package:flutter/material.dart';
+import '../../../../core/services/admin_data_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -18,10 +19,20 @@ class DashboardScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isArabic = ref.watch(isArabicProvider);
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: AppColors.bgScaffold,
+      backgroundColor: isDark ? AppColors.darkBg : AppColors.lightBg,
       body: Container(
-        decoration: const BoxDecoration(gradient: AppGradients.hero),
+        decoration: BoxDecoration(
+          gradient: isDark
+              ? AppGradients.splash
+              : const LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [AppColors.lightBg, AppColors.lightCardBg],
+                ),
+        ),
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(AppSpacing.pagePadding),
