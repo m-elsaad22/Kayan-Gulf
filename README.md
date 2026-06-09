@@ -65,6 +65,83 @@ lib/
 └── shared/                # Providers, widgets, services
 ```
 
+## دليل المستخدم — User Guide
+
+### وضع العرض الفاتح / الداكن (Light / Dark Mode)
+
+| العربية | English |
+|---------|---------|
+| افتح **الملف الشخصي** → **الإعدادات** → **وضع العرض** | Open **Profile** → **Settings** → **Theme** |
+| اختر: **فاتح**، **داكن**، أو **تلقائي** (يتبع نظام الجهاز) | Choose: **Light**, **Dark**, or **System** |
+| يُحفظ اختيارك تلقائياً في الجهاز | Your preference is saved automatically |
+
+المسار في التطبيق: `/profile/settings/theme`
+
+---
+
+### اللغة العربية / English
+
+| العربية | English |
+|---------|---------|
+| افتح **الملف الشخصي** → **الإعدادات** → **اللغة** | Open **Profile** → **Settings** → **Language** |
+| اختر **العربية** أو **English** | Select **Arabic** or **English** |
+| يتبدّل اتجاه الواجهة تلقائياً (RTL للعربية، LTR للإنجليزية) | UI direction switches automatically (RTL for Arabic, LTR for English) |
+
+المسار في التطبيق: `/profile/settings/language`
+
+---
+
+### لوحة تحكم المشرف (Admin Panel) — مخفية
+
+لوحة إدارة المحتوى (CMS) مخفية عن المستخدمين العاديين.
+
+| الخطوة | التفاصيل |
+|--------|----------|
+| 1 | افتح **الملف الشخصي** (Profile) |
+| 2 | انقر **5 مرات بسرعة** على نص **رقم الإصدار** في أسفل الشاشة |
+| 3 | ستُفتح شاشة تسجيل الدخول للمشرف |
+| 4 | أدخل بيانات الدخول: **اسم المستخدم:** `admin` — **كلمة المرور:** `kayan@admin` |
+
+**English:** Profile → tap the **version text 5 times quickly** → Admin Login → `admin` / `kayan@admin`
+
+---
+
+### إدارة الألوان والخطوط والبانرات من لوحة المشرف
+
+بعد تسجيل الدخول للمشرف، من **لوحة التحكم** يمكنك:
+
+| القسم | الوظيفة |
+|-------|---------|
+| **إدارة البانرات** | إضافة / تعديل / حذف صور البانر في الصفحة الرئيسية |
+| **إعدادات الألوان** | تغيير الألوان الأساسية (أزرق ملكي، بيبسي، ذهبي، فيروزي) — تنعكس فوراً على التطبيق |
+| **إعدادات الخطوط** | ضبط حجم العناوين والنصوص والتسميات |
+| **إدارة الشاشات** | إظهار / إخفاء شاشات محددة |
+| **إدارة المنتجات** | إضافة وتعديل وحذف منتجات المتجر (21 فئة) |
+| **إدارة الخدمات** | إدارة خدمات المنزل |
+| **إدارة الإعلانات** | الموافقة / الرفض / الحذف |
+| **الإعدادات العامة** | اسم التطبيق، رابط الشعار، نص عرض الترحيب، بيانات التواصل |
+
+جميع التغييرات تُحفظ محلياً عبر `SharedPreferences` وتنعكس مباشرة في التطبيق.
+
+---
+
+## تحميل APK — Download Release APK
+
+| المصدر | الرابط |
+|--------|--------|
+| **GitHub Releases** | [Releases](https://github.com/m-elsaad22/Kayan-Gulf/releases) — ملف `app-release.apk` |
+| **GitHub Actions** | [Actions → Build Release APK](https://github.com/m-elsaad22/Kayan-Gulf/actions/workflows/build_apk.yml) — artifact `kayan-release-apk` |
+
+لبناء APK محلياً:
+
+```bash
+flutter pub get
+flutter build apk --release
+# المخرجات: build/app/outputs/flutter-apk/app-release.apk
+```
+
+---
+
 ## للنشر على Google Play
 
 1. أنشئ release keystore:
