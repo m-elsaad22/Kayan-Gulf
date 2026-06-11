@@ -20,6 +20,7 @@ class AdminDashboardScreen extends StatelessWidget {
     ];
 
     final menu = [
+      ('محرك التصميم الفاخر', AppRoutes.superAdminDashboard, Icons.auto_awesome),
       ('إدارة المنتجات', AppRoutes.adminProducts, Icons.shopping_bag_outlined),
       ('إدارة الفئات', AppRoutes.adminCategories, Icons.category_outlined),
       ('إدارة الخدمات المنزلية', AppRoutes.adminServices, Icons.home_repair_service_outlined),

@@ -143,6 +143,11 @@ import '../features/admin/presentation/screens/admin_banners_screen.dart';
 import '../features/admin/presentation/screens/admin_colors_screen.dart';
 import '../features/admin/presentation/screens/admin_fonts_screen.dart';
 import '../features/admin/presentation/screens/admin_screens_screen.dart';
+import '../features/super_admin/screens/super_admin_dashboard.dart';
+import '../features/super_admin/screens/color_control_screen.dart';
+import '../features/super_admin/screens/typography_screen.dart';
+import '../features/super_admin/screens/radius_shadow_screen.dart';
+import '../features/super_admin/screens/animations_screen.dart';
 import '../features/orders/presentation/screens/unified_orders_screen.dart';
 import '../features/profile/presentation/screens/unified_wishlist_screen.dart';
 import '../features/services/browse/presentation/screens/search_services_screen.dart';
@@ -285,6 +290,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         '/gallery',
         '/welcome-offer',
         '/admin/',
+        '/super-admin/',
       ];
       final isPublic = publicPrefixes.any((p) => location.startsWith(p));
       if (isPublic) {
@@ -1563,6 +1569,45 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         pageBuilder: (c, s) => _buildSlidePage(
           key: s.pageKey,
           child: const AdminScreensScreen(),
+        ),
+      ),
+
+      // ════════════════════════════════════════════════════
+      // SUPER ADMIN — Design Engine
+      // ════════════════════════════════════════════════════
+      GoRoute(
+        path: AppRoutes.superAdminDashboard,
+        pageBuilder: (c, s) => _buildSlidePage(
+          key: s.pageKey,
+          child: const SuperAdminDashboardScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.superAdminColors,
+        pageBuilder: (c, s) => _buildSlidePage(
+          key: s.pageKey,
+          child: const ColorControlScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.superAdminTypography,
+        pageBuilder: (c, s) => _buildSlidePage(
+          key: s.pageKey,
+          child: const TypographyScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.superAdminRadius,
+        pageBuilder: (c, s) => _buildSlidePage(
+          key: s.pageKey,
+          child: const RadiusShadowScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.superAdminAnimations,
+        pageBuilder: (c, s) => _buildSlidePage(
+          key: s.pageKey,
+          child: const AnimationsScreen(),
         ),
       ),
       GoRoute(path: AppRoutes.unifiedOrders, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const UnifiedOrdersScreen())),

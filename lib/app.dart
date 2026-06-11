@@ -19,6 +19,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/services/admin_data_service.dart';
 import 'core/theme/app_theme.dart';
+import 'core/theme/dynamic_theme.dart';
+import 'features/super_admin/services/design_engine_service.dart';
 import 'l10n/app_localizations.dart';
 import 'routing/app_router.dart';
 import 'shared/providers/locale_provider.dart';
@@ -39,9 +41,12 @@ class KayanApp extends ConsumerWidget {
     return ValueListenableBuilder<int>(
       valueListenable: AdminDataService.instance.revisionNotifier,
       builder: (context, _, __) {
+        return ValueListenableBuilder<int>(
+          valueListenable: DesignEngineService.instance.revisionNotifier,
+          builder: (context, _, __) {
         final isArabic  = locale.languageCode == 'ar';
         final appName   = AdminDataService.instance.getAppName();
-        final adminColors = AdminDataService.instance.getThemeColors();
+        final design    = DesignEngineService.instance.settings;
         final fontScale = AdminDataService.instance.getFontSettings().bodyScale;
 
         return MaterialApp.router(
@@ -51,9 +56,9 @@ class KayanApp extends ConsumerWidget {
       debugShowMaterialGrid:    false,
 
       // ── Theme ───────────────────────────────────────────
-      // Dark is primary (Royal Metallic Luxury)
-      theme:      AppTheme.lightWithAdmin(adminColors),
-      darkTheme:  AppTheme.darkWithAdmin(adminColors),
+      // Dynamic design engine (Super Admin) + legacy admin fallback merge
+      theme:      DynamicTheme.light(design),
+      darkTheme:  DynamicTheme.dark(design),
       themeMode:  themeMode,
 
       // ── Localization ────────────────────────────────────
@@ -113,6 +118,8 @@ class KayanApp extends ConsumerWidget {
         );
       },
     );
+          },
+        );
       },
     );
   }

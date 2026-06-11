@@ -252,6 +252,13 @@ abstract final class AppRoutes {
   static const String adminFonts = '/admin/fonts';
   static const String adminScreens = '/admin/screens';
 
+  // ── Super Admin Design Engine ──
+  static const String superAdminDashboard = '/super-admin/dashboard';
+  static const String superAdminColors = '/super-admin/colors';
+  static const String superAdminTypography = '/super-admin/typography';
+  static const String superAdminRadius = '/super-admin/radius-shadows';
+  static const String superAdminAnimations = '/super-admin/animations';
+
   // ── Additional documented screens ──
   static const String unifiedOrders = '/orders-unified';
   static const String unifiedWishlist = '/wishlist';

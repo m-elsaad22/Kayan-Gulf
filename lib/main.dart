@@ -13,6 +13,7 @@ import 'core/di/providers.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/kayan_motion.dart';
 import 'core/services/admin_data_service.dart';
+import 'features/super_admin/services/design_engine_service.dart';
 import 'shared/services/local_storage_service.dart';
 import 'shared/services/notification_service.dart';
 
@@ -30,6 +31,7 @@ void main() {
     await Hive.initFlutter();
     await LocalStorageService.initialize();
     await AdminDataService.instance.initialize();
+    await DesignEngineService.instance.initialize();
     await NotificationService.initialize();
 
     runApp(
