@@ -32,13 +32,17 @@ class KayanThemedScaffold extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor:
-          isDark ? AppColors.darkBg : AppColors.lightBg,
+      backgroundColor: isDark ? AppColors.darkBg : AppColors.lightBg,
+      extendBodyBehindAppBar: false,
       appBar: AppBar(
-        backgroundColor: isDark ? AppColors.darkCardBg : AppColors.pureWhite,
+        backgroundColor: isDark
+            ? AppColors.darkCardBg.withValues(alpha: 0.94)
+            : AppColors.pureWhite.withValues(alpha: 0.92),
         foregroundColor: isDark ? AppColors.darkText : AppColors.lightText,
-        elevation: isDark ? 0 : 1,
-        shadowColor: AppColors.royalBlue.withValues(alpha: 0.08),
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        shadowColor: AppColors.royalBlue.withValues(alpha: 0.06),
+        surfaceTintColor: Colors.transparent,
         leading: showBack
             ? IconButton(
                 icon: Icon(
@@ -59,10 +63,22 @@ class KayanThemedScaffold extends ConsumerWidget {
         actions: actions,
       ),
       floatingActionButton: floatingActionButton,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.pagePadding),
-          child: body,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: isDark
+              ? null
+              : const LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [AppColors.lightBg, AppColors.lightCardBg],
+                ),
+          color: isDark ? AppColors.darkBg : null,
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.pagePadding),
+            child: body,
+          ),
         ),
       ),
     );

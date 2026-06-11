@@ -23,6 +23,7 @@ import '../../../../routing/app_routes.dart';
 import '../../../../shared/providers/auth_provider.dart';
 import '../../../../core/services/admin_data_service.dart';
 import '../../../../shared/services/local_storage_service.dart';
+import '../../../../shared/widgets/luxury/luxury_glass.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -179,18 +180,23 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                   opacity: _logoFade,
                   child: ScaleTransition(
                     scale: _logoScale,
-                    child: Image.asset(
-                      AdminDataService.instance.getLogoPath().startsWith('http')
-                          ? 'assets/images/kayan_logo.png'
-                          : AdminDataService.instance.getLogoPath(),
-                      width: 200,
-                      height: 200,
-                      fit: BoxFit.contain,
-                      errorBuilder: (_, __, ___) => Image.asset(
-                        'assets/images/kayan_logo.png',
-                        width: 200,
-                        height: 200,
+                    child: LuxuryGlassPanel(
+                      padding: const EdgeInsets.all(28),
+                      blurSigma: 24,
+                      borderColor: AppColors.metallicGold.withValues(alpha: 0.35),
+                      child: Image.asset(
+                        AdminDataService.instance.getLogoPath().startsWith('http')
+                            ? 'assets/images/kayan_logo.png'
+                            : AdminDataService.instance.getLogoPath(),
+                        width: 160,
+                        height: 160,
                         fit: BoxFit.contain,
+                        errorBuilder: (_, __, ___) => Image.asset(
+                          'assets/images/kayan_logo.png',
+                          width: 160,
+                          height: 160,
+                          fit: BoxFit.contain,
+                        ),
                       ),
                     ),
                   ),

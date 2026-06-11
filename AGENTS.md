@@ -57,7 +57,7 @@ Ensure `android/local.properties` exists with `sdk.dir` and `flutter.sdk` (Flutt
 
 ### Known gotchas
 
-1. **`main` branch compile errors:** As of setup, `main` has Dart compile errors (missing imports, router/screen API mismatches, syntax issues). CI targets release APK builds but may fail on a clean analyze. The branch `cursor/fix-apk-dart-compile-errors-9c38` is closer to buildable; merge or cherry-pick its fixes before expecting a green `flutter build apk`.
+1. **Design system:** Shared luxury primitives live under `lib/shared/widgets/luxury/` (`LuxuryGlassPanel`, `LuxuryNeumorphicCard`, `LuxuryHubCard`). Motion/haptics: `lib/core/theme/kayan_motion.dart`. `flutter analyze` may report many info-level lints; release APK builds succeed on `main`.
 
 2. **GoRouter redirect loop on first launch (web):** If both `language_region_done` and `seen_onboarding` are false, guards can bounce between `/language-region` and `/onboarding`. Clear site data in Chrome DevTools, or ensure onboarding redirect only runs after language/region is saved (`hasSelectedRegion == true`).
 

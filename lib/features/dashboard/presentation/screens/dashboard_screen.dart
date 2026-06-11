@@ -1,16 +1,15 @@
 // TODO: connect to real backend
 import 'package:flutter/material.dart';
-import '../../../../core/services/admin_data_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/theme/app_border_radius.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_gradients.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../routing/app_routes.dart';
 import '../../../../shared/providers/locale_provider.dart';
+import '../../../../shared/widgets/luxury/luxury_widgets.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -18,7 +17,6 @@ class DashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isArabic = ref.watch(isArabicProvider);
-
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -42,34 +40,70 @@ class DashboardScreen extends ConsumerWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: Text(
-                        isArabic ? 'أهلاً بك في كيان' : 'Welcome to KAYAN',
-                        style: isArabic
-                            ? AppTextStyles.arabicHeadlineMedium
-                            : AppTextStyles.headlineMedium,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            isArabic ? 'أهلاً بك في كيان' : 'Welcome to KAYAN',
+                            style: isArabic
+                                ? AppTextStyles.arabicHeadlineMedium
+                                : AppTextStyles.headlineMedium,
+                          ),
+                          const SizedBox(height: 6),
+                          LuxuryGlassPanel(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            blurSigma: 12,
+                            child: Text(
+                              isArabic ? 'سوبر أب الخليج' : 'GCC Super App',
+                              style: AppTextStyles.caption.copyWith(
+                                color: AppColors.metallicGold,
+                                letterSpacing: 1.2,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    IconButton(
-                      onPressed: () => context.push(AppRoutes.profile),
-                      icon: const Icon(Icons.account_circle_rounded),
+                    LuxuryTap(
+                      onTap: () {
+                        context.push(AppRoutes.profile);
+                      },
+                      child: LuxuryGlassPanel(
+                        padding: EdgeInsets.zero,
+                        blurSigma: 14,
+                        borderRadius: BorderRadius.circular(24),
+                        child: const SizedBox(
+                          width: 48,
+                          height: 48,
+                          child: Icon(Icons.account_circle_rounded, size: 28),
+                        ),
+                      ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 12),
                 Text(
                   isArabic
                       ? 'اختر عالمك الآن من منصة كيان الشاملة'
                       : 'Choose your world inside the KAYAN super app',
                   style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.textSecondary,
+                    color: isDark
+                        ? AppColors.darkSubtext
+                        : AppColors.lightSubtext,
                   ),
                 ),
                 const SizedBox(height: 28),
                 Expanded(
                   child: ListView(
-                    physics: const BouncingScrollPhysics(),
+                    physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics(),
+                    ),
                     children: [
-                      _DashboardCard(
+                      LuxuryHubCard(
                         icon: Icons.home_repair_service_rounded,
                         title: isArabic ? 'خدمات منزلية' : 'Home Services',
                         subtitle: isArabic
@@ -79,7 +113,7 @@ class DashboardScreen extends ConsumerWidget {
                         onTap: () => context.go(AppRoutes.services),
                       ),
                       const SizedBox(height: 16),
-                      _DashboardCard(
+                      LuxuryHubCard(
                         icon: Icons.storefront_rounded,
                         title: isArabic ? 'متجر تسوق' : 'Shopping Store',
                         subtitle: isArabic
@@ -90,7 +124,7 @@ class DashboardScreen extends ConsumerWidget {
                         onTap: () => context.go(AppRoutes.shop),
                       ),
                       const SizedBox(height: 16),
-                      _DashboardCard(
+                      LuxuryHubCard(
                         icon: Icons.campaign_rounded,
                         title: isArabic ? 'إعلانات مبوبة' : 'Classifieds',
                         subtitle: isArabic
@@ -105,85 +139,6 @@ class DashboardScreen extends ConsumerWidget {
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _DashboardCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final Gradient gradient;
-  final bool darkText;
-  final VoidCallback onTap;
-
-  const _DashboardCard({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.gradient,
-    required this.onTap,
-    this.darkText = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final fg = darkText ? AppColors.bgPrimary : AppColors.textPrimary;
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        constraints: const BoxConstraints(minHeight: 150),
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          gradient: gradient,
-          borderRadius: AppBorderRadius.card,
-          border: Border.all(color: AppColors.whiteOp(0.12)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.24),
-              blurRadius: 24,
-              offset: const Offset(0, 10),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 64,
-              height: 64,
-              decoration: BoxDecoration(
-                color: AppColors.whiteOp(darkText ? 0.22 : 0.12),
-                borderRadius: AppBorderRadius.md,
-              ),
-              child: Icon(icon, color: fg, size: 34),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    title,
-                    style: AppTextStyles.titleLarge.copyWith(
-                      color: fg,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    subtitle,
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: fg.withOpacity(0.78),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Icon(Icons.arrow_forward_ios_rounded, color: fg, size: 18),
-          ],
         ),
       ),
     );

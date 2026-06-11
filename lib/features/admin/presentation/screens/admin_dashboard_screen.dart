@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/services/admin_data_service.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_text_styles.dart';
 import '../../../../routing/app_routes.dart';
+import '../../../../shared/widgets/luxury/luxury_widgets.dart';
 import '../widgets/admin_scaffold.dart';
 
 class AdminDashboardScreen extends StatelessWidget {
@@ -14,10 +13,10 @@ class AdminDashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final admin = AdminDataService.instance;
     final stats = [
-      ('عدد المنتجات', admin.getProducts().length, Icons.inventory_2_outlined),
-      ('عدد الخدمات', admin.getServices().length, Icons.handyman_outlined),
-      ('عدد الإعلانات', admin.getAds().length, Icons.campaign_outlined),
-      ('عدد المستخدمين', admin.userCount, Icons.people_outline),
+      ('عدد المنتجات', '${admin.getProducts().length}', Icons.inventory_2_outlined),
+      ('عدد الخدمات', '${admin.getServices().length}', Icons.handyman_outlined),
+      ('عدد الإعلانات', '${admin.getAds().length}', Icons.campaign_outlined),
+      ('عدد المستخدمين', '${admin.userCount}', Icons.people_outline),
     ];
 
     final menu = [
@@ -33,10 +32,11 @@ class AdminDashboardScreen extends StatelessWidget {
     ];
 
     return AdminScaffold(
-      title: 'لوحة التحكم',
+      title: 'لوحة التحكم — كيان',
       actions: [
         IconButton(
           icon: const Icon(Icons.logout),
+          tooltip: 'تسجيل الخروج',
           onPressed: () async {
             await admin.logout();
             if (context.mounted) context.go(AppRoutes.adminLogin);
@@ -44,7 +44,8 @@ class AdminDashboardScreen extends StatelessWidget {
         ),
       ],
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+        physics: const BouncingScrollPhysics(),
         children: [
           GridView.count(
             shrinkWrap: true,
@@ -52,38 +53,23 @@ class AdminDashboardScreen extends StatelessWidget {
             crossAxisCount: 2,
             crossAxisSpacing: 12,
             mainAxisSpacing: 12,
-            childAspectRatio: 1.4,
+            childAspectRatio: 1.35,
             children: stats
                 .map(
-                  (s) => Card(
-                    color: AppColors.bgCard,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Icon(s.$3, color: AppColors.metallicGold),
-                          const Spacer(),
-                          Text('${s.$2}',
-                              style: AppTextStyles.arabicHeadlineSmall),
-                          Text(s.$1, style: AppTextStyles.bodySmall),
-                        ],
-                      ),
-                    ),
+                  (s) => LuxuryStatTile(
+                    label: s.$1,
+                    value: s.$2,
+                    icon: s.$3,
                   ),
                 )
                 .toList(),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 20),
           ...menu.map(
-            (m) => Card(
-              margin: const EdgeInsets.only(bottom: 8),
-              child: ListTile(
-                leading: Icon(m.$3, color: AppColors.royalBlue),
-                title: Text(m.$1, style: AppTextStyles.arabicTitleSmall),
-                trailing: const Icon(Icons.chevron_left),
-                onTap: () => context.push(m.$2),
-              ),
+            (m) => LuxuryAdminMenuTile(
+              title: m.$1,
+              icon: m.$3,
+              onTap: () => context.push(m.$2),
             ),
           ),
         ],

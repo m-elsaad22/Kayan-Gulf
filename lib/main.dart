@@ -11,6 +11,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'app.dart';
 import 'core/di/providers.dart';
 import 'core/theme/app_theme.dart';
+import 'core/theme/kayan_motion.dart';
 import 'core/services/admin_data_service.dart';
 import 'shared/services/local_storage_service.dart';
 import 'shared/services/notification_service.dart';
@@ -18,6 +19,7 @@ import 'shared/services/notification_service.dart';
 void main() {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
+    KayanMotion.prepareHighRefreshPipeline();
 
     SystemChrome.setSystemUIOverlayStyle(AppTheme.systemUiDark);
     await SystemChrome.setPreferredOrientations([

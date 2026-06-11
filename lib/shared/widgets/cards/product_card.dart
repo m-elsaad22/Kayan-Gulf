@@ -17,6 +17,7 @@ import '../../../core/theme/app_gradients.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/theme/app_border_radius.dart';
 import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/kayan_motion.dart';
 import '../../../features/home/data/models/home_models.dart';
 import '../loaders/shimmer_loader.dart';
 
@@ -95,7 +96,7 @@ class _ProductCardState extends State<ProductCard>
   }
 
   void _handleTap() {
-    HapticFeedback.lightImpact();
+    KayanMotion.hapticLight();
     widget.onTap?.call();
   }
 
@@ -109,6 +110,37 @@ class _ProductCardState extends State<ProductCard>
   // ──────────────────────────────────────────────────────────
   // GRID VARIANT (default — 2 per row)
   // ──────────────────────────────────────────────────────────
+  BoxDecoration _productCardDecoration(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return BoxDecoration(
+      color: isDark ? AppColors.bgCard : AppColors.lightCardBg,
+      borderRadius: AppBorderRadius.card,
+      border: Border.all(
+        color: isDark ? AppColors.borderSubtle : AppColors.royalBlueOp(0.08),
+      ),
+      boxShadow: isDark
+          ? [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.22),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ]
+          : [
+              BoxShadow(
+                color: AppColors.pureWhite.withValues(alpha: 0.9),
+                blurRadius: 10,
+                offset: const Offset(-3, -3),
+              ),
+              BoxShadow(
+                color: AppColors.royalBlue.withValues(alpha: 0.10),
+                blurRadius: 14,
+                offset: const Offset(4, 6),
+              ),
+            ],
+    );
+  }
+
   Widget _buildGrid() {
     final product = widget.product;
     final discount = product.discountPercent;
@@ -124,18 +156,7 @@ class _ProductCardState extends State<ProductCard>
           child: child,
         ),
         child: Container(
-          decoration: BoxDecoration(
-            color:        AppColors.bgCard,
-            borderRadius: AppBorderRadius.card,
-            border:       Border.all(color: AppColors.borderSubtle),
-            boxShadow: [
-              BoxShadow(
-                color:      Colors.black.withOpacity(0.2),
-                blurRadius: 8,
-                offset:     const Offset(0, 2),
-              ),
-            ],
-          ),
+          decoration: _productCardDecoration(context),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -378,10 +399,8 @@ class _ProductCardState extends State<ProductCard>
       onTap: _handleTap,
       child: Container(
         height:      110,
-        decoration:  BoxDecoration(
-          color:        AppColors.bgCard,
+        decoration:  _productCardDecoration(context).copyWith(
           borderRadius: AppBorderRadius.md,
-          border:       Border.all(color: AppColors.borderSubtle),
         ),
         child: Row(
           children: [
