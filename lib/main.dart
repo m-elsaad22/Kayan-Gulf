@@ -22,7 +22,7 @@ void main() {
     WidgetsFlutterBinding.ensureInitialized();
     KayanMotion.prepareHighRefreshPipeline();
 
-    SystemChrome.setSystemUIOverlayStyle(AppTheme.systemUiDark);
+    SystemChrome.setSystemUIOverlayStyle(AppTheme.systemUiLight);
     await SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,

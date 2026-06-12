@@ -21,7 +21,6 @@ import '../../../../core/theme/app_gradients.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../routing/app_routes.dart';
 import '../../../../shared/providers/auth_provider.dart';
-import '../../../../core/services/admin_data_service.dart';
 import '../../../../shared/services/local_storage_service.dart';
 import '../../../../shared/widgets/luxury/luxury_glass.dart';
 
@@ -145,10 +144,17 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       backgroundColor: AppColors.bgScaffold,
       body: Stack(
         children: [
-          // ── Background gradient ──────────────────────────
+          // ── Background gradient (Royal → Pepsi Blue) ─────
           Container(
             decoration: const BoxDecoration(
-              gradient: AppGradients.splash,
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  AppColors.royalBlue,
+                  AppColors.pepsiBlue,
+                ],
+              ),
             ),
           ),
 
@@ -180,23 +186,16 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                   opacity: _logoFade,
                   child: ScaleTransition(
                     scale: _logoScale,
-                    child: LuxuryGlassPanel(
-                      padding: const EdgeInsets.all(28),
-                      blurSigma: 24,
-                      borderColor: AppColors.metallicGold.withValues(alpha: 0.35),
-                      child: Image.asset(
-                        AdminDataService.instance.getLogoPath().startsWith('http')
-                            ? 'assets/images/kayan_logo.png'
-                            : AdminDataService.instance.getLogoPath(),
-                        width: 160,
-                        height: 160,
+                    child: Image.asset(
+                      'assets/images/kayan_logo.png',
+                      width: 220,
+                      height: 220,
+                      fit: BoxFit.contain,
+                      errorBuilder: (_, __, ___) => Image.asset(
+                        'assets/images/kayan_logo.png',
+                        width: 220,
+                        height: 220,
                         fit: BoxFit.contain,
-                        errorBuilder: (_, __, ___) => Image.asset(
-                          'assets/images/kayan_logo.png',
-                          width: 160,
-                          height: 160,
-                          fit: BoxFit.contain,
-                        ),
                       ),
                     ),
                   ),
@@ -212,21 +211,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                     child: Column(
                       children: [
                         Text(
-                          'التسوق · الخدمات · الإعلانات',
-                          style: AppTextStyles.arabicCaption.copyWith(
-                            color:         AppColors.textSecondary,
-                            letterSpacing: 1.5,
-                            fontSize:      13,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Shop · Services · Classifieds',
-                          style: AppTextStyles.caption.copyWith(
-                            color:         AppColors.textMuted,
-                            letterSpacing: 2.0,
-                            fontSize:      10,
+                          'GULF SUPER APP',
+                          style: TextStyle(
+                            color: AppColors.silver,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w300,
+                            letterSpacing: 2,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -246,22 +236,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
             child: FadeTransition(
               opacity: _taglineFade,
               child: Center(
-                child: SizedBox(
-                  width:  120,
-                  height: 2,
-                  child: AnimatedBuilder(
-                    animation: _shimmerCtrl,
-                    builder: (_, __) {
-                      return LinearProgressIndicator(
-                        value:           null,
-                        backgroundColor: AppColors.borderSubtle,
-                        valueColor: const AlwaysStoppedAnimation<Color>(
-                          AppColors.metallicGold,
-                        ),
-                        borderRadius: BorderRadius.circular(1),
-                      );
-                    },
-                  ),
+                child: const CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.skyBlue),
                 ),
               ),
             ),

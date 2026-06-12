@@ -977,89 +977,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           ),
 
           // ──────────────────────────────────────────────
-          // TAB 1 — SHOP 🛒
-          // ──────────────────────────────────────────────
-          StatefulShellBranch(
-            navigatorKey: _shopTabKey,
-            routes: [
-              GoRoute(
-                path:        AppRoutes.shop,
-                pageBuilder: (context, state) => _buildNoTransitionPage(
-                  key:   state.pageKey,
-                  child: const ProductListScreen(),
-                ),
-                routes: [
-                  // Search
-                  GoRoute(
-                    path:        AppRoutes.$search,
-                    pageBuilder: (context, state) => _buildSlidePage(
-                      key:   state.pageKey,
-                      child: SearchScreen(
-                        initialQuery: state.uri.queryParameters['q'],
-                      ),
-                    ),
-                  ),
-                  // Flash Deals
-                  GoRoute(
-                    path:        AppRoutes.$flashDeals,
-                    pageBuilder: (context, state) => _buildSlidePage(
-                      key:   state.pageKey,
-                      child: const FlashDealsScreen(),
-                    ),
-                  ),
-                  // All categories grid
-                  GoRoute(
-                    path:        AppRoutes.$categories,
-                    pageBuilder: (context, state) => _buildSlidePage(
-                      key:   state.pageKey,
-                      child: const CategoriesScreen(),
-                    ),
-                  ),
-                  // Products filtered by category
-                  GoRoute(
-                    path:        AppRoutes.$categoryProducts,
-                    pageBuilder: (context, state) => _buildSlidePage(
-                      key:   state.pageKey,
-                      child: ProductListScreen(
-                        categorySlug: state.pathParameters['categorySlug']!,
-                      ),
-                    ),
-                  ),
-                  // Single product detail
-                  GoRoute(
-                    path:        AppRoutes.$productDetail,
-                    pageBuilder: (context, state) => _buildSlidePage(
-                      key:   state.pageKey,
-                      child: ProductDetailScreen(
-                        slug: state.pathParameters['productSlug']!,
-                      ),
-                    ),
-                  ),
-                  // Vendor storefront
-                  GoRoute(
-                    path:        AppRoutes.$vendorProfile,
-                    pageBuilder: (context, state) => _buildSlidePage(
-                      key:   state.pageKey,
-                      child: VendorProfileScreen(
-                        vendorSlug: state.pathParameters['vendorSlug']!,
-                      ),
-                    ),
-                  ),
-                  // Favorites
-                  GoRoute(
-                    path:        AppRoutes.$favorites,
-                    pageBuilder: (context, state) => _buildSlidePage(
-                      key:   state.pageKey,
-                      child: const fav_screen.FavoritesScreen(),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-
-          // ──────────────────────────────────────────────
-          // TAB 2 — SERVICES 🔧
+          // TAB 1 — SERVICES 🔧 🔧
           // ──────────────────────────────────────────────
           StatefulShellBranch(
             navigatorKey: _servicesTabKey,
@@ -1159,6 +1077,89 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                         ),
                       ),
                     ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+
+
+          // ──────────────────────────────────────────────
+          // TAB 2 — SHOP 🛒 🛒
+          // ──────────────────────────────────────────────
+          StatefulShellBranch(
+            navigatorKey: _shopTabKey,
+            routes: [
+              GoRoute(
+                path:        AppRoutes.shop,
+                pageBuilder: (context, state) => _buildNoTransitionPage(
+                  key:   state.pageKey,
+                  child: const ProductListScreen(),
+                ),
+                routes: [
+                  // Search
+                  GoRoute(
+                    path:        AppRoutes.$search,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: SearchScreen(
+                        initialQuery: state.uri.queryParameters['q'],
+                      ),
+                    ),
+                  ),
+                  // Flash Deals
+                  GoRoute(
+                    path:        AppRoutes.$flashDeals,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const FlashDealsScreen(),
+                    ),
+                  ),
+                  // All categories grid
+                  GoRoute(
+                    path:        AppRoutes.$categories,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const CategoriesScreen(),
+                    ),
+                  ),
+                  // Products filtered by category
+                  GoRoute(
+                    path:        AppRoutes.$categoryProducts,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: ProductListScreen(
+                        categorySlug: state.pathParameters['categorySlug']!,
+                      ),
+                    ),
+                  ),
+                  // Single product detail
+                  GoRoute(
+                    path:        AppRoutes.$productDetail,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: ProductDetailScreen(
+                        slug: state.pathParameters['productSlug']!,
+                      ),
+                    ),
+                  ),
+                  // Vendor storefront
+                  GoRoute(
+                    path:        AppRoutes.$vendorProfile,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: VendorProfileScreen(
+                        vendorSlug: state.pathParameters['vendorSlug']!,
+                      ),
+                    ),
+                  ),
+                  // Favorites
+                  GoRoute(
+                    path:        AppRoutes.$favorites,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const fav_screen.FavoritesScreen(),
+                    ),
                   ),
                 ],
               ),

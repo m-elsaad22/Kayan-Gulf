@@ -20,7 +20,7 @@ class ServicesHomeScreen extends ConsumerWidget{
   Widget build(BuildContext context,WidgetRef ref){
     final ar=ref.watch(isArabicProvider);
     final cats=ref.watch(_catsProv);
-    return Scaffold(backgroundColor:AppColors.bgScaffold,body:CustomScrollView(physics:const BouncingScrollPhysics(parent:AlwaysScrollableScrollPhysics()),slivers:[
+    return Scaffold(backgroundColor:Theme.of(context).scaffoldBackgroundColor,body:CustomScrollView(physics:const BouncingScrollPhysics(parent:AlwaysScrollableScrollPhysics()),slivers:[
       SliverAppBar(pinned:true,expandedHeight:130,backgroundColor:AppColors.bgSurface,
         flexibleSpace:FlexibleSpaceBar(collapseMode:CollapseMode.pin,background:Container(decoration:const BoxDecoration(gradient:AppGradients.hero),child:SafeArea(child:Padding(padding:const EdgeInsets.fromLTRB(20,8,20,0),child:Column(crossAxisAlignment:CrossAxisAlignment.start,mainAxisAlignment:MainAxisAlignment.end,children:[
           Text(ar?'الخدمات المنزلية':'Home Services',style:ar?AppTextStyles.arabicHeadlineSmall:AppTextStyles.headlineSmall),

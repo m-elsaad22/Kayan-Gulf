@@ -14,7 +14,7 @@ class ThemeModeNotifier extends Notifier<ThemeMode> {
     return switch (saved) {
       'light'  => ThemeMode.light,
       'system' => ThemeMode.system,
-      _        => ThemeMode.dark, // KAYAN default: dark
+      _        => ThemeMode.light, // KAYAN default: light (production)
     };
   }
 

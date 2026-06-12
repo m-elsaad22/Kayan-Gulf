@@ -22,6 +22,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_gradients.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/theme/app_border_radius.dart';
+import '../../../../core/theme/screen_theme.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../routing/app_routes.dart';
 import '../../../../shared/providers/auth_provider.dart';
@@ -84,7 +85,7 @@ class ProfileScreen extends ConsumerWidget {
     final profile  = _mockProfile;
 
     return Scaffold(
-      backgroundColor: AppColors.bgScaffold,
+      backgroundColor: context.screenBackground,
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
@@ -316,6 +317,27 @@ class _ProfileSliverHeader extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Center(
+                      child: Column(
+                        children: [
+                          Image.asset(
+                            'assets/images/kayan_logo.png',
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.contain,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'KAYAN Gulf',
+                            style: AppTextStyles.titleMedium.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
                     Row(
                       children: [
                         // Avatar

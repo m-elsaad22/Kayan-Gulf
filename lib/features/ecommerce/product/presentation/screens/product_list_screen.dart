@@ -22,6 +22,9 @@ import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_gradients.dart';
 import '../../../../../core/theme/app_text_styles.dart';
 import '../../../../../core/theme/app_border_radius.dart';
+import '../../../../../shared/widgets/competitor_patterns.dart';
+import '../../../../../shared/widgets/kayan_app_bar.dart';
+import '../../../../../core/theme/screen_theme.dart';
 import '../../../../../core/theme/app_spacing.dart';
 import '../../../../../routing/app_routes.dart';
 import '../../../../../shared/providers/locale_provider.dart';
@@ -101,10 +104,12 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
     final products  = ref.watch(productListProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.bgScaffold,
+      backgroundColor: context.screenBackground,
 
       // ── App Bar ───────────────────────────────────────────
-      appBar: AppBar(
+      appBar: widget.categorySlug == null
+          ? const KayanAppBar(showLogo: true, showBack: false)
+          : AppBar(
         backgroundColor: AppColors.bgSurface,
         centerTitle:     true,
         title: Text(
@@ -153,6 +158,13 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
           // ── Active filter chips ───────────────────────────
           if (filter.hasActiveFilters)
             _ActiveFilterChips(filter: filter, isArabic: isArabic),
+
+          if (widget.categorySlug == null)
+            NoonFlashDealStrip(
+              title: isArabic ? 'عروض فلاش — خصومات حصرية' : 'Flash Deals — Exclusive',
+              endsIn: const Duration(hours: 2, minutes: 15),
+              onTap: () => context.push(AppRoutes.flashDeals),
+            ),
 
           // ── Products grid/list ────────────────────────────
           Expanded(

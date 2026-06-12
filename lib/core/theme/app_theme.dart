@@ -783,14 +783,23 @@ abstract class AppTheme {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(AppColors.royalBlue),
+        backgroundColor: MaterialStateProperty.all(AppColors.pepsiBlue),
         foregroundColor: MaterialStateProperty.all(Colors.white),
         shape: MaterialStateProperty.all(
-          RoundedRectangleBorder(borderRadius: AppBorderRadius.button),
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
         ),
         minimumSize: MaterialStateProperty.all(const Size(double.infinity, 52)),
         textStyle: MaterialStateProperty.all(AppTextStyles.buttonMedium),
       ),
+    ),
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor: Colors.white,
+      selectedItemColor: AppColors.pepsiBlue,
+      unselectedItemColor: AppColors.silver,
+      elevation: 8,
+      type: BottomNavigationBarType.fixed,
     ),
   );
 }

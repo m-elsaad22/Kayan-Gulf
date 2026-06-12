@@ -21,6 +21,7 @@ import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_gradients.dart';
 import '../../../../../core/theme/app_text_styles.dart';
 import '../../../../../core/theme/app_border_radius.dart';
+import '../../../../../core/theme/screen_theme.dart';
 import '../../../../../core/theme/app_spacing.dart';
 import '../../../../../routing/app_routes.dart';
 import '../../../../../shared/providers/locale_provider.dart';
@@ -53,7 +54,7 @@ class _ClassifiedsHomeScreenState
     final adsAsync  = ref.watch(_classifiedsProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.bgScaffold,
+      backgroundColor: context.screenBackground,
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(
             parent: AlwaysScrollableScrollPhysics()),

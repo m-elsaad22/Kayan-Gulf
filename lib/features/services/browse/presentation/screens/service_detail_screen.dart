@@ -11,6 +11,8 @@ import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_gradients.dart';
 import '../../../../../core/theme/app_text_styles.dart';
 import '../../../../../core/theme/app_border_radius.dart';
+import '../../../../../shared/widgets/competitor_patterns.dart';
+import '../../../../../core/theme/screen_theme.dart';
 import '../../../../../core/theme/app_spacing.dart';
 import '../../../../../routing/app_routes.dart';
 import '../../../../../shared/providers/locale_provider.dart';
@@ -45,7 +47,7 @@ class _SDS extends ConsumerState<ServiceDetailScreen> {
     final svc = ref.watch(_svcDetailProv(widget.slug));
 
     return Scaffold(
-      backgroundColor: AppColors.bgScaffold,
+      backgroundColor: context.screenBackground,
       body: svc.when(
         loading: () => const _Skel(),
         error: (e, _) => Center(child: Text(e.toString())),
@@ -88,6 +90,13 @@ class _SDS extends ConsumerState<ServiceDetailScreen> {
             ),
 
             SliverToBoxAdapter(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              ServiceVerifiedProviderRow(
+                name: s.technicians.isNotEmpty
+                    ? s.technicians.first.name
+                    : (ar ? s.nameAr : s.nameEn),
+                rating: s.rating,
+                jobsDone: s.totalBookings,
+              ),
               // Header info
               Padding(padding: const EdgeInsets.fromLTRB(16, 14, 16, 0), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 // Category + badges
