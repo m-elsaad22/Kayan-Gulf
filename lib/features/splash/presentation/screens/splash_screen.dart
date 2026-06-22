@@ -192,8 +192,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                       fit: BoxFit.contain,
                       errorBuilder: (_, __, ___) => Image.asset(
                         'assets/images/kayan_logo.png',
-                        width: 220,
-                        height: 220,
+                        width: 260,
+                        height: 260,
                         fit: BoxFit.contain,
                       ),
                     ),
