@@ -55,7 +55,7 @@ class KayanAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: showLogo && title == null
           ? Image.asset(
               'assets/images/kayan_logo.png',
-              height: 42,
+              height: 52,
               fit: BoxFit.contain,
             )
           : title != null

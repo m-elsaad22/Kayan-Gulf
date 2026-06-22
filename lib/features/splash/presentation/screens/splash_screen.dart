@@ -22,7 +22,6 @@ import '../../../../core/theme/app_text_styles.dart';
 import '../../../../routing/app_routes.dart';
 import '../../../../shared/providers/auth_provider.dart';
 import '../../../../shared/services/local_storage_service.dart';
-import '../../../../shared/widgets/luxury/luxury_glass.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -188,8 +187,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                     scale: _logoScale,
                     child: Image.asset(
                       'assets/images/kayan_logo.png',
-                      width: 220,
-                      height: 220,
+                      width: 260,
+                      height: 260,
                       fit: BoxFit.contain,
                       errorBuilder: (_, __, ___) => Image.asset(
                         'assets/images/kayan_logo.png',
