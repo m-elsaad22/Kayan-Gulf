@@ -69,6 +69,8 @@ Ensure `android/local.properties` exists with `sdk.dir` and `flutter.sdk` (Flutt
 
 6. **Firebase / Maps / Stripe:** Documented in `README.md` and `SETUP_COMPLETE.md` but not required for mock-data development.
 
+7. **Branding assets:** Launcher icon and in-app logo must be separate owner files: `assets/images/kayan_icon.webp` (square 3D knot) and `assets/images/kayan_logo.png` (KAYAN + GULF SUPER APP wordmark). Do **not** use or crop legacy `1009078094.png` (gold K mark). After replacing files run `python3 scripts/install_kayan_branding.py` then rebuild APK.
+
 ### Manual test flow (hello world)
 
 1. Open `http://127.0.0.1:8080` after `flutter run -d chrome`.
