@@ -19,6 +19,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/theme/kayan_design_tokens.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_gradients.dart';
 import '../../../../core/theme/app_text_styles.dart';
@@ -249,10 +250,11 @@ class _OtpVerificationScreenState
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        backgroundColor: AppColors.bgScaffold,
+        backgroundColor: KayanDesignTokens.bg,
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation:       0,
+          backgroundColor: Colors.white,
+          foregroundColor: KayanDesignTokens.kBlueDeep,
+          elevation: 0,
           leading: IconButton(
             icon: Icon(
               isArabic

@@ -14,6 +14,19 @@ Extracted files live in `design/html/`.
 | `or-` | طلبات / delivery | `lib/features/delivery/` |
 | `cl-` | Classifieds | `lib/features/classifieds/` |
 
+## Entry flow (01–22)
+
+| HTML file | Flutter screen |
+|-----------|----------------|
+| `01-splash.html` | `SplashScreen` |
+| `02-language-region.html` | `LanguageRegionScreen` |
+| `03–05-onboarding-*.html` | `OnboardingScreen` |
+| `08-login-1.html` | `LoginScreen` |
+| `09-signup.html` | `SignupScreen` |
+| `10-otp.html` | `OtpVerificationScreen` (partial) |
+
+Entry widgets: `lib/shared/widgets/design/kayan_entry_widgets.dart`
+
 ## Delivery flow (or-*)
 
 | HTML file | Flutter screen |
