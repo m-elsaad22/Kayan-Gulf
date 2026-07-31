@@ -2,7 +2,7 @@
 // KAYAN Super App — Main Shell (Bottom Navigation)
 // lib/routing/main_shell.dart
 //
-// Wraps all 5 bottom-nav tabs.
+// Wraps all 6 bottom-nav tabs.
 // Features:
 //   • Custom bottom nav bar with KAYAN Royal Metallic style
 //   • Cart badge (live item count from Riverpod)
@@ -50,6 +50,13 @@ const List<_TabItem> _tabs = [
     labelAr:    'الرئيسية',
     icon:       Icons.home_outlined,
     activeIcon: Icons.home_rounded,
+  ),
+  _TabItem(
+    route:      AppRoutes.delivery,
+    label:      'Orders',
+    labelAr:    'طلبات',
+    icon:       Icons.delivery_dining_outlined,
+    activeIcon: Icons.delivery_dining_rounded,
   ),
   _TabItem(
     route:      AppRoutes.shop,
@@ -186,10 +193,8 @@ class _KayanBottomNavBar extends ConsumerWidget {
   }
 
   int? _getBadge(int index, WidgetRef ref) {
-    // Tab 1 (Shop) → cart count
-    // Tab 3 (Classifieds) → nothing
-    // Tab 4 (Profile) → notification count
-    // Implement when providers exist
+    // Tab 1 (Delivery) → delivery cart count
+    // Tab 2 (Shop) → cart count
     return null;
   }
 }
@@ -321,6 +326,7 @@ class _NavBarItemState extends State<_NavBarItem>
                       ? FontWeight.w600
                       : FontWeight.w400,
                   fontFamily: widget.isArabic ? 'NotoKufiArabic' : 'Inter',
+                  fontSize: 10,
                 ),
                 child: Text(label),
               ),

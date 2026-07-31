@@ -39,10 +39,25 @@ abstract final class AppRoutes {
   // ──────────────────────────────────────────────────────────
 
   static const String home        = '/home';
+  static const String delivery    = '/delivery';
   static const String shop        = '/shop';
   static const String services    = '/services';
   static const String classifieds = '/classifieds';
   static const String profile     = '/profile';
+
+  // ──────────────────────────────────────────────────────────
+  // 🍔 FOOD & GROCERY DELIVERY (طلبات — nested + checkout flow)
+  // ──────────────────────────────────────────────────────────
+
+  static const String deliveryVendors  = '/delivery/vendors';
+  static const String deliveryCart     = '/delivery/cart';
+  static const String deliveryAddress  = '/delivery/address';
+  static const String deliveryPayment  = '/delivery/payment';
+  static const String deliverySuccess  = '/delivery/success';
+  static const String deliveryTracking = '/delivery/tracking';
+
+  static const String _deliveryVendorSlug = 'vendors/:vendorSlug';
+  static const String _deliveryItemId     = 'vendors/:vendorSlug/items/:itemId';
 
   // ──────────────────────────────────────────────────────────
   // 🛒 E-COMMERCE (nested under /shop)
@@ -280,6 +295,10 @@ abstract final class AppRoutes {
   static const String $reportAdSlug     = _reportAdSlug;
   static const String $similarAdSlug    = _similarAdSlug;
 
+  // Delivery relative paths
+  static const String $deliveryVendorSlug = _deliveryVendorSlug;
+  static const String $deliveryItemId     = _deliveryItemId;
+
   // Profile relative paths
   static const String $editProfile      = _editProfile;
   static const String $addresses        = _addresses;
@@ -326,4 +345,9 @@ abstract final class AppRoutes {
 
   // Chat
   static String chatPath(String convId)     => '/chat/$convId';
+
+  // Delivery (طلبات)
+  static String deliveryVendorPath(String slug) => '/delivery/vendors/$slug';
+  static String deliveryItemPath(String vendorSlug, String itemId) =>
+      '/delivery/vendors/$vendorSlug/items/$itemId';
 }

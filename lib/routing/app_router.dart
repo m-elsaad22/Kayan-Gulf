@@ -13,11 +13,12 @@
 //   │  ├─ /orders/*      → Orders (root nav)              │
 //   │  ├─ /chat/*        → Chat (root nav)                │
 //   │  └─ StatefulShellRoute (Bottom Nav)                 │
-//   │     ├─ Branch 0: /home         → HomeScreen         │
-//   │     ├─ Branch 1: /shop/*       → E-commerce         │
-//   │     ├─ Branch 2: /services/*   → Services           │
-//   │     ├─ Branch 3: /classifieds/*→ Classifieds        │
-//   │     └─ Branch 4: /profile/*    → Profile            │
+//   │     ├─ Branch 0: /home         → Dashboard hub       │
+//   │     ├─ Branch 1: /delivery/*   → Food & grocery      │
+//   │     ├─ Branch 2: /shop/*       → E-commerce          │
+//   │     ├─ Branch 3: /services/*   → Services            │
+//   │     ├─ Branch 4: /classifieds/*→ Classifieds       │
+//   │     └─ Branch 5: /profile/*    → Profile             │
 //   └─────────────────────────────────────────────────────┘
 //
 // Auth Guard: redirect unauthenticated to /auth/phone
@@ -52,7 +53,6 @@ import '../features/auth/presentation/screens/otp_verification_screen.dart';
 import '../features/auth/presentation/screens/profile_setup_screen.dart';
 // Dashboard & Home
 import '../features/dashboard/presentation/screens/dashboard_screen.dart';
-import '../features/home/presentation/screens/home_screen.dart';
 // E-commerce
 import '../features/ecommerce/categories/presentation/screens/categories_screen.dart';
 import '../features/ecommerce/product/presentation/screens/product_list_screen.dart';
@@ -168,6 +168,15 @@ import '../features/wallet/presentation/screens/payment_receipt_screen.dart';
 import '../features/notifications/presentation/screens/notifications_screen.dart';
 // Wallet
 import '../features/wallet/presentation/screens/wallet_screen.dart';
+import '../features/delivery/presentation/screens/delivery_home_screen.dart';
+import '../features/delivery/presentation/screens/delivery_vendor_list_screen.dart';
+import '../features/delivery/presentation/screens/delivery_vendor_detail_screen.dart';
+import '../features/delivery/presentation/screens/delivery_item_detail_screen.dart';
+import '../features/delivery/presentation/screens/delivery_cart_screen.dart';
+import '../features/delivery/presentation/screens/delivery_address_screen.dart';
+import '../features/delivery/presentation/screens/delivery_payment_screen.dart';
+import '../features/delivery/presentation/screens/delivery_success_screen.dart';
+import '../features/delivery/presentation/screens/delivery_tracking_screen.dart';
 // Settings
 import '../features/settings/presentation/screens/settings_screen.dart';
 import '../features/settings/presentation/screens/settings_detail_screens.dart';
@@ -180,6 +189,7 @@ import '../features/settings/presentation/screens/settings_detail_screens.dart';
 
 final _rootNavigatorKey        = GlobalKey<NavigatorState>(debugLabel: 'root');
 final _homeTabKey              = GlobalKey<NavigatorState>(debugLabel: 'home');
+final _deliveryTabKey          = GlobalKey<NavigatorState>(debugLabel: 'delivery');
 final _shopTabKey              = GlobalKey<NavigatorState>(debugLabel: 'shop');
 final _servicesTabKey          = GlobalKey<NavigatorState>(debugLabel: 'services');
 final _classifiedsTabKey       = GlobalKey<NavigatorState>(debugLabel: 'classifieds');
@@ -401,6 +411,50 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildSlidePage(
           key:   state.pageKey,
           child: const CartScreen(),
+        ),
+      ),
+
+      // ════════════════════════════════════════════════════
+      // DELIVERY CHECKOUT FLOW (root-level — طلبات)
+      // ════════════════════════════════════════════════════
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path:        AppRoutes.deliveryCart,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key:   state.pageKey,
+          child: const DeliveryCartScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path:        AppRoutes.deliveryAddress,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key:   state.pageKey,
+          child: const DeliveryAddressScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path:        AppRoutes.deliveryPayment,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key:   state.pageKey,
+          child: const DeliveryPaymentScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path:        AppRoutes.deliverySuccess,
+        pageBuilder: (context, state) => _buildFadePage(
+          key:   state.pageKey,
+          child: const DeliverySuccessScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path:        AppRoutes.deliveryTracking,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key:   state.pageKey,
+          child: const DeliveryTrackingScreen(),
         ),
       ),
 
@@ -897,7 +951,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
 
       // ════════════════════════════════════════════════════
-      // MAIN SHELL — Stateful Bottom Navigation (5 tabs)
+      // MAIN SHELL — Stateful Bottom Navigation (6 tabs)
       // Each branch maintains its own navigation stack.
       // ════════════════════════════════════════════════════
       StatefulShellRoute.indexedStack(
@@ -909,7 +963,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         branches: [
 
           // ──────────────────────────────────────────────
-          // TAB 0 — HOME 🏠
+          // TAB 0 — HOME 🏠 (super-app hub)
           // ──────────────────────────────────────────────
           StatefulShellBranch(
             navigatorKey: _homeTabKey,
@@ -918,10 +972,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 path:        AppRoutes.home,
                 pageBuilder: (context, state) => _buildNoTransitionPage(
                   key:   state.pageKey,
-                  child: const HomeScreen(),
+                  child: const DashboardScreen(),
                 ),
                 routes: [
-                  // Notifications accessible from home bell icon
                   GoRoute(
                     path:        'notifications',
                     pageBuilder: (context, state) => _buildSlidePage(
@@ -935,7 +988,53 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           ),
 
           // ──────────────────────────────────────────────
-          // TAB 1 — SHOP 🛒
+          // TAB 1 — DELIVERY 🍔 (طلبات)
+          // ──────────────────────────────────────────────
+          StatefulShellBranch(
+            navigatorKey: _deliveryTabKey,
+            routes: [
+              GoRoute(
+                path:        AppRoutes.delivery,
+                pageBuilder: (context, state) => _buildNoTransitionPage(
+                  key:   state.pageKey,
+                  child: const DeliveryHomeScreen(),
+                ),
+                routes: [
+                  GoRoute(
+                    path:        'vendors',
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const DeliveryVendorListScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$deliveryVendorSlug,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: DeliveryVendorDetailScreen(
+                        vendorSlug: state.pathParameters['vendorSlug']!,
+                      ),
+                    ),
+                    routes: [
+                      GoRoute(
+                        path:        'items/:itemId',
+                        pageBuilder: (context, state) => _buildSlidePage(
+                          key:   state.pageKey,
+                          child: DeliveryItemDetailScreen(
+                            vendorSlug: state.pathParameters['vendorSlug']!,
+                            itemId: state.pathParameters['itemId']!,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+
+          // ──────────────────────────────────────────────
+          // TAB 2 — SHOP 🛒
           // ──────────────────────────────────────────────
           StatefulShellBranch(
             navigatorKey: _shopTabKey,
@@ -1017,7 +1116,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           ),
 
           // ──────────────────────────────────────────────
-          // TAB 2 — SERVICES 🔧
+          // TAB 3 — SERVICES 🔧
           // ──────────────────────────────────────────────
           StatefulShellBranch(
             navigatorKey: _servicesTabKey,
@@ -1124,7 +1223,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           ),
 
           // ──────────────────────────────────────────────
-          // TAB 3 — CLASSIFIEDS 📢
+          // TAB 4 — CLASSIFIEDS 📢
           // ──────────────────────────────────────────────
           StatefulShellBranch(
             navigatorKey: _classifiedsTabKey,
@@ -1289,7 +1388,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           ),
 
           // ──────────────────────────────────────────────
-          // TAB 4 — PROFILE 👤
+          // TAB 5 — PROFILE 👤
           // ──────────────────────────────────────────────
           StatefulShellBranch(
             navigatorKey: _profileTabKey,
