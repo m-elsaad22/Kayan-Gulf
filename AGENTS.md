@@ -6,15 +6,18 @@
 
 KAYAN (`sa.kayan.app`) is a **Flutter mobile client** (Android in-repo; iOS not checked in). It combines e-commerce, home services, and classifieds with mock data — no backend is required for local UI development.
 
-### Toolchain (pre-installed on the VM)
+### Toolchain
 
-| Component | Location |
-|-----------|----------|
-| Flutter stable | `$HOME/flutter` |
-| Android SDK 35/36 | `$HOME/Android/Sdk` |
-| JDK 17 (Android builds) | `$HOME/jdk/jdk-17` |
+| Component | Location | Provisioned? |
+|-----------|----------|--------------|
+| Flutter stable (3.44.x, Dart 3.12.x) | `$HOME/flutter` | Yes — matches `pubspec.lock` (`flutter >=3.44.0`, `dart >=3.12.0`) |
+| Chrome (web) | `google-chrome` on `PATH` | Yes |
+| Android SDK | `$HOME/Android/Sdk` | No — not installed. Only needed for APK builds (see below) |
+| JDK 17 (Android builds) | — | No — system Java is JDK 21 (`/usr/lib/jvm/java-21-openjdk-amd64`) |
 
-Shell PATH is configured in `~/.bashrc`. Open a new shell or `source ~/.bashrc` if `flutter` is not found.
+`$HOME/flutter/bin` is on `PATH` via `~/.bashrc`. Open a new shell or `source ~/.bashrc` if `flutter` is not found. The startup update script runs `flutter pub get` automatically.
+
+The **web target is the validated dev path** in this Cloud VM. APK builds are not provisioned by default: they require installing the Android SDK (platforms 35/36 + build-tools) and JDK 17, then setting `JAVA_HOME` and `android/local.properties`.
 
 ### Services to run
 
@@ -43,17 +46,21 @@ flutter build apk --release --android-skip-build-dependency-validation
 flutter create . --platforms=web
 
 flutter run -d chrome --web-port=8080 --web-browser-flag="--no-sandbox"
+
+# Headless alternative (serve only; drive the browser yourself). This is the
+# form validated during env setup:
+flutter run -d web-server --web-port=8080 --web-hostname=0.0.0.0
 ```
 
-App URL: `http://127.0.0.1:8080`
+App URL: `http://127.0.0.1:8080` (first web compile takes ~30s).
 
-**Android APK build** (requires JDK 17 — set `JAVA_HOME=$HOME/jdk/jdk-17`):
+**Android APK build** (not provisioned by default): install the Android SDK + JDK 17 first, then:
 
 ```bash
 flutter build apk --debug --android-skip-build-dependency-validation
 ```
 
-Ensure `android/local.properties` exists with `sdk.dir` and `flutter.sdk` (Flutter usually generates these on first build).
+Ensure `android/local.properties` exists with `sdk.dir` and `flutter.sdk` (Flutter usually generates these on first build), and set `JAVA_HOME` to a JDK 17 install.
 
 ### Known gotchas
 
