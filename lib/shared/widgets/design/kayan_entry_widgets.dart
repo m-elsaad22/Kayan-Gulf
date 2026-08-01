@@ -198,6 +198,7 @@ class KayanCtaButton extends StatelessWidget {
       KayanCtaVariant.gold => KayanDesignTokens.gradGold,
       KayanCtaVariant.blue => KayanDesignTokens.gradBlue,
       KayanCtaVariant.orange => KayanDesignTokens.gradOrange,
+      KayanCtaVariant.green => KayanDesignTokens.gradGreen,
     };
     final textColor = variant == KayanCtaVariant.gold ? const Color(0xFF402C00) : Colors.white;
 
@@ -240,7 +241,7 @@ class KayanCtaButton extends StatelessWidget {
   }
 }
 
-enum KayanCtaVariant { gold, blue, orange }
+enum KayanCtaVariant { gold, blue, orange, green }
 
 class KayanDesignTextField extends StatefulWidget {
   const KayanDesignTextField({

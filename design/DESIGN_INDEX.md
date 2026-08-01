@@ -27,6 +27,15 @@ Extracted files live in `design/html/`.
 
 Entry widgets: `lib/shared/widgets/design/kayan_entry_widgets.dart`
 
+## Home services flow (hs-*)
+
+| HTML file | Flutter screen |
+|-----------|----------------|
+| `24-hs-dashboard.html` | `ServicesHomeScreen` |
+| `25-hs-service-list.html` | `ServicesListScreen` |
+| `26-hs-service-details.html` | `ServiceDetailScreen` (partial) |
+| `27-hs-datetime.html` | `BookingCalendarScreen` (partial) |
+
 ## Delivery flow (or-*)
 
 | HTML file | Flutter screen |

@@ -333,6 +333,101 @@ class KayanCategoryPillRow extends StatelessWidget {
   }
 }
 
+class KayanServiceCard extends StatelessWidget {
+  const KayanServiceCard({
+    super.key,
+    required this.name,
+    required this.rating,
+    required this.reviews,
+    required this.duration,
+    required this.priceLabel,
+    required this.icon,
+    this.onTap,
+    this.onAdd,
+    this.accentGradient = KayanDesignTokens.gradGreen,
+  });
+
+  final String name;
+  final double rating;
+  final String reviews;
+  final String duration;
+  final String priceLabel;
+  final IconData icon;
+  final VoidCallback? onTap;
+  final VoidCallback? onAdd;
+  final LinearGradient accentGradient;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: KayanDesignTokens.border),
+          boxShadow: KayanDesignTokens.shadowS,
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 84,
+              height: 84,
+              decoration: BoxDecoration(
+                gradient: accentGradient,
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Icon(icon, color: Colors.white, size: 28),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(name, style: KayanDesignTokens.cairo(fontSize: 14.5, fontWeight: FontWeight.w800, color: KayanDesignTokens.kBlueDeep)),
+                  const SizedBox(height: 5),
+                  Wrap(
+                    spacing: 10,
+                    runSpacing: 4,
+                    children: [
+                      _Meta(Icons.star_rounded, '$rating ($reviews)', KayanDesignTokens.gold),
+                      _Meta(Icons.schedule_rounded, duration, KayanDesignTokens.muted),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Text(
+                        priceLabel,
+                        style: KayanDesignTokens.cairo(fontSize: 15, fontWeight: FontWeight.w900, color: KayanDesignTokens.kGreen),
+                      ),
+                      const Spacer(),
+                      GestureDetector(
+                        onTap: onAdd ?? onTap,
+                        child: Container(
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                            gradient: accentGradient,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(Icons.add_rounded, color: Colors.white, size: 18),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class KayanVendorCard extends StatelessWidget {
   const KayanVendorCard({
     super.key,

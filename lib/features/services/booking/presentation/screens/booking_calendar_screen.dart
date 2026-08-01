@@ -6,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../../core/theme/kayan_design_tokens.dart';
+import '../../../../../shared/widgets/design/kayan_entry_widgets.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_gradients.dart';
 import '../../../../../core/theme/app_text_styles.dart';
@@ -62,12 +64,16 @@ class _BCS extends ConsumerState<BookingCalendarScreen> {
     final ar = ref.watch(isArabicProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.bgScaffold,
+      backgroundColor: KayanDesignTokens.bg,
       appBar: AppBar(
-        backgroundColor: AppColors.bgSurface,
+        backgroundColor: Colors.white,
+        foregroundColor: KayanDesignTokens.kBlueDeep,
+        elevation: 0,
         centerTitle: true,
-        title: Text(ar ? 'اختر الموعد' : 'Choose Date & Time',
-            style: ar ? AppTextStyles.arabicTitleMedium : AppTextStyles.titleMedium),
+        title: Text(
+          ar ? 'اختر الموعد' : 'Choose date & time',
+          style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800),
+        ),
         leading: IconButton(
           icon: Icon(ar ? Icons.arrow_forward_ios_rounded : Icons.arrow_back_ios_new_rounded, size: 20),
           onPressed: () => context.pop()),
