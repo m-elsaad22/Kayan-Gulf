@@ -4,10 +4,18 @@ on:
   push:
     branches:
       - main
+    tags:
+      - "v*"
   workflow_dispatch:
+    inputs:
+      create_release:
+        description: "Attach APK to a GitHub Release"
+        required: false
+        default: true
+        type: boolean
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build-apk:
@@ -51,9 +59,30 @@ jobs:
       - name: Build release APK
         run: flutter build apk --release --android-skip-build-dependency-validation
 
-      - name: Upload release APK
+      - name: Upload release APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: kayan-release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
+          retention-days: 90
+
+      - name: Create GitHub Release (tag push)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/app/outputs/flutter-apk/app-release.apk
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+
+      - name: Create GitHub Release (manual dispatch)
+        if: github.event_name == 'workflow_dispatch' && inputs.create_release == true
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.0
+          name: KAYAN v1.0.0
+          files: build/app/outputs/flutter-apk/app-release.apk
+          generate_release_notes: true
+          draft: false
+          prerelease: false

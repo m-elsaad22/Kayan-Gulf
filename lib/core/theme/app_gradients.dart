@@ -330,9 +330,9 @@ abstract class AppGradients {
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
     colors: [
-      Color(0xFF0A1F3B),
-      Color(0xFF142B5A),
-      Color(0xFF0A1F3B),
+      Color(0xFF0A2B5E),
+      Color(0xFF0033A0),
+      Color(0xFF0A2B5E),
     ],
     stops: [0.0, 0.5, 1.0],
   );

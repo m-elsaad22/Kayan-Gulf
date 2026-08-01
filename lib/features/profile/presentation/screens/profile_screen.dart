@@ -22,6 +22,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_gradients.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/theme/app_border_radius.dart';
+import '../../../../core/theme/screen_theme.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../routing/app_routes.dart';
 import '../../../../shared/providers/auth_provider.dart';
@@ -84,7 +85,7 @@ class ProfileScreen extends ConsumerWidget {
     final profile  = _mockProfile;
 
     return Scaffold(
-      backgroundColor: AppColors.bgScaffold,
+      backgroundColor: context.screenBackground,
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
@@ -316,6 +317,27 @@ class _ProfileSliverHeader extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Center(
+                      child: Column(
+                        children: [
+                          Image.asset(
+                            'assets/images/kayan_logo.png',
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.contain,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'KAYAN Gulf',
+                            style: AppTextStyles.titleMedium.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
                     Row(
                       children: [
                         // Avatar
@@ -981,9 +1003,30 @@ class _LogoutButton extends ConsumerWidget {
 // ──────────────────────────────────────────────────────────────
 // VERSION FOOTER
 // ──────────────────────────────────────────────────────────────
-class _VersionFooter extends StatelessWidget {
+class _VersionFooter extends StatefulWidget {
   final bool isArabic;
   const _VersionFooter({required this.isArabic});
+
+  @override
+  State<_VersionFooter> createState() => _VersionFooterState();
+}
+
+class _VersionFooterState extends State<_VersionFooter> {
+  int _tapCount = 0;
+  DateTime? _lastTap;
+
+  void _onVersionTap() {
+    final now = DateTime.now();
+    if (_lastTap == null || now.difference(_lastTap!) > const Duration(seconds: 2)) {
+      _tapCount = 0;
+    }
+    _lastTap = now;
+    _tapCount++;
+    if (_tapCount >= 5) {
+      _tapCount = 0;
+      context.push(AppRoutes.adminLogin);
+    }
+  }
 
   @override
   Widget build(BuildContext context) => Column(
@@ -1002,9 +1045,12 @@ class _VersionFooter extends StatelessWidget {
         ),
       ),
       const SizedBox(height: 4),
-      Text(
-        'v1.0.0 • ${isArabic ? 'تسوق ملكي في الخليج' : 'Royal Shopping in the Gulf'}',
-        style: AppTextStyles.caption.copyWith(color: AppColors.textDisabled),
+      GestureDetector(
+        onTap: _onVersionTap,
+        child: Text(
+          'v1.0.0 • ${widget.isArabic ? 'تسوق ملكي في الخليج' : 'Royal Shopping in the Gulf'}',
+          style: AppTextStyles.caption.copyWith(color: AppColors.textDisabled),
+        ),
       ),
     ],
   );

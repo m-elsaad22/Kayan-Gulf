@@ -4,6 +4,7 @@
 // ============================================================
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/services/admin_data_service.dart';
 import '../../data/models/home_models.dart';
 
 // ──────────────────────────────────────────────────────────────
@@ -24,36 +25,29 @@ final homeDataProvider = FutureProvider.autoDispose<HomeData>((ref) async {
 // MOCK DATA — remove when API is ready
 // ──────────────────────────────────────────────────────────────
 
-HomeData _mockHomeData() => HomeData(
-  banners: [
-    BannerModel(
-      id: '1',
-      imageUrl: 'https://picsum.photos/800/400?random=1',
-      titleAr: 'خصومات تصل إلى ٥٠٪',
-      titleEn: 'Up to 50% Off',
-      subtitleAr: 'على آلاف المنتجات',
-      subtitleEn: 'On thousands of products',
-      actionRoute: '/shop/flash-deals',
-    ),
-    BannerModel(
-      id: '2',
-      imageUrl: 'https://picsum.photos/800/400?random=2',
-      titleAr: 'خدمات منزلية',
-      titleEn: 'Home Services',
-      subtitleAr: '٢٤/٧ فنيون معتمدون',
-      subtitleEn: '24/7 Certified Technicians',
-      actionRoute: '/services',
-    ),
-    BannerModel(
-      id: '3',
-      imageUrl: 'https://picsum.photos/800/400?random=3',
-      titleAr: 'إعلانك هنا',
-      titleEn: 'Advertise Here',
-      subtitleAr: 'انشر إعلانك مجاناً',
-      subtitleEn: 'Post your ad for free',
-      actionRoute: '/classifieds/post',
-    ),
-  ],
+HomeData _mockHomeData() {
+  final admin = AdminDataService.instance;
+  final bannerUrls = admin.getBannerUrls();
+  final banners = bannerUrls.isEmpty
+      ? [
+          BannerModel(
+            id: '1',
+            imageUrl: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800',
+            titleAr: 'خصومات تصل إلى ٥٠٪',
+            titleEn: 'Up to 50% Off',
+            actionRoute: '/shop/flash-deals',
+          ),
+        ]
+      : bannerUrls.asMap().entries.map((e) => BannerModel(
+            id: 'b${e.key}',
+            imageUrl: e.value,
+            titleAr: admin.getSettings().welcomeOfferText,
+            titleEn: admin.getAppName(),
+            actionRoute: '/shop',
+          )).toList();
+
+  return HomeData(
+  banners: banners,
   ecommerceCategories: [
     CategoryModel(id: '1', slug: 'electronics', nameAr: 'إلكترونيات', nameEn: 'Electronics', color: '#4169E1'),
     CategoryModel(id: '2', slug: 'fashion',     nameAr: 'أزياء',       nameEn: 'Fashion',      color: '#EC4899'),
@@ -124,4 +118,5 @@ HomeData _mockHomeData() => HomeData(
     createdAt: DateTime.now().subtract(Duration(hours: i * 3 + 1)),
     isBoosted: i % 3 == 0,
   )),
-);
+  );
+}

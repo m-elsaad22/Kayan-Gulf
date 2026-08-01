@@ -99,11 +99,14 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true
 
   # ─── Assets ──────────────────────────────────────────────────
   # أضف الملفات الفعلية داخل هذه المجلدات قبل البناء
   assets:
     - assets/images/
+    - assets/images/kayan_logo.png
+    - assets/images/kayan_icon.webp
     - assets/icons/
     - assets/lottie/
     - assets/svg/

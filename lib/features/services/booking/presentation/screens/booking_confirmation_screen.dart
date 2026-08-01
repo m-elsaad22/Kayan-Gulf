@@ -13,6 +13,7 @@ import '../../../../../core/theme/app_border_radius.dart';
 import '../../../../../core/theme/app_spacing.dart';
 import '../../../../../routing/app_routes.dart';
 import '../../../../../shared/providers/locale_provider.dart';
+import '../../../../../shared/widgets/competitor_patterns.dart';
 import '../../../browse/data/models/service_models.dart';
 
 class BookingConfirmationScreen extends ConsumerStatefulWidget {
@@ -52,6 +53,13 @@ class _BCnf extends ConsumerState<BookingConfirmationScreen> {
       ),
       body: Column(children: [
         Expanded(child: SingleChildScrollView(padding: const EdgeInsets.all(AppSpacing.pagePadding), child: Column(children: [
+          // Booking timeline (DARI pattern)
+          ServiceBookingTimeline(
+            steps: ar
+                ? ['اختيار الخدمة', 'تحديد الموعد', 'تأكيد الحجز', 'تنفيذ الخدمة']
+                : ['Choose service', 'Pick slot', 'Confirm', 'Service done'],
+            activeIndex: 2,
+          ),
           // Service card
           Container(padding: const EdgeInsets.all(16), decoration: BoxDecoration(gradient: AppGradients.card, borderRadius: AppBorderRadius.card, border: Border.all(color: AppColors.borderGold)),
             child: Column(children: [

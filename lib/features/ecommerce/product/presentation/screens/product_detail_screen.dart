@@ -26,6 +26,7 @@ import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_gradients.dart';
 import '../../../../../core/theme/app_text_styles.dart';
 import '../../../../../core/theme/app_border_radius.dart';
+import '../../../../../core/theme/screen_theme.dart';
 import '../../../../../core/theme/app_spacing.dart';
 import '../../../../../routing/app_routes.dart';
 import '../../../../../shared/providers/locale_provider.dart';
@@ -90,7 +91,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
         favorites.contains(productAsync.value!.id);
 
     return Scaffold(
-      backgroundColor: AppColors.bgScaffold,
+      backgroundColor: context.screenBackground,
       body: productAsync.when(
         loading: () => const _DetailSkeleton(),
         error:   (e, _) => Center(

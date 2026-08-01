@@ -17,7 +17,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'core/services/admin_data_service.dart';
 import 'core/theme/app_theme.dart';
+import 'core/theme/dynamic_theme.dart';
+import 'features/super_admin/services/design_engine_service.dart';
+import 'l10n/app_localizations.dart';
 import 'routing/app_router.dart';
 import 'shared/providers/locale_provider.dart';
 import 'shared/providers/theme_provider.dart';
@@ -30,24 +34,32 @@ class KayanApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // ── State ──────────────────────────────────────────────
     final router    = ref.watch(appRouterProvider);
     final locale    = ref.watch(localeProvider);
     final themeMode = ref.watch(themeModeProvider);
 
-    final isArabic  = locale.languageCode == 'ar';
+    return ValueListenableBuilder<int>(
+      valueListenable: AdminDataService.instance.revisionNotifier,
+      builder: (context, _, __) {
+        return ValueListenableBuilder<int>(
+          valueListenable: DesignEngineService.instance.revisionNotifier,
+          builder: (context, _, __) {
+        final isArabic  = locale.languageCode == 'ar';
+        final appName   = AdminDataService.instance.getAppName();
+        final design    = DesignEngineService.instance.settings;
+        final fontScale = AdminDataService.instance.getFontSettings().bodyScale;
 
-    return MaterialApp.router(
+        return MaterialApp.router(
       // ── Identity ────────────────────────────────────────
-      title:                    isArabic ? 'كيان' : 'KAYAN',
+      title:                    appName,
       debugShowCheckedModeBanner: false,
       debugShowMaterialGrid:    false,
 
       // ── Theme ───────────────────────────────────────────
-      // Dark is primary (Royal Metallic Luxury)
-      theme:      AppTheme.light,
-      darkTheme:  AppTheme.dark,
-      themeMode:  themeMode,        // default: ThemeMode.dark
+      // Dynamic design engine (Super Admin) + legacy admin fallback merge
+      theme:      DynamicTheme.light(design),
+      darkTheme:  DynamicTheme.dark(design),
+      themeMode:  themeMode,
 
       // ── Localization ────────────────────────────────────
       locale: locale,
@@ -61,6 +73,7 @@ class KayanApp extends ConsumerWidget {
         Locale('en', 'US'),     // English
       ],
       localizationsDelegates: const [
+        AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
@@ -93,8 +106,8 @@ class KayanApp extends ConsumerWidget {
             // Prevents UI breakage from extreme accessibility settings
             data: MediaQuery.of(context).copyWith(
               textScaler: MediaQuery.of(context).textScaler.clamp(
-                minScaleFactor: 0.85,
-                maxScaleFactor: 1.3,
+                minScaleFactor: 0.85 * fontScale,
+                maxScaleFactor: 1.3 * fontScale,
               ),
             ),
             child: ScrollConfiguration(
@@ -102,6 +115,10 @@ class KayanApp extends ConsumerWidget {
               child: child ?? const SizedBox.shrink(),
             ),
           ),
+        );
+      },
+    );
+          },
         );
       },
     );

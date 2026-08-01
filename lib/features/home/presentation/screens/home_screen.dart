@@ -27,6 +27,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_gradients.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/theme/app_border_radius.dart';
+import '../../../../core/theme/screen_theme.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../routing/app_routes.dart';
 import '../../../../shared/providers/auth_provider.dart';
@@ -75,7 +76,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final homeAsync = ref.watch(homeDataProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.bgScaffold,
+      backgroundColor: context.screenBackground,
       extendBodyBehindAppBar: true,
 
       // ── Custom App Bar ─────────────────────────────────────
@@ -327,13 +328,15 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 250),
       decoration: BoxDecoration(
-        gradient: AppGradients.hero,
+        color: isDark ? null : AppColors.lightBg,
+        gradient: isDark ? AppGradients.hero : null,
         boxShadow: isScrolled ? [
           BoxShadow(
-            color:      Colors.black.withOpacity(0.3),
+            color:      Colors.black.withValues(alpha: isDark ? 0.3 : 0.06),
             blurRadius: 12,
             offset:     const Offset(0, 4),
           ),
@@ -342,7 +345,7 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       child: SafeArea(
         child: Column(
           children: [
-            // ── Top row: greeting + actions ──────────────
+            // ── Top row: logo + greeting + actions ──────────────
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: AppSpacing.pagePadding,
@@ -350,6 +353,12 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
               child: Row(
                 children: [
+                  Image.asset(
+                    'assets/images/kayan_logo.png',
+                    height: 36,
+                    fit: BoxFit.contain,
+                  ),
+                  const SizedBox(width: 10),
                   // Greeting
                   Expanded(
                     child: Column(

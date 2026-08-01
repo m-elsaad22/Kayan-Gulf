@@ -11,12 +11,15 @@ import '../../../../../core/theme/app_spacing.dart';
 import '../../../../../routing/app_routes.dart';
 import '../../../../../shared/providers/locale_provider.dart';
 import '../../../../../shared/widgets/loaders/shimmer_loader.dart';
+import '../../../../../core/services/admin_data_service.dart';
 import '../../../../classifieds/browse/data/models/ad_models.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 enum _SortOpt { newest, priceAsc, priceDesc }
 
-final _adsListProvider = StateProvider<List<AdModel>>((_) => mockAds);
+final _adsListProvider = StateProvider<List<AdModel>>(
+  (_) => AdminDataService.instance.getClassifiedAds(),
+);
 final _sortProvider    = StateProvider<_SortOpt>((_) => _SortOpt.newest);
 final _searchProvider  = StateProvider<String>((_) => '');
 
@@ -38,7 +41,7 @@ class _ALS extends ConsumerState<AdsListScreen> {
     final sort = ref.watch(_sortProvider);
     final q    = ref.watch(_searchProvider);
 
-    var ads = mockAds.where((a) {
+    var ads = AdminDataService.instance.getClassifiedAds().where((a) {
       if (widget.categorySlug != null && a.categorySlug != widget.categorySlug) return false;
       if (q.isNotEmpty && !a.title.contains(q) && !(a.city.contains(q))) return false;
       return true;
