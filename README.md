@@ -1,6 +1,6 @@
 # KAYAN Super App — Flutter
 
-تطبيق سوبر آب للخليج العربي يجمع بين التسوق الإلكتروني، الخدمات المنزلية، والإعلانات المبوّبة.
+تطبيق سوبر آب للخليج العربي يجمع بين التسوق الإلكتروني، الخدمات المنزلية، **توصيل الطلبات** (مطاعم/بقالة/صيدليات)، والإعلانات المبوّبة.
 
 ## التقنيات المستخدمة
 
@@ -51,6 +51,7 @@ lib/
 │   ├── chat/              # Real-time messaging
 │   ├── checkout/          # Checkout + payment
 │   ├── classifieds/       # Classified ads
+│   ├── delivery/          # Food & grocery delivery (طلبات)
 │   ├── ecommerce/         # Products, search, vendors
 │   ├── home/              # Home screen
 │   ├── notifications/     # Push notifications

@@ -1,17 +1,14 @@
-// TODO: connect to real backend
+// Signup — matches design/html/09-signup.html
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/theme/app_border_radius.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_gradients.dart';
-import '../../../../core/theme/app_spacing.dart';
-import '../../../../core/theme/app_text_styles.dart';
 import '../../../../routing/app_routes.dart';
 import '../../../../shared/providers/auth_provider.dart';
 import '../../../../shared/providers/locale_provider.dart';
+import '../../../../shared/widgets/design/kayan_design_widgets.dart';
+import '../../../../shared/widgets/design/kayan_entry_widgets.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});
@@ -56,110 +53,74 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isArabic = ref.watch(isArabicProvider);
+    final ar = ref.watch(isArabicProvider);
 
-    return Scaffold(
-      backgroundColor: AppColors.bgScaffold,
-      appBar: AppBar(
-        title: Text(isArabic ? 'إنشاء حساب' : 'Create Account'),
-      ),
-      body: Container(
-        decoration: const BoxDecoration(gradient: AppGradients.card),
-        child: ListView(
-          padding: const EdgeInsets.all(AppSpacing.pagePadding),
+    return KayanEntryScaffold(
+      smallHero: true,
+      heroHeight: 210,
+      hero: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 16, 24, 36),
+        child: Column(
           children: [
-            Text(
-              isArabic ? 'ابدأ تجربتك مع كيان' : 'Start your KAYAN experience',
-              style: isArabic
-                  ? AppTextStyles.arabicHeadlineSmall
-                  : AppTextStyles.headlineSmall,
-            ),
-            const SizedBox(height: 18),
-            _Field(
-              controller: _nameCtrl,
-              label: isArabic ? 'الاسم الكامل' : 'Full name',
-              icon: Icons.person_outline_rounded,
-            ),
-            const SizedBox(height: 12),
-            _Field(
-              controller: _emailCtrl,
-              label: isArabic ? 'البريد الإلكتروني' : 'Email',
-              icon: Icons.email_outlined,
-              keyboardType: TextInputType.emailAddress,
-            ),
-            const SizedBox(height: 12),
-            _Field(
-              controller: _phoneCtrl,
-              label: isArabic ? 'رقم الجوال' : 'Phone',
-              icon: Icons.phone_iphone_rounded,
-              keyboardType: TextInputType.phone,
-            ),
-            const SizedBox(height: 12),
-            _Field(
-              controller: _passwordCtrl,
-              label: isArabic ? 'كلمة المرور' : 'Password',
-              icon: Icons.lock_outline_rounded,
-              obscureText: true,
-            ),
-            const SizedBox(height: 12),
-            CheckboxListTile(
-              value: _accepted,
-              onChanged: (value) => setState(() => _accepted = value ?? false),
-              contentPadding: EdgeInsets.zero,
-              title: Text(
-                isArabic
-                    ? 'أوافق على الشروط والأحكام وسياسة الخصوصية'
-                    : 'I agree to the terms and privacy policy',
-                style: AppTextStyles.bodySmall,
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: KayanHeroIconButton(
+                icon: Icons.arrow_forward_ios_rounded,
+                onTap: () => context.pop(),
               ),
             ),
-            const SizedBox(height: 18),
-            ElevatedButton(
-              onPressed: _accepted && !_loading ? _submit : null,
-              child: _loading
-                  ? const SizedBox(
-                      width: 22,
-                      height: 22,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : Text(isArabic ? 'تسجيل' : 'Sign Up'),
-            ),
-            const SizedBox(height: 12),
-            TextButton(
-              onPressed: () => context.go(AppRoutes.login),
-              child: Text(isArabic ? 'لديك حساب؟ سجل الدخول' : 'Have an account? Login'),
-            ),
+            const KayanBrandLogo(size: 56),
+            const SizedBox(height: 14),
+            KayanEntryTitle(before: ar ? 'إنشاء ' : 'Create ', highlight: ar ? 'حساب جديد' : 'account'),
+            const SizedBox(height: 8),
+            KayanEntrySubtitle(ar ? 'انضم إلى كيان في أقل من دقيقة' : 'Join KAYAN in under a minute'),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _Field extends StatelessWidget {
-  final TextEditingController controller;
-  final String label;
-  final IconData icon;
-  final TextInputType? keyboardType;
-  final bool obscureText;
-
-  const _Field({
-    required this.controller,
-    required this.label,
-    required this.icon,
-    this.keyboardType,
-    this.obscureText = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      keyboardType: keyboardType,
-      obscureText: obscureText,
-      decoration: InputDecoration(
-        labelText: label,
-        prefixIcon: Icon(icon),
+      sheet: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            KayanDesignTextField(
+              label: ar ? 'الاسم الكامل' : 'Full name',
+              controller: _nameCtrl,
+              icon: Icons.person_outline_rounded,
+            ),
+            const SizedBox(height: 16),
+            KayanDesignTextField(
+              label: ar ? 'البريد الإلكتروني' : 'Email',
+              controller: _emailCtrl,
+              icon: Icons.email_outlined,
+              keyboardType: TextInputType.emailAddress,
+            ),
+            const SizedBox(height: 16),
+            KayanDesignTextField(
+              label: ar ? 'رقم الجوال' : 'Phone',
+              controller: _phoneCtrl,
+              icon: Icons.phone_iphone_rounded,
+              keyboardType: TextInputType.phone,
+            ),
+            const SizedBox(height: 16),
+            KayanDesignTextField(
+              label: ar ? 'كلمة المرور' : 'Password',
+              controller: _passwordCtrl,
+              icon: Icons.lock_outline_rounded,
+              obscureText: true,
+            ),
+            const SizedBox(height: 14),
+            KayanCheckRow(
+              label: ar ? 'أوافق على الشروط والأحكام وسياسة الخصوصية' : 'I agree to terms and privacy policy',
+              value: _accepted,
+              onChanged: (v) => setState(() => _accepted = v),
+            ),
+            const SizedBox(height: 20),
+            KayanCtaButton(
+              label: ar ? 'إنشاء حساب' : 'Create account',
+              loading: _loading,
+              onPressed: _accepted && !_loading ? _submit : null,
+            ),
+          ],
+        ),
       ),
     );
   }

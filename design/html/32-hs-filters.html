@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+/* ═══════════════════════════════════════════════════
+   KAYAN — Responsive Web-App Screens (v2)
+   ألوان مأخوذة فعليًا من صورة الشعار (خلفية زرقاء + عقدة زرقاء/برتقالي/أخضر)
+   ═══════════════════════════════════════════════════ */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap');
+
+:root{
+  --k-blue:#0B4F9E;      /* أزرق الشعار/الخلفية */
+  --k-blue-deep:#062E63;
+  --k-blue-light:#3C86D6;
+  --k-orange:#E2801F;    /* برتقالي عقدة الشعار */
+  --k-orange-light:#F4A94D;
+  --k-green:#1FA073;     /* أخضر عقدة الشعار */
+  --k-green-light:#4FC79B;
+  --silver:#B9C3D1;      /* فضي معدني من نص الشعار */
+  --gold:#E3B34A;
+  --white:#FFFFFF;
+  --bg:#F5F8FC;
+  --text:#132038;
+  --text2:#4C5A72;
+  --muted:#8894A6;
+  --border:#E4E9F2;
+  --success:#1FA073;
+  --danger:#E2541F;
+  --r-s:14px;--r-m:20px;--r-l:28px;--r-pill:999px;
+  --grad-brand:linear-gradient(135deg,var(--k-blue) 0%,var(--k-blue-deep) 60%,#041F45 100%);
+  --grad-hero:linear-gradient(160deg,#0E5AB0 0%,var(--k-blue) 55%,var(--k-blue-deep) 100%);
+  --grad-gold:linear-gradient(120deg,var(--gold),#F4CD7E);
+  --grad-orange:linear-gradient(135deg,var(--k-orange),var(--k-orange-light));
+  --grad-green:linear-gradient(135deg,var(--k-green),var(--k-green-light));
+  --grad-blue:linear-gradient(135deg,var(--k-blue),var(--k-blue-light));
+  --sh-s:0 4px 16px rgba(6,46,99,.08);
+  --sh-m:0 14px 34px rgba(6,46,99,.14);
+  --sh-l:0 26px 60px rgba(6,46,99,.20);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:'Cairo',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;justify-content:center;
+}
+
+/* ─── App shell: full-bleed on mobile, framed only as max-width on wide screens ─── */
+.app{
+  width:100%;max-width:520px;
+  min-height:100vh;
+  background:var(--white);
+  display:flex;flex-direction:column;
+  position:relative;
+  overflow-x:hidden;
+  direction:rtl;
+  box-shadow:0 0 60px rgba(6,46,99,.08);
+}
+@media(min-width:521px){
+  body{padding:24px 0}
+  .app{min-height:calc(100vh - 48px);border-radius:28px;overflow:hidden}
+}
+
+.pad{padding:0 24px}
+
+/* ─── Hero top (shared screens: gradient matching logo bg) ─── */
+.hero-top{
+  position:relative;background:var(--grad-hero);
+  padding:34px 24px 46px;overflow:hidden;color:#fff;
+}
+.hero-top::before{content:"";position:absolute;inset:0;background:
+  radial-gradient(360px 220px at 85% -10%,rgba(226,128,31,.30),transparent 60%),
+  radial-gradient(320px 220px at 5% 110%,rgba(31,160,115,.30),transparent 60%);
+  pointer-events:none}
+.hero-top.small{padding:24px 24px 34px}
+.hero-top .top-row{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between}
+.icon-btn{width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.14);
+  display:grid;place-items:center;color:#fff;font-size:14px;flex:none;border:none}
+.icon-btn.light{background:var(--bg);color:var(--k-blue)}
+.skip-link{color:rgba(255,255,255,.8);font-size:13.5px;font-weight:700}
+
+/* ─── Sheet (white rounded content area below hero) ─── */
+.sheet{
+  background:var(--white);border-radius:28px 28px 0 0;margin-top:-24px;
+  position:relative;z-index:3;flex:1;padding:30px 24px 24px;
+  display:flex;flex-direction:column;
+}
+.sheet.flush{margin-top:0;border-radius:0}
+
+/* ─── Logo ─── */
+.kmark img{display:block;width:100%;height:100%;object-fit:contain}
+h1.scr-title{font-size:22px;font-weight:900;color:#fff;line-height:1.4}
+h1.scr-title.dark{color:var(--k-blue-deep)}
+h1.scr-title em{font-style:normal;background:var(--grad-gold);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+p.scr-sub{font-size:14px;color:rgba(255,255,255,.82);line-height:1.8;margin-top:8px}
+p.scr-sub.dark{color:var(--text2)}
+
+/* ─── Buttons ─── */
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;
+  font-family:'Cairo';font-weight:800;font-size:16px;padding:16px;border-radius:var(--r-pill);
+  border:none;cursor:pointer;transition:.2s}
+.btn-cta{background:var(--grad-gold);color:#402c00;box-shadow:0 14px 30px rgba(227,179,74,.35)}
+.btn-blue{background:var(--grad-blue);color:#fff;box-shadow:0 14px 30px rgba(11,79,158,.30)}
+.btn-orange{background:var(--grad-orange);color:#fff;box-shadow:0 14px 30px rgba(226,128,31,.30)}
+.btn-green{background:var(--grad-green);color:#fff;box-shadow:0 14px 30px rgba(31,160,115,.30)}
+.btn-ghost{background:var(--bg);color:var(--k-blue-deep);border:1.5px solid var(--border)}
+.btn-outline-white{background:rgba(255,255,255,.08);color:#fff;border:1.5px solid rgba(255,255,255,.35)}
+.btn-text{background:none;color:var(--k-blue);font-weight:700;font-size:14px}
+.btn[disabled]{opacity:.4}
+
+/* ─── Inputs ─── */
+.field{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.field label{font-size:13px;font-weight:700;color:var(--text2)}
+.field label.on-hero{color:rgba(255,255,255,.85)}
+.input-wrap{display:flex;align-items:center;gap:10px;background:var(--bg);
+  border:1.5px solid var(--border);border-radius:16px;padding:14px 16px;transition:.2s}
+.input-wrap:focus-within{border-color:var(--k-blue);box-shadow:0 0 0 4px rgba(11,79,158,.10)}
+.input-wrap i{color:var(--k-blue);font-size:16px;width:18px;text-align:center}
+.input-wrap input,.input-wrap textarea{flex:1;background:none;border:none;outline:none;color:var(--text);font-family:'Cairo';font-size:15px}
+.input-wrap input::placeholder{color:#A9B7CC}
+.input-wrap .eye{color:var(--muted);cursor:pointer;font-size:15px}
+.check-row{display:flex;align-items:center;gap:9px;font-size:13.5px;color:var(--text2)}
+.check-row .box{width:19px;height:19px;border-radius:6px;border:1.5px solid var(--border);display:grid;place-items:center;flex:none}
+.check-row .box.on{background:var(--grad-gold);border-color:transparent;color:#402c00;font-size:11px}
+.row-between{display:flex;align-items:center;justify-content:space-between}
+
+/* ─── Divider ─── */
+.divider{display:flex;align-items:center;gap:14px;color:var(--muted);font-size:13px;margin:20px 0}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--border)}
+
+/* ─── Social buttons ─── */
+.social-row{display:flex;gap:12px}
+.social-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--white);border:1.5px solid var(--border);border-radius:14px;
+  padding:13px;font-size:13.5px;font-weight:700;color:var(--k-blue-deep);box-shadow:var(--sh-s)}
+
+/* ─── Progress dots ─── */
+.dots{display:flex;gap:7px;justify-content:center}
+.dots span{width:8px;height:8px;border-radius:99px;background:rgba(255,255,255,.28)}
+.dots span.on{width:26px;background:var(--grad-gold)}
+.dots.dark span{background:var(--border)}
+
+/* ─── OTP ─── */
+.otp-row{display:flex;gap:12px;justify-content:center;direction:ltr}
+.otp-box{width:50px;height:58px;border-radius:16px;background:var(--bg);
+  border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;
+  font-size:23px;font-weight:800;color:var(--k-blue-deep)}
+.otp-box.filled{border-color:var(--gold);background:rgba(227,179,74,.08)}
+.otp-box.active{border-color:var(--k-blue);box-shadow:0 0 0 4px rgba(11,79,158,.12)}
+.timer{text-align:center;font-size:13.5px;color:var(--muted)}
+.timer b{color:var(--gold)}
+
+/* ─── Illustration ─── */
+.illust-wrap{position:relative;width:100%;display:flex;align-items:center;justify-content:center;padding:20px 0}
+.illust-blob{position:absolute;width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.16),transparent 60%);
+  border:1px solid rgba(255,255,255,.18)}
+.illust-icon{position:relative;z-index:2;width:110px;height:110px;border-radius:32px;
+  display:grid;place-items:center;font-size:46px;color:#fff;box-shadow:var(--sh-m)}
+
+/* ─── Service trio (onboarding) ─── */
+.serv-trio{display:flex;gap:12px;justify-content:center}
+.serv-pill{flex:1;background:rgba(255,255,255,.10);border:1.5px solid rgba(255,255,255,.2);
+  border-radius:20px;padding:18px 8px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:9px}
+.serv-pill .ic{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;font-size:20px;color:#fff}
+.serv-pill span{font-size:12px;font-weight:700;color:rgba(255,255,255,.85)}
+
+/* ─── Country / language ─── */
+.country-list{display:flex;flex-direction:column;gap:2px}
+.country-row{display:flex;align-items:center;justify-content:space-between;padding:15px 6px;border-bottom:1px solid var(--border)}
+.country-row .left{display:flex;align-items:center;gap:12px;font-weight:700;font-size:15px;color:var(--k-blue-deep)}
+.radio{width:20px;height:20px;border-radius:50%;border:2px solid var(--border)}
+.radio.on{border-color:var(--k-orange);position:relative}
+.radio.on::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--k-orange)}
+.lang-pair{display:flex;gap:14px}
+.lang-card{flex:1;background:var(--white);border:1.5px solid var(--border);border-radius:18px;
+  padding:20px 0;text-align:center;font-weight:800;font-size:16px;color:var(--k-blue-deep);box-shadow:var(--sh-s)}
+.lang-card.on{border-color:var(--k-orange);background:rgba(226,128,31,.06);color:#B5590C}
+
+/* ─── Strength meter ─── */
+.strength{display:flex;gap:6px;margin-top:6px}
+.strength i{flex:1;height:5px;border-radius:99px;background:var(--border)}
+.strength.strong i{background:var(--success)}
+.strength-label{font-size:12px;font-weight:700;margin-top:6px}
+
+/* ─── Success ring ─── */
+.success-ring{width:104px;height:104px;border-radius:50%;background:rgba(31,160,115,.10);
+  display:grid;place-items:center;margin:0 auto}
+.success-ring .core{width:72px;height:72px;border-radius:50%;background:var(--grad-green);
+  display:grid;place-items:center;color:#fff;font-size:32px;box-shadow:0 16px 34px rgba(31,160,115,.30)}
+
+/* ─── Top bar (inner pages, light) ─── */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 0 8px}
+.topbar h2{font-size:17px;font-weight:800;color:var(--k-blue-deep)}
+
+/* ─── Avatar ─── */
+.avatar-wrap{position:relative;width:92px;height:92px;margin:0 auto}
+.avatar-wrap .ph{width:100%;height:100%;border-radius:50%;background:var(--grad-blue);
+  display:grid;place-items:center;color:#fff;font-size:32px;font-weight:800;border:3px solid #fff;box-shadow:var(--sh-m)}
+.avatar-edit{position:absolute;bottom:0;left:0;width:28px;height:28px;border-radius:50%;background:var(--grad-gold);
+  color:#402c00;display:grid;place-items:center;font-size:11px;border:3px solid #fff}
+
+/* ─── Stat row / wallet ─── */
+.stat-row{display:flex;gap:10px}
+.stat-box{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:14px 8px;text-align:center}
+.stat-box b{display:block;font-size:18px;font-weight:900;color:var(--k-blue-deep)}
+.stat-box small{font-size:11px;color:var(--muted)}
+.wallet-card{background:var(--grad-hero);border-radius:20px;padding:20px;color:#fff;position:relative;overflow:hidden}
+.wallet-card::before{content:"";position:absolute;inset:0;background:radial-gradient(300px 200px at 90% 0,rgba(227,179,74,.25),transparent 60%)}
+.wallet-card .wt-row{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between}
+.wallet-card b{font-size:22px;font-weight:900}
+.wallet-card small{color:rgba(255,255,255,.72);font-size:12px}
+
+/* ─── List menu ─── */
+.list-menu{display:flex;flex-direction:column}
+.list-item{display:flex;align-items:center;gap:14px;padding:14px 4px;border-bottom:1px solid var(--border)}
+.list-item .li-ic{width:40px;height:40px;border-radius:12px;background:var(--bg);display:grid;place-items:center;color:var(--k-blue);font-size:15px;flex:none}
+.list-item .li-txt{flex:1}
+.list-item b{font-size:14px;color:var(--k-blue-deep);display:block}
+.list-item small{font-size:11.5px;color:var(--muted)}
+.list-item .arrow{color:var(--muted);font-size:12px}
+.list-item.danger b{color:var(--danger)}
+.list-item.danger .li-ic{color:var(--danger)}
+
+/* ─── Toggle ─── */
+.toggle{width:44px;height:25px;border-radius:99px;background:var(--border);position:relative;flex:none}
+.toggle.on{background:var(--grad-blue)}
+.toggle .knob{position:absolute;top:3px;right:3px;width:19px;height:19px;border-radius:50%;background:#fff;box-shadow:var(--sh-s);transition:.2s}
+.toggle.on .knob{right:22px}
+
+/* ─── Tabs ─── */
+.tabbar{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.tabbar .tab{flex:none;padding:8px 16px;border-radius:99px;font-size:12.5px;font-weight:700;color:var(--text2);background:var(--bg);border:1px solid var(--border)}
+.tabbar .tab.on{background:var(--grad-blue);color:#fff;border-color:transparent}
+
+/* ─── Notification item ─── */
+.notif-item{display:flex;gap:12px;padding:13px 4px;border-bottom:1px solid var(--border)}
+.notif-item.unread{background:rgba(11,79,158,.04);border-radius:14px;padding-inline:10px}
+.notif-item .ni-ic{width:38px;height:38px;border-radius:12px;color:#fff;display:grid;place-items:center;font-size:13px;flex:none}
+.notif-item b{font-size:13px;color:var(--k-blue-deep);display:block}
+.notif-item p{font-size:12px;color:var(--text2);margin-top:2px}
+.notif-item time{font-size:10.5px;color:var(--muted)}
+
+/* ─── Order card ─── */
+.order-card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:var(--sh-s)}
+.order-card .oc-top{display:flex;justify-content:space-between;align-items:center}
+.order-card b{font-size:14px;color:var(--k-blue-deep)}
+.order-card .price{color:var(--k-orange);font-weight:800}
+.order-card small{color:var(--muted);font-size:11.5px}
+.status-badge{font-size:10.5px;font-weight:800;padding:4px 10px;border-radius:99px}
+.status-badge.paid{background:rgba(31,160,115,.12);color:var(--success)}
+.status-badge.unpaid{background:rgba(226,84,31,.1);color:var(--danger)}
+.status-badge.scheduled{background:rgba(11,79,158,.1);color:var(--k-blue)}
+
+/* ─── Wishlist ─── */
+.wish-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.wish-card{background:var(--white);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:var(--sh-s)}
+.wish-card .wc-img{height:85px;position:relative}
+.wish-card .wc-heart{position:absolute;top:8px;left:8px;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.9);display:grid;place-items:center;color:var(--danger);font-size:10px}
+.wish-card .wc-body{padding:10px}
+.wish-card b{font-size:12px;color:var(--k-blue-deep);display:block}
+.wish-card .wc-price{color:var(--k-orange);font-weight:800;font-size:12.5px}
+
+/* ─── Chat ─── */
+.chat-area{display:flex;flex-direction:column;gap:10px}
+.bubble{max-width:75%;padding:12px 15px;border-radius:18px;font-size:13px;line-height:1.6}
+.bubble.mine{align-self:flex-end;background:var(--grad-blue);color:#fff;border-bottom-left-radius:5px}
+.bubble.theirs{align-self:flex-start;background:var(--bg);color:var(--text);border-bottom-right-radius:5px}
+.bubble time{display:block;font-size:10px;opacity:.7;margin-top:5px}
+.chat-input{display:flex;align-items:center;gap:10px;background:var(--bg);border:1.5px solid var(--border);border-radius:99px;padding:10px 14px}
+.chat-input input{flex:1;border:none;background:none;outline:none;font-family:'Cairo';font-size:13.5px}
+.chat-send{width:36px;height:36px;border-radius:50%;background:var(--grad-blue);color:#fff;display:grid;place-items:center;flex:none}
+
+/* ─── Star rating ─── */
+.star-row{display:flex;gap:8px;justify-content:center;direction:ltr}
+.star-row i{font-size:30px;color:var(--border)}
+.star-row i.on{color:var(--gold)}
+
+/* ─── Dialog overlay ─── */
+.dialog-overlay{position:absolute;inset:0;background:rgba(6,46,99,.55);display:flex;align-items:center;justify-content:center;z-index:60}
+.dialog-box{background:#fff;border-radius:24px;padding:28px 24px;width:85%;text-align:center;box-shadow:var(--sh-l)}
+.dialog-icon{width:60px;height:60px;border-radius:50%;background:rgba(226,84,31,.1);color:var(--danger);display:grid;place-items:center;font-size:24px;margin:0 auto 14px}
+.dialog-actions{display:flex;gap:10px;margin-top:20px}
+
+/* utility */
+.flex-1{flex:1}
+.center{display:flex;flex-direction:column;align-items:center;text-align:center}
+.gap-8{gap:8px}.gap-10{gap:10px}.gap-14{gap:14px}.gap-18{gap:18px}.gap-24{gap:24px}
+.mt-8{margin-top:8px}.mt-14{margin-top:14px}.mt-18{margin-top:18px}.mt-24{margin-top:24px}.mt-30{margin-top:30px}
+.mt-auto{margin-top:auto}
+.w-full{width:100%}
+
+/* ─── Orders/Delivery section palette ─── */
+:root{
+  --o-orange:#D87220;
+  --o-orange-light:#FF8636;
+  --o-red:#E63946;
+  --o-green-open:#2ECC71;
+  --grad-o-orange:linear-gradient(135deg,var(--o-orange),var(--o-orange-light));
+}
+
+/* ─── Dashboard hub cards (screen 7) ─── */
+.hub-card{position:relative;border-radius:26px;overflow:hidden;min-height:150px;display:flex;align-items:center;
+  padding:22px;box-shadow:var(--sh-m);isolation:isolate}
+.hub-card::after{content:"";position:absolute;inset:0;z-index:0;opacity:.14;
+  background-image:radial-gradient(#fff 1.4px,transparent 1.4px);background-size:16px 16px}
+.hub-card .hc-scene{position:absolute;inset-inline-end:-10px;top:0;bottom:0;width:150px;z-index:1;opacity:.95}
+.hub-card .hc-body{position:relative;z-index:2;color:#fff;max-width:64%}
+.hub-card .hc-body b{font-size:19px;font-weight:900;display:block;margin-bottom:5px}
+.hub-card .hc-body p{font-size:12.5px;color:rgba(255,255,255,.85);line-height:1.6}
+.hub-card .hc-arrow{position:absolute;left:16px;top:16px;width:34px;height:34px;border-radius:50%;
+  background:rgba(255,255,255,.18);display:grid;place-items:center;color:#fff;font-size:13px;z-index:3}
+.hub-card.services{background:linear-gradient(120deg,#0E7A56,var(--k-green))}
+.hub-card.shop{background:linear-gradient(120deg,#B5620F,var(--k-orange))}
+.hub-card.classifieds{background:linear-gradient(120deg,var(--k-blue-deep),var(--k-blue))}
+.hub-card.orders{background:linear-gradient(120deg,#A8380F,var(--o-orange))}
+
+/* icon-scene: layered shapes forming a small illustrated composition (no stock photos) */
+.scene-icon{position:absolute;border-radius:16px;background:rgba(255,255,255,.16);
+  display:grid;place-items:center;color:#fff;box-shadow:0 8px 20px rgba(0,0,0,.18)}
+
+/* ─── Section hero (small colored header for section home pages) ─── */
+.sec-hero{position:relative;padding:20px 24px 26px;overflow:hidden;color:#fff}
+.sec-hero.green{background:linear-gradient(120deg,#0E7A56,var(--k-green))}
+.sec-hero.orange{background:linear-gradient(120deg,#B5620F,var(--k-orange))}
+.sec-hero.blue{background:linear-gradient(120deg,var(--k-blue-deep),var(--k-blue))}
+.sec-hero.red-orange{background:linear-gradient(120deg,#A8380F,var(--o-orange))}
+.sec-hero::after{content:"";position:absolute;inset:0;opacity:.12;
+  background-image:radial-gradient(#fff 1.4px,transparent 1.4px);background-size:16px 16px}
+.sec-hero .top-row{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between}
+.sec-searchbar{position:relative;z-index:2;margin-top:16px;display:flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,.16);border:1.5px solid rgba(255,255,255,.25);border-radius:16px;padding:13px 16px}
+.sec-searchbar i{color:rgba(255,255,255,.85)}
+.sec-searchbar span{color:rgba(255,255,255,.75);font-size:14px}
+
+/* ─── Category pill row (horizontal scroll) ─── */
+.pill-scroll{display:flex;gap:10px;overflow-x:auto;padding:2px}
+.cat-pill{flex:none;display:flex;flex-direction:column;align-items:center;gap:7px;width:66px}
+.cat-pill .cp-ic{width:56px;height:56px;border-radius:18px;display:grid;place-items:center;color:#fff;font-size:22px}
+.cat-pill span{font-size:11px;font-weight:700;color:var(--text2);text-align:center}
+
+/* ─── Service / product card (list item with scene thumbnail) ─── */
+.svc-card{display:flex;gap:12px;background:#fff;border:1px solid var(--border);border-radius:18px;padding:12px;margin-bottom:12px;box-shadow:var(--sh-s)}
+.svc-thumb{position:relative;width:84px;height:84px;border-radius:14px;flex:none;overflow:hidden;display:grid;place-items:center;color:#fff;font-size:26px}
+.svc-body{flex:1;min-width:0}
+.svc-body b{font-size:14.5px;color:var(--k-blue-deep);display:block}
+.svc-meta{display:flex;gap:10px;margin-top:5px;font-size:11.5px;color:var(--muted);flex-wrap:wrap}
+.svc-meta span{display:flex;align-items:center;gap:4px}
+.svc-price-row{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+.svc-price{font-weight:900;color:var(--k-green);font-size:15px}
+.svc-add{width:32px;height:32px;border-radius:10px;background:var(--grad-green);color:#fff;display:grid;place-items:center;font-size:13px;flex:none}
+
+/* ─── Offer banner ─── */
+.offer-banner{border-radius:20px;padding:18px 20px;color:#fff;position:relative;overflow:hidden;margin-bottom:16px}
+.offer-banner b{font-size:16px;display:block}
+.offer-banner small{opacity:.85;font-size:12px}
+
+/* ─── Calendar ─── */
+.cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cal-head b{color:var(--k-blue-deep);font-size:15px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}
+.cal-grid .dow{font-size:11px;color:var(--muted);font-weight:700;padding-bottom:4px}
+.cal-day{aspect-ratio:1;display:grid;place-items:center;border-radius:12px;font-size:13px;font-weight:700;color:var(--text)}
+.cal-day.avail{background:rgba(31,160,115,.08);color:var(--k-green)}
+.cal-day.muted{color:var(--border)}
+.cal-day.on{background:var(--grad-green);color:#fff}
+
+/* ─── Time slots ─── */
+.slot-group b.grp-title{font-size:13px;color:var(--text2);display:block;margin-bottom:10px}
+.slot-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}
+.slot{padding:10px 16px;border-radius:12px;border:1.5px solid var(--border);font-size:13px;font-weight:700;color:var(--text2);background:#fff}
+.slot.on{background:var(--grad-green);color:#fff;border-color:transparent}
+
+/* ─── Summary rows (booking/cart) ─── */
+.sum-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:13.5px}
+.sum-row span:first-child{color:var(--text2)}
+.sum-row span:last-child{color:var(--k-blue-deep);font-weight:700}
+.sum-row.total span{font-weight:900;font-size:16px;color:var(--k-blue-deep)}
+.sum-row.total{border-bottom:none;padding-top:14px}
+
+/* ─── Payment method row ─── */
+.pay-row{display:flex;align-items:center;gap:14px;padding:15px 4px;border-bottom:1px solid var(--border)}
+.pay-row .pr-ic{width:42px;height:42px;border-radius:12px;background:var(--bg);display:grid;place-items:center;font-size:17px;color:var(--k-blue);flex:none}
+.pay-row b{font-size:14px;color:var(--k-blue-deep);flex:1}
+.pay-row .radio{margin-inline-start:auto}
+
+/* ─── Tracking timeline ─── */
+.track-line{display:flex;flex-direction:column;gap:0;position:relative;padding-inline-start:26px}
+.track-line::before{content:"";position:absolute;top:8px;bottom:14px;right:auto;inset-inline-start:9px;width:2px;background:var(--border)}
+.track-step{position:relative;padding-bottom:26px}
+.track-step .ts-dot{position:absolute;inset-inline-start:-26px;top:0;width:20px;height:20px;border-radius:50%;
+  background:var(--border);display:grid;place-items:center;color:#fff;font-size:9px}
+.track-step.done .ts-dot{background:var(--success)}
+.track-step.active .ts-dot{background:var(--grad-green);box-shadow:0 0 0 5px rgba(31,160,115,.18)}
+.track-step b{font-size:13.5px;color:var(--k-blue-deep)}
+.track-step small{color:var(--muted);font-size:11.5px}
+
+/* ─── Map placeholder ─── */
+.map-ph{position:relative;height:160px;border-radius:18px;background:linear-gradient(135deg,#DCEFE7,#EAF4F0);
+  overflow:hidden;display:grid;place-items:center;color:var(--k-green);margin-bottom:16px}
+.map-ph::before{content:"";position:absolute;inset:0;background-image:
+  linear-gradient(rgba(31,160,115,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(31,160,115,.12) 1px,transparent 1px);
+  background-size:22px 22px}
+.map-pin{position:relative;z-index:2;width:40px;height:40px;border-radius:50% 50% 50% 0;background:var(--grad-green);
+  transform:rotate(-45deg);display:grid;place-items:center;box-shadow:var(--sh-m)}
+.map-pin i{transform:rotate(45deg);color:#fff;font-size:16px}
+
+/* ─── Tech/agent card ─── */
+.tech-card{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--border);border-radius:16px;padding:14px;box-shadow:var(--sh-s)}
+.tech-avatar{width:50px;height:50px;border-radius:50%;background:var(--grad-green);display:grid;place-items:center;color:#fff;font-size:18px;font-weight:800;flex:none}
+.tech-card b{font-size:14px;color:var(--k-blue-deep);display:block}
+.tech-card small{color:var(--muted);font-size:11.5px}
+
+
+</style>
+<title>KAYAN — الفلاتر المتقدمة - خدمات منزلية</title>
+</head>
+<body>
+<div class="app">
+  
+<div class="pad" style="min-height:100vh;display:flex;flex-direction:column">
+  <div class="topbar"><div class="icon-btn light"><i class="fas fa-arrow-right"></i></div><h2>بحث متقدم</h2><span style="color:var(--k-green);font-weight:700;font-size:12.5px">إعادة تعيين</span></div>
+  <div class="mt-14">
+    <b class="grp-title" style="font-size:13px;color:var(--text2);display:block;margin-bottom:10px">نوع الخدمة</b>
+    <div class="slot-row">
+      <span class="slot" style="background:var(--grad-green);color:#fff;border:none">الكل</span>
+      <span class="slot">كهرباء</span><span class="slot">سباكة</span><span class="slot">تنظيف</span><span class="slot">طوارئ</span>
+    </div>
+    <b class="grp-title" style="font-size:13px;color:var(--text2);display:block;margin:14px 0 10px">التقييم</b>
+    <div class="star-row" style="justify-content:flex-start;gap:6px"><i class="fas fa-star on" style="font-size:24px"></i><i class="fas fa-star on" style="font-size:24px"></i><i class="fas fa-star on" style="font-size:24px"></i><i class="fas fa-star on" style="font-size:24px"></i><i class="fas fa-star" style="font-size:24px"></i></div>
+    <b class="grp-title" style="font-size:13px;color:var(--text2);display:block;margin:18px 0 10px">نطاق السعر</b>
+    <div style="height:6px;background:var(--border);border-radius:99px;position:relative">
+      <div style="position:absolute;right:20%;left:15%;height:100%;background:var(--grad-green);border-radius:99px"></div>
+      <div style="position:absolute;right:20%;top:-6px;width:18px;height:18px;border-radius:50%;background:#fff;border:3px solid var(--k-green)"></div>
+      <div style="position:absolute;left:15%;top:-6px;width:18px;height:18px;border-radius:50%;background:#fff;border:3px solid var(--k-green)"></div>
+    </div>
+    <div class="row-between mt-8" style="font-size:12px;color:var(--muted)"><span>10 ر.س</span><span>500 ر.س</span></div>
+    <b class="grp-title" style="font-size:13px;color:var(--text2);display:block;margin:18px 0 10px">سنوات الخبرة</b>
+    <div class="slot-row"><span class="slot">1+</span><span class="slot" style="background:var(--grad-green);color:#fff;border:none">5+</span><span class="slot">10+</span></div>
+  </div>
+  <button class="btn btn-green mt-auto" style="margin-bottom:20px">تطبيق الفلتر</button>
+</div>
+
+</div>
+</body>
+</html>

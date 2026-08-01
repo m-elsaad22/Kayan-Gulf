@@ -1,0 +1,70 @@
+name: Phase Release ZIP
+
+on:
+  workflow_dispatch:
+    inputs:
+      phase:
+        description: Phase slug (e.g. phase-3-services)
+        required: true
+      version:
+        description: Version label
+        required: true
+        default: "1.0.0"
+
+permissions:
+  contents: write
+
+jobs:
+  release-zip:
+    name: Build APK and publish ZIP
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build release APK
+        run: flutter build apk --release --android-skip-build-dependency-validation
+
+      - name: Package ZIP
+        run: |
+          PHASE="${{ github.event.inputs.phase }}"
+          VERSION="${{ github.event.inputs.version }}"
+          mkdir -p "dist/stage-$PHASE"
+          cp build/app/outputs/flutter-apk/app-release.apk "dist/stage-$PHASE/kayan-app.apk"
+          printf 'KAYAN Gulf Super App\nPhase: %s\nVersion: %s\n' "$PHASE" "$VERSION" > "dist/stage-$PHASE/README.txt"
+          cd "dist/stage-$PHASE" && zip -r "../../kayan-${PHASE}-${VERSION}.zip" .
+          ls -lh "../kayan-${PHASE}-${VERSION}.zip"
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kayan-${{ github.event.inputs.phase }}-${{ github.event.inputs.version }}
+          path: dist/kayan-${{ github.event.inputs.phase }}-${{ github.event.inputs.version }}.zip
+          if-no-files-found: error
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.phase }}-${{ github.event.inputs.version }}
+          name: KAYAN ${{ github.event.inputs.phase }}
+          draft: false
+          prerelease: true
+          generate_release_notes: true
+          files: dist/kayan-${{ github.event.inputs.phase }}-${{ github.event.inputs.version }}.zip

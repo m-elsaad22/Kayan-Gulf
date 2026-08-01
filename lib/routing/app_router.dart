@@ -13,11 +13,12 @@
 //   │  ├─ /orders/*      → Orders (root nav)              │
 //   │  ├─ /chat/*        → Chat (root nav)                │
 //   │  └─ StatefulShellRoute (Bottom Nav)                 │
-//   │     ├─ Branch 0: /home         → HomeScreen         │
-//   │     ├─ Branch 1: /shop/*       → E-commerce         │
-//   │     ├─ Branch 2: /services/*   → Services           │
-//   │     ├─ Branch 3: /classifieds/*→ Classifieds        │
-//   │     └─ Branch 4: /profile/*    → Profile            │
+//   │     ├─ Branch 0: /home         → Dashboard hub       │
+//   │     ├─ Branch 1: /delivery/*   → Food & grocery      │
+//   │     ├─ Branch 2: /shop/*       → E-commerce          │
+//   │     ├─ Branch 3: /services/*   → Services            │
+//   │     ├─ Branch 4: /classifieds/*→ Classifieds       │
+//   │     └─ Branch 5: /profile/*    → Profile             │
 //   └─────────────────────────────────────────────────────┘
 //
 // Auth Guard: redirect unauthenticated to /auth/phone
@@ -52,7 +53,6 @@ import '../features/auth/presentation/screens/otp_verification_screen.dart';
 import '../features/auth/presentation/screens/profile_setup_screen.dart';
 // Dashboard & Home
 import '../features/dashboard/presentation/screens/dashboard_screen.dart';
-import '../features/home/presentation/screens/home_screen.dart';
 // E-commerce
 import '../features/ecommerce/categories/presentation/screens/categories_screen.dart';
 import '../features/ecommerce/product/presentation/screens/product_list_screen.dart';
@@ -132,46 +132,6 @@ import '../shared/screens/quick_switch_screen.dart';
 import '../shared/screens/fullscreen_gallery_screen.dart';
 import '../shared/widgets/no_internet_widget.dart';
 import '../shared/widgets/welcome_offer_screen.dart';
-import '../features/admin/presentation/screens/admin_login_screen.dart';
-import '../features/admin/presentation/screens/admin_dashboard_screen.dart';
-import '../features/admin/presentation/screens/admin_products_screen.dart';
-import '../features/admin/presentation/screens/admin_categories_screen.dart';
-import '../features/admin/presentation/screens/admin_services_screen.dart';
-import '../features/admin/presentation/screens/admin_ads_screen.dart';
-import '../features/admin/presentation/screens/admin_settings_screen.dart';
-import '../features/admin/presentation/screens/admin_banners_screen.dart';
-import '../features/admin/presentation/screens/admin_colors_screen.dart';
-import '../features/admin/presentation/screens/admin_fonts_screen.dart';
-import '../features/admin/presentation/screens/admin_screens_screen.dart';
-import '../features/super_admin/screens/super_admin_dashboard.dart';
-import '../features/super_admin/screens/color_control_screen.dart';
-import '../features/super_admin/screens/typography_screen.dart';
-import '../features/super_admin/screens/radius_shadow_screen.dart';
-import '../features/super_admin/screens/animations_screen.dart';
-import '../features/orders/presentation/screens/unified_orders_screen.dart';
-import '../features/profile/presentation/screens/unified_wishlist_screen.dart';
-import '../features/services/browse/presentation/screens/search_services_screen.dart';
-import '../features/services/booking/presentation/screens/cancel_booking_screen.dart';
-import '../features/services/booking/presentation/screens/reschedule_booking_screen.dart';
-import '../features/services/booking/presentation/screens/report_issue_screen.dart';
-import '../features/services/notifications/presentation/screens/service_notifications_screen.dart';
-import '../features/ecommerce/search/presentation/screens/product_filters_screen.dart';
-import '../features/ecommerce/notifications/presentation/screens/shop_notifications_screen.dart';
-import '../features/classifieds/ad_detail/presentation/screens/contact_seller_screen.dart';
-import '../features/classifieds/post_ad/presentation/screens/post_ad_success_screen.dart';
-import '../features/profile/presentation/screens/change_password_screen.dart';
-import '../features/profile/presentation/screens/delete_account_screen.dart';
-import '../features/wallet/presentation/screens/points_refund_screen.dart';
-import '../shared/screens/call_screen.dart';
-import '../shared/screens/cancel_otp_screen.dart';
-import '../shared/screens/review_reply_screen.dart';
-import '../shared/screens/virtual_tour_screen.dart';
-import '../shared/screens/whats_new_screen.dart';
-import '../shared/screens/app_permissions_screen.dart';
-import '../shared/screens/empty_state_screen.dart';
-import '../shared/screens/advanced_search_results_screen.dart';
-import '../shared/screens/map_location_picker_screen.dart';
-import '../shared/screens/qr_display_screen.dart';
 // Chat
 import '../features/chat/presentation/screens/conversations_screen.dart';
 import '../features/chat/presentation/screens/chat_screen.dart';
@@ -208,6 +168,15 @@ import '../features/wallet/presentation/screens/payment_receipt_screen.dart';
 import '../features/notifications/presentation/screens/notifications_screen.dart';
 // Wallet
 import '../features/wallet/presentation/screens/wallet_screen.dart';
+import '../features/delivery/presentation/screens/delivery_home_screen.dart';
+import '../features/delivery/presentation/screens/delivery_vendor_list_screen.dart';
+import '../features/delivery/presentation/screens/delivery_vendor_detail_screen.dart';
+import '../features/delivery/presentation/screens/delivery_item_detail_screen.dart';
+import '../features/delivery/presentation/screens/delivery_cart_screen.dart';
+import '../features/delivery/presentation/screens/delivery_address_screen.dart';
+import '../features/delivery/presentation/screens/delivery_payment_screen.dart';
+import '../features/delivery/presentation/screens/delivery_success_screen.dart';
+import '../features/delivery/presentation/screens/delivery_tracking_screen.dart';
 // Settings
 import '../features/settings/presentation/screens/settings_screen.dart';
 import '../features/settings/presentation/screens/settings_detail_screens.dart';
@@ -220,6 +189,7 @@ import '../features/settings/presentation/screens/settings_detail_screens.dart';
 
 final _rootNavigatorKey        = GlobalKey<NavigatorState>(debugLabel: 'root');
 final _homeTabKey              = GlobalKey<NavigatorState>(debugLabel: 'home');
+final _deliveryTabKey          = GlobalKey<NavigatorState>(debugLabel: 'delivery');
 final _shopTabKey              = GlobalKey<NavigatorState>(debugLabel: 'shop');
 final _servicesTabKey          = GlobalKey<NavigatorState>(debugLabel: 'services');
 final _classifiedsTabKey       = GlobalKey<NavigatorState>(debugLabel: 'classifieds');
@@ -289,8 +259,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         '/quick-switch',
         '/gallery',
         '/welcome-offer',
-        '/admin/',
-        '/super-admin/',
       ];
       final isPublic = publicPrefixes.any((p) => location.startsWith(p));
       if (isPublic) {
@@ -443,6 +411,50 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildSlidePage(
           key:   state.pageKey,
           child: const CartScreen(),
+        ),
+      ),
+
+      // ════════════════════════════════════════════════════
+      // DELIVERY CHECKOUT FLOW (root-level — طلبات)
+      // ════════════════════════════════════════════════════
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path:        AppRoutes.deliveryCart,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key:   state.pageKey,
+          child: const DeliveryCartScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path:        AppRoutes.deliveryAddress,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key:   state.pageKey,
+          child: const DeliveryAddressScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path:        AppRoutes.deliveryPayment,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key:   state.pageKey,
+          child: const DeliveryPaymentScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path:        AppRoutes.deliverySuccess,
+        pageBuilder: (context, state) => _buildFadePage(
+          key:   state.pageKey,
+          child: const DeliverySuccessScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path:        AppRoutes.deliveryTracking,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key:   state.pageKey,
+          child: const DeliveryTrackingScreen(),
         ),
       ),
 
@@ -939,7 +951,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
 
       // ════════════════════════════════════════════════════
-      // MAIN SHELL — Stateful Bottom Navigation (5 tabs)
+      // MAIN SHELL — Stateful Bottom Navigation (6 tabs)
       // Each branch maintains its own navigation stack.
       // ════════════════════════════════════════════════════
       StatefulShellRoute.indexedStack(
@@ -951,7 +963,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         branches: [
 
           // ──────────────────────────────────────────────
-          // TAB 0 — HOME 🏠
+          // TAB 0 — HOME 🏠 (super-app hub)
           // ──────────────────────────────────────────────
           StatefulShellBranch(
             navigatorKey: _homeTabKey,
@@ -960,10 +972,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 path:        AppRoutes.home,
                 pageBuilder: (context, state) => _buildNoTransitionPage(
                   key:   state.pageKey,
-                  child: const HomeScreen(),
+                  child: const DashboardScreen(),
                 ),
                 routes: [
-                  // Notifications accessible from home bell icon
                   GoRoute(
                     path:        'notifications',
                     pageBuilder: (context, state) => _buildSlidePage(
@@ -977,7 +988,135 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           ),
 
           // ──────────────────────────────────────────────
-          // TAB 1 — SERVICES 🔧 🔧
+          // TAB 1 — DELIVERY 🍔 (طلبات)
+          // ──────────────────────────────────────────────
+          StatefulShellBranch(
+            navigatorKey: _deliveryTabKey,
+            routes: [
+              GoRoute(
+                path:        AppRoutes.delivery,
+                pageBuilder: (context, state) => _buildNoTransitionPage(
+                  key:   state.pageKey,
+                  child: const DeliveryHomeScreen(),
+                ),
+                routes: [
+                  GoRoute(
+                    path:        'vendors',
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const DeliveryVendorListScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$deliveryVendorSlug,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: DeliveryVendorDetailScreen(
+                        vendorSlug: state.pathParameters['vendorSlug']!,
+                      ),
+                    ),
+                    routes: [
+                      GoRoute(
+                        path:        'items/:itemId',
+                        pageBuilder: (context, state) => _buildSlidePage(
+                          key:   state.pageKey,
+                          child: DeliveryItemDetailScreen(
+                            vendorSlug: state.pathParameters['vendorSlug']!,
+                            itemId: state.pathParameters['itemId']!,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+
+          // ──────────────────────────────────────────────
+          // TAB 2 — SHOP 🛒
+          // ──────────────────────────────────────────────
+          StatefulShellBranch(
+            navigatorKey: _shopTabKey,
+            routes: [
+              GoRoute(
+                path:        AppRoutes.shop,
+                pageBuilder: (context, state) => _buildNoTransitionPage(
+                  key:   state.pageKey,
+                  child: const ProductListScreen(),
+                ),
+                routes: [
+                  // Search
+                  GoRoute(
+                    path:        AppRoutes.$search,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: SearchScreen(
+                        initialQuery: state.uri.queryParameters['q'],
+                      ),
+                    ),
+                  ),
+                  // Flash Deals
+                  GoRoute(
+                    path:        AppRoutes.$flashDeals,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const FlashDealsScreen(),
+                    ),
+                  ),
+                  // All categories grid
+                  GoRoute(
+                    path:        AppRoutes.$categories,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const CategoriesScreen(),
+                    ),
+                  ),
+                  // Products filtered by category
+                  GoRoute(
+                    path:        AppRoutes.$categoryProducts,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: ProductListScreen(
+                        categorySlug: state.pathParameters['categorySlug']!,
+                      ),
+                    ),
+                  ),
+                  // Single product detail
+                  GoRoute(
+                    path:        AppRoutes.$productDetail,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: ProductDetailScreen(
+                        slug: state.pathParameters['productSlug']!,
+                      ),
+                    ),
+                  ),
+                  // Vendor storefront
+                  GoRoute(
+                    path:        AppRoutes.$vendorProfile,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: VendorProfileScreen(
+                        vendorSlug: state.pathParameters['vendorSlug']!,
+                      ),
+                    ),
+                  ),
+                  // Favorites
+                  GoRoute(
+                    path:        AppRoutes.$favorites,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const fav_screen.FavoritesScreen(),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+
+          // ──────────────────────────────────────────────
+          // TAB 3 — SERVICES 🔧
           // ──────────────────────────────────────────────
           StatefulShellBranch(
             navigatorKey: _servicesTabKey,
@@ -1083,91 +1222,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             ],
           ),
 
-
           // ──────────────────────────────────────────────
-          // TAB 2 — SHOP 🛒 🛒
-          // ──────────────────────────────────────────────
-          StatefulShellBranch(
-            navigatorKey: _shopTabKey,
-            routes: [
-              GoRoute(
-                path:        AppRoutes.shop,
-                pageBuilder: (context, state) => _buildNoTransitionPage(
-                  key:   state.pageKey,
-                  child: const ProductListScreen(),
-                ),
-                routes: [
-                  // Search
-                  GoRoute(
-                    path:        AppRoutes.$search,
-                    pageBuilder: (context, state) => _buildSlidePage(
-                      key:   state.pageKey,
-                      child: SearchScreen(
-                        initialQuery: state.uri.queryParameters['q'],
-                      ),
-                    ),
-                  ),
-                  // Flash Deals
-                  GoRoute(
-                    path:        AppRoutes.$flashDeals,
-                    pageBuilder: (context, state) => _buildSlidePage(
-                      key:   state.pageKey,
-                      child: const FlashDealsScreen(),
-                    ),
-                  ),
-                  // All categories grid
-                  GoRoute(
-                    path:        AppRoutes.$categories,
-                    pageBuilder: (context, state) => _buildSlidePage(
-                      key:   state.pageKey,
-                      child: const CategoriesScreen(),
-                    ),
-                  ),
-                  // Products filtered by category
-                  GoRoute(
-                    path:        AppRoutes.$categoryProducts,
-                    pageBuilder: (context, state) => _buildSlidePage(
-                      key:   state.pageKey,
-                      child: ProductListScreen(
-                        categorySlug: state.pathParameters['categorySlug']!,
-                      ),
-                    ),
-                  ),
-                  // Single product detail
-                  GoRoute(
-                    path:        AppRoutes.$productDetail,
-                    pageBuilder: (context, state) => _buildSlidePage(
-                      key:   state.pageKey,
-                      child: ProductDetailScreen(
-                        slug: state.pathParameters['productSlug']!,
-                      ),
-                    ),
-                  ),
-                  // Vendor storefront
-                  GoRoute(
-                    path:        AppRoutes.$vendorProfile,
-                    pageBuilder: (context, state) => _buildSlidePage(
-                      key:   state.pageKey,
-                      child: VendorProfileScreen(
-                        vendorSlug: state.pathParameters['vendorSlug']!,
-                      ),
-                    ),
-                  ),
-                  // Favorites
-                  GoRoute(
-                    path:        AppRoutes.$favorites,
-                    pageBuilder: (context, state) => _buildSlidePage(
-                      key:   state.pageKey,
-                      child: const fav_screen.FavoritesScreen(),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-
-          // ──────────────────────────────────────────────
-          // TAB 3 — CLASSIFIEDS 📢
+          // TAB 4 — CLASSIFIEDS 📢
           // ──────────────────────────────────────────────
           StatefulShellBranch(
             navigatorKey: _classifiedsTabKey,
@@ -1332,7 +1388,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           ),
 
           // ──────────────────────────────────────────────
-          // TAB 4 — PROFILE 👤
+          // TAB 5 — PROFILE 👤
           // ──────────────────────────────────────────────
           StatefulShellBranch(
             navigatorKey: _profileTabKey,
@@ -1491,150 +1547,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           child: const WelcomeOfferScreen(),
         ),
       ),
-
-      // ════════════════════════════════════════════════════
-      // ADMIN PANEL
-      // ════════════════════════════════════════════════════
-      GoRoute(
-        path: AppRoutes.adminLogin,
-        pageBuilder: (context, state) => _buildSlidePage(
-          key: state.pageKey,
-          child: const AdminLoginScreen(),
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.adminDashboard,
-        pageBuilder: (context, state) => _buildSlidePage(
-          key: state.pageKey,
-          child: const AdminDashboardScreen(),
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.adminProducts,
-        pageBuilder: (context, state) => _buildSlidePage(
-          key: state.pageKey,
-          child: const AdminProductsScreen(),
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.adminCategories,
-        pageBuilder: (context, state) => _buildSlidePage(
-          key: state.pageKey,
-          child: const AdminCategoriesScreen(),
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.adminServices,
-        pageBuilder: (context, state) => _buildSlidePage(
-          key: state.pageKey,
-          child: const AdminServicesScreen(),
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.adminAds,
-        pageBuilder: (context, state) => _buildSlidePage(
-          key: state.pageKey,
-          child: const AdminAdsScreen(),
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.adminSettings,
-        pageBuilder: (context, state) => _buildSlidePage(
-          key: state.pageKey,
-          child: const AdminSettingsScreen(),
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.adminBanners,
-        pageBuilder: (c, s) => _buildSlidePage(
-          key: s.pageKey,
-          child: const AdminBannersScreen(),
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.adminColors,
-        pageBuilder: (c, s) => _buildSlidePage(
-          key: s.pageKey,
-          child: const AdminColorsScreen(),
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.adminFonts,
-        pageBuilder: (c, s) => _buildSlidePage(
-          key: s.pageKey,
-          child: const AdminFontsScreen(),
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.adminScreens,
-        pageBuilder: (c, s) => _buildSlidePage(
-          key: s.pageKey,
-          child: const AdminScreensScreen(),
-        ),
-      ),
-
-      // ════════════════════════════════════════════════════
-      // SUPER ADMIN — Design Engine
-      // ════════════════════════════════════════════════════
-      GoRoute(
-        path: AppRoutes.superAdminDashboard,
-        pageBuilder: (c, s) => _buildSlidePage(
-          key: s.pageKey,
-          child: const SuperAdminDashboardScreen(),
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.superAdminColors,
-        pageBuilder: (c, s) => _buildSlidePage(
-          key: s.pageKey,
-          child: const ColorControlScreen(),
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.superAdminTypography,
-        pageBuilder: (c, s) => _buildSlidePage(
-          key: s.pageKey,
-          child: const TypographyScreen(),
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.superAdminRadius,
-        pageBuilder: (c, s) => _buildSlidePage(
-          key: s.pageKey,
-          child: const RadiusShadowScreen(),
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.superAdminAnimations,
-        pageBuilder: (c, s) => _buildSlidePage(
-          key: s.pageKey,
-          child: const AnimationsScreen(),
-        ),
-      ),
-      GoRoute(path: AppRoutes.unifiedOrders, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const UnifiedOrdersScreen())),
-      GoRoute(path: AppRoutes.unifiedWishlist, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const UnifiedWishlistScreen())),
-      GoRoute(path: AppRoutes.searchServices, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const SearchServicesScreen())),
-      GoRoute(path: AppRoutes.cancelBooking, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const CancelBookingScreen())),
-      GoRoute(path: AppRoutes.rescheduleBooking, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const RescheduleBookingScreen())),
-      GoRoute(path: AppRoutes.reportIssue, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const ReportIssueScreen())),
-      GoRoute(path: AppRoutes.serviceNotifications, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const ServiceNotificationsScreen())),
-      GoRoute(path: AppRoutes.shopFilters, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const ProductFiltersScreen())),
-      GoRoute(path: AppRoutes.shopNotifications, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const ShopNotificationsScreen())),
-      GoRoute(path: AppRoutes.contactSeller, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const ContactSellerScreen())),
-      GoRoute(path: AppRoutes.postAdSuccess, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const PostAdSuccessScreen())),
-      GoRoute(path: AppRoutes.whatsNew, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const WhatsNewScreen())),
-      GoRoute(path: AppRoutes.appPermissions, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const AppPermissionsScreen())),
-      GoRoute(path: AppRoutes.emptyState, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const EmptyStateScreen())),
-      GoRoute(path: AppRoutes.advancedSearch, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const AdvancedSearchResultsScreen())),
-      GoRoute(path: AppRoutes.mapPicker, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const MapLocationPickerScreen())),
-      GoRoute(path: AppRoutes.qrDisplay, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const QrDisplayScreen())),
-      GoRoute(path: AppRoutes.callScreen, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const CallScreen())),
-      GoRoute(path: AppRoutes.cancelOtp, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const CancelOtpScreen())),
-      GoRoute(path: AppRoutes.reviewReply, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const ReviewReplyScreen())),
-      GoRoute(path: AppRoutes.virtualTour, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const VirtualTourScreen())),
-      GoRoute(path: AppRoutes.changePassword, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const ChangePasswordScreen())),
-      GoRoute(path: AppRoutes.deleteAccount, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const DeleteAccountScreen())),
-      GoRoute(path: AppRoutes.pointsRefund, pageBuilder: (c, s) => _buildSlidePage(key: s.pageKey, child: const PointsRefundScreen())),
       GoRoute(
         path:        AppRoutes.fullscreenGallery,
         pageBuilder: (context, state) {

@@ -7,12 +7,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../../core/theme/kayan_design_tokens.dart';
+import '../../../../../shared/widgets/design/kayan_entry_widgets.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_gradients.dart';
 import '../../../../../core/theme/app_text_styles.dart';
 import '../../../../../core/theme/app_border_radius.dart';
-import '../../../../../shared/widgets/competitor_patterns.dart';
-import '../../../../../core/theme/screen_theme.dart';
 import '../../../../../core/theme/app_spacing.dart';
 import '../../../../../routing/app_routes.dart';
 import '../../../../../shared/providers/locale_provider.dart';
@@ -47,7 +47,7 @@ class _SDS extends ConsumerState<ServiceDetailScreen> {
     final svc = ref.watch(_svcDetailProv(widget.slug));
 
     return Scaffold(
-      backgroundColor: context.screenBackground,
+      backgroundColor: KayanDesignTokens.bg,
       body: svc.when(
         loading: () => const _Skel(),
         error: (e, _) => Center(child: Text(e.toString())),
@@ -90,13 +90,6 @@ class _SDS extends ConsumerState<ServiceDetailScreen> {
             ),
 
             SliverToBoxAdapter(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              ServiceVerifiedProviderRow(
-                name: s.technicians.isNotEmpty
-                    ? s.technicians.first.name
-                    : (ar ? s.nameAr : s.nameEn),
-                rating: s.rating,
-                jobsDone: s.totalBookings,
-              ),
               // Header info
               Padding(padding: const EdgeInsets.fromLTRB(16, 14, 16, 0), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 // Category + badges
@@ -319,19 +312,27 @@ class _SDS extends ConsumerState<ServiceDetailScreen> {
           // Book Now sticky bar
           Positioned(bottom: 0, left: 0, right: 0, child: Container(
             padding: EdgeInsets.fromLTRB(16, 12, 16, MediaQuery.paddingOf(context).bottom + 12),
-            decoration: BoxDecoration(color: AppColors.bgSurface, border: const Border(top: BorderSide(color: AppColors.borderSubtle)),
-                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 20, offset: const Offset(0, -4))]),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: const Border(top: BorderSide(color: KayanDesignTokens.border)),
+              boxShadow: KayanDesignTokens.shadowS,
+            ),
             child: Row(children: [
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(ar ? 'يبدأ من' : 'From', style: AppTextStyles.caption),
-                Text('${s.finalPrice.toInt()} ر.س', style: AppTextStyles.priceLarge),
+                Text(ar ? 'يبدأ من' : 'From', style: KayanDesignTokens.cairo(fontSize: 12, color: KayanDesignTokens.muted)),
+                Text('${s.finalPrice.toInt()} ${ar ? 'ر.س' : 'SAR'}', style: KayanDesignTokens.cairo(fontSize: 18, fontWeight: FontWeight.w900, color: KayanDesignTokens.kGreen)),
               ]),
               const SizedBox(width: 12),
-              Expanded(child: GestureDetector(
-                onTap: () { HapticFeedback.mediumImpact(); context.push(AppRoutes.serviceBookPath(s.slug)); },
-                child: Container(height: 52, decoration: BoxDecoration(gradient: AppGradients.primaryButton, borderRadius: AppBorderRadius.button,
-                    boxShadow: [BoxShadow(color: AppColors.royalBlue.withOpacity(0.35), blurRadius: 14, offset: const Offset(0, 4))]),
-                    child: Center(child: Text(ar ? 'احجز الآن' : 'Book Now', style: ar ? AppTextStyles.arabicButton : AppTextStyles.buttonMedium))))),
+              Expanded(
+                child: KayanCtaButton(
+                  label: ar ? 'احجز الآن' : 'Book now',
+                  variant: KayanCtaVariant.green,
+                  onPressed: () {
+                    HapticFeedback.mediumImpact();
+                    context.push(AppRoutes.serviceBookPath(s.slug));
+                  },
+                ),
+              ),
               const SizedBox(width: 10),
               Container(width: 52, height: 52, decoration: BoxDecoration(color: AppColors.errorBg, borderRadius: AppBorderRadius.button, border: Border.all(color: AppColors.borderError)),
                   child: const Icon(Icons.phone_rounded, color: AppColors.error, size: 22)),

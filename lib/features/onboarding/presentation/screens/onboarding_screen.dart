@@ -1,67 +1,66 @@
-// ============================================================
-// KAYAN Super App — Onboarding Screen
-// lib/features/onboarding/presentation/screens/onboarding_screen.dart
-//
-// 3 pages: E-commerce → Services → Classifieds
-// Smooth PageView with gold dot indicator, skip button
-// ============================================================
-
+// Onboarding — matches design/html/03–05-onboarding-*.html
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_gradients.dart';
-import '../../../../core/theme/app_text_styles.dart';
-import '../../../../core/theme/app_border_radius.dart';
-import '../../../../core/theme/app_spacing.dart';
 import '../../../../routing/app_routes.dart';
+import '../../../../core/theme/kayan_design_tokens.dart';
 import '../../../../shared/providers/locale_provider.dart';
 import '../../../../shared/services/local_storage_service.dart';
+import '../../../../shared/widgets/design/kayan_entry_widgets.dart';
 
 class _OnboardPage {
-  final String emoji;
   final String titleAr;
   final String titleEn;
+  final String highlightAr;
+  final String highlightEn;
   final String bodyAr;
   final String bodyEn;
-  final List<Color> gradientColors;
+  final String ctaAr;
+  final String ctaEn;
 
   const _OnboardPage({
-    required this.emoji,
     required this.titleAr,
     required this.titleEn,
+    required this.highlightAr,
+    required this.highlightEn,
     required this.bodyAr,
     required this.bodyEn,
-    required this.gradientColors,
+    required this.ctaAr,
+    required this.ctaEn,
   });
 }
 
 const _pages = [
   _OnboardPage(
-    emoji: '🛒',
-    titleAr: 'تسوق من أفضل المتاجر',
-    titleEn: 'Shop from Top Vendors',
-    bodyAr: 'آلاف المنتجات من متاجر موثوقة في السعودية والإمارات وقطر. شحن سريع وأسعار تنافسية.',
-    bodyEn: 'Thousands of products from trusted vendors across Saudi Arabia, UAE & Qatar. Fast delivery, competitive prices.',
-    gradientColors: [Color(0xFF0A1F3B), Color(0xFF1E3A8A)],
+    titleAr: 'مرحباً بك في ',
+    titleEn: 'Welcome to ',
+    highlightAr: 'كيان',
+    highlightEn: 'KAYAN',
+    bodyAr: 'السوبر أب الخليجي الأول — كل احتياجاتك اليومية في تطبيق واحد أنيق وموثوق.',
+    bodyEn: 'The Gulf\'s first super app — all your daily needs in one elegant, trusted place.',
+    ctaAr: 'التالي',
+    ctaEn: 'Next',
   ),
   _OnboardPage(
-    emoji: '🔧',
-    titleAr: 'خدمات منزلية بضغطة زر',
-    titleEn: 'Home Services On-Demand',
-    bodyAr: 'سباكة، كهرباء، تكييف، تنظيف وأكثر. فنيون معتمدون يصلون إليك في أسرع وقت.',
-    bodyEn: 'Plumbing, electrical, AC, cleaning & more. Certified technicians reach you fast, even 24/7 emergency.',
-    gradientColors: [Color(0xFF0A1F3B), Color(0xFF004B93)],
+    titleAr: 'كل ما تحتاجه في ',
+    titleEn: 'Everything you need in ',
+    highlightAr: 'تطبيق واحد',
+    highlightEn: 'one app',
+    bodyAr: 'خدمات منزلية، متجر متكامل، إعلانات مبوبة، وتوصيل طعام — بضغطة واحدة.',
+    bodyEn: 'Home services, shopping, classifieds, and food delivery — one tap away.',
+    ctaAr: 'التالي',
+    ctaEn: 'Next',
   ),
   _OnboardPage(
-    emoji: '📢',
-    titleAr: 'بيع واشترِ بسهولة',
-    titleEn: 'Buy & Sell Easily',
-    bodyAr: 'أعلن عن منتجاتك أو ابحث عن صفقات رائعة في إعلانات كيان المبوبة.',
-    bodyEn: 'Post your items for sale or find great deals on KAYAN\'s classifieds marketplace.',
-    gradientColors: [Color(0xFF0A1F3B), Color(0xFF2A1A5A)],
+    titleAr: 'استعد ',
+    titleEn: 'Get ready for a ',
+    highlightAr: 'لتجربة فريدة',
+    highlightEn: 'unique experience',
+    bodyAr: 'خصومات حصرية، فنيون معتمدون، وتوصيل سريع أينما كنت في الخليج.',
+    bodyEn: 'Exclusive deals, certified pros, and fast delivery across the GCC.',
+    ctaAr: 'ابدأ الآن',
+    ctaEn: 'Get started',
   ),
 ];
 
@@ -82,200 +81,97 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     super.dispose();
   }
 
-  void _next() {
-    if (_current < _pages.length - 1) {
-      _ctrl.nextPage(
-        duration: const Duration(milliseconds: 350),
-        curve:    Curves.easeOutCubic,
-      );
-    } else {
-      _finish();
-    }
-  }
-
   Future<void> _finish() async {
     await LocalStorageService.markOnboardingSeen();
     if (mounted) context.go(AppRoutes.login);
   }
 
+  void _next() {
+    if (_current < _pages.length - 1) {
+      _ctrl.nextPage(duration: const Duration(milliseconds: 350), curve: Curves.easeOutCubic);
+    } else {
+      _finish();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final isArabic = ref.watch(isArabicProvider);
-    final isLast   = _current == _pages.length - 1;
+    final ar = ref.watch(isArabicProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.bgScaffold,
-      body: Stack(
-        children: [
-          // ── Page content ────────────────────────────────
-          PageView.builder(
-            controller: _ctrl,
-            onPageChanged: (i) => setState(() => _current = i),
-            itemCount: _pages.length,
-            itemBuilder: (_, i) => _OnboardPageView(
-              page:     _pages[i],
-              isArabic: isArabic,
-            ),
-          ),
-
-          // ── Skip ────────────────────────────────────────
-          SafeArea(
-            child: Align(
-              alignment: isArabic ? Alignment.topLeft : Alignment.topRight,
-              child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.lg),
-                child: TextButton(
-                  onPressed: _finish,
-                  child: Text(
-                    isArabic ? 'تخطي' : 'Skip',
-                    style: AppTextStyles.labelLarge.copyWith(
-                      color: AppColors.textMuted,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-
-          // ── Bottom controls ──────────────────────────────
-          Align(
-            alignment: Alignment.bottomCenter,
+      backgroundColor: KayanDesignTokens.kBlueDeep,
+      body: PageView.builder(
+        controller: _ctrl,
+        onPageChanged: (i) => setState(() => _current = i),
+        itemCount: _pages.length,
+        itemBuilder: (_, i) {
+          final p = _pages[i];
+          return KayanHeroBackdrop(
+            minHeight: MediaQuery.sizeOf(context).height,
             child: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  AppSpacing.pagePadding, 0,
-                  AppSpacing.pagePadding, 32,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Dot indicator
-                    SmoothPageIndicator(
-                      controller: _ctrl,
-                      count:      _pages.length,
-                      effect: WormEffect(
-                        dotWidth:    8,
-                        dotHeight:   8,
-                        activeDotColor: AppColors.metallicGold,
-                        dotColor:    AppColors.borderDefault,
-                        spacing:     8,
-                      ),
-                    ),
-                    const SizedBox(height: 32),
-
-                    // CTA Button
-                    GestureDetector(
-                      onTap: _next,
-                      child: Container(
-                        height: 56,
-                        decoration: BoxDecoration(
-                          gradient: isLast
-                              ? AppGradients.goldButton
-                              : AppGradients.primaryButton,
-                          borderRadius: AppBorderRadius.button,
-                          boxShadow: [
-                            BoxShadow(
-                              color: (isLast
-                                      ? AppColors.metallicGold
-                                      : AppColors.royalBlue)
-                                  .withOpacity(0.35),
-                              blurRadius: 20,
-                              offset:     const Offset(0, 6),
-                            ),
-                          ],
-                        ),
-                        child: Center(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 6, 24, 0),
+                    child: Row(
+                      children: [
+                        KayanOnboardingDots(count: _pages.length, index: _current),
+                        const Spacer(),
+                        GestureDetector(
+                          onTap: _finish,
                           child: Text(
-                            isLast
-                                ? (isArabic ? 'ابدأ الآن' : 'Get Started')
-                                : (isArabic ? 'التالي' : 'Next'),
-                            style: (isArabic
-                                    ? AppTextStyles.arabicButton
-                                    : AppTextStyles.buttonMedium)
-                                .copyWith(
-                              color: isLast
-                                  ? AppColors.bgPrimary
-                                  : Colors.white,
-                            ),
+                            ar ? 'تخطي' : 'Skip',
+                            style: KayanDesignTokens.cairo(fontSize: 13.5, fontWeight: FontWeight.w700, color: Colors.white.withValues(alpha: 0.8)),
                           ),
                         ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 220,
+                            height: 220,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white.withValues(alpha: 0.08),
+                              border: Border.all(color: Colors.white.withValues(alpha: 0.18)),
+                            ),
+                            child: Center(child: KayanBrandLogo(size: i == 0 ? 140 : 120)),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Column(
+                      children: [
+                        KayanEntryTitle(
+                          before: ar ? p.titleAr : p.titleEn,
+                          highlight: ar ? p.highlightAr : p.highlightEn,
+                        ),
+                        const SizedBox(height: 10),
+                        KayanEntrySubtitle(ar ? p.bodyAr : p.bodyEn),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 26, 24, 36),
+                    child: KayanCtaButton(
+                      label: ar ? p.ctaAr : p.ctaEn,
+                      onPressed: _next,
+                      trailingIcon: _current < _pages.length - 1 ? Icons.arrow_back_ios_new_rounded : null,
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _OnboardPageView extends StatelessWidget {
-  final _OnboardPage page;
-  final bool         isArabic;
-  const _OnboardPageView({required this.page, required this.isArabic});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin:  Alignment.topCenter,
-          end:    Alignment.bottomCenter,
-          colors: page.gradientColors,
-        ),
-      ),
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.pagePadding),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/images/kayan_logo.png',
-                width: 96,
-                height: 96,
-                fit: BoxFit.contain,
-              ),
-              const SizedBox(height: 24),
-              // Emoji icon in gold circle
-              Container(
-                width: 120, height: 120,
-                decoration: BoxDecoration(
-                  shape:   BoxShape.circle,
-                  color:   AppColors.royalBlue.withOpacity(0.15),
-                  border:  Border.all(color: AppColors.borderGold, width: 1),
-                ),
-                child: Center(
-                  child: Text(
-                    page.emoji,
-                    style: const TextStyle(fontSize: 56),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 48),
-              Text(
-                isArabic ? page.titleAr : page.titleEn,
-                style: isArabic
-                    ? AppTextStyles.arabicHeadlineMedium
-                    : AppTextStyles.headlineMedium,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                isArabic ? page.bodyAr : page.bodyEn,
-                style: (isArabic
-                        ? AppTextStyles.arabicBodyMedium
-                        : AppTextStyles.bodyMedium)
-                    .copyWith(color: AppColors.textSecondary),
-                textAlign: TextAlign.center,
-                maxLines:  4,
-              ),
-            ],
-          ),
-        ),
+          );
+        },
       ),
     );
   }
