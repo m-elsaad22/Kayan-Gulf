@@ -54,6 +54,8 @@ import '../features/auth/presentation/screens/profile_setup_screen.dart';
 // Dashboard & Home
 import '../features/dashboard/presentation/screens/dashboard_screen.dart';
 // E-commerce
+import '../features/ecommerce/shop/presentation/screens/shop_home_screen.dart';
+import '../features/ecommerce/notifications/presentation/screens/shop_notifications_screen.dart';
 import '../features/ecommerce/categories/presentation/screens/categories_screen.dart';
 import '../features/ecommerce/product/presentation/screens/product_list_screen.dart';
 import '../features/ecommerce/product/presentation/screens/product_detail_screen.dart';
@@ -1043,9 +1045,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 path:        AppRoutes.shop,
                 pageBuilder: (context, state) => _buildNoTransitionPage(
                   key:   state.pageKey,
-                  child: const ProductListScreen(),
+                  child: const ShopHomeScreen(),
                 ),
                 routes: [
+                  GoRoute(
+                    path:        AppRoutes.$browse,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const ProductListScreen(),
+                    ),
+                  ),
                   // Search
                   GoRoute(
                     path:        AppRoutes.$search,
@@ -1108,6 +1117,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
                       child: const fav_screen.FavoritesScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$shopNotifications,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const ShopNotificationsScreen(),
                     ),
                   ),
                 ],

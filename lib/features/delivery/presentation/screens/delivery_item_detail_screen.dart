@@ -40,13 +40,16 @@ class DeliveryItemDetailScreen extends ConsumerWidget {
       return Scaffold(appBar: AppBar(), body: const Center(child: Text('—')));
     }
 
+    final resolvedVendor = vendor;
+    final resolvedItem = item;
+
     return Scaffold(
       backgroundColor: KayanDesignTokens.bg,
       appBar: AppBar(
         backgroundColor: Colors.white,
         foregroundColor: KayanDesignTokens.kBlueDeep,
         elevation: 0,
-        title: Text(item.name(ar), style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800)),
+        title: Text(resolvedItem.name(ar), style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(24),
@@ -59,22 +62,22 @@ class DeliveryItemDetailScreen extends ConsumerWidget {
                 gradient: KayanDesignTokens.gradDeliveryOrange,
                 borderRadius: BorderRadius.circular(24),
               ),
-              child: Icon(item.icon, size: 72, color: Colors.white),
+              child: Icon(resolvedItem.icon, size: 72, color: Colors.white),
             ),
             const SizedBox(height: 20),
-            Text(item.name(ar), style: KayanDesignTokens.cairo(fontSize: 22, fontWeight: FontWeight.w900, color: KayanDesignTokens.kBlueDeep)),
+            Text(resolvedItem.name(ar), style: KayanDesignTokens.cairo(fontSize: 22, fontWeight: FontWeight.w900, color: KayanDesignTokens.kBlueDeep)),
             const SizedBox(height: 8),
-            Text(item.description(ar), style: KayanDesignTokens.cairo(fontSize: 14, color: KayanDesignTokens.text2, height: 1.7)),
+            Text(resolvedItem.description(ar), style: KayanDesignTokens.cairo(fontSize: 14, color: KayanDesignTokens.text2, height: 1.7)),
             const SizedBox(height: 16),
             Text(
-              '${item.price.toStringAsFixed(0)} ${ar ? 'ر.س' : 'SAR'}',
+              '${resolvedItem.price.toStringAsFixed(0)} ${ar ? 'ر.س' : 'SAR'}',
               style: KayanDesignTokens.cairo(fontSize: 24, fontWeight: FontWeight.w900, color: KayanDesignTokens.oOrange),
             ),
             const Spacer(),
             KayanDesignPrimaryButton(
               label: ar ? 'أضف إلى السلة' : 'Add to cart',
               onPressed: () {
-                cart.addItem(vendor, item);
+                cart.addItem(resolvedVendor, resolvedItem);
                 context.pop();
               },
             ),

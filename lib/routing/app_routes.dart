@@ -71,12 +71,15 @@ abstract final class AppRoutes {
   static const String _flashDeals       = 'flash-deals';
   static const String _vendorProfile    = 'vendors/:vendorSlug';
   static const String _favorites        = 'favorites';
+  static const String _browse           = 'browse';
+  static const String _shopNotifications = 'notifications';
 
   // Full absolute paths (used by context.go / context.push)
   static const String categories       = '/shop/categories';
   static const String search           = '/shop/search';
   static const String flashDeals       = '/shop/flash-deals';
   static const String favorites        = '/shop/favorites';
+  static const String shopBrowse       = '/shop/browse';
   static const String productReviews    = '/shop/product-reviews';
   static const String productCompare    = '/shop/product-compare';
   static const String bestSellers       = '/shop/best-sellers';
@@ -316,6 +319,8 @@ abstract final class AppRoutes {
   static const String $flashDeals       = _flashDeals;
   static const String $vendorProfile    = _vendorProfile;
   static const String $favorites        = _favorites;
+  static const String $browse           = _browse;
+  static const String $shopNotifications = _shopNotifications;
 
   // Services relative paths
   static const String $serviceSlug      = _serviceSlug;

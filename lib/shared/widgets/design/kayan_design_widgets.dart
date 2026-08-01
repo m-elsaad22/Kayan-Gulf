@@ -287,11 +287,13 @@ class KayanCategoryPillRow extends StatelessWidget {
     required this.items,
     required this.isArabic,
     this.iconGradient = KayanDesignTokens.gradDeliveryOrange,
+    this.onPillTap,
   });
 
   final List<KayanCategoryPill> items;
   final bool isArabic;
   final LinearGradient iconGradient;
+  final void Function(int index)? onPillTap;
 
   @override
   Widget build(BuildContext context) {
@@ -303,28 +305,31 @@ class KayanCategoryPillRow extends StatelessWidget {
         separatorBuilder: (_, __) => const SizedBox(width: 10),
         itemBuilder: (context, index) {
           final item = items[index];
-          return SizedBox(
-            width: 66,
-            child: Column(
-              children: [
-                Container(
-                  width: 56,
-                  height: 56,
-                  decoration: BoxDecoration(
-                    gradient: iconGradient,
-                    borderRadius: BorderRadius.circular(18),
+          return GestureDetector(
+            onTap: onPillTap != null ? () => onPillTap!(index) : null,
+            child: SizedBox(
+              width: 66,
+              child: Column(
+                children: [
+                  Container(
+                    width: 56,
+                    height: 56,
+                    decoration: BoxDecoration(
+                      gradient: iconGradient,
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                    child: Icon(item.icon, color: Colors.white, size: 22),
                   ),
-                  child: Icon(item.icon, color: Colors.white, size: 22),
-                ),
-                const SizedBox(height: 7),
-                Text(
-                  isArabic ? item.labelAr : item.labelEn,
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: KayanDesignTokens.cairo(fontSize: 11, fontWeight: FontWeight.w700, color: KayanDesignTokens.text2),
-                ),
-              ],
+                  const SizedBox(height: 7),
+                  Text(
+                    isArabic ? item.labelAr : item.labelEn,
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: KayanDesignTokens.cairo(fontSize: 11, fontWeight: FontWeight.w700, color: KayanDesignTokens.text2),
+                  ),
+                ],
+              ),
             ),
           );
         },
@@ -345,6 +350,8 @@ class KayanServiceCard extends StatelessWidget {
     this.onTap,
     this.onAdd,
     this.accentGradient = KayanDesignTokens.gradGreen,
+    this.metaIcon = Icons.schedule_rounded,
+    this.priceColor = KayanDesignTokens.kGreen,
   });
 
   final String name;
@@ -356,6 +363,8 @@ class KayanServiceCard extends StatelessWidget {
   final VoidCallback? onTap;
   final VoidCallback? onAdd;
   final LinearGradient accentGradient;
+  final IconData metaIcon;
+  final Color priceColor;
 
   @override
   Widget build(BuildContext context) {
@@ -393,7 +402,7 @@ class KayanServiceCard extends StatelessWidget {
                     runSpacing: 4,
                     children: [
                       _Meta(Icons.star_rounded, '$rating ($reviews)', KayanDesignTokens.gold),
-                      _Meta(Icons.schedule_rounded, duration, KayanDesignTokens.muted),
+                      _Meta(metaIcon, duration, KayanDesignTokens.muted),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -401,7 +410,7 @@ class KayanServiceCard extends StatelessWidget {
                     children: [
                       Text(
                         priceLabel,
-                        style: KayanDesignTokens.cairo(fontSize: 15, fontWeight: FontWeight.w900, color: KayanDesignTokens.kGreen),
+                        style: KayanDesignTokens.cairo(fontSize: 15, fontWeight: FontWeight.w900, color: priceColor),
                       ),
                       const Spacer(),
                       GestureDetector(
