@@ -157,6 +157,7 @@ abstract final class AppRoutes {
   static const String featuredAds = '/classifieds/featured';
   static const String savedAds  = '/classifieds/saved';
   static const String classifiedsChats = '/classifieds/chats';
+  static const String classifiedsCategories = '/classifieds/ad-categories';
   static const String contactSeller = '/classifieds/contact-seller';
   static const String recentViews = '/classifieds/recent-views';
   static const String classifiedsNotifications = '/classifieds/notifications';
@@ -184,6 +185,7 @@ abstract final class AppRoutes {
   static const String _classifiedsChats = 'chats';
   static const String _classifiedsChatId = 'chats/:chatId';
   static const String _contactSeller = 'contact-seller';
+  static const String _classifiedsCategories = 'ad-categories';
 
   // ──────────────────────────────────────────────────────────
   // 💬 CHAT (global)
@@ -356,6 +358,7 @@ abstract final class AppRoutes {
   static const String $classifiedsChats  = _classifiedsChats;
   static const String $classifiedsChatId = _classifiedsChatId;
   static const String $contactSeller     = _contactSeller;
+  static const String $classifiedsCategories = _classifiedsCategories;
 
   // Delivery relative paths
   static const String $deliveryVendorSlug = _deliveryVendorSlug;

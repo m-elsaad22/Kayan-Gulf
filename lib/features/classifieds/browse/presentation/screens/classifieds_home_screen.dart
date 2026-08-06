@@ -112,7 +112,7 @@ class _ClassifiedsHomeScreenState extends ConsumerState<ClassifiedsHomeScreen> {
                       .toList(),
                   onPillTap: (index) {
                     if (index == _homeCategories.length - 1) {
-                      context.push(AppRoutes.adsList);
+                      context.push(AppRoutes.classifiedsCategories);
                       return;
                     }
                     context.push(AppRoutes.adsList);

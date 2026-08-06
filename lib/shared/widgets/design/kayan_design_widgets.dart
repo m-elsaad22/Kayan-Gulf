@@ -1053,6 +1053,178 @@ class KayanChatListTile extends StatelessWidget {
   }
 }
 
+class KayanCategoryGridTile extends StatelessWidget {
+  const KayanCategoryGridTile({
+    super.key,
+    required this.label,
+    required this.icon,
+    this.onTap,
+    this.iconGradient = KayanDesignTokens.gradBlue,
+  });
+
+  final String label;
+  final IconData icon;
+  final VoidCallback? onTap;
+  final LinearGradient iconGradient;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: KayanDesignTokens.border),
+          boxShadow: KayanDesignTokens.shadowS,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 52,
+              height: 52,
+              decoration: BoxDecoration(gradient: iconGradient, borderRadius: BorderRadius.circular(18)),
+              child: Icon(icon, color: Colors.white, size: 20),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: KayanDesignTokens.cairo(fontSize: 12.5, fontWeight: FontWeight.w700, color: KayanDesignTokens.text2),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class KayanNotificationItem extends StatelessWidget {
+  const KayanNotificationItem({
+    super.key,
+    required this.title,
+    required this.body,
+    required this.time,
+    required this.icon,
+    this.iconGradient = KayanDesignTokens.gradBlue,
+    this.unread = false,
+    this.onTap,
+  });
+
+  final String title;
+  final String body;
+  final String time;
+  final IconData icon;
+  final LinearGradient iconGradient;
+  final bool unread;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 4),
+        padding: EdgeInsets.symmetric(horizontal: unread ? 10 : 4, vertical: 13),
+        decoration: BoxDecoration(
+          color: unread ? KayanDesignTokens.kBlue.withValues(alpha: 0.04) : Colors.transparent,
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 38,
+              height: 38,
+              decoration: BoxDecoration(gradient: iconGradient, borderRadius: BorderRadius.circular(12)),
+              child: Icon(icon, color: Colors.white, size: 14),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: KayanDesignTokens.cairo(fontSize: 13, fontWeight: FontWeight.w800, color: KayanDesignTokens.kBlueDeep)),
+                  const SizedBox(height: 2),
+                  Text(body, style: KayanDesignTokens.cairo(fontSize: 12, color: KayanDesignTokens.text2, height: 1.5)),
+                  const SizedBox(height: 4),
+                  Text(time, style: KayanDesignTokens.cairo(fontSize: 10.5, color: KayanDesignTokens.muted)),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class KayanPayOptionRow extends StatelessWidget {
+  const KayanPayOptionRow({
+    super.key,
+    required this.label,
+    required this.icon,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final IconData icon;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 4),
+        child: Row(
+          children: [
+            Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                color: KayanDesignTokens.bg,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: KayanDesignTokens.kBlue, size: 17),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(
+                label,
+                style: KayanDesignTokens.cairo(fontSize: 14, fontWeight: FontWeight.w800, color: KayanDesignTokens.kBlueDeep),
+              ),
+            ),
+            Container(
+              width: 20,
+              height: 20,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: selected ? KayanDesignTokens.kBlue : KayanDesignTokens.border, width: 2),
+              ),
+              child: selected
+                  ? Center(
+                      child: Container(
+                        width: 10,
+                        height: 10,
+                        decoration: const BoxDecoration(color: KayanDesignTokens.kBlue, shape: BoxShape.circle),
+                      ),
+                    )
+                  : null,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _DotPatternPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
