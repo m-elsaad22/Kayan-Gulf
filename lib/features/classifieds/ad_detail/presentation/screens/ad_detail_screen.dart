@@ -226,7 +226,10 @@ class _AdDetailScreenState extends ConsumerState<AdDetailScreen> {
                         ],
                         if (seller != null) ...[
                           const SizedBox(height: 18),
-                          Container(
+                          InkWell(
+                            onTap: () => context.push(AppRoutes.sellerPath(seller.id)),
+                            borderRadius: BorderRadius.circular(16),
+                            child: Container(
                             padding: const EdgeInsets.all(14),
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -282,10 +285,11 @@ class _AdDetailScreenState extends ConsumerState<AdDetailScreen> {
                                     gradient: KayanDesignTokens.gradBlue,
                                     borderRadius: BorderRadius.all(Radius.circular(12)),
                                   ),
-                                  child: const Icon(Icons.phone_rounded, color: Colors.white, size: 16),
+                                  child: const Icon(Icons.chevron_left_rounded, color: Colors.white, size: 20),
                                 ),
                               ],
                             ),
+                          ),
                           ),
                         ],
                         const SizedBox(height: 14),
@@ -293,15 +297,27 @@ class _AdDetailScreenState extends ConsumerState<AdDetailScreen> {
                           label: ar ? 'مراسلة البائع' : 'Message seller',
                           trailingIcon: Icons.chat_bubble_outline_rounded,
                           variant: KayanCtaVariant.blue,
-                          onPressed: () => context.push(AppRoutes.classifiedsChatPath('khalid')),
+                          onPressed: () => context.push(AppRoutes.classifiedsChatPath(seller?.id ?? 's1')),
                         ),
                         const SizedBox(height: 8),
-                        TextButton(
-                          onPressed: () => context.push(AppRoutes.similarAdsPath(ad.slug)),
-                          child: Text(
-                            ar ? 'إعلانات مشابهة' : 'Similar ads',
-                            style: KayanDesignTokens.cairo(fontWeight: FontWeight.w700, color: KayanDesignTokens.kBlue),
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextButton(
+                              onPressed: () => context.push(AppRoutes.similarAdsPath(ad.slug)),
+                              child: Text(
+                                ar ? 'إعلانات مشابهة' : 'Similar ads',
+                                style: KayanDesignTokens.cairo(fontWeight: FontWeight.w700, color: KayanDesignTokens.kBlue),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () => context.push(AppRoutes.reportAdPath(ad.slug)),
+                              child: Text(
+                                ar ? 'الإبلاغ' : 'Report',
+                                style: KayanDesignTokens.cairo(fontWeight: FontWeight.w700, color: KayanDesignTokens.muted),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
