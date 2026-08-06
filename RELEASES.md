@@ -9,6 +9,7 @@
 | phase-3-services | الخدمات المنزلية | [kayan-phase-3-services-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-3-services-1.0.0/kayan-phase-3-services-1.0.0.zip) |
 | phase-4-shop | المتجر (59-sh-dashboard) | [kayan-phase-4-shop-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-4-shop-1.0.0/kayan-phase-4-shop-1.0.0.zip) |
 | phase-5-classifieds | الإعلانات (113-cl-dashboard) | [kayan-phase-5-classifieds-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-5-classifieds-1.0.0/kayan-phase-5-classifieds-1.0.0.zip) |
+| phase-6-classifieds-screens | تفاصيل + إضافة + فلاتر | [kayan-phase-6-classifieds-screens-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-6-classifieds-screens-1.0.0/kayan-phase-6-classifieds-screens-1.0.0.zip) |
 
 ## كيف يُنشأ الـ ZIP؟
 

@@ -770,6 +770,92 @@ class KayanSectionHeader extends StatelessWidget {
   }
 }
 
+/// Light inner-page top bar — matches design/html cl-* topbar pattern.
+class KayanLightTopBar extends StatelessWidget {
+  const KayanLightTopBar({
+    super.key,
+    required this.title,
+    this.onBack,
+    this.trailing,
+  });
+
+  final String title;
+  final VoidCallback? onBack;
+  final Widget? trailing;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+      child: Row(
+        children: [
+          KayanHeroIconButton(
+            icon: Icons.arrow_forward_ios_rounded,
+            onTap: onBack ?? () => Navigator.of(context).maybePop(),
+            light: true,
+          ),
+          Expanded(
+            child: Text(
+              title,
+              textAlign: TextAlign.center,
+              style: KayanDesignTokens.cairo(fontSize: 17, fontWeight: FontWeight.w800, color: KayanDesignTokens.kBlueDeep),
+            ),
+          ),
+          trailing ?? const SizedBox(width: 38),
+        ],
+      ),
+    );
+  }
+}
+
+/// Selectable filter chips row — matches 118-cl-search-filters slot-row.
+class KayanFilterSlotRow extends StatelessWidget {
+  const KayanFilterSlotRow({
+    super.key,
+    required this.labels,
+    required this.selectedIndex,
+    required this.onSelected,
+    this.activeGradient = KayanDesignTokens.gradBlue,
+  });
+
+  final List<String> labels;
+  final int selectedIndex;
+  final ValueChanged<int> onSelected;
+  final LinearGradient activeGradient;
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 10,
+      runSpacing: 10,
+      children: List.generate(labels.length, (index) {
+        final selected = index == selectedIndex;
+        return GestureDetector(
+          onTap: () => onSelected(index),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            decoration: BoxDecoration(
+              gradient: selected ? activeGradient : null,
+              color: selected ? null : Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: selected ? Colors.transparent : KayanDesignTokens.border),
+            ),
+            child: Text(
+              labels[index],
+              style: KayanDesignTokens.cairo(
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                color: selected ? Colors.white : KayanDesignTokens.text2,
+              ),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+}
+
 class _DotPatternPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
