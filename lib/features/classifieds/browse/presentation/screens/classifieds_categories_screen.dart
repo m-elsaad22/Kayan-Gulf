@@ -55,7 +55,7 @@ class ClassifiedsCategoriesScreen extends ConsumerWidget {
                   return KayanCategoryGridTile(
                     label: ar ? c.$2 : c.$3,
                     icon: c.$1,
-                    onTap: () => context.push(AppRoutes.adsList),
+                    onTap: () => context.push(AppRoutes.classifiedsCategoryPath(c.$4)),
                   );
                 },
               ),

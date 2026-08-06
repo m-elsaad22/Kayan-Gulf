@@ -1225,6 +1225,96 @@ class KayanPayOptionRow extends StatelessWidget {
   }
 }
 
+class KayanStatBox extends StatelessWidget {
+  const KayanStatBox({super.key, required this.value, required this.label});
+
+  final String value;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+        decoration: BoxDecoration(
+          color: KayanDesignTokens.bg,
+          border: Border.all(color: KayanDesignTokens.border),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          children: [
+            Text(value, style: KayanDesignTokens.cairo(fontSize: 18, fontWeight: FontWeight.w900, color: KayanDesignTokens.kBlueDeep)),
+            const SizedBox(height: 4),
+            Text(label, style: KayanDesignTokens.cairo(fontSize: 11, color: KayanDesignTokens.muted)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class KayanReportReasonRow extends StatelessWidget {
+  const KayanReportReasonRow({
+    super.key,
+    required this.title,
+    required this.icon,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String title;
+  final IconData icon;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 4),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: KayanDesignTokens.bg,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: KayanDesignTokens.kBlue, size: 15),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(
+                title,
+                style: KayanDesignTokens.cairo(fontSize: 14, fontWeight: FontWeight.w800, color: KayanDesignTokens.kBlueDeep),
+              ),
+            ),
+            Container(
+              width: 20,
+              height: 20,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: selected ? KayanDesignTokens.kBlue : KayanDesignTokens.border, width: 2),
+              ),
+              child: selected
+                  ? Center(
+                      child: Container(
+                        width: 10,
+                        height: 10,
+                        decoration: const BoxDecoration(color: KayanDesignTokens.kBlue, shape: BoxShape.circle),
+                      ),
+                    )
+                  : null,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _DotPatternPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {

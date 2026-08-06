@@ -12,6 +12,7 @@
 | phase-6-classifieds-screens | تفاصيل + إضافة + فلاتر | [kayan-phase-6-classifieds-screens-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-6-classifieds-screens-1.0.0/kayan-phase-6-classifieds-screens-1.0.0.zip) |
 | phase-7-classifieds-chat | إعلاناتي + محفوظة + محادثات | [kayan-phase-7-classifieds-chat-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-7-classifieds-chat-1.0.0/kayan-phase-7-classifieds-chat-1.0.0.zip) |
 | phase-8-classifieds-extra | أقسام + إشعارات + تمييز | [kayan-phase-8-classifieds-extra-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-8-classifieds-extra-1.0.0/kayan-phase-8-classifieds-extra-1.0.0.zip) |
+| phase-9-classifieds-browse | تصفح + إحصائيات + بلاغ | [kayan-phase-9-classifieds-browse-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-9-classifieds-browse-1.0.0/kayan-phase-9-classifieds-browse-1.0.0.zip) |
 
 ## كيف يُنشأ الـ ZIP؟
 

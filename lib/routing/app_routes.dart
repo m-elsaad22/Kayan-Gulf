@@ -186,6 +186,7 @@ abstract final class AppRoutes {
   static const String _classifiedsChatId = 'chats/:chatId';
   static const String _contactSeller = 'contact-seller';
   static const String _classifiedsCategories = 'ad-categories';
+  static const String _categoryBrowse = 'category/:categorySlug';
 
   // ──────────────────────────────────────────────────────────
   // 💬 CHAT (global)
@@ -359,6 +360,7 @@ abstract final class AppRoutes {
   static const String $classifiedsChatId = _classifiedsChatId;
   static const String $contactSeller     = _contactSeller;
   static const String $classifiedsCategories = _classifiedsCategories;
+  static const String $categoryBrowse = _categoryBrowse;
 
   // Delivery relative paths
   static const String $deliveryVendorSlug = _deliveryVendorSlug;
@@ -407,6 +409,7 @@ abstract final class AppRoutes {
   static String similarAdsPath(String slug) => '/classifieds/similar/$slug';
   static String adStatsPath(String adId)    => '/classifieds/my-ads/stats/$adId';
   static String classifiedsChatPath(String chatId) => '/classifieds/chats/$chatId';
+  static String classifiedsCategoryPath(String slug) => '/classifieds/category/$slug';
   static String galleryPath()               => '/gallery';
 
   // Chat

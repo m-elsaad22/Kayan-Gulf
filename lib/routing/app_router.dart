@@ -114,6 +114,7 @@ import '../features/services/booking/presentation/screens/service_qr_screen.dart
 import '../features/classifieds/browse/presentation/screens/ads_list_screen.dart';
 import '../features/classifieds/browse/presentation/screens/classifieds_home_screen.dart';
 import '../features/classifieds/browse/presentation/screens/classifieds_categories_screen.dart';
+import '../features/classifieds/browse/presentation/screens/classifieds_category_browse_screen.dart';
 import '../features/classifieds/ad_detail/presentation/screens/ad_detail_screen.dart';
 import '../features/classifieds/post_ad/presentation/screens/post_ad_screen.dart';
 import '../features/classifieds/post_ad/presentation/screens/boost_ad_screen.dart';
@@ -1306,6 +1307,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
                       child: const ClassifiedsCategoriesScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$categoryBrowse,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: ClassifiedsCategoryBrowseScreen(
+                        categorySlug: state.pathParameters['categorySlug']!,
+                      ),
                     ),
                   ),
                   GoRoute(
