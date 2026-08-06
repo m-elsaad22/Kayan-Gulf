@@ -156,6 +156,8 @@ abstract final class AppRoutes {
   static const String adFilters = '/classifieds/filters';
   static const String featuredAds = '/classifieds/featured';
   static const String savedAds  = '/classifieds/saved';
+  static const String classifiedsChats = '/classifieds/chats';
+  static const String contactSeller = '/classifieds/contact-seller';
   static const String recentViews = '/classifieds/recent-views';
   static const String classifiedsNotifications = '/classifieds/notifications';
   static const String pendingAds = '/classifieds/my-ads/pending';
@@ -179,6 +181,9 @@ abstract final class AppRoutes {
   static const String _sellerId = 'seller/:sellerId';
   static const String _reportAdSlug = 'report/:adSlug';
   static const String _similarAdSlug = 'similar/:adSlug';
+  static const String _classifiedsChats = 'chats';
+  static const String _classifiedsChatId = 'chats/:chatId';
+  static const String _contactSeller = 'contact-seller';
 
   // ──────────────────────────────────────────────────────────
   // 💬 CHAT (global)
@@ -287,7 +292,6 @@ abstract final class AppRoutes {
   static const String serviceNotifications = '/services/notifications';
   static const String shopFilters = '/shop/filters';
   static const String shopNotifications = '/shop/notifications';
-  static const String contactSeller = '/classifieds/contact-seller';
   static const String postAdSuccess = '/classifieds/post/success';
   static const String whatsNew = '/whats-new';
   static const String appPermissions = '/permissions';
@@ -349,6 +353,9 @@ abstract final class AppRoutes {
   static const String $sellerId         = _sellerId;
   static const String $reportAdSlug     = _reportAdSlug;
   static const String $similarAdSlug    = _similarAdSlug;
+  static const String $classifiedsChats  = _classifiedsChats;
+  static const String $classifiedsChatId = _classifiedsChatId;
+  static const String $contactSeller     = _contactSeller;
 
   // Delivery relative paths
   static const String $deliveryVendorSlug = _deliveryVendorSlug;
@@ -396,6 +403,7 @@ abstract final class AppRoutes {
   static String reportAdPath(String slug)   => '/classifieds/report/$slug';
   static String similarAdsPath(String slug) => '/classifieds/similar/$slug';
   static String adStatsPath(String adId)    => '/classifieds/my-ads/stats/$adId';
+  static String classifiedsChatPath(String chatId) => '/classifieds/chats/$chatId';
   static String galleryPath()               => '/gallery';
 
   // Chat

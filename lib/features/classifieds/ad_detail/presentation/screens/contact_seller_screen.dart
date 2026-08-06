@@ -1,42 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../../../../shared/widgets/kayan_themed_scaffold.dart';
-import '../../../../../core/theme/app_colors.dart';
-import '../../../../../core/theme/app_text_styles.dart';
-import '../../../../../shared/providers/locale_provider.dart';
+import '../../../../../routing/app_routes.dart';
 
-/// KAYAN Screen — Contact Seller
-class ContactSellerScreen extends ConsumerWidget {
+/// Opens classifieds seller chat (117-cl-chat-seller).
+class ContactSellerScreen extends ConsumerStatefulWidget {
   const ContactSellerScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isArabic = ref.watch(isArabicProvider);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+  ConsumerState<ContactSellerScreen> createState() => _ContactSellerScreenState();
+}
 
-    return KayanThemedScaffold(
-      titleAr: 'تواصل مع البائع',
-      titleEn: 'Contact Seller',
-      body: ListView(
-        children: [
-          Icon(Icons.layers_outlined, size: 64, color: isDark ? AppColors.skyBlue : AppColors.pepsiBlue),
-          const SizedBox(height: 16),
-          Text(
-            isArabic ? 'تواصل مع البائع' : 'Contact Seller',
-            style: isArabic ? AppTextStyles.arabicHeadlineSmall : AppTextStyles.headlineSmall,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            isArabic
-                ? 'شاشة كيان — تجربة احترافية مع دعم الوضع الفاتح/الداكن والعربية/الإنجليزية.'
-                : 'KAYAN screen with light/dark mode and Arabic/English support.',
-            style: AppTextStyles.bodyMedium.copyWith(
-              color: isDark ? AppColors.darkSubtext : AppColors.lightSubtext,
-            ),
-          ),
-        ],
-      ),
-    );
+class _ContactSellerScreenState extends ConsumerState<ContactSellerScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      context.replace(AppRoutes.classifiedsChatPath('khalid'));
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(body: Center(child: CircularProgressIndicator()));
   }
 }

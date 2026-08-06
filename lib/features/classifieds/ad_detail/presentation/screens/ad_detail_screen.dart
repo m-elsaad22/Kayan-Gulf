@@ -293,7 +293,7 @@ class _AdDetailScreenState extends ConsumerState<AdDetailScreen> {
                           label: ar ? 'مراسلة البائع' : 'Message seller',
                           trailingIcon: Icons.chat_bubble_outline_rounded,
                           variant: KayanCtaVariant.blue,
-                          onPressed: () => context.push(AppRoutes.contactSeller),
+                          onPressed: () => context.push(AppRoutes.classifiedsChatPath('khalid')),
                         ),
                         const SizedBox(height: 8),
                         TextButton(

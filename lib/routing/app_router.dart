@@ -130,6 +130,9 @@ import '../features/classifieds/my_ads/presentation/screens/edit_ad_screen.dart'
 import '../features/classifieds/saved_ads/presentation/screens/saved_ads_screen.dart';
 import '../features/classifieds/saved_ads/presentation/screens/recent_views_screen.dart';
 import '../features/classifieds/saved_ads/presentation/screens/classifieds_notifications_screen.dart';
+import '../features/classifieds/chat/presentation/screens/classifieds_chat_list_screen.dart';
+import '../features/classifieds/chat/presentation/screens/classifieds_chat_screen.dart';
+import '../features/classifieds/ad_detail/presentation/screens/contact_seller_screen.dart';
 import '../shared/screens/quick_switch_screen.dart';
 import '../shared/screens/fullscreen_gallery_screen.dart';
 import '../shared/widgets/no_internet_widget.dart';
@@ -1366,6 +1369,31 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                       child: SimilarAdsScreen(
                         adSlug: state.pathParameters['adSlug']!,
                       ),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$classifiedsChats,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const ClassifiedsChatListScreen(),
+                    ),
+                    routes: [
+                      GoRoute(
+                        path:        ':chatId',
+                        pageBuilder: (context, state) => _buildSlidePage(
+                          key:   state.pageKey,
+                          child: ClassifiedsChatScreen(
+                            chatId: state.pathParameters['chatId']!,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$contactSeller,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const ContactSellerScreen(),
                     ),
                   ),
                   // Edit existing ad

@@ -856,6 +856,203 @@ class KayanFilterSlotRow extends StatelessWidget {
   }
 }
 
+class KayanMyAdCard extends StatelessWidget {
+  const KayanMyAdCard({
+    super.key,
+    required this.title,
+    required this.statusLabel,
+    required this.statusColor,
+    required this.viewsLabel,
+    required this.icon,
+    this.onEdit,
+    this.onDelete,
+    this.onRenew,
+    this.editLabel = 'تعديل',
+    this.deleteLabel = 'حذف',
+    this.renewLabel = 'تجديد',
+  });
+
+  final String title;
+  final String statusLabel;
+  final Color statusColor;
+  final String viewsLabel;
+  final IconData icon;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
+  final VoidCallback? onRenew;
+  final String editLabel;
+  final String deleteLabel;
+  final String renewLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: KayanDesignTokens.border),
+        boxShadow: KayanDesignTokens.shadowS,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 84,
+            height: 84,
+            decoration: BoxDecoration(
+              gradient: KayanDesignTokens.gradBlue,
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Icon(icon, color: Colors.white, size: 28),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: KayanDesignTokens.cairo(fontSize: 14.5, fontWeight: FontWeight.w800, color: KayanDesignTokens.kBlueDeep),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: statusColor.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(99),
+                      ),
+                      child: Text(
+                        statusLabel,
+                        style: KayanDesignTokens.cairo(fontSize: 10.5, fontWeight: FontWeight.w800, color: statusColor),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 5),
+                Row(
+                  children: [
+                    const Icon(Icons.visibility_outlined, size: 12, color: KayanDesignTokens.muted),
+                    const SizedBox(width: 4),
+                    Text(viewsLabel, style: KayanDesignTokens.cairo(fontSize: 11.5, color: KayanDesignTokens.muted)),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _ActionText(editLabel, KayanDesignTokens.kBlue, onEdit),
+                    _ActionText(deleteLabel, KayanDesignTokens.danger, onDelete),
+                    _ActionText(renewLabel, KayanDesignTokens.kGreen, onRenew),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ActionText extends StatelessWidget {
+  const _ActionText(this.label, this.color, this.onTap);
+
+  final String label;
+  final Color color;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Text(
+        label,
+        style: KayanDesignTokens.cairo(fontSize: 12, fontWeight: FontWeight.w700, color: color),
+      ),
+    );
+  }
+}
+
+class KayanChatListTile extends StatelessWidget {
+  const KayanChatListTile({
+    super.key,
+    required this.name,
+    required this.preview,
+    required this.time,
+    required this.initial,
+    this.unread = false,
+    this.onTap,
+  });
+
+  final String name;
+  final String preview;
+  final String time;
+  final String initial;
+  final bool unread;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 4),
+        child: Row(
+          children: [
+            Container(
+              width: 50,
+              height: 50,
+              decoration: const BoxDecoration(gradient: KayanDesignTokens.gradBlue, shape: BoxShape.circle),
+              alignment: Alignment.center,
+              child: Text(
+                initial,
+                style: KayanDesignTokens.cairo(fontSize: 18, fontWeight: FontWeight.w800, color: Colors.white),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(name, style: KayanDesignTokens.cairo(fontSize: 14, fontWeight: FontWeight.w800, color: KayanDesignTokens.kBlueDeep)),
+                  const SizedBox(height: 2),
+                  Text(
+                    preview,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: KayanDesignTokens.cairo(fontSize: 11.5, color: KayanDesignTokens.muted),
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(time, style: KayanDesignTokens.cairo(fontSize: 10.5, color: KayanDesignTokens.muted)),
+                if (unread) ...[
+                  const SizedBox(height: 6),
+                  Container(
+                    width: 9,
+                    height: 9,
+                    decoration: const BoxDecoration(color: KayanDesignTokens.kBlue, shape: BoxShape.circle),
+                  ),
+                ],
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _DotPatternPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
