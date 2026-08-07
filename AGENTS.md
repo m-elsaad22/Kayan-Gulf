@@ -4,35 +4,38 @@
 
 ### Product overview
 
-KAYAN (`sa.kayan.app`) is a **Flutter mobile client** (Android in-repo; iOS not checked in). It combines e-commerce, home services, and classifieds with mock data — no backend is required for local UI development.
+KAYAN (`sa.kayan.app`) is a **Flutter mobile client** (Android in-repo; iOS scaffold present). It combines e-commerce, home services, food delivery, and classifieds using **mock/local data** — no backend container is required for UI development.
 
-### Toolchain (pre-installed on the VM)
+### Toolchain (this VM)
 
-| Component | Location |
-|-----------|----------|
-| Flutter stable | `$HOME/flutter` |
-| Android SDK 35/36 | `$HOME/Android/Sdk` |
-| JDK 17 (Android builds) | `$HOME/jdk/jdk-17` |
+| Component | Location / notes |
+|-----------|------------------|
+| Flutter stable | On `PATH` (e.g. `/tmp/flutter/bin/flutter`) |
+| Android SDK | `/workspace/.android-sdk` — export `ANDROID_HOME` and `ANDROID_SDK_ROOT` to this path before APK builds |
+| Java | System OpenJDK 21 (`java` on PATH); used successfully for release APK builds |
+| `android/local.properties` | Points `sdk.dir` → `/workspace/.android-sdk`, `flutter.sdk` → Flutter install |
 
-Shell PATH is configured in `~/.bashrc`. Open a new shell or `source ~/.bashrc` if `flutter` is not found.
+Do **not** commit `.android-sdk/` or `dist/` (local build artifacts).
 
 ### Services to run
 
-| Service | Required? | Notes |
-|---------|-----------|-------|
-| Flutter app | **Yes** | Only runnable product in this repo |
-| Android emulator | Optional | **Does not work** in this Cloud VM (no `/dev/kvm`). Use Chrome/web instead. |
-| Chrome (web) | **Recommended** | Best way to run and manually test in Cloud Agents |
-| Backend / Firebase | No | Mock data; Firebase not initialized in `main.dart` |
+| Service | Required? | How to start |
+|---------|-----------|--------------|
+| Flutter app (web) | **Yes** (recommended) | `flutter run -d chrome --web-port=8080 --web-browser-flag="--no-sandbox"` |
+| Flutter app (APK) | Optional | `flutter build apk --release --android-skip-build-dependency-validation` with `ANDROID_HOME=/workspace/.android-sdk` |
+| Android emulator | No | **No KVM** in Cloud VM — use Chrome/web |
+| Backend / Firebase | No | Mock providers; Firebase not initialized in `main.dart` |
+
+Use **tmux** for long-running `flutter run` (e.g. session `kayan-web-dev`). App URL after web start: `http://127.0.0.1:8080`.
 
 ### Common commands
 
 From repo root (`/workspace`):
 
 ```bash
-flutter pub get          # install Dart deps (also runs on VM startup)
-flutter analyze          # static analysis
-flutter test             # widget tests (if present)
+flutter pub get          # VM startup (update script)
+flutter analyze          # many info-level lints; exit 0 is normal
+flutter test             # widget smoke test in test/widget_test.dart
 flutter build apk --release --android-skip-build-dependency-validation
 ```
 
@@ -42,37 +45,41 @@ flutter build apk --release --android-skip-build-dependency-validation
 # One-time if web/ is missing:
 flutter create . --platforms=web
 
+export ANDROID_HOME=/workspace/.android-sdk ANDROID_SDK_ROOT=/workspace/.android-sdk
 flutter run -d chrome --web-port=8080 --web-browser-flag="--no-sandbox"
 ```
 
-App URL: `http://127.0.0.1:8080`
-
-**Android APK build** (requires JDK 17 — set `JAVA_HOME=$HOME/jdk/jdk-17`):
+**Phase release ZIPs** (APK + README):
 
 ```bash
-flutter build apk --debug --android-skip-build-dependency-validation
+./scripts/package_phase_zip.sh phase-4-shop 1.0.0
+# Output: dist/kayan-phase-4-shop-1.0.0.zip
 ```
 
-Ensure `android/local.properties` exists with `sdk.dir` and `flutter.sdk` (Flutter usually generates these on first build).
+See `RELEASES.md` for GitHub download links.
 
 ### Known gotchas
 
-1. **Design system:** Shared luxury primitives live under `lib/shared/widgets/luxury/` (`LuxuryGlassPanel`, `LuxuryNeumorphicCard`, `LuxuryHubCard`). Motion/haptics: `lib/core/theme/kayan_motion.dart`. `flutter analyze` may report many info-level lints; release APK builds succeed on `main`.
+1. **Design system:** HTML-matched light theme uses `lib/core/theme/kayan_design_tokens.dart` and `lib/shared/widgets/design/`. Older dark/luxury widgets still exist under `lib/shared/widgets/luxury/`.
 
-2. **GoRouter redirect loop on first launch (web):** If both `language_region_done` and `seen_onboarding` are false, guards can bounce between `/language-region` and `/onboarding`. Clear site data in Chrome DevTools, or ensure onboarding redirect only runs after language/region is saved (`hasSelectedRegion == true`).
+2. **GoRouter redirect loop on first launch (web):** If language/region and onboarding flags conflict, clear site data in Chrome DevTools.
 
-3. **No KVM / emulator:** Do not rely on `emulator -avd …` in this VM. Use `flutter run -d chrome` for interactive testing.
+3. **No KVM / emulator:** Use `flutter run -d chrome`, not `emulator`.
 
-4. **Mock auth:** Phone OTP accepts any 6 digits after the simulated delay. Guest/skip flows may be available on auth screens.
+4. **Mock auth:** OTP accepts any 6 digits; **تخطي / Skip** on login works for smoke tests.
 
-5. **Outbound HTTPS:** Mock images use `picsum.photos`; `google_fonts` loads fonts at runtime — network is required for full UI fidelity.
+5. **Outbound HTTPS:** `picsum.photos` and `google_fonts` need network for full UI.
 
-6. **Firebase / Maps / Stripe:** Documented in `README.md` and `SETUP_COMPLETE.md` but not required for mock-data development.
+6. **Firebase / Maps / Stripe:** Optional for production; not required for mock-data dev (`README.md`, `lib/core/config/README_FIREBASE.md`).
 
-7. **Branding assets:** Launcher icon and in-app logo must be separate owner files: `assets/images/kayan_icon.webp` (square 3D knot) and `assets/images/kayan_logo.png` (KAYAN + GULF SUPER APP wordmark). Do **not** use or crop legacy `1009078094.png` (gold K mark). After replacing files run `python3 scripts/install_kayan_branding.py` then rebuild APK.
+7. **Android SDK:** `android/app/build.gradle` uses `compileSdk 36` / `targetSdk 36`.
+
+8. **Branding:** After replacing `assets/images/kayan_icon.webp` / `kayan_logo.png`, run `python3 scripts/install_kayan_branding.py` then rebuild.
 
 ### Manual test flow (hello world)
 
-1. Open `http://127.0.0.1:8080` after `flutter run -d chrome`.
-2. Select language/region → onboarding (skip ok) → phone auth (any number + 6-digit OTP) → profile setup.
-3. Dashboard → **Shopping Store** → open a product detail page.
+1. Start web: `flutter run -d chrome` → open `http://127.0.0.1:8080`.
+2. Language/region → onboarding (skip) → login (skip or any phone + 6-digit OTP).
+3. Dashboard → tap **متجر تسوق** or bottom **التسوق** tab.
+4. Confirm shop home: orange header **متجر كيان**, category pills, recommended products.
+5. Optional: open a product detail, or build APK via `scripts/package_phase_zip.sh`.

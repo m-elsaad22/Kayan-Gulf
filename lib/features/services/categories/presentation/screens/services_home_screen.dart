@@ -132,6 +132,54 @@ class ServicesHomeScreen extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => context.push(AppRoutes.servicePackages),
+                        child: Container(
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: KayanDesignTokens.border),
+                            boxShadow: KayanDesignTokens.shadowS,
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.inventory_2_outlined, color: KayanDesignTokens.kGreen, size: 20),
+                              const SizedBox(width: 8),
+                              Expanded(child: Text(ar ? 'الباقات' : 'Packages', style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800, fontSize: 13))),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => context.push(AppRoutes.advancedServiceFilters),
+                        child: Container(
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: KayanDesignTokens.border),
+                            boxShadow: KayanDesignTokens.shadowS,
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.tune_rounded, color: KayanDesignTokens.kBlue, size: 20),
+                              const SizedBox(width: 8),
+                              Expanded(child: Text(ar ? 'فلاتر' : 'Filters', style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800, fontSize: 13))),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
                 GestureDetector(
                   onTap: () => context.push(AppRoutes.myBookings),
                   child: Container(

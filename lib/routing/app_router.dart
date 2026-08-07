@@ -54,6 +54,14 @@ import '../features/auth/presentation/screens/profile_setup_screen.dart';
 // Dashboard & Home
 import '../features/dashboard/presentation/screens/dashboard_screen.dart';
 // E-commerce
+import '../features/ecommerce/shop/presentation/screens/shop_home_screen.dart';
+import '../features/ecommerce/shop/presentation/screens/shop_orders_screen.dart';
+import '../features/ecommerce/shop/presentation/screens/shop_catalog_screen.dart';
+import '../features/ecommerce/shop/presentation/screens/shop_product_screen.dart';
+import '../features/ecommerce/shop/presentation/screens/shop_cart_screen.dart';
+import '../features/ecommerce/shop/presentation/screens/shop_checkout_screen.dart';
+import '../features/ecommerce/shop/presentation/screens/shop_success_screen.dart';
+import '../features/ecommerce/notifications/presentation/screens/shop_notifications_screen.dart';
 import '../features/ecommerce/categories/presentation/screens/categories_screen.dart';
 import '../features/ecommerce/product/presentation/screens/product_list_screen.dart';
 import '../features/ecommerce/product/presentation/screens/product_detail_screen.dart';
@@ -92,11 +100,12 @@ import '../features/services/browse/presentation/screens/service_detail_screen.d
 import '../features/services/booking/presentation/screens/booking_calendar_screen.dart';
 import '../features/services/booking/presentation/screens/booking_confirmation_screen.dart';
 import '../features/services/booking/presentation/screens/booking_success_screen.dart';
-import '../features/services/booking/presentation/screens/my_bookings_screen.dart';
+import '../features/services/booking/presentation/screens/services_bookings_light_screen.dart';
 import '../features/services/booking/presentation/screens/booking_detail_screen.dart';
-import '../features/services/tracking/presentation/screens/live_tracking_screen.dart';
-import '../features/services/browse/presentation/screens/advanced_filters_screen.dart';
+import '../features/services/tracking/presentation/screens/service_tracking_light_screen.dart';
+import '../features/services/browse/presentation/screens/services_filters_screen.dart';
 import '../features/services/browse/presentation/screens/service_subcategories_screen.dart';
+import '../features/services/browse/presentation/screens/services_packages_screen.dart';
 import '../features/services/booking/presentation/screens/address_entry_screen.dart';
 import '../features/services/booking/presentation/screens/payment_method_screen.dart';
 import '../features/services/booking/presentation/screens/add_card_screen.dart';
@@ -111,6 +120,8 @@ import '../features/services/booking/presentation/screens/service_qr_screen.dart
 // Classifieds
 import '../features/classifieds/browse/presentation/screens/ads_list_screen.dart';
 import '../features/classifieds/browse/presentation/screens/classifieds_home_screen.dart';
+import '../features/classifieds/browse/presentation/screens/classifieds_categories_screen.dart';
+import '../features/classifieds/browse/presentation/screens/classifieds_category_browse_screen.dart';
 import '../features/classifieds/ad_detail/presentation/screens/ad_detail_screen.dart';
 import '../features/classifieds/post_ad/presentation/screens/post_ad_screen.dart';
 import '../features/classifieds/post_ad/presentation/screens/boost_ad_screen.dart';
@@ -128,6 +139,9 @@ import '../features/classifieds/my_ads/presentation/screens/edit_ad_screen.dart'
 import '../features/classifieds/saved_ads/presentation/screens/saved_ads_screen.dart';
 import '../features/classifieds/saved_ads/presentation/screens/recent_views_screen.dart';
 import '../features/classifieds/saved_ads/presentation/screens/classifieds_notifications_screen.dart';
+import '../features/classifieds/chat/presentation/screens/classifieds_chat_list_screen.dart';
+import '../features/classifieds/chat/presentation/screens/classifieds_chat_screen.dart';
+import '../features/classifieds/ad_detail/presentation/screens/contact_seller_screen.dart';
 import '../shared/screens/quick_switch_screen.dart';
 import '../shared/screens/fullscreen_gallery_screen.dart';
 import '../shared/widgets/no_internet_widget.dart';
@@ -177,6 +191,11 @@ import '../features/delivery/presentation/screens/delivery_address_screen.dart';
 import '../features/delivery/presentation/screens/delivery_payment_screen.dart';
 import '../features/delivery/presentation/screens/delivery_success_screen.dart';
 import '../features/delivery/presentation/screens/delivery_tracking_screen.dart';
+import '../features/delivery/presentation/screens/delivery_my_orders_screen.dart';
+import '../features/delivery/presentation/screens/delivery_order_detail_screen.dart';
+import '../features/delivery/presentation/screens/delivery_favorites_screen.dart';
+import '../features/delivery/presentation/screens/delivery_coupons_screen.dart';
+import '../features/delivery/presentation/screens/delivery_rate_order_screen.dart';
 // Settings
 import '../features/settings/presentation/screens/settings_screen.dart';
 import '../features/settings/presentation/screens/settings_detail_screens.dart';
@@ -736,7 +755,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.advancedServiceFilters,
         pageBuilder: (context, state) => _buildSlidePage(
           key: state.pageKey,
-          child: const AdvancedFiltersScreen(),
+          child: const ServicesFiltersScreen(),
         ),
       ),
       GoRoute(
@@ -745,6 +764,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildSlidePage(
           key: state.pageKey,
           child: const ServiceSubcategoriesScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.servicePackages,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ServicesPackagesScreen(),
         ),
       ),
       GoRoute(
@@ -1028,6 +1055,45 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                       ),
                     ],
                   ),
+                  GoRoute(
+                    path:        AppRoutes.$deliveryMyOrders,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const DeliveryMyOrdersScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$deliveryFavorites,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const DeliveryFavoritesScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$deliveryCoupons,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const DeliveryCouponsScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$deliveryOrderId,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: DeliveryOrderDetailScreen(
+                        orderId: state.pathParameters['orderId']!,
+                      ),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$deliveryRateOrderId,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: DeliveryRateOrderScreen(
+                        orderId: state.pathParameters['orderId']!,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ],
@@ -1043,9 +1109,44 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 path:        AppRoutes.shop,
                 pageBuilder: (context, state) => _buildNoTransitionPage(
                   key:   state.pageKey,
-                  child: const ProductListScreen(),
+                  child: const ShopHomeScreen(),
                 ),
                 routes: [
+                  GoRoute(
+                    path:        AppRoutes.$browse,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const ShopCatalogScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$shopCart,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const ShopCartScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$shopCheckout,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const ShopCheckoutScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$shopSuccess,
+                    pageBuilder: (context, state) => _buildFadePage(
+                      key:   state.pageKey,
+                      child: const ShopSuccessScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$shopMyOrders,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const ShopOrdersScreen(),
+                    ),
+                  ),
                   // Search
                   GoRoute(
                     path:        AppRoutes.$search,
@@ -1087,7 +1188,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     path:        AppRoutes.$productDetail,
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
-                      child: ProductDetailScreen(
+                      child: ShopProductScreen(
                         slug: state.pathParameters['productSlug']!,
                       ),
                     ),
@@ -1108,6 +1209,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
                       child: const fav_screen.FavoritesScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$shopNotifications,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const ShopNotificationsScreen(),
                     ),
                   ),
                 ],
@@ -1151,7 +1259,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     path:        AppRoutes.$myBookings,
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
-                      child: const MyBookingsScreen(),
+                      child: const ServicesBookingsLightScreen(),
                     ),
                     routes: [
                       GoRoute(
@@ -1190,7 +1298,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     path:        AppRoutes.$trackingId,
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
-                      child: LiveTrackingScreen(
+                      child: ServiceTrackingLightScreen(
                         bookingId: state.pathParameters['bookingId']!,
                       ),
                     ),
@@ -1282,6 +1390,22 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     ),
                   ),
                   GoRoute(
+                    path:        AppRoutes.$classifiedsCategories,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const ClassifiedsCategoriesScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$categoryBrowse,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: ClassifiedsCategoryBrowseScreen(
+                        categorySlug: state.pathParameters['categorySlug']!,
+                      ),
+                    ),
+                  ),
+                  GoRoute(
                     path:        AppRoutes.$savedAds,
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
@@ -1349,6 +1473,34 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                       key:   state.pageKey,
                       child: SimilarAdsScreen(
                         adSlug: state.pathParameters['adSlug']!,
+                      ),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$classifiedsChats,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const ClassifiedsChatListScreen(),
+                    ),
+                    routes: [
+                      GoRoute(
+                        path:        ':chatId',
+                        pageBuilder: (context, state) => _buildSlidePage(
+                          key:   state.pageKey,
+                          child: ClassifiedsChatScreen(
+                            chatId: state.pathParameters['chatId']!,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$contactSeller,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: ContactSellerScreen(
+                        adSlug: state.uri.queryParameters['ad'],
+                        sellerId: state.uri.queryParameters['seller'],
                       ),
                     ),
                   ),

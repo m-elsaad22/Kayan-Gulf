@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../data/mock/delivery_mock_data.dart';
-import '../data/models/delivery_models.dart';
+import '../../data/mock/delivery_mock_data.dart';
+import '../../data/models/delivery_models.dart';
 
 final deliveryVendorsProvider = Provider<List<DeliveryVendor>>((ref) => mockDeliveryVendors);
 

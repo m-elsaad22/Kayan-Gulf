@@ -55,9 +55,17 @@ abstract final class AppRoutes {
   static const String deliveryPayment  = '/delivery/payment';
   static const String deliverySuccess  = '/delivery/success';
   static const String deliveryTracking = '/delivery/tracking';
+  static const String deliveryMyOrders = '/delivery/my-orders';
+  static const String deliveryFavorites = '/delivery/favorites';
+  static const String deliveryCoupons = '/delivery/coupons';
 
   static const String _deliveryVendorSlug = 'vendors/:vendorSlug';
   static const String _deliveryItemId     = 'vendors/:vendorSlug/items/:itemId';
+  static const String _deliveryMyOrders   = 'my-orders';
+  static const String _deliveryFavorites  = 'favorites';
+  static const String _deliveryCoupons    = 'coupons';
+  static const String _deliveryOrderId    = 'orders/:orderId';
+  static const String _deliveryRateOrderId = 'rate/:orderId';
 
   // ──────────────────────────────────────────────────────────
   // 🛒 E-COMMERCE (nested under /shop)
@@ -71,16 +79,27 @@ abstract final class AppRoutes {
   static const String _flashDeals       = 'flash-deals';
   static const String _vendorProfile    = 'vendors/:vendorSlug';
   static const String _favorites        = 'favorites';
+  static const String _browse           = 'browse';
+  static const String _shopNotifications = 'notifications';
+  static const String _shopMyOrders      = 'my-orders';
+  static const String _shopCart          = 'cart';
+  static const String _shopCheckout      = 'checkout';
+  static const String _shopSuccess       = 'success';
 
   // Full absolute paths (used by context.go / context.push)
   static const String categories       = '/shop/categories';
   static const String search           = '/shop/search';
   static const String flashDeals       = '/shop/flash-deals';
   static const String favorites        = '/shop/favorites';
+  static const String shopBrowse       = '/shop/browse';
   static const String productReviews    = '/shop/product-reviews';
   static const String productCompare    = '/shop/product-compare';
   static const String bestSellers       = '/shop/best-sellers';
   static const String exclusiveOffers   = '/shop/exclusive-offers';
+  static const String shopMyOrders      = '/shop/my-orders';
+  static const String shopCart          = '/shop/cart';
+  static const String shopCheckout      = '/shop/checkout';
+  static const String shopSuccess       = '/shop/success';
 
   // ──────────────────────────────────────────────────────────
   // 🛍️ CART & CHECKOUT (global, outside shell)
@@ -153,6 +172,9 @@ abstract final class AppRoutes {
   static const String adFilters = '/classifieds/filters';
   static const String featuredAds = '/classifieds/featured';
   static const String savedAds  = '/classifieds/saved';
+  static const String classifiedsChats = '/classifieds/chats';
+  static const String classifiedsCategories = '/classifieds/ad-categories';
+  static const String contactSeller = '/classifieds/contact-seller';
   static const String recentViews = '/classifieds/recent-views';
   static const String classifiedsNotifications = '/classifieds/notifications';
   static const String pendingAds = '/classifieds/my-ads/pending';
@@ -176,6 +198,11 @@ abstract final class AppRoutes {
   static const String _sellerId = 'seller/:sellerId';
   static const String _reportAdSlug = 'report/:adSlug';
   static const String _similarAdSlug = 'similar/:adSlug';
+  static const String _classifiedsChats = 'chats';
+  static const String _classifiedsChatId = 'chats/:chatId';
+  static const String _contactSeller = 'contact-seller';
+  static const String _classifiedsCategories = 'ad-categories';
+  static const String _categoryBrowse = 'category/:categorySlug';
 
   // ──────────────────────────────────────────────────────────
   // 💬 CHAT (global)
@@ -282,9 +309,9 @@ abstract final class AppRoutes {
   static const String rescheduleBooking = '/services/reschedule-booking';
   static const String reportIssue = '/services/report-issue';
   static const String serviceNotifications = '/services/notifications';
+  static const String servicePackages      = '/services/packages';
   static const String shopFilters = '/shop/filters';
   static const String shopNotifications = '/shop/notifications';
-  static const String contactSeller = '/classifieds/contact-seller';
   static const String postAdSuccess = '/classifieds/post/success';
   static const String whatsNew = '/whats-new';
   static const String appPermissions = '/permissions';
@@ -316,6 +343,8 @@ abstract final class AppRoutes {
   static const String $flashDeals       = _flashDeals;
   static const String $vendorProfile    = _vendorProfile;
   static const String $favorites        = _favorites;
+  static const String $browse           = _browse;
+  static const String $shopNotifications = _shopNotifications;
 
   // Services relative paths
   static const String $serviceSlug      = _serviceSlug;
@@ -344,10 +373,24 @@ abstract final class AppRoutes {
   static const String $sellerId         = _sellerId;
   static const String $reportAdSlug     = _reportAdSlug;
   static const String $similarAdSlug    = _similarAdSlug;
+  static const String $classifiedsChats  = _classifiedsChats;
+  static const String $classifiedsChatId = _classifiedsChatId;
+  static const String $contactSeller     = _contactSeller;
+  static const String $classifiedsCategories = _classifiedsCategories;
+  static const String $categoryBrowse = _categoryBrowse;
 
   // Delivery relative paths
   static const String $deliveryVendorSlug = _deliveryVendorSlug;
   static const String $deliveryItemId     = _deliveryItemId;
+  static const String $deliveryMyOrders   = _deliveryMyOrders;
+  static const String $deliveryFavorites  = _deliveryFavorites;
+  static const String $deliveryCoupons    = _deliveryCoupons;
+  static const String $deliveryOrderId    = _deliveryOrderId;
+  static const String $deliveryRateOrderId = _deliveryRateOrderId;
+  static const String $shopMyOrders       = _shopMyOrders;
+  static const String $shopCart           = _shopCart;
+  static const String $shopCheckout       = _shopCheckout;
+  static const String $shopSuccess        = _shopSuccess;
 
   // Profile relative paths
   static const String $editProfile      = _editProfile;
@@ -391,6 +434,16 @@ abstract final class AppRoutes {
   static String reportAdPath(String slug)   => '/classifieds/report/$slug';
   static String similarAdsPath(String slug) => '/classifieds/similar/$slug';
   static String adStatsPath(String adId)    => '/classifieds/my-ads/stats/$adId';
+  static String contactSellerPath({String? adSlug, String? sellerId}) {
+    final params = <String>[];
+    if (adSlug != null) params.add('ad=$adSlug');
+    if (sellerId != null) params.add('seller=$sellerId');
+    if (params.isEmpty) return contactSeller;
+    return '$contactSeller?${params.join('&')}';
+  }
+
+  static String classifiedsChatPath(String chatId) => '/classifieds/chats/$chatId';
+  static String classifiedsCategoryPath(String slug) => '/classifieds/category/$slug';
   static String galleryPath()               => '/gallery';
 
   // Chat
@@ -400,4 +453,6 @@ abstract final class AppRoutes {
   static String deliveryVendorPath(String slug) => '/delivery/vendors/$slug';
   static String deliveryItemPath(String vendorSlug, String itemId) =>
       '/delivery/vendors/$vendorSlug/items/$itemId';
+  static String deliveryOrderPath(String orderId) => '/delivery/orders/$orderId';
+  static String deliveryRatePath(String orderId) => '/delivery/rate/$orderId';
 }

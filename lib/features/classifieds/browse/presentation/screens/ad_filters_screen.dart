@@ -1,69 +1,131 @@
-// TODO: connect to real backend
+// Advanced search filters — matches design/html/118-cl-search-filters.html
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../../../../core/theme/app_text_styles.dart';
+import '../../../../../core/theme/kayan_design_tokens.dart';
 import '../../../../../shared/providers/locale_provider.dart';
-import '../../../shared/presentation/widgets/phase5_classifieds_widgets.dart';
+import '../../../../../shared/widgets/design/kayan_design_widgets.dart';
+import '../../../../../shared/widgets/design/kayan_entry_widgets.dart';
 import '../../data/models/ad_models.dart';
 
-final _minPriceProvider = StateProvider<double>((_) => 0);
-final _maxPriceProvider = StateProvider<double>((_) => 50000);
-final _conditionProvider = StateProvider<AdCondition?>((_) => null);
-
-class AdFiltersScreen extends ConsumerWidget {
+class AdFiltersScreen extends ConsumerStatefulWidget {
   const AdFiltersScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final ar = ref.watch(isArabicProvider);
-    final minPrice = ref.watch(_minPriceProvider);
-    final maxPrice = ref.watch(_maxPriceProvider);
-    final condition = ref.watch(_conditionProvider);
+  ConsumerState<AdFiltersScreen> createState() => _AdFiltersScreenState();
+}
 
-    return Phase5ClassifiedsScaffold(
-      titleAr: 'تصفية الإعلانات',
-      titleEn: 'Ad Filters',
-      subtitleAr: 'حدّد السعر والحالة والفئة.',
-      subtitleEn: 'Filter by price, condition, and category.',
-      children: [
-        Text(
-          ar ? 'نطاق السعر (ر.س)' : 'Price range (SAR)',
-          style: ar ? AppTextStyles.arabicTitleSmall : AppTextStyles.titleSmall,
+class _AdFiltersScreenState extends ConsumerState<AdFiltersScreen> {
+  final _keywordCtrl = TextEditingController(text: '');
+  final _cityCtrl = TextEditingController(text: 'الرياض');
+
+  int _categoryIndex = 0;
+  RangeValues _priceRange = const RangeValues(5000, 90000);
+
+  static const _categorySlugs = ['vehicles', 'realestate', 'electronics', 'jobs'];
+
+  @override
+  void dispose() {
+    _keywordCtrl.dispose();
+    _cityCtrl.dispose();
+    super.dispose();
+  }
+
+  List<String> _categoryLabels(bool ar) {
+    final names = mockAdCategories
+        .where((c) => _categorySlugs.contains(c.slug))
+        .map((c) => ar ? c.nameAr : c.nameEn)
+        .toList();
+    return names.length == _categorySlugs.length
+        ? names
+        : (ar ? ['سيارات', 'عقارات', 'إلكترونيات', 'وظائف'] : ['Cars', 'Property', 'Electronics', 'Jobs']);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ar = ref.watch(isArabicProvider);
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              KayanLightTopBar(
+                title: ar ? 'بحث متقدم' : 'Advanced search',
+                onBack: () => context.pop(),
+              ),
+              Expanded(
+                child: ListView(
+                  children: [
+                    const SizedBox(height: 10),
+                    KayanDesignTextField(
+                      label: ar ? 'الكلمة المفتاحية' : 'Keyword',
+                      hint: ar ? 'مثال: كامري 2023' : 'e.g. Camry 2023',
+                      icon: Icons.search_rounded,
+                      controller: _keywordCtrl,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      ar ? 'القسم' : 'Category',
+                      style: KayanDesignTokens.cairo(fontSize: 13, fontWeight: FontWeight.w700, color: KayanDesignTokens.text2),
+                    ),
+                    const SizedBox(height: 10),
+                    KayanFilterSlotRow(
+                      labels: _categoryLabels(ar),
+                      selectedIndex: _categoryIndex,
+                      onSelected: (i) => setState(() => _categoryIndex = i),
+                    ),
+                    const SizedBox(height: 14),
+                    Text(
+                      ar ? 'نطاق السعر' : 'Price range',
+                      style: KayanDesignTokens.cairo(fontSize: 13, fontWeight: FontWeight.w700, color: KayanDesignTokens.text2),
+                    ),
+                    const SizedBox(height: 10),
+                    SliderTheme(
+                      data: SliderTheme.of(context).copyWith(
+                        activeTrackColor: KayanDesignTokens.kBlue,
+                        inactiveTrackColor: KayanDesignTokens.border,
+                        thumbColor: Colors.white,
+                        overlayColor: KayanDesignTokens.kBlue.withValues(alpha: 0.12),
+                        rangeThumbShape: const RoundRangeSliderThumbShape(enabledThumbRadius: 9, elevation: 2),
+                        rangeTrackShape: const RoundedRectRangeSliderTrackShape(),
+                      ),
+                      child: RangeSlider(
+                        values: _priceRange,
+                        min: 0,
+                        max: 200000,
+                        divisions: 40,
+                        onChanged: (v) => setState(() => _priceRange = v),
+                      ),
+                    ),
+                    Text(
+                      '${_priceRange.start.toInt()} — ${_priceRange.end.toInt()} ${ar ? 'ر.س' : 'SAR'}',
+                      textAlign: TextAlign.center,
+                      style: KayanDesignTokens.cairo(fontSize: 13, fontWeight: FontWeight.w700, color: KayanDesignTokens.kBlueDeep),
+                    ),
+                    const SizedBox(height: 18),
+                    KayanDesignTextField(
+                      label: ar ? 'المدينة' : 'City',
+                      hint: ar ? 'الرياض' : 'Riyadh',
+                      icon: Icons.location_on_outlined,
+                      controller: _cityCtrl,
+                    ),
+                  ],
+                ),
+              ),
+              KayanCtaButton(
+                label: ar ? 'تطبيق البحث' : 'Apply search',
+                variant: KayanCtaVariant.blue,
+                onPressed: () => context.pop(true),
+              ),
+            ],
+          ),
         ),
-        RangeSlider(
-          values: RangeValues(minPrice, maxPrice),
-          max: 100000,
-          divisions: 20,
-          onChanged: (v) {
-            ref.read(_minPriceProvider.notifier).state = v.start;
-            ref.read(_maxPriceProvider.notifier).state = v.end;
-          },
-        ),
-        Text('${minPrice.toInt()} — ${maxPrice.toInt()}'),
-        const SizedBox(height: 16),
-        Text(
-          ar ? 'الحالة' : 'Condition',
-          style: ar ? AppTextStyles.arabicTitleSmall : AppTextStyles.titleSmall,
-        ),
-        Wrap(
-          spacing: 8,
-          children: AdCondition.values.map((c) {
-            final selected = condition == c;
-            return FilterChip(
-              label: Text(ar ? c.labelAr() : c.labelEn()),
-              selected: selected,
-              onSelected: (_) => ref.read(_conditionProvider.notifier).state =
-                  selected ? null : c,
-            );
-          }).toList(),
-        ),
-        const SizedBox(height: 24),
-        ElevatedButton(
-          onPressed: () => Navigator.of(context).pop(true),
-          child: Text(ar ? 'تطبيق الفلاتر' : 'Apply Filters'),
-        ),
-      ],
+      ),
     );
   }
 }
