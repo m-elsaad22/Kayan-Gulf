@@ -99,6 +99,54 @@ class ShopHomeScreen extends ConsumerWidget {
                   subtitle: ar ? 'على تشكيلة الصيف الجديدة' : 'On the new summer collection',
                   gradient: KayanDesignTokens.gradOrange,
                 ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => context.push(AppRoutes.shopMyOrders),
+                        child: Container(
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: KayanDesignTokens.border),
+                            boxShadow: KayanDesignTokens.shadowS,
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.receipt_long_rounded, color: KayanDesignTokens.oOrange, size: 20),
+                              const SizedBox(width: 8),
+                              Expanded(child: Text(ar ? 'طلباتي' : 'My orders', style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800, fontSize: 13))),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => context.push(AppRoutes.categories),
+                        child: Container(
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: KayanDesignTokens.border),
+                            boxShadow: KayanDesignTokens.shadowS,
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.grid_view_rounded, color: KayanDesignTokens.kBlue, size: 20),
+                              const SizedBox(width: 8),
+                              Expanded(child: Text(ar ? 'الأقسام' : 'Categories', style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800, fontSize: 13))),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
                 KayanCategoryPillRow(
                   isArabic: ar,
                   iconGradient: KayanDesignTokens.gradOrange,

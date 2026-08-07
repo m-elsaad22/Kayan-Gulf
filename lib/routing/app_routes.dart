@@ -55,9 +55,17 @@ abstract final class AppRoutes {
   static const String deliveryPayment  = '/delivery/payment';
   static const String deliverySuccess  = '/delivery/success';
   static const String deliveryTracking = '/delivery/tracking';
+  static const String deliveryMyOrders = '/delivery/my-orders';
+  static const String deliveryFavorites = '/delivery/favorites';
+  static const String deliveryCoupons = '/delivery/coupons';
 
   static const String _deliveryVendorSlug = 'vendors/:vendorSlug';
   static const String _deliveryItemId     = 'vendors/:vendorSlug/items/:itemId';
+  static const String _deliveryMyOrders   = 'my-orders';
+  static const String _deliveryFavorites  = 'favorites';
+  static const String _deliveryCoupons    = 'coupons';
+  static const String _deliveryOrderId    = 'orders/:orderId';
+  static const String _deliveryRateOrderId = 'rate/:orderId';
 
   // ──────────────────────────────────────────────────────────
   // 🛒 E-COMMERCE (nested under /shop)
@@ -73,6 +81,7 @@ abstract final class AppRoutes {
   static const String _favorites        = 'favorites';
   static const String _browse           = 'browse';
   static const String _shopNotifications = 'notifications';
+  static const String _shopMyOrders      = 'my-orders';
 
   // Full absolute paths (used by context.go / context.push)
   static const String categories       = '/shop/categories';
@@ -84,6 +93,7 @@ abstract final class AppRoutes {
   static const String productCompare    = '/shop/product-compare';
   static const String bestSellers       = '/shop/best-sellers';
   static const String exclusiveOffers   = '/shop/exclusive-offers';
+  static const String shopMyOrders      = '/shop/my-orders';
 
   // ──────────────────────────────────────────────────────────
   // 🛍️ CART & CHECKOUT (global, outside shell)
@@ -365,6 +375,12 @@ abstract final class AppRoutes {
   // Delivery relative paths
   static const String $deliveryVendorSlug = _deliveryVendorSlug;
   static const String $deliveryItemId     = _deliveryItemId;
+  static const String $deliveryMyOrders   = _deliveryMyOrders;
+  static const String $deliveryFavorites  = _deliveryFavorites;
+  static const String $deliveryCoupons    = _deliveryCoupons;
+  static const String $deliveryOrderId    = _deliveryOrderId;
+  static const String $deliveryRateOrderId = _deliveryRateOrderId;
+  static const String $shopMyOrders       = _shopMyOrders;
 
   // Profile relative paths
   static const String $editProfile      = _editProfile;
@@ -427,4 +443,6 @@ abstract final class AppRoutes {
   static String deliveryVendorPath(String slug) => '/delivery/vendors/$slug';
   static String deliveryItemPath(String vendorSlug, String itemId) =>
       '/delivery/vendors/$vendorSlug/items/$itemId';
+  static String deliveryOrderPath(String orderId) => '/delivery/orders/$orderId';
+  static String deliveryRatePath(String orderId) => '/delivery/rate/$orderId';
 }

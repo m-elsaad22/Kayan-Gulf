@@ -55,6 +55,7 @@ import '../features/auth/presentation/screens/profile_setup_screen.dart';
 import '../features/dashboard/presentation/screens/dashboard_screen.dart';
 // E-commerce
 import '../features/ecommerce/shop/presentation/screens/shop_home_screen.dart';
+import '../features/ecommerce/shop/presentation/screens/shop_orders_screen.dart';
 import '../features/ecommerce/notifications/presentation/screens/shop_notifications_screen.dart';
 import '../features/ecommerce/categories/presentation/screens/categories_screen.dart';
 import '../features/ecommerce/product/presentation/screens/product_list_screen.dart';
@@ -184,6 +185,11 @@ import '../features/delivery/presentation/screens/delivery_address_screen.dart';
 import '../features/delivery/presentation/screens/delivery_payment_screen.dart';
 import '../features/delivery/presentation/screens/delivery_success_screen.dart';
 import '../features/delivery/presentation/screens/delivery_tracking_screen.dart';
+import '../features/delivery/presentation/screens/delivery_my_orders_screen.dart';
+import '../features/delivery/presentation/screens/delivery_order_detail_screen.dart';
+import '../features/delivery/presentation/screens/delivery_favorites_screen.dart';
+import '../features/delivery/presentation/screens/delivery_coupons_screen.dart';
+import '../features/delivery/presentation/screens/delivery_rate_order_screen.dart';
 // Settings
 import '../features/settings/presentation/screens/settings_screen.dart';
 import '../features/settings/presentation/screens/settings_detail_screens.dart';
@@ -1035,6 +1041,45 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                       ),
                     ],
                   ),
+                  GoRoute(
+                    path:        AppRoutes.$deliveryMyOrders,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const DeliveryMyOrdersScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$deliveryFavorites,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const DeliveryFavoritesScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$deliveryCoupons,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const DeliveryCouponsScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$deliveryOrderId,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: DeliveryOrderDetailScreen(
+                        orderId: state.pathParameters['orderId']!,
+                      ),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$deliveryRateOrderId,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: DeliveryRateOrderScreen(
+                        orderId: state.pathParameters['orderId']!,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ],
@@ -1058,6 +1103,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
                       child: const ProductListScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$shopMyOrders,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const ShopOrdersScreen(),
                     ),
                   ),
                   // Search

@@ -1,41 +1,66 @@
-// TODO: connect to real backend
+// Service payment — light design (29-hs-payment.html)
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../../shared/presentation/widgets/phase3_service_widgets.dart';
+import '../../../../../core/theme/kayan_design_tokens.dart';
+import '../../../../../shared/providers/locale_provider.dart';
+import '../../../../../shared/widgets/design/kayan_design_widgets.dart';
+import '../../../../../shared/widgets/design/kayan_entry_widgets.dart';
 
-class PaymentMethodScreen extends StatelessWidget {
+class PaymentMethodScreen extends ConsumerStatefulWidget {
   const PaymentMethodScreen({super.key});
 
   @override
+  ConsumerState<PaymentMethodScreen> createState() => _PaymentMethodScreenState();
+}
+
+class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
+  int _selected = 0;
+
+  @override
   Widget build(BuildContext context) {
-    return Phase3ServiceScaffold(
-      titleAr: 'طريقة الدفع',
-      titleEn: 'Payment Method',
-      subtitleAr: 'اختر وسيلة الدفع المناسبة لحجز الخدمة.',
-      subtitleEn: 'Choose the preferred payment method for booking.',
-      children: [
-          Phase3ServiceCard(
-            icon: Icons.credit_card_rounded,
-            titleAr: 'بطاقة بنكية',
-            titleEn: 'Card',
-            bodyAr: 'ادفع بأمان عبر بطاقة محفوظة أو جديدة.',
-            bodyEn: 'Pay securely with saved or new card.',
+    final ar = ref.watch(isArabicProvider);
+    final options = ar
+        ? ['بطاقة بنكية', 'محفظة كيان', 'الدفع عند الإنجاز']
+        : ['Card', 'KAYAN Wallet', 'Pay on completion'];
+    final icons = [Icons.credit_card_rounded, Icons.account_balance_wallet_rounded, Icons.payments_rounded];
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              KayanLightTopBar(title: ar ? 'طريقة الدفع' : 'Payment method', onBack: () => context.pop()),
+              const SizedBox(height: 14),
+              Expanded(
+                child: ListView(
+                  children: List.generate(options.length, (i) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: KayanPayOptionRow(
+                        icon: icons[i],
+                        label: options[i],
+                        selected: _selected == i,
+                        onTap: () => setState(() => _selected = i),
+                      ),
+                    );
+                  }),
+                ),
+              ),
+              KayanCtaButton(
+                label: ar ? 'تأكيد الدفع' : 'Confirm payment',
+                trailingIcon: Icons.lock_rounded,
+                variant: KayanCtaVariant.green,
+                onPressed: () => context.pop(),
+              ),
+            ],
           ),
-          Phase3ServiceCard(
-            icon: Icons.account_balance_wallet_rounded,
-            titleAr: 'محفظة كيان',
-            titleEn: 'KAYAN Wallet',
-            bodyAr: 'استخدم رصيد محفظتك ونقاطك.',
-            bodyEn: 'Use wallet balance and points.',
-          ),
-          Phase3ServiceCard(
-            icon: Icons.payments_rounded,
-            titleAr: 'الدفع عند الإنجاز',
-            titleEn: 'Pay on Completion',
-            bodyAr: 'متاح لبعض الخدمات المؤهلة.',
-            bodyEn: 'Available for eligible services.',
-          ),
-      ],
+        ),
+      ),
     );
   }
 }

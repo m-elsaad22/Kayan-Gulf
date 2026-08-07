@@ -161,3 +161,100 @@ DeliveryVendor? findDeliveryVendor(String slug) {
     return null;
   }
 }
+
+final mockDeliveryOrders = <DeliveryOrder>[
+  DeliveryOrder(
+    id: 'ord-1001',
+    vendor: mockDeliveryVendors[0],
+    lines: [
+      DeliveryCartLine(
+        item: mockDeliveryVendors[0].menu[0],
+        vendor: mockDeliveryVendors[0],
+        quantity: 2,
+      ),
+      DeliveryCartLine(
+        item: mockDeliveryVendors[0].menu[2],
+        vendor: mockDeliveryVendors[0],
+        quantity: 1,
+      ),
+    ],
+    total: 76,
+    statusAr: 'قيد التوصيل',
+    statusEn: 'On the way',
+    createdAt: DateTime.now().subtract(const Duration(minutes: 18)),
+  ),
+  DeliveryOrder(
+    id: 'ord-1002',
+    vendor: mockDeliveryVendors[1],
+    lines: [
+      DeliveryCartLine(
+        item: mockDeliveryVendors[1].menu[0],
+        vendor: mockDeliveryVendors[1],
+        quantity: 1,
+      ),
+    ],
+    total: 38,
+    statusAr: 'تم التسليم',
+    statusEn: 'Delivered',
+    createdAt: DateTime.now().subtract(const Duration(days: 1)),
+  ),
+  DeliveryOrder(
+    id: 'ord-1003',
+    vendor: mockDeliveryVendors[2],
+    lines: [
+      DeliveryCartLine(
+        item: mockDeliveryVendors[2].menu[0],
+        vendor: mockDeliveryVendors[2],
+        quantity: 3,
+      ),
+    ],
+    total: 24,
+    statusAr: 'ملغي',
+    statusEn: 'Cancelled',
+    createdAt: DateTime.now().subtract(const Duration(days: 3)),
+  ),
+];
+
+class DeliveryCoupon {
+  final String code;
+  final String titleAr;
+  final String titleEn;
+  final String discountAr;
+  final String discountEn;
+  final bool isActive;
+
+  const DeliveryCoupon({
+    required this.code,
+    required this.titleAr,
+    required this.titleEn,
+    required this.discountAr,
+    required this.discountEn,
+    this.isActive = true,
+  });
+}
+
+const mockDeliveryCoupons = <DeliveryCoupon>[
+  DeliveryCoupon(
+    code: 'KAYAN30',
+    titleAr: 'خصم 30% على أول طلب',
+    titleEn: '30% off first order',
+    discountAr: '30%',
+    discountEn: '30%',
+  ),
+  DeliveryCoupon(
+    code: 'FREE5',
+    titleAr: 'توصيل مجاني',
+    titleEn: 'Free delivery',
+    discountAr: 'مجاني',
+    discountEn: 'Free',
+  ),
+  DeliveryCoupon(
+    code: 'BURGER15',
+    titleAr: 'خصم 15 ر.س على المطاعم',
+    titleEn: 'SAR 15 off restaurants',
+    discountAr: '15 ر.س',
+    discountEn: 'SAR 15',
+  ),
+];
+
+final mockDeliveryFavoriteSlugs = ['burger-house', 'pizza-hut', 'nahdi'];
