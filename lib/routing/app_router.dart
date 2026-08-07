@@ -8,7 +8,7 @@
 //   │  ├─ /              → SplashScreen                   │
 //   │  ├─ /onboarding    → OnboardingScreen               │
 //   │  ├─ /auth/*        → Auth flow                      │
-//   │  ├─ /cart          → CartScreen (root nav)          │
+//   │  ├─ /cart          → ShopCartScreen (root nav)      │
 //   │  ├─ /checkout/*    → Checkout flow (root nav)       │
 //   │  ├─ /orders/*      → Orders (root nav)              │
 //   │  ├─ /chat/*        → Chat (root nav)                │
@@ -163,6 +163,7 @@ import '../features/profile/presentation/screens/security_screen.dart';
 import '../features/profile/presentation/screens/two_fa_setup_screen.dart';
 import '../features/profile/presentation/screens/two_fa_verify_screen.dart';
 import '../features/profile/presentation/screens/connected_devices_screen.dart';
+import '../features/profile/presentation/screens/delete_account_screen.dart';
 import '../features/profile/presentation/screens/privacy_policy_screen.dart';
 import '../features/profile/presentation/screens/terms_screen.dart';
 import '../features/profile/presentation/screens/faq_general_screen.dart';
@@ -430,7 +431,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path:        AppRoutes.cart,
         pageBuilder: (context, state) => _buildSlidePage(
           key:   state.pageKey,
-          child: const CartScreen(),
+          child: const ShopCartScreen(),
         ),
       ),
 
@@ -486,7 +487,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path:        AppRoutes.checkout,
         pageBuilder: (context, state) => _buildSlidePage(
           key:   state.pageKey,
-          child: const CheckoutScreen(),
+          child: const ShopCheckoutScreen(),
         ),
         routes: [
           GoRoute(
@@ -518,7 +519,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path:        AppRoutes.orders,
         pageBuilder: (context, state) => _buildSlidePage(
           key:   state.pageKey,
-          child: const OrdersListScreen(),
+          child: const ShopOrdersScreen(),
         ),
         routes: [
           GoRoute(
@@ -635,6 +636,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildSlidePage(
           key: state.pageKey,
           child: const ConnectedDevicesScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.deleteAccount,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const DeleteAccountScreen(),
         ),
       ),
       GoRoute(
@@ -1179,8 +1188,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     path:        AppRoutes.$categoryProducts,
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
-                      child: ProductListScreen(
-                        categorySlug: state.pathParameters['categorySlug']!,
+                      child: ShopCatalogScreen(
+                        categorySlug: state.pathParameters['categorySlug'],
                       ),
                     ),
                   ),
