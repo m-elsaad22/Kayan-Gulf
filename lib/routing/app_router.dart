@@ -89,7 +89,7 @@ import '../features/checkout/presentation/screens/order_success_light_screen.dar
 // Orders
 import '../features/orders/presentation/screens/orders_list_screen.dart';
 import '../features/orders/presentation/screens/order_detail_light_screen.dart';
-import '../features/orders/presentation/screens/order_tracking_screen.dart';
+import '../features/orders/presentation/screens/order_tracking_light_screen.dart';
 // Services
 import '../features/services/categories/presentation/screens/services_home_screen.dart';
 import '../features/services/browse/presentation/screens/services_list_screen.dart';
@@ -533,7 +533,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 path:        'tracking',
                 pageBuilder: (context, state) => _buildSlidePage(
                   key:   state.pageKey,
-                  child: OrderTrackingScreen(
+                  child: OrderTrackingLightScreen(
                     orderId: state.pathParameters['orderId']!,
                   ),
                 ),

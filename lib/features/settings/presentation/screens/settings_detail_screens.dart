@@ -1,18 +1,16 @@
-// ============================================================
-// KAYAN — Settings Detail Screens
-// ============================================================
-
+// Settings detail screens — light design
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_gradients.dart';
-import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/theme/kayan_design_tokens.dart';
+import '../../../../routing/app_routes.dart';
 import '../../../../shared/providers/locale_provider.dart';
 import '../../../../shared/providers/theme_provider.dart';
-import '../../../../shared/widgets/premium/premium_widgets.dart';
+import '../../../../shared/widgets/design/kayan_design_widgets.dart';
+import '../../../profile/presentation/widgets/kayan_profile_widgets.dart';
 
 enum LegalType { privacy, terms }
 
@@ -22,81 +20,46 @@ class LoyaltyScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ar = ref.watch(isArabicProvider);
-    return PremiumScaffold(
-      title: ar ? 'كيان بلس' : 'KAYAN Plus',
-      subtitle: ar ? 'مزايا ذهبية لعملائنا الأكثر ولاء' : 'Gold-tier rewards for loyal members',
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+
+    return Scaffold(
+      backgroundColor: KayanDesignTokens.bg,
+      body: Column(
         children: [
-          GlassPanel(
-            gradient: AppGradients.goldPremium,
-            borderColor: Colors.transparent,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          KayanSectionHero(
+            title: ar ? 'كيان بلس' : 'KAYAN Plus',
+            variant: KayanSectionHeroVariant.blue,
+            leading: KayanHeroIconButton(icon: Icons.arrow_forward_ios_rounded, onTap: () => context.pop()),
+          ),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(24, 18, 24, 24),
               children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 54,
-                      height: 54,
-                      decoration: BoxDecoration(
-                        color: AppColors.bgPrimary.withOpacity(0.16),
-                        shape: BoxShape.circle,
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(gradient: KayanDesignTokens.gradGold, borderRadius: BorderRadius.circular(KayanDesignTokens.radiusL), boxShadow: KayanDesignTokens.shadowM),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(ar ? 'عضوية ذهبية' : 'Gold membership', style: KayanDesignTokens.cairo(color: const Color(0xFF402C00))),
+                      Text('2,450 ${ar ? 'نقطة' : 'pts'}', style: KayanDesignTokens.cairo(fontSize: 26, fontWeight: FontWeight.w900, color: const Color(0xFF402C00))),
+                      const SizedBox(height: 12),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(99),
+                        child: LinearProgressIndicator(minHeight: 8, value: 0.72, backgroundColor: const Color(0xFF402C00).withValues(alpha: 0.2), valueColor: const AlwaysStoppedAnimation(Color(0xFF402C00))),
                       ),
-                      child: const Icon(Icons.workspace_premium_rounded, color: AppColors.bgPrimary, size: 30),
-                    ),
-                    const SizedBox(width: 14),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(ar ? 'عضوية ذهبية' : 'Gold Membership',
-                              style: AppTextStyles.titleLarge.copyWith(color: AppColors.bgPrimary, fontWeight: FontWeight.w900)),
-                          Text(ar ? '2,450 نقطة متاحة' : '2,450 points available',
-                              style: AppTextStyles.bodySmall.copyWith(color: AppColors.bgPrimary.withOpacity(0.72))),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 22),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(99),
-                  child: LinearProgressIndicator(
-                    minHeight: 10,
-                    value: 0.72,
-                    backgroundColor: AppColors.bgPrimary.withOpacity(0.18),
-                    valueColor: const AlwaysStoppedAnimation<Color>(AppColors.bgPrimary),
+                      const SizedBox(height: 6),
+                      Text(ar ? '550 نقطة للوصول إلى Platinum' : '550 pts to Platinum', style: KayanDesignTokens.cairo(fontSize: 12, color: const Color(0xFF402C00).withValues(alpha: 0.85))),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 8),
-                Text(ar ? '550 نقطة للوصول إلى Platinum' : '550 points to Platinum',
-                    style: AppTextStyles.caption.copyWith(color: AppColors.bgPrimary.withOpacity(0.72))),
+                const SizedBox(height: 20),
+                KayanSectionHeader(title: ar ? 'مزاياك' : 'Your benefits'),
+                const SizedBox(height: 10),
+                _BenefitTile(icon: Icons.local_shipping_outlined, title: ar ? 'شحن مجاني' : 'Free delivery', body: ar ? 'على طلبات المتجر المؤهلة' : 'On eligible shop orders'),
+                _BenefitTile(icon: Icons.home_repair_service_outlined, title: ar ? 'أولوية الخدمات' : 'Priority services', body: ar ? 'حجز أسرع وفنيون موثوقون' : 'Faster booking with top providers'),
+                _BenefitTile(icon: Icons.campaign_outlined, title: ar ? 'تمييز إعلان شهري' : 'Monthly ad boost', body: ar ? 'إعلان مميز مجاني كل شهر' : 'One free featured listing monthly'),
               ],
             ),
-          ),
-          const SizedBox(height: 18),
-          _SectionTitle(ar ? 'مزاياك الحالية' : 'Current benefits'),
-          PremiumInfoTile(
-            icon: Icons.local_shipping_rounded,
-            title: ar ? 'شحن مجاني' : 'Free delivery',
-            subtitle: ar ? 'على طلبات المتجر المؤهلة داخل مدن الخليج' : 'On eligible GCC marketplace orders',
-            color: AppColors.royalBlue,
-            trailing: const Icon(Icons.check_circle_rounded, color: AppColors.success),
-          ),
-          PremiumInfoTile(
-            icon: Icons.home_repair_service_rounded,
-            title: ar ? 'أولوية في الخدمات' : 'Priority services',
-            subtitle: ar ? 'حجز أسرع وفنيون موثوقون بتقييم عال' : 'Faster slots with top-rated verified providers',
-            color: AppColors.metallicGold,
-            trailing: const Icon(Icons.check_circle_rounded, color: AppColors.success),
-          ),
-          PremiumInfoTile(
-            icon: Icons.campaign_rounded,
-            title: ar ? 'تمييز إعلان شهري' : 'Monthly ad boost',
-            subtitle: ar ? 'تمييز إعلان واحد شهرياً مجاناً' : 'Boost one classified listing every month',
-            color: AppColors.categoryPurple,
-            trailing: const Icon(Icons.check_circle_rounded, color: AppColors.success),
           ),
         ],
       ),
@@ -111,26 +74,22 @@ class LanguageSettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = ref.watch(localeProvider);
     final ar = locale.languageCode == 'ar';
-    return PremiumScaffold(
-      title: ar ? 'اللغة' : 'Language',
-      subtitle: ar ? 'اختر لغة تجربة كيان' : 'Choose your KAYAN experience language',
-      child: Column(
-        children: [
-          _SelectableTile(
-            icon: Icons.language_rounded,
-            title: 'العربية',
-            subtitle: 'واجهة عربية واتجاه RTL لدول الخليج',
-            selected: locale.languageCode == 'ar',
-            onTap: () => ref.read(localeProvider.notifier).setArabic(),
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              KayanLightTopBar(title: ar ? 'اللغة' : 'Language', onBack: () => context.pop()),
+              const SizedBox(height: 16),
+              _SelectableTile(icon: Icons.language_rounded, title: 'العربية', subtitle: 'واجهة عربية RTL', selected: locale.languageCode == 'ar', onTap: () => ref.read(localeProvider.notifier).setArabic()),
+              _SelectableTile(icon: Icons.translate_rounded, title: 'English', subtitle: 'English LTR interface', selected: locale.languageCode == 'en', onTap: () => ref.read(localeProvider.notifier).setEnglish()),
+            ],
           ),
-          _SelectableTile(
-            icon: Icons.translate_rounded,
-            title: 'English',
-            subtitle: 'Premium English interface with LTR layout',
-            selected: locale.languageCode == 'en',
-            onTap: () => ref.read(localeProvider.notifier).setEnglish(),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -143,33 +102,23 @@ class ThemeSettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final mode = ref.watch(themeModeProvider);
     final ar = ref.watch(isArabicProvider);
-    return PremiumScaffold(
-      title: ar ? 'المظهر' : 'Appearance',
-      subtitle: ar ? 'ثيم ملكي داكن أو وضع النظام' : 'Royal dark, light, or system mode',
-      child: Column(
-        children: [
-          _SelectableTile(
-            icon: Icons.dark_mode_rounded,
-            title: ar ? 'داكن ملكي' : 'Royal dark',
-            subtitle: ar ? 'الأفضل لتجربة كيان الفاخرة' : 'The signature KAYAN luxury look',
-            selected: mode == ThemeMode.dark,
-            onTap: () => ref.read(themeModeProvider.notifier).setDark(),
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              KayanLightTopBar(title: ar ? 'المظهر' : 'Appearance', onBack: () => context.pop()),
+              const SizedBox(height: 16),
+              _SelectableTile(icon: Icons.light_mode_rounded, title: ar ? 'فاتح' : 'Light', subtitle: ar ? 'تصميم كيان الفاتح' : 'KAYAN light design', selected: mode == ThemeMode.light, onTap: () => ref.read(themeModeProvider.notifier).setLight()),
+              _SelectableTile(icon: Icons.dark_mode_rounded, title: ar ? 'داكن' : 'Dark', subtitle: ar ? 'راحة للعين ليلاً' : 'Easier on eyes at night', selected: mode == ThemeMode.dark, onTap: () => ref.read(themeModeProvider.notifier).setDark()),
+              _SelectableTile(icon: Icons.settings_suggest_rounded, title: ar ? 'حسب النظام' : 'System', subtitle: ar ? 'مطابقة إعدادات الجهاز' : 'Follow device settings', selected: mode == ThemeMode.system, onTap: () => ref.read(themeModeProvider.notifier).setSystem()),
+            ],
           ),
-          _SelectableTile(
-            icon: Icons.light_mode_rounded,
-            title: ar ? 'فاتح' : 'Light',
-            subtitle: ar ? 'وضوح أعلى في الإضاءة القوية' : 'High contrast for bright environments',
-            selected: mode == ThemeMode.light,
-            onTap: () => ref.read(themeModeProvider.notifier).setLight(),
-          ),
-          _SelectableTile(
-            icon: Icons.settings_suggest_rounded,
-            title: ar ? 'حسب النظام' : 'System',
-            subtitle: ar ? 'مطابقة إعدادات الجهاز' : 'Follow device settings',
-            selected: mode == ThemeMode.system,
-            onTap: () => ref.read(themeModeProvider.notifier).setSystem(),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -191,177 +140,287 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
   @override
   Widget build(BuildContext context) {
     final ar = Directionality.of(context) == TextDirection.rtl;
-    return PremiumScaffold(
-      title: ar ? 'إعدادات الإشعارات' : 'Notification Settings',
-      subtitle: ar ? 'تحكم ذكي في التنبيهات المهمة' : 'Smart control over important alerts',
-      child: Column(
-        children: [
-          _SwitchTile(title: ar ? 'طلبات المتجر' : 'Marketplace orders', subtitle: ar ? 'حالة الطلب والشحن والتسليم' : 'Order, shipping, and delivery status', icon: Icons.shopping_bag_rounded, value: _orders, onChanged: (v) => setState(() => _orders = v)),
-          _SwitchTile(title: ar ? 'حجوزات الخدمات' : 'Service bookings', subtitle: ar ? 'تأكيد الحجز ووصول الفني' : 'Booking confirmations and technician arrival', icon: Icons.home_repair_service_rounded, value: _services, onChanged: (v) => setState(() => _services = v)),
-          _SwitchTile(title: ar ? 'العروض الحصرية' : 'Exclusive offers', subtitle: ar ? 'خصومات ذهبية وتنبيهات الفلاش' : 'Gold offers and flash-deal alerts', icon: Icons.local_offer_rounded, value: _offers, onChanged: (v) => setState(() => _offers = v)),
-          _SwitchTile(title: ar ? 'المحادثات' : 'Conversations', subtitle: ar ? 'رسائل المشترين ومقدمي الخدمات' : 'Buyer and provider messages', icon: Icons.chat_bubble_rounded, value: _chat, onChanged: (v) => setState(() => _chat = v)),
-        ],
-      ),
-    );
-  }
-}
 
-class SecuritySettingsScreen extends StatelessWidget {
-  const SecuritySettingsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final ar = Directionality.of(context) == TextDirection.rtl;
-    return PremiumScaffold(
-      title: ar ? 'الأمان' : 'Security',
-      subtitle: ar ? 'حماية الحساب والمدفوعات' : 'Protect account and payments',
-      child: Column(
-        children: [
-          PremiumInfoTile(icon: Icons.verified_user_rounded, title: ar ? 'التحقق الثنائي' : 'Two-factor verification', subtitle: ar ? 'رمز OTP لكل عملية دخول حساسة' : 'OTP verification for sensitive sign-ins', color: AppColors.success, trailing: const Icon(Icons.check_circle_rounded, color: AppColors.success)),
-          PremiumInfoTile(icon: Icons.fingerprint_rounded, title: ar ? 'الدخول الحيوي' : 'Biometric access', subtitle: ar ? 'استخدم بصمة الإصبع أو الوجه عند توفرها' : 'Use fingerprint or face unlock when available', color: AppColors.royalBlue),
-          PremiumInfoTile(icon: Icons.payment_rounded, title: ar ? 'حماية المدفوعات' : 'Payment protection', subtitle: ar ? 'تشفير بيانات الدفع وعدم تخزين CVV' : 'Encrypted payments with no CVV storage', color: AppColors.metallicGold, trailing: const Icon(Icons.lock_rounded, color: AppColors.metallicGold)),
-        ],
-      ),
-    );
-  }
-}
-
-class AboutAppScreen extends StatelessWidget {
-  const AboutAppScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final ar = Directionality.of(context) == TextDirection.rtl;
-    return PremiumScaffold(
-      title: ar ? 'عن كيان' : 'About KAYAN',
-      subtitle: ar ? 'منصة الخليج الشاملة' : 'The GCC premium super app',
-      child: FutureBuilder<PackageInfo>(
-        future: PackageInfo.fromPlatform(),
-        builder: (context, snapshot) {
-          final version = snapshot.data == null
-              ? '1.0.0'
-              : '${snapshot.data!.version}+${snapshot.data!.buildNumber}';
-          return Column(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              GlassPanel(
-                child: Column(
+              KayanLightTopBar(title: ar ? 'إعدادات الإشعارات' : 'Notification settings', onBack: () => context.pop()),
+              Expanded(
+                child: ListView(
                   children: [
-                    Container(width: 82, height: 82, decoration: const BoxDecoration(shape: BoxShape.circle, gradient: AppGradients.goldPremium), child: const Icon(Icons.diamond_rounded, color: AppColors.bgPrimary, size: 42)),
-                    const SizedBox(height: 16),
-                    Text(ar ? 'كيان' : 'KAYAN', style: AppTextStyles.displaySmall.copyWith(fontWeight: FontWeight.w900)),
-                    Text(ar ? 'تجارة، خدمات، وإعلانات في تجربة واحدة موثوقة' : 'Commerce, services, and classifieds in one trusted experience', textAlign: TextAlign.center, style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary)),
                     const SizedBox(height: 12),
-                    Text(version, style: AppTextStyles.caption.copyWith(color: AppColors.metallicGold)),
+                    _SwitchRow(icon: Icons.shopping_bag_outlined, title: ar ? 'طلبات المتجر' : 'Shop orders', value: _orders, onChanged: (v) => setState(() => _orders = v)),
+                    _SwitchRow(icon: Icons.home_repair_service_outlined, title: ar ? 'حجوزات الخدمات' : 'Service bookings', value: _services, onChanged: (v) => setState(() => _services = v)),
+                    _SwitchRow(icon: Icons.local_offer_outlined, title: ar ? 'العروض' : 'Offers', value: _offers, onChanged: (v) => setState(() => _offers = v)),
+                    _SwitchRow(icon: Icons.chat_bubble_outline_rounded, title: ar ? 'المحادثات' : 'Chats', value: _chat, onChanged: (v) => setState(() => _chat = v)),
                   ],
                 ),
               ),
-              const SizedBox(height: 14),
-              PremiumInfoTile(icon: Icons.business_center_rounded, title: ar ? 'ثقة مؤسسية' : 'Corporate trust', subtitle: ar ? 'تصميم وتجربة مناسبة لسوق الخليج' : 'Designed for GCC market expectations', color: AppColors.royalBlue, trailing: const SizedBox.shrink()),
-              PremiumInfoTile(icon: Icons.support_agent_rounded, title: ar ? 'دعم موثوق' : 'Reliable support', subtitle: ar ? 'قنوات مساعدة للمشتريات والحجوزات والإعلانات' : 'Support across shopping, bookings, and listings', color: AppColors.success, trailing: const SizedBox.shrink()),
             ],
-          );
-        },
+          ),
+        ),
       ),
     );
   }
 }
 
-class LegalScreen extends StatelessWidget {
-  final LegalType type;
+class SecuritySettingsScreen extends ConsumerWidget {
+  const SecuritySettingsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final ar = ref.watch(isArabicProvider);
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              KayanLightTopBar(title: ar ? 'أمان الحساب' : 'Account security', onBack: () => context.pop()),
+              Expanded(
+                child: ListView(
+                  children: [
+                    const SizedBox(height: 12),
+                    KayanProfileMenuTile(icon: Icons.verified_user_outlined, title: ar ? 'التحقق الثنائي' : 'Two-factor auth', onTap: () => context.push(AppRoutes.twoFASetup)),
+                    KayanProfileMenuTile(icon: Icons.fingerprint_rounded, title: ar ? 'الدخول الحيوي' : 'Biometric login', onTap: () {}),
+                    KayanProfileMenuTile(icon: Icons.lock_outline_rounded, title: ar ? 'تغيير كلمة المرور' : 'Change password', onTap: () => context.push(AppRoutes.changePassword)),
+                    KayanProfileMenuTile(icon: Icons.devices_rounded, title: ar ? 'الأجهزة المتصلة' : 'Connected devices', onTap: () => context.push(AppRoutes.connectedDevices)),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class AboutAppScreen extends ConsumerWidget {
+  const AboutAppScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final ar = ref.watch(isArabicProvider);
+
+    return Scaffold(
+      backgroundColor: KayanDesignTokens.bg,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              KayanLightTopBar(title: ar ? 'عن كيان' : 'About KAYAN', onBack: () => context.pop()),
+              Expanded(
+                child: FutureBuilder<PackageInfo>(
+                  future: PackageInfo.fromPlatform(),
+                  builder: (context, snapshot) {
+                    final version = snapshot.data == null ? '1.0.0' : '${snapshot.data!.version}+${snapshot.data!.buildNumber}';
+                    return ListView(
+                      children: [
+                        const SizedBox(height: 24),
+                        Center(
+                          child: Container(
+                            width: 88,
+                            height: 88,
+                            decoration: const BoxDecoration(gradient: KayanDesignTokens.gradBlue, shape: BoxShape.circle),
+                            child: const Icon(Icons.diamond_rounded, color: Colors.white, size: 42),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Text('KAYAN', textAlign: TextAlign.center, style: KayanDesignTokens.cairo(fontSize: 24, fontWeight: FontWeight.w900, color: KayanDesignTokens.kBlueDeep)),
+                        Text(ar ? 'تجارة، خدمات، وإعلانات في تجربة واحدة' : 'Commerce, services & classifieds in one app', textAlign: TextAlign.center, style: KayanDesignTokens.cairo(color: KayanDesignTokens.text2)),
+                        const SizedBox(height: 8),
+                        Text(version, textAlign: TextAlign.center, style: KayanDesignTokens.cairo(color: KayanDesignTokens.kBlue)),
+                        const SizedBox(height: 24),
+                        _BenefitTile(icon: Icons.business_center_outlined, title: ar ? 'ثقة مؤسسية' : 'Corporate trust', body: ar ? 'مصمم لسوق الخليج' : 'Built for the GCC market'),
+                        _BenefitTile(icon: Icons.support_agent_outlined, title: ar ? 'دعم موثوق' : 'Reliable support', body: ar ? 'مساعدة في كل الخدمات' : 'Help across all services'),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class LegalScreen extends ConsumerWidget {
   const LegalScreen({super.key, required this.type});
+
+  final LegalType type;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final ar = ref.watch(isArabicProvider);
+    final privacy = type == LegalType.privacy;
+    final title = privacy ? (ar ? 'سياسة الخصوصية' : 'Privacy policy') : (ar ? 'الشروط والأحكام' : 'Terms of service');
+    final items = privacy
+        ? [
+            (ar ? 'البيانات التي نجمعها' : 'Data we collect', ar ? 'بيانات الحساب والطلبات لتحسين التجربة' : 'Account and order data to improve experience'),
+            (ar ? 'حماية البيانات' : 'Data protection', ar ? 'تخزين آمن وتشفير للبيانات الحساسة' : 'Secure storage and encryption'),
+            (ar ? 'التحكم' : 'Your control', ar ? 'تعديل البيانات من إعدادات الحساب' : 'Update data from account settings'),
+          ]
+        : [
+            (ar ? 'استخدام المنصة' : 'Platform usage', ar ? 'استخدم كيان وفق القوانين المحلية' : 'Use KAYAN under local laws'),
+            (ar ? 'المدفوعات' : 'Payments', ar ? 'سياسات الإلغاء تختلف حسب الخدمة' : 'Cancellation policies vary by service'),
+            (ar ? 'جودة المحتوى' : 'Content quality', ar ? 'معلومات دقيقة وغير مضللة' : 'Accurate, non-misleading information'),
+          ];
+
+    return Scaffold(
+      backgroundColor: KayanDesignTokens.bg,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              KayanLightTopBar(title: title, onBack: () => context.pop()),
+              Expanded(
+                child: ListView(
+                  children: [
+                    const SizedBox(height: 8),
+                    Text(ar ? 'آخر تحديث: يونيو 2026' : 'Last updated: June 2026', style: KayanDesignTokens.cairo(color: KayanDesignTokens.muted)),
+                    const SizedBox(height: 16),
+                    for (final item in items)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: _BenefitTile(icon: privacy ? Icons.privacy_tip_outlined : Icons.gavel_outlined, title: item.$1, body: item.$2),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _BenefitTile extends StatelessWidget {
+  const _BenefitTile({required this.icon, required this.title, required this.body});
+
+  final IconData icon;
+  final String title;
+  final String body;
 
   @override
   Widget build(BuildContext context) {
-    final ar = Directionality.of(context) == TextDirection.rtl;
-    final privacy = type == LegalType.privacy;
-    final title = privacy ? (ar ? 'سياسة الخصوصية' : 'Privacy Policy') : (ar ? 'الشروط والأحكام' : 'Terms of Service');
-    final items = privacy
-        ? [
-            (ar ? 'البيانات التي نجمعها' : 'Data we collect', ar ? 'نستخدم بيانات الحساب، الموقع عند السماح، وسجل الطلبات لتحسين التجربة.' : 'We use account data, permitted location, and order history to improve the experience.'),
-            (ar ? 'حماية البيانات' : 'Data protection', ar ? 'تعتمد كيان على تخزين آمن وتشفير للبيانات الحساسة.' : 'KAYAN relies on secure storage and encryption for sensitive information.'),
-            (ar ? 'التحكم والشفافية' : 'Control and transparency', ar ? 'يمكنك تعديل بياناتك وإعدادات الإشعارات من الحساب.' : 'You can update profile data and notification preferences from your account.'),
-          ]
-        : [
-            (ar ? 'استخدام المنصة' : 'Platform usage', ar ? 'استخدم كيان للشراء والحجز والإعلانات وفق القوانين المحلية.' : 'Use KAYAN for shopping, bookings, and listings under local regulations.'),
-            (ar ? 'المدفوعات والحجوزات' : 'Payments and bookings', ar ? 'قد تختلف سياسات الإلغاء والاسترداد حسب الخدمة أو البائع.' : 'Cancellation and refund policies may vary by service or vendor.'),
-            (ar ? 'جودة المحتوى' : 'Content quality', ar ? 'يلتزم المستخدمون بنشر معلومات دقيقة وغير مضللة.' : 'Users must publish accurate, non-misleading information.'),
-          ];
-    return PremiumScaffold(
-      title: title,
-      subtitle: ar ? 'آخر تحديث: يونيو 2026' : 'Last updated: June 2026',
-      child: Column(
-        children: [
-          for (final item in items)
-            PremiumInfoTile(
-              icon: privacy ? Icons.privacy_tip_rounded : Icons.gavel_rounded,
-              title: item.$1,
-              subtitle: item.$2,
-              color: privacy ? AppColors.royalBlue : AppColors.metallicGold,
-              trailing: const SizedBox.shrink(),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(color: KayanDesignTokens.surface, borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM), border: Border.all(color: KayanDesignTokens.border)),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, color: KayanDesignTokens.kBlue),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800)),
+                  Text(body, style: KayanDesignTokens.cairo(fontSize: 12, color: KayanDesignTokens.text2, height: 1.5)),
+                ],
+              ),
             ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
 class _SelectableTile extends StatelessWidget {
+  const _SelectableTile({required this.icon, required this.title, required this.subtitle, required this.selected, required this.onTap});
+
   final IconData icon;
   final String title;
   final String subtitle;
   final bool selected;
   final VoidCallback onTap;
 
-  const _SelectableTile({required this.icon, required this.title, required this.subtitle, required this.selected, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return PremiumInfoTile(
-      icon: icon,
-      title: title,
-      subtitle: subtitle,
-      color: selected ? AppColors.metallicGold : AppColors.royalBlue,
-      onTap: () {
-        HapticFeedback.selectionClick();
-        onTap();
-      },
-      trailing: selected
-          ? const Icon(Icons.check_circle_rounded, color: AppColors.metallicGold)
-          : const Icon(Icons.circle_outlined, color: AppColors.textMuted),
-    );
-  }
-}
-
-class _SwitchTile extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final IconData icon;
-  final bool value;
-  final ValueChanged<bool> onChanged;
-
-  const _SwitchTile({required this.title, required this.subtitle, required this.icon, required this.value, required this.onChanged});
-
-  @override
-  Widget build(BuildContext context) {
-    return PremiumInfoTile(
-      icon: icon,
-      title: title,
-      subtitle: subtitle,
-      color: value ? AppColors.royalBlue : AppColors.textMuted,
-      trailing: Switch(value: value, onChanged: onChanged),
-    );
-  }
-}
-
-class _SectionTitle extends StatelessWidget {
-  final String text;
-  const _SectionTitle(this.text);
-
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
-      child: Text(text, style: AppTextStyles.titleMedium.copyWith(fontWeight: FontWeight.w800)),
+      child: Material(
+        color: selected ? KayanDesignTokens.kBlue.withValues(alpha: 0.06) : KayanDesignTokens.surface,
+        borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
+        child: InkWell(
+          onTap: () {
+            HapticFeedback.selectionClick();
+            onTap();
+          },
+          borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
+          child: Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
+              border: Border.all(color: selected ? KayanDesignTokens.kBlue : KayanDesignTokens.border, width: selected ? 1.5 : 1),
+            ),
+            child: Row(
+              children: [
+                Icon(icon, color: KayanDesignTokens.kBlue),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(title, style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800)),
+                      Text(subtitle, style: KayanDesignTokens.cairo(fontSize: 12, color: KayanDesignTokens.muted)),
+                    ],
+                  ),
+                ),
+                if (selected) const Icon(Icons.check_circle_rounded, color: KayanDesignTokens.kBlue),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SwitchRow extends StatelessWidget {
+  const _SwitchRow({required this.icon, required this.title, required this.value, required this.onChanged});
+
+  final IconData icon;
+  final String title;
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(color: KayanDesignTokens.kBlue.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
+            child: Icon(icon, size: 18, color: KayanDesignTokens.kBlue),
+          ),
+          const SizedBox(width: 14),
+          Expanded(child: Text(title, style: KayanDesignTokens.cairo(fontWeight: FontWeight.w700))),
+          Switch.adaptive(value: value, onChanged: onChanged, activeColor: KayanDesignTokens.kBlue),
+        ],
+      ),
     );
   }
 }
