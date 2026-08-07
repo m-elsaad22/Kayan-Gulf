@@ -78,7 +78,7 @@ class ShopHomeScreen extends ConsumerWidget {
               children: [
                 KayanHeroIconButton(
                   icon: Icons.shopping_cart_outlined,
-                  onTap: () => context.push(AppRoutes.cart),
+                  onTap: () => context.push(AppRoutes.shopCart),
                 ),
                 const SizedBox(width: 8),
                 KayanHeroIconButton(

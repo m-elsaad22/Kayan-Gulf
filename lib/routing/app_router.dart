@@ -56,6 +56,11 @@ import '../features/dashboard/presentation/screens/dashboard_screen.dart';
 // E-commerce
 import '../features/ecommerce/shop/presentation/screens/shop_home_screen.dart';
 import '../features/ecommerce/shop/presentation/screens/shop_orders_screen.dart';
+import '../features/ecommerce/shop/presentation/screens/shop_catalog_screen.dart';
+import '../features/ecommerce/shop/presentation/screens/shop_product_screen.dart';
+import '../features/ecommerce/shop/presentation/screens/shop_cart_screen.dart';
+import '../features/ecommerce/shop/presentation/screens/shop_checkout_screen.dart';
+import '../features/ecommerce/shop/presentation/screens/shop_success_screen.dart';
 import '../features/ecommerce/notifications/presentation/screens/shop_notifications_screen.dart';
 import '../features/ecommerce/categories/presentation/screens/categories_screen.dart';
 import '../features/ecommerce/product/presentation/screens/product_list_screen.dart';
@@ -95,11 +100,12 @@ import '../features/services/browse/presentation/screens/service_detail_screen.d
 import '../features/services/booking/presentation/screens/booking_calendar_screen.dart';
 import '../features/services/booking/presentation/screens/booking_confirmation_screen.dart';
 import '../features/services/booking/presentation/screens/booking_success_screen.dart';
-import '../features/services/booking/presentation/screens/my_bookings_screen.dart';
+import '../features/services/booking/presentation/screens/services_bookings_light_screen.dart';
 import '../features/services/booking/presentation/screens/booking_detail_screen.dart';
-import '../features/services/tracking/presentation/screens/live_tracking_screen.dart';
-import '../features/services/browse/presentation/screens/advanced_filters_screen.dart';
+import '../features/services/tracking/presentation/screens/service_tracking_light_screen.dart';
+import '../features/services/browse/presentation/screens/services_filters_screen.dart';
 import '../features/services/browse/presentation/screens/service_subcategories_screen.dart';
+import '../features/services/browse/presentation/screens/services_packages_screen.dart';
 import '../features/services/booking/presentation/screens/address_entry_screen.dart';
 import '../features/services/booking/presentation/screens/payment_method_screen.dart';
 import '../features/services/booking/presentation/screens/add_card_screen.dart';
@@ -749,7 +755,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.advancedServiceFilters,
         pageBuilder: (context, state) => _buildSlidePage(
           key: state.pageKey,
-          child: const AdvancedFiltersScreen(),
+          child: const ServicesFiltersScreen(),
         ),
       ),
       GoRoute(
@@ -758,6 +764,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildSlidePage(
           key: state.pageKey,
           child: const ServiceSubcategoriesScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.servicePackages,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ServicesPackagesScreen(),
         ),
       ),
       GoRoute(
@@ -1102,7 +1116,28 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     path:        AppRoutes.$browse,
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
-                      child: const ProductListScreen(),
+                      child: const ShopCatalogScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$shopCart,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const ShopCartScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$shopCheckout,
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const ShopCheckoutScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        AppRoutes.$shopSuccess,
+                    pageBuilder: (context, state) => _buildFadePage(
+                      key:   state.pageKey,
+                      child: const ShopSuccessScreen(),
                     ),
                   ),
                   GoRoute(
@@ -1153,7 +1188,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     path:        AppRoutes.$productDetail,
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
-                      child: ProductDetailScreen(
+                      child: ShopProductScreen(
                         slug: state.pathParameters['productSlug']!,
                       ),
                     ),
@@ -1224,7 +1259,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     path:        AppRoutes.$myBookings,
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
-                      child: const MyBookingsScreen(),
+                      child: const ServicesBookingsLightScreen(),
                     ),
                     routes: [
                       GoRoute(
@@ -1263,7 +1298,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     path:        AppRoutes.$trackingId,
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
-                      child: LiveTrackingScreen(
+                      child: ServiceTrackingLightScreen(
                         bookingId: state.pathParameters['bookingId']!,
                       ),
                     ),

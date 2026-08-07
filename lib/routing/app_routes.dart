@@ -82,6 +82,9 @@ abstract final class AppRoutes {
   static const String _browse           = 'browse';
   static const String _shopNotifications = 'notifications';
   static const String _shopMyOrders      = 'my-orders';
+  static const String _shopCart          = 'cart';
+  static const String _shopCheckout      = 'checkout';
+  static const String _shopSuccess       = 'success';
 
   // Full absolute paths (used by context.go / context.push)
   static const String categories       = '/shop/categories';
@@ -94,6 +97,9 @@ abstract final class AppRoutes {
   static const String bestSellers       = '/shop/best-sellers';
   static const String exclusiveOffers   = '/shop/exclusive-offers';
   static const String shopMyOrders      = '/shop/my-orders';
+  static const String shopCart          = '/shop/cart';
+  static const String shopCheckout      = '/shop/checkout';
+  static const String shopSuccess       = '/shop/success';
 
   // ──────────────────────────────────────────────────────────
   // 🛍️ CART & CHECKOUT (global, outside shell)
@@ -303,6 +309,7 @@ abstract final class AppRoutes {
   static const String rescheduleBooking = '/services/reschedule-booking';
   static const String reportIssue = '/services/report-issue';
   static const String serviceNotifications = '/services/notifications';
+  static const String servicePackages      = '/services/packages';
   static const String shopFilters = '/shop/filters';
   static const String shopNotifications = '/shop/notifications';
   static const String postAdSuccess = '/classifieds/post/success';
@@ -381,6 +388,9 @@ abstract final class AppRoutes {
   static const String $deliveryOrderId    = _deliveryOrderId;
   static const String $deliveryRateOrderId = _deliveryRateOrderId;
   static const String $shopMyOrders       = _shopMyOrders;
+  static const String $shopCart           = _shopCart;
+  static const String $shopCheckout       = _shopCheckout;
+  static const String $shopSuccess        = _shopSuccess;
 
   // Profile relative paths
   static const String $editProfile      = _editProfile;
