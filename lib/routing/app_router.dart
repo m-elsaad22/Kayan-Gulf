@@ -88,10 +88,10 @@ import '../features/returns/presentation/screens/return_status_screen.dart';
 import '../features/cart/presentation/screens/cart_screen.dart';
 import '../features/checkout/presentation/screens/checkout_screen.dart';
 import '../features/checkout/presentation/screens/payment_screen.dart';
-import '../features/checkout/presentation/screens/order_success_screen.dart';
+import '../features/checkout/presentation/screens/order_success_light_screen.dart';
 // Orders
 import '../features/orders/presentation/screens/orders_list_screen.dart';
-import '../features/orders/presentation/screens/order_detail_screen.dart';
+import '../features/orders/presentation/screens/order_detail_light_screen.dart';
 import '../features/orders/presentation/screens/order_tracking_screen.dart';
 // Services
 import '../features/services/categories/presentation/screens/services_home_screen.dart';
@@ -169,6 +169,7 @@ import '../features/profile/presentation/screens/terms_screen.dart';
 import '../features/profile/presentation/screens/faq_general_screen.dart';
 import '../features/profile/presentation/screens/contact_support_screen.dart';
 import '../features/profile/presentation/screens/loyalty_cards_screen.dart';
+import '../features/profile/presentation/screens/unified_wishlist_screen.dart';
 import '../features/profile/presentation/screens/referrals_screen.dart';
 import '../features/profile/presentation/screens/subscriptions_screen.dart';
 import '../features/profile/presentation/screens/manage_subscription_screen.dart';
@@ -503,7 +504,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             path:        'success/:orderId',
             pageBuilder: (context, state) => _buildFadePage(
               key:   state.pageKey,
-              child: OrderSuccessScreen(
+              child: OrderSuccessLightScreen(
                 orderId: state.pathParameters['orderId']!,
               ),
             ),
@@ -526,7 +527,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             path:        ':orderId',
             pageBuilder: (context, state) => _buildSlidePage(
               key:   state.pageKey,
-              child: OrderDetailScreen(
+              child: OrderDetailLightScreen(
                 orderId: state.pathParameters['orderId']!,
               ),
             ),
@@ -684,6 +685,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildSlidePage(
           key: state.pageKey,
           child: const LoyaltyCardsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.unifiedWishlist,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const UnifiedWishlistScreen(),
         ),
       ),
       GoRoute(
