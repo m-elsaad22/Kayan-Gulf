@@ -14,6 +14,7 @@
 | phase-8-classifieds-extra | أقسام + إشعارات + تمييز | [kayan-phase-8-classifieds-extra-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-8-classifieds-extra-1.0.0/kayan-phase-8-classifieds-extra-1.0.0.zip) |
 | phase-9-classifieds-browse | تصفح + إحصائيات + بلاغ | [kayan-phase-9-classifieds-browse-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-9-classifieds-browse-1.0.0/kayan-phase-9-classifieds-browse-1.0.0.zip) |
 | phase-10-classifieds-similar | مشابهة + بائع + مميزة | [kayan-phase-10-classifieds-similar-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-10-classifieds-similar-1.0.0/kayan-phase-10-classifieds-similar-1.0.0.zip) |
+| phase-11-classifieds-manage | إدارة + تواصل + تعديل | [kayan-phase-11-classifieds-manage-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-11-classifieds-manage-1.0.0/kayan-phase-11-classifieds-manage-1.0.0.zip) |
 
 ## كيف يُنشأ الـ ZIP؟
 
