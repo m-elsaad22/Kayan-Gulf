@@ -7,7 +7,6 @@ import '../../../../core/theme/kayan_design_tokens.dart';
 import '../../../../routing/app_routes.dart';
 import '../../../../shared/providers/locale_provider.dart';
 import '../../../../shared/widgets/design/kayan_design_widgets.dart';
-import '../../../../shared/widgets/design/kayan_design_widgets.dart';
 import '../../../profile/presentation/widgets/kayan_profile_widgets.dart';
 
 class WalletLightScreen extends ConsumerWidget {
@@ -60,6 +59,8 @@ class WalletLightScreen extends ConsumerWidget {
                 _TxnRow(ar: ar, title: ar ? 'شحن المحفظة' : 'Wallet top-up', amount: '+500', credit: true),
                 const SizedBox(height: 16),
                 KayanProfileMenuTile(icon: Icons.history_rounded, title: ar ? 'سجل العمليات' : 'Transaction history', onTap: () => context.push(AppRoutes.earningsHistory)),
+                KayanProfileMenuTile(icon: Icons.account_balance_rounded, title: ar ? 'سحب الأرباح' : 'Withdraw earnings', onTap: () => context.push(AppRoutes.withdrawEarnings)),
+                KayanProfileMenuTile(icon: Icons.receipt_long_rounded, title: ar ? 'إيصال الدفع' : 'Payment receipt', onTap: () => context.push(AppRoutes.paymentReceipt)),
                 KayanProfileMenuTile(icon: Icons.redeem_rounded, title: ar ? 'استبدال النقاط' : 'Redeem points', onTap: () => context.push(AppRoutes.redeemPoints)),
               ],
             ),

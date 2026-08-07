@@ -63,8 +63,6 @@ import '../features/ecommerce/shop/presentation/screens/shop_checkout_screen.dar
 import '../features/ecommerce/shop/presentation/screens/shop_success_screen.dart';
 import '../features/ecommerce/notifications/presentation/screens/shop_notifications_screen.dart';
 import '../features/ecommerce/categories/presentation/screens/categories_screen.dart';
-import '../features/ecommerce/product/presentation/screens/product_list_screen.dart';
-import '../features/ecommerce/product/presentation/screens/product_detail_screen.dart';
 import '../features/ecommerce/search/presentation/screens/search_screen.dart';
 import '../features/ecommerce/flash_deals/presentation/screens/flash_deals_screen.dart';
 import '../features/ecommerce/vendors/presentation/screens/vendor_profile_screen.dart';
@@ -86,7 +84,6 @@ import '../features/returns/presentation/screens/return_status_screen.dart';
 
 // Cart & Checkout
 import '../features/cart/presentation/screens/cart_screen.dart';
-import '../features/checkout/presentation/screens/checkout_screen.dart';
 import '../features/checkout/presentation/screens/payment_screen.dart';
 import '../features/checkout/presentation/screens/order_success_light_screen.dart';
 // Orders
