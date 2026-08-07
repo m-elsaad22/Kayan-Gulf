@@ -101,7 +101,7 @@ import '../features/services/booking/presentation/screens/booking_calendar_scree
 import '../features/services/booking/presentation/screens/booking_confirmation_screen.dart';
 import '../features/services/booking/presentation/screens/booking_success_screen.dart';
 import '../features/services/booking/presentation/screens/services_bookings_light_screen.dart';
-import '../features/services/booking/presentation/screens/booking_detail_screen.dart';
+import '../features/services/booking/presentation/screens/booking_detail_light_screen.dart';
 import '../features/services/tracking/presentation/screens/service_tracking_light_screen.dart';
 import '../features/services/browse/presentation/screens/services_filters_screen.dart';
 import '../features/services/browse/presentation/screens/service_subcategories_screen.dart';
@@ -147,8 +147,8 @@ import '../shared/screens/fullscreen_gallery_screen.dart';
 import '../shared/widgets/no_internet_widget.dart';
 import '../shared/widgets/welcome_offer_screen.dart';
 // Chat
-import '../features/chat/presentation/screens/conversations_screen.dart';
-import '../features/chat/presentation/screens/chat_screen.dart';
+import '../features/chat/presentation/screens/conversations_light_screen.dart';
+import '../features/chat/presentation/screens/chat_light_screen.dart';
 // Profile
 import '../features/profile/presentation/screens/favorites_screen.dart' as fav_screen;
 import '../features/profile/presentation/screens/profile_home_screen.dart';
@@ -180,7 +180,7 @@ import '../features/wallet/presentation/screens/earnings_history_screen.dart';
 import '../features/wallet/presentation/screens/payment_receipt_screen.dart';
 
 // Notifications
-import '../features/notifications/presentation/screens/notifications_screen.dart';
+import '../features/notifications/presentation/screens/notifications_light_screen.dart';
 // Wallet
 import '../features/wallet/presentation/screens/wallet_light_screen.dart';
 import '../features/delivery/presentation/screens/delivery_home_screen.dart';
@@ -553,7 +553,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path:        AppRoutes.conversations,
         pageBuilder: (context, state) => _buildSlidePage(
           key:   state.pageKey,
-          child: const ConversationsScreen(),
+          child: const ConversationsLightScreen(),
         ),
         routes: [
           GoRoute(
@@ -562,7 +562,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               final extra = state.extra as Map<String, dynamic>?;
               return _buildSlidePage(
                 key:   state.pageKey,
-                child: ChatScreen(
+                child: ChatLightScreen(
                   convId: state.pathParameters['conversationId']!,
                   adTitle: extra?['adTitle'] as String?,
                   adImage: extra?['adImage'] as String?,
@@ -1016,7 +1016,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     path:        'notifications',
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
-                      child: const NotificationsScreen(),
+                      child: const NotificationsLightScreen(),
                     ),
                   ),
                 ],
@@ -1276,7 +1276,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                         path:        ':bookingId',
                         pageBuilder: (context, state) => _buildSlidePage(
                           key:   state.pageKey,
-                          child: BookingDetailScreen(
+                          child: BookingDetailLightScreen(
                             bookingId: state.pathParameters['bookingId']!,
                           ),
                         ),
