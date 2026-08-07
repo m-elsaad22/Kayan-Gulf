@@ -151,7 +151,7 @@ import '../features/chat/presentation/screens/conversations_screen.dart';
 import '../features/chat/presentation/screens/chat_screen.dart';
 // Profile
 import '../features/profile/presentation/screens/favorites_screen.dart' as fav_screen;
-import '../features/profile/presentation/screens/profile_screen.dart';
+import '../features/profile/presentation/screens/profile_home_screen.dart';
 import '../features/profile/presentation/screens/edit_profile_screen.dart';
 import '../features/profile/presentation/screens/addresses_screen.dart';
 import '../features/profile/presentation/screens/add_address_screen.dart';
@@ -197,7 +197,8 @@ import '../features/delivery/presentation/screens/delivery_favorites_screen.dart
 import '../features/delivery/presentation/screens/delivery_coupons_screen.dart';
 import '../features/delivery/presentation/screens/delivery_rate_order_screen.dart';
 // Settings
-import '../features/settings/presentation/screens/settings_screen.dart';
+import '../features/settings/presentation/screens/settings_light_screen.dart';
+import '../features/notifications/presentation/screens/profile_notifications_light_screen.dart';
 import '../features/settings/presentation/screens/settings_detail_screens.dart';
 
 // ──────────────────────────────────────────────────────────────
@@ -1549,7 +1550,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 path:        AppRoutes.profile,
                 pageBuilder: (context, state) => _buildNoTransitionPage(
                   key:   state.pageKey,
-                  child: const ProfileScreen(),
+                  child: const ProfileHomeScreen(),
                 ),
                 routes: [
                   GoRoute(
@@ -1579,7 +1580,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     path:        AppRoutes.$notifications,
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
-                      child: const NotificationsScreen(),
+                      child: const ProfileNotificationsLightScreen(),
                     ),
                   ),
                   GoRoute(
@@ -1600,7 +1601,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     path:        AppRoutes.$settings,
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
-                      child: const SettingsScreen(),
+                      child: const SettingsLightScreen(),
                     ),
                     routes: [
                       GoRoute(
