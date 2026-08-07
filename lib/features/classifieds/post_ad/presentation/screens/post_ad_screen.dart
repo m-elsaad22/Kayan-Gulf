@@ -30,6 +30,30 @@ class _PostAdScreenState extends ConsumerState<PostAdScreen> {
   int _photoCount = 0;
 
   @override
+  void initState() {
+    super.initState();
+    final editId = widget.editAdId;
+    if (editId == null) return;
+
+    AdModel? ad;
+    for (final item in mockAds) {
+      if (item.id == editId) {
+        ad = item;
+        break;
+      }
+    }
+    ad ??= mockMyAds.where((m) => m.ad.id == editId).map((m) => m.ad).firstOrNull;
+    ad ??= mockAds.first;
+
+    _categorySlug = ad.categorySlug;
+    _titleCtrl.text = ad.title;
+    if (ad.price != null) _priceCtrl.text = ad.price!.toStringAsFixed(0);
+    _descCtrl.text = ad.description ?? '';
+    _locationCtrl.text = ad.district.isNotEmpty ? '${ad.city}، ${ad.district}' : ad.city;
+    _photoCount = ad.imageUrls.isEmpty ? 0 : ad.imageUrls.length.clamp(1, 8);
+  }
+
+  @override
   void dispose() {
     _titleCtrl.dispose();
     _priceCtrl.dispose();
@@ -52,6 +76,11 @@ class _PostAdScreenState extends ConsumerState<PostAdScreen> {
     await Future.delayed(const Duration(seconds: 1));
     if (!mounted) return;
     setState(() => _publishing = false);
+    if (widget.editAdId != null) {
+      context.pop();
+      _snack(ar ? 'تم حفظ التعديلات' : 'Changes saved');
+      return;
+    }
     context.push(AppRoutes.postAdSuccess);
   }
 
@@ -64,6 +93,8 @@ class _PostAdScreenState extends ConsumerState<PostAdScreen> {
     final ar = ref.watch(isArabicProvider);
     final categories = mockAdCategories.take(6).toList();
 
+    final isEdit = widget.editAdId != null;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -73,7 +104,7 @@ class _PostAdScreenState extends ConsumerState<PostAdScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               KayanLightTopBar(
-                title: ar ? 'أضف إعلانك' : 'Post your ad',
+                title: isEdit ? (ar ? 'تعديل الإعلان' : 'Edit ad') : (ar ? 'أضف إعلانك' : 'Post your ad'),
                 onBack: () => context.pop(),
               ),
               Expanded(
@@ -170,7 +201,7 @@ class _PostAdScreenState extends ConsumerState<PostAdScreen> {
                 ),
               ),
               KayanCtaButton(
-                label: ar ? 'نشر الإعلان' : 'Publish ad',
+                label: isEdit ? (ar ? 'حفظ التعديلات' : 'Save changes') : (ar ? 'نشر الإعلان' : 'Publish ad'),
                 trailingIcon: Icons.arrow_back_rounded,
                 variant: KayanCtaVariant.blue,
                 loading: _publishing,

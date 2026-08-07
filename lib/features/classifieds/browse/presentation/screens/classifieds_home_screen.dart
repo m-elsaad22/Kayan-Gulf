@@ -178,6 +178,82 @@ class _ClassifiedsHomeScreenState extends ConsumerState<ClassifiedsHomeScreen> {
                   },
                 ),
                 const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => context.push(AppRoutes.recentViews),
+                        child: Container(
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: KayanDesignTokens.border),
+                            boxShadow: KayanDesignTokens.shadowS,
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  color: KayanDesignTokens.kBlue.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Icon(Icons.history_rounded, color: KayanDesignTokens.kBlue, size: 20),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Text(
+                                  ar ? 'شوهد مؤخراً' : 'Recently viewed',
+                                  style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800, fontSize: 13, color: KayanDesignTokens.kBlueDeep),
+                                ),
+                              ),
+                              const Icon(Icons.arrow_back_ios_new_rounded, size: 12, color: KayanDesignTokens.muted),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => context.push(AppRoutes.featuredAds),
+                        child: Container(
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: KayanDesignTokens.border),
+                            boxShadow: KayanDesignTokens.shadowS,
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  color: KayanDesignTokens.gold.withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Icon(Icons.star_rounded, color: KayanDesignTokens.gold, size: 20),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Text(
+                                  ar ? 'إعلانات مميزة' : 'Featured',
+                                  style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800, fontSize: 13, color: KayanDesignTokens.kBlueDeep),
+                                ),
+                              ),
+                              const Icon(Icons.arrow_back_ios_new_rounded, size: 12, color: KayanDesignTokens.muted),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
                 GestureDetector(
                   onTap: () => context.push(AppRoutes.myAds),
                   child: Container(

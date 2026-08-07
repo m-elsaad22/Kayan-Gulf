@@ -1411,7 +1411,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     path:        AppRoutes.$contactSeller,
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
-                      child: const ContactSellerScreen(),
+                      child: ContactSellerScreen(
+                        adSlug: state.uri.queryParameters['ad'],
+                        sellerId: state.uri.queryParameters['seller'],
+                      ),
                     ),
                   ),
                   // Edit existing ad

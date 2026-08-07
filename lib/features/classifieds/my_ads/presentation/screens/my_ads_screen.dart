@@ -91,6 +91,28 @@ class _MyAdsScreenState extends ConsumerState<MyAdsScreen> {
             children: [
               KayanLightTopBar(title: ar ? 'إعلاناتي' : 'My ads', onBack: () => context.pop()),
               const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: _QuickLinkChip(
+                      icon: Icons.hourglass_top_rounded,
+                      label: ar ? 'قيد المراجعة' : 'Pending',
+                      color: KayanDesignTokens.kOrange,
+                      onTap: () => context.push(AppRoutes.pendingAds),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: _QuickLinkChip(
+                      icon: Icons.block_rounded,
+                      label: ar ? 'مرفوضة' : 'Rejected',
+                      color: KayanDesignTokens.danger,
+                      onTap: () => context.push(AppRoutes.rejectedAds),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
               KayanFilterSlotRow(
                 labels: tabs,
                 selectedIndex: _tabIndex,
@@ -132,6 +154,49 @@ class _MyAdsScreenState extends ConsumerState<MyAdsScreen> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _QuickLinkChip extends StatelessWidget {
+  const _QuickLinkChip({
+    required this.icon,
+    required this.label,
+    required this.color,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: color.withValues(alpha: 0.2)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 16, color: color),
+            const SizedBox(width: 6),
+            Flexible(
+              child: Text(
+                label,
+                style: KayanDesignTokens.cairo(fontSize: 12, fontWeight: FontWeight.w800, color: color),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -408,6 +408,14 @@ abstract final class AppRoutes {
   static String reportAdPath(String slug)   => '/classifieds/report/$slug';
   static String similarAdsPath(String slug) => '/classifieds/similar/$slug';
   static String adStatsPath(String adId)    => '/classifieds/my-ads/stats/$adId';
+  static String contactSellerPath({String? adSlug, String? sellerId}) {
+    final params = <String>[];
+    if (adSlug != null) params.add('ad=$adSlug');
+    if (sellerId != null) params.add('seller=$sellerId');
+    if (params.isEmpty) return contactSeller;
+    return '$contactSeller?${params.join('&')}';
+  }
+
   static String classifiedsChatPath(String chatId) => '/classifieds/chats/$chatId';
   static String classifiedsCategoryPath(String slug) => '/classifieds/category/$slug';
   static String galleryPath()               => '/gallery';
