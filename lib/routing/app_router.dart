@@ -181,7 +181,7 @@ import '../features/wallet/presentation/screens/payment_receipt_screen.dart';
 // Notifications
 import '../features/notifications/presentation/screens/notifications_screen.dart';
 // Wallet
-import '../features/wallet/presentation/screens/wallet_screen.dart';
+import '../features/wallet/presentation/screens/wallet_light_screen.dart';
 import '../features/delivery/presentation/screens/delivery_home_screen.dart';
 import '../features/delivery/presentation/screens/delivery_vendor_list_screen.dart';
 import '../features/delivery/presentation/screens/delivery_vendor_detail_screen.dart';
@@ -1587,7 +1587,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     path:        AppRoutes.$wallet,
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
-                      child: const WalletScreen(),
+                      child: const WalletLightScreen(),
                     ),
                   ),
                   GoRoute(

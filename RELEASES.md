@@ -17,6 +17,8 @@
 | phase-11-classifieds-manage | إدارة + تواصل + تعديل | [kayan-phase-11-classifieds-manage-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-11-classifieds-manage-1.0.0/kayan-phase-11-classifieds-manage-1.0.0.zip) |
 | phase-12-14-batch | طلبات إضافية + متجر + خدمات | [kayan-phase-12-14-batch-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-12-14-batch-1.0.0/kayan-phase-12-14-batch-1.0.0.zip) |
 | phase-15-17-batch | متجر كامل + خدمات حجز | [kayan-phase-15-17-batch-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-15-17-batch-1.0.0/kayan-phase-15-17-batch-1.0.0.zip) |
+| phase-18-20-final | حسابي + إعدادات + دعم | [kayan-phase-18-20-final-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-18-20-final-1.0.0/kayan-phase-18-20-final-1.0.0.zip) |
+| phase-21-profile-polish | تلميع الملف + المحفظة + الأمان | [kayan-phase-21-profile-polish-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-21-profile-polish-1.0.0/kayan-phase-21-profile-polish-1.0.0.zip) |
 
 ## كيف يُنشأ الـ ZIP؟
 
