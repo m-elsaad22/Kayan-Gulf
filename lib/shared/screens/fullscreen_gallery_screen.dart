@@ -2,7 +2,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import '../../core/theme/app_colors.dart';
+import '../../core/theme/kayan_design_tokens.dart';
 
 class FullscreenGalleryScreen extends StatefulWidget {
   final List<String> imageUrls;
@@ -59,7 +59,7 @@ class _FullscreenGalleryScreenState extends State<FullscreenGalleryScreen> {
               imageUrl: urls[i],
               fit: BoxFit.contain,
               placeholder: (_, __) => const CircularProgressIndicator(
-                color: AppColors.metallicGold,
+                color: KayanDesignTokens.gold,
               ),
             ),
           ),

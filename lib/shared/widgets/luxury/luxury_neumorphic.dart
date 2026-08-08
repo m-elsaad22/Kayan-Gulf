@@ -1,11 +1,7 @@
-// ============================================================
 // KAYAN — Light neumorphism for premium CTAs & stat cards
-// ============================================================
-
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/app_border_radius.dart';
-import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/kayan_design_tokens.dart';
 import '../../../core/theme/kayan_motion.dart';
 
 /// Soft dual-shadow card — subtle neumorphism for important surfaces.
@@ -36,37 +32,19 @@ class LuxuryNeumorphicCard extends StatefulWidget {
 class _LuxuryNeumorphicCardState extends State<LuxuryNeumorphicCard> {
   bool _pressed = false;
 
-  List<BoxShadow> _shadows(BuildContext context) {
-    final dark = Theme.of(context).brightness == Brightness.dark;
+  List<BoxShadow> get _shadows {
     final depth = widget.emphasized ? 18.0 : 14.0;
     final spread = widget.emphasized ? 1.0 : 0.0;
 
-    if (dark) {
-      return [
-        BoxShadow(
-          color: AppColors.whiteOp(0.06),
-          blurRadius: depth,
-          offset: const Offset(-4, -4),
-          spreadRadius: spread,
-        ),
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.45),
-          blurRadius: depth + 6,
-          offset: const Offset(6, 8),
-          spreadRadius: spread,
-        ),
-      ];
-    }
-
     return [
       BoxShadow(
-        color: AppColors.pureWhite.withValues(alpha: 0.95),
+        color: KayanDesignTokens.surface.withValues(alpha: 0.95),
         blurRadius: depth,
         offset: const Offset(-5, -5),
         spreadRadius: spread,
       ),
       BoxShadow(
-        color: AppColors.royalBlue.withValues(alpha: 0.12),
+        color: KayanDesignTokens.kBlue.withValues(alpha: 0.12),
         blurRadius: depth + 4,
         offset: const Offset(5, 7),
         spreadRadius: spread,
@@ -74,16 +52,9 @@ class _LuxuryNeumorphicCardState extends State<LuxuryNeumorphicCard> {
     ];
   }
 
-  Color _fill(BuildContext context) {
-    final dark = Theme.of(context).brightness == Brightness.dark;
-    if (widget.gradient != null) return Colors.transparent;
-    return dark ? AppColors.darkCardBg : AppColors.lightCardBg;
-  }
-
   @override
   Widget build(BuildContext context) {
     final enabled = widget.onTap != null;
-    final dark = Theme.of(context).brightness == Brightness.dark;
 
     return GestureDetector(
       onTapDown: enabled ? (_) => setState(() => _pressed = true) : null,
@@ -107,14 +78,10 @@ class _LuxuryNeumorphicCardState extends State<LuxuryNeumorphicCard> {
           constraints: const BoxConstraints(minHeight: 140),
           decoration: BoxDecoration(
             gradient: widget.gradient,
-            color: widget.gradient == null ? _fill(context) : null,
-            borderRadius: AppBorderRadius.card,
-            border: Border.all(
-              color: dark
-                  ? AppColors.whiteOp(0.10)
-                  : AppColors.royalBlueOp(0.08),
-            ),
-            boxShadow: _shadows(context),
+            color: widget.gradient == null ? KayanDesignTokens.surface : null,
+            borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
+            border: Border.all(color: KayanDesignTokens.kBlue.withValues(alpha: 0.08)),
+            boxShadow: _shadows,
           ),
           child: widget.child,
         ),

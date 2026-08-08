@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/kayan_design_tokens.dart';
 import '../../../routing/app_routes.dart';
 import '../services/design_engine_service.dart';
 import '../widgets/super_admin_shell.dart';
@@ -63,7 +63,7 @@ RadiusShadowSettings(
         padding: const EdgeInsets.all(16),
         children: [
           Card(
-            color: AppColors.bgCard.withValues(alpha: 0.75),
+            color: KayanDesignTokens.surface,
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -163,11 +163,11 @@ class _PreviewButton extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.bgCard.withValues(alpha: 0.5),
+        color: KayanDesignTokens.surface.withValues(alpha: 0.9),
         borderRadius: BorderRadius.circular(12),
         boxShadow: neumorphic
             ? [
-                BoxShadow(color: AppColors.whiteOp(0.06), blurRadius: 8, offset: const Offset(-2, -2)),
+                BoxShadow(color: KayanDesignTokens.surface.withValues(alpha: 0.95), blurRadius: 8, offset: const Offset(-2, -2)),
                 BoxShadow(color: Colors.black38, blurRadius: 10, offset: const Offset(3, 4)),
               ]
             : null,
@@ -205,7 +205,7 @@ class _PreviewCard extends StatelessWidget {
       elevation: neumorphic ? 0 : elevation,
       shadowColor: Colors.black26,
       borderRadius: BorderRadius.circular(radius),
-      color: AppColors.bgCard,
+      color: KayanDesignTokens.surface,
       child: Container(
         width: 120,
         height: 80,
@@ -214,7 +214,7 @@ class _PreviewCard extends StatelessWidget {
             ? BoxDecoration(
                 borderRadius: BorderRadius.circular(radius),
                 boxShadow: [
-                  BoxShadow(color: AppColors.whiteOp(0.05), blurRadius: 8, offset: const Offset(-2, -2)),
+                  BoxShadow(color: KayanDesignTokens.surface.withValues(alpha: 0.95), blurRadius: 8, offset: const Offset(-2, -2)),
                   BoxShadow(color: Colors.black45, blurRadius: 12, offset: const Offset(3, 5)),
                 ],
               )
@@ -259,7 +259,7 @@ class _PreviewImage extends StatelessWidget {
         child: Container(
           width: 80,
           height: 80,
-          color: AppColors.royalBlue,
+          color: KayanDesignTokens.kBlue,
           child: const Icon(Icons.image, color: Colors.white),
         ),
       ),
@@ -277,11 +277,11 @@ class _PreviewModal extends StatelessWidget {
     return Material(
       elevation: elevation,
       borderRadius: BorderRadius.circular(radius),
-      color: AppColors.bgModal,
+      color: KayanDesignTokens.surface,
       child: SizedBox(
         width: 140,
         height: 70,
-        child: Center(child: Text('نافذة', style: TextStyle(color: Colors.white.withValues(alpha: 0.9)))),
+        child: Center(child: Text('نافذة', style: KayanDesignTokens.cairo(color: KayanDesignTokens.text2))),
       ),
     );
   }

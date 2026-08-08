@@ -1,13 +1,9 @@
-// ============================================================
-// KAYAN — Glassmorphism primitives (light / dark aware)
-// ============================================================
-
+// KAYAN — Glassmorphism primitives (light design)
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/app_border_radius.dart';
-import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/kayan_design_tokens.dart';
 import '../../../core/theme/kayan_motion.dart';
 
 /// Frosted glass panel with blur + semi-transparent Gulf palette.
@@ -33,31 +29,16 @@ class LuxuryGlassPanel extends StatelessWidget {
     this.gradient,
   });
 
-  static bool _isDark(BuildContext context) =>
-      Theme.of(context).brightness == Brightness.dark;
-
-  static List<Color> _glassGradient(BuildContext context) {
-    final dark = _isDark(context);
-    if (dark) {
-      return [
-        AppColors.whiteOp(0.14),
-        AppColors.skyBlue.withValues(alpha: 0.08),
-        AppColors.whiteOp(0.04),
+  static List<Color> get _glassGradient => [
+        KayanDesignTokens.surface.withValues(alpha: 0.72),
+        KayanDesignTokens.kBlueLight.withValues(alpha: 0.06),
+        KayanDesignTokens.surface.withValues(alpha: 0.55),
       ];
-    }
-    return [
-      AppColors.pureWhite.withValues(alpha: 0.72),
-      AppColors.skyBlue.withValues(alpha: 0.06),
-      AppColors.pureWhite.withValues(alpha: 0.55),
-    ];
-  }
 
   @override
   Widget build(BuildContext context) {
-    final dark = _isDark(context);
-    final radius = borderRadius ?? AppBorderRadius.card;
-    final effectiveBorder =
-        borderColor ?? (dark ? AppColors.whiteOp(0.16) : AppColors.royalBlueOp(0.12));
+    final radius = borderRadius ?? BorderRadius.circular(KayanDesignTokens.radiusM);
+    final effectiveBorder = borderColor ?? KayanDesignTokens.kBlue.withValues(alpha: 0.12);
 
     return Container(
       margin: margin,
@@ -71,14 +52,13 @@ class LuxuryGlassPanel extends StatelessWidget {
                   LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: _glassGradient(context),
+                    colors: _glassGradient,
                   ),
               borderRadius: radius,
               border: Border.all(color: effectiveBorder, width: 1),
               boxShadow: [
                 BoxShadow(
-                  color: (dark ? Colors.black : AppColors.royalBlue)
-                      .withValues(alpha: dark ? 0.28 : 0.08),
+                  color: KayanDesignTokens.kBlue.withValues(alpha: 0.08),
                   blurRadius: 24,
                   offset: const Offset(0, 12),
                 ),

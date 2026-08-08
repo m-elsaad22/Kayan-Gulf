@@ -1,11 +1,8 @@
-// ============================================================
-// KAYAN — Branded AppBar with optional logo
-// ============================================================
-
+// KAYAN — Branded AppBar with optional logo (light design)
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../core/theme/app_colors.dart';
+import '../../core/theme/kayan_design_tokens.dart';
 
 class KayanAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showLogo;
@@ -30,23 +27,18 @@ class KayanAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final fg = isDark ? AppColors.darkText : AppColors.lightText;
-    final bg = isDark ? AppColors.darkCardBg : AppColors.lightBg;
-
     return AppBar(
-      backgroundColor: bg,
+      backgroundColor: KayanDesignTokens.surface,
       elevation: 0,
-      scrolledUnderElevation: isDark ? 0 : 1,
-      shadowColor: AppColors.royalBlue.withValues(alpha: 0.08),
+      scrolledUnderElevation: 1,
+      shadowColor: KayanDesignTokens.kBlueDeep.withValues(alpha: 0.08),
       surfaceTintColor: Colors.transparent,
       centerTitle: true,
       automaticallyImplyLeading: showBack,
       leading: showBack
           ? IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.arrow_back_ios_new_rounded,
-                color: fg,
                 size: 20,
               ),
               onPressed: () => context.pop(),
@@ -61,14 +53,14 @@ class KayanAppBar extends StatelessWidget implements PreferredSizeWidget {
           : title != null
               ? Text(
                   title!,
-                  style: TextStyle(
-                    color: fg,
+                  style: KayanDesignTokens.cairo(
                     fontSize: 18,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w700,
+                    color: KayanDesignTokens.text,
                   ),
                 )
               : null,
-      iconTheme: IconThemeData(color: fg),
+      iconTheme: const IconThemeData(color: KayanDesignTokens.text),
       actions: actions,
       bottom: bottom,
     );

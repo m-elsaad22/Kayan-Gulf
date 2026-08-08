@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/kayan_design_tokens.dart';
 import '../../../core/theme/dynamic_theme.dart';
 import '../../../core/theme/kayan_motion.dart';
 import '../../../routing/app_routes.dart';
@@ -58,11 +58,11 @@ class _AnimationsScreenState extends State<AnimationsScreen>
 
   Widget _demoChild(int i) {
     final colors = [
-      AppColors.royalBlue,
-      AppColors.pepsiBlue,
-      AppColors.turquoise,
-      AppColors.metallicGold,
-      AppColors.skyBlue,
+      KayanDesignTokens.kBlue,
+      KayanDesignTokens.kBlueDeep,
+      KayanDesignTokens.kGreenLight,
+      KayanDesignTokens.gold,
+      KayanDesignTokens.kBlueLight,
     ];
     return Container(
       width: 80,
@@ -117,7 +117,7 @@ class _AnimationsScreenState extends State<AnimationsScreen>
         padding: const EdgeInsets.all(16),
         children: [
           Card(
-            color: AppColors.bgCard.withValues(alpha: 0.75),
+            color: KayanDesignTokens.surface,
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/kayan_design_tokens.dart';
 import '../../../core/theme/dynamic_theme.dart';
 import '../../../routing/app_routes.dart';
 import '../services/design_engine_service.dart';
@@ -37,9 +37,13 @@ class _ColorControlScreenState extends State<ColorControlScreen> {
 
   Color _parse(String hex) {
     try {
-      return AppColors.fromHex(hex.replaceFirst('#', ''));
+      final buffer = StringBuffer();
+      final cleaned = hex.replaceFirst('#', '');
+      if (cleaned.length == 6 || cleaned.length == 7) buffer.write('ff');
+      buffer.write(cleaned);
+      return Color(int.parse(buffer.toString(), radix: 16));
     } catch (_) {
-      return AppColors.royalBlue;
+      return KayanDesignTokens.kBlue;
     }
   }
 
@@ -338,16 +342,20 @@ class _ColorFields extends StatelessWidget {
 
   Color _c(String hex) {
     try {
-      return AppColors.fromHex(hex.replaceFirst('#', ''));
+      final buffer = StringBuffer();
+      final cleaned = hex.replaceFirst('#', '');
+      if (cleaned.length == 6 || cleaned.length == 7) buffer.write('ff');
+      buffer.write(cleaned);
+      return Color(int.parse(buffer.toString(), radix: 16));
     } catch (_) {
-      return AppColors.royalBlue;
+      return KayanDesignTokens.kBlue;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: AppColors.bgCard.withValues(alpha: 0.7),
+      color: KayanDesignTokens.surface,
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
