@@ -39,12 +39,13 @@ lib/
 ├── main.dart              # نقطة الدخول
 ├── app.dart               # Root Widget
 ├── core/
-│   ├── constants/         # API constants
-│   ├── di/                # Dependency Injection
+│   ├── config/            # AppConfig (API URL, mock flag)
+│   ├── data/              # MockDataCatalog + seed data
+│   ├── di/                # Repository providers (mock ↔ remote)
 │   ├── errors/            # App exceptions
-│   ├── network/           # Dio client + token storage
+│   ├── network/           # Dio client + ApiException
 │   ├── services/          # Firebase, Payment, Socket
-│   └── theme/             # Colors, typography, theme
+│   └── theme/             # KayanDesignTokens, typography
 ├── features/
 │   ├── auth/              # Phone OTP authentication
 │   ├── cart/              # Shopping cart
@@ -65,6 +66,24 @@ lib/
 ├── routing/               # GoRouter configuration
 └── shared/                # Providers, widgets, services
 ```
+
+## التوثيق التقني — Developer docs
+
+| المستند | المحتوى |
+|---------|---------|
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | طبقات التطبيق، Repository pattern، Riverpod، الاختبارات |
+| [docs/API_SWITCH.md](docs/API_SWITCH.md) | التبديل من Mock إلى API حقيقي (`KAYAN_USE_MOCK_DATA`, `KAYAN_API_BASE_URL`) |
+| [RELEASES.md](RELEASES.md) | روابط تحميل إصدارات المراحل (ZIP + APK) |
+
+### التبديل السريع إلى API حقيقي
+
+```bash
+flutter run \
+  --dart-define=KAYAN_USE_MOCK_DATA=false \
+  --dart-define=KAYAN_API_BASE_URL=https://your-api.example.com/v1
+```
+
+الوضع الافتراضي (`KAYAN_USE_MOCK_DATA=true`) يستخدم بيانات محلية عبر `MockDataCatalog` — لا حاجة لخادم خلفي للتطوير أو العروض التوضيحية.
 
 ## دليل المستخدم — User Guide
 
