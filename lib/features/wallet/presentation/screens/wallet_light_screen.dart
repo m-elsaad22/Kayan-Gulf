@@ -62,6 +62,7 @@ class WalletLightScreen extends ConsumerWidget {
                 KayanProfileMenuTile(icon: Icons.account_balance_rounded, title: ar ? 'سحب الأرباح' : 'Withdraw earnings', onTap: () => context.push(AppRoutes.withdrawEarnings)),
                 KayanProfileMenuTile(icon: Icons.receipt_long_rounded, title: ar ? 'إيصال الدفع' : 'Payment receipt', onTap: () => context.push(AppRoutes.paymentReceipt)),
                 KayanProfileMenuTile(icon: Icons.redeem_rounded, title: ar ? 'استبدال النقاط' : 'Redeem points', onTap: () => context.push(AppRoutes.redeemPoints)),
+                KayanProfileMenuTile(icon: Icons.undo_rounded, title: ar ? 'استرداد النقاط' : 'Points refund', onTap: () => context.push(AppRoutes.pointsRefund)),
               ],
             ),
           ),

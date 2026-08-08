@@ -199,6 +199,28 @@ import '../features/delivery/presentation/screens/delivery_rate_order_screen.dar
 import '../features/settings/presentation/screens/settings_light_screen.dart';
 import '../features/notifications/presentation/screens/profile_notifications_light_screen.dart';
 import '../features/settings/presentation/screens/settings_detail_screens.dart';
+// Admin
+import '../features/admin/presentation/screens/admin_login_screen.dart';
+import '../features/admin/presentation/screens/admin_dashboard_screen.dart';
+import '../features/admin/presentation/screens/admin_products_screen.dart';
+import '../features/admin/presentation/screens/admin_categories_screen.dart';
+import '../features/admin/presentation/screens/admin_services_screen.dart';
+import '../features/admin/presentation/screens/admin_ads_screen.dart';
+import '../features/admin/presentation/screens/admin_banners_screen.dart';
+import '../features/admin/presentation/screens/admin_colors_screen.dart';
+import '../features/admin/presentation/screens/admin_fonts_screen.dart';
+import '../features/admin/presentation/screens/admin_screens_screen.dart';
+import '../features/admin/presentation/screens/admin_settings_screen.dart';
+// Super Admin
+import '../features/super_admin/screens/super_admin_dashboard.dart';
+import '../features/super_admin/screens/color_control_screen.dart';
+import '../features/super_admin/screens/typography_screen.dart';
+import '../features/super_admin/screens/radius_shadow_screen.dart';
+import '../features/super_admin/screens/animations_screen.dart';
+// Wallet extras
+import '../features/wallet/presentation/screens/points_refund_screen.dart';
+// Service notifications
+import '../features/services/notifications/presentation/screens/service_notifications_screen.dart';
 
 // ──────────────────────────────────────────────────────────────
 // NAVIGATOR KEYS
@@ -272,6 +294,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         '/auth/',
         '/onboarding',
         '/language-region',
+        '/admin/',
+        '/super-admin/',
         '/404',
         '/no-internet',
         '/maintenance',
@@ -762,6 +786,130 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildSlidePage(
           key: state.pageKey,
           child: const PaymentReceiptScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.pointsRefund,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const PointsRefundScreen(),
+        ),
+      ),
+
+      // ════════════════════════════════════════════════════
+      // ADMIN & SUPER ADMIN
+      // ════════════════════════════════════════════════════
+      GoRoute(
+        path: AppRoutes.adminLogin,
+        pageBuilder: (context, state) => _buildFadePage(
+          key: state.pageKey,
+          child: const AdminLoginScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminDashboard,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdminDashboardScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminProducts,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdminProductsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminCategories,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdminCategoriesScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminServices,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdminServicesScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminAds,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdminAdsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminBanners,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdminBannersScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminColors,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdminColorsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminFonts,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdminFontsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminScreens,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdminScreensScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminSettings,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdminSettingsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.superAdminDashboard,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const SuperAdminDashboardScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.superAdminColors,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ColorControlScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.superAdminTypography,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const TypographyScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.superAdminRadius,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const RadiusShadowScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.superAdminAnimations,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AnimationsScreen(),
         ),
       ),
 
@@ -1317,6 +1465,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                       child: ServiceTrackingLightScreen(
                         bookingId: state.pathParameters['bookingId']!,
                       ),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        'notifications',
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const ServiceNotificationsScreen(),
                     ),
                   ),
                   // Service detail (slug-based)

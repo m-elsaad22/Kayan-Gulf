@@ -23,6 +23,8 @@
 | phase-23-chat-notifications | محادثات + إشعارات + تفاصيل حجز | [kayan-phase-23-chat-notifications-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-23-chat-notifications-1.0.0/kayan-phase-23-chat-notifications-1.0.0.zip) |
 | phase-24-profile-wallet-orders | إحالات + نقاط + طلبات + دفع | [kayan-phase-24-profile-wallet-orders-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-24-profile-wallet-orders-1.0.0/kayan-phase-24-profile-wallet-orders-1.0.0.zip) |
 | phase-25-wallet-checkout | محفظة + مسار checkout كامل | [kayan-phase-25-wallet-checkout-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-25-wallet-checkout-1.0.0/kayan-phase-25-wallet-checkout-1.0.0.zip) |
+| phase-26-settings-tracking | إعدادات + تتبع الطلب | [kayan-phase-26-settings-tracking-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-26-settings-tracking-1.0.0/kayan-phase-26-settings-tracking-1.0.0.zip) |
+| phase-27-auth-admin | مصادقة خفيفة + إدارة + محفظة | [kayan-phase-27-auth-admin-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-27-auth-admin-1.0.0/kayan-phase-27-auth-admin-1.0.0.zip) |
 
 ## كيف يُنشأ الـ ZIP؟
 
