@@ -1,28 +1,17 @@
-// ============================================================
-// KAYAN — Competitor-inspired UI patterns
-// NOON · DARI/BYTAK · Open Sooq
-// ============================================================
-
+// Competitor-inspired UI patterns — light design
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_border_radius.dart';
-import '../../core/theme/app_text_styles.dart';
+import '../../core/theme/kayan_design_tokens.dart';
 
 /// NOON-style flash deal strip with live countdown.
 class NoonFlashDealStrip extends StatefulWidget {
+  const NoonFlashDealStrip({super.key, required this.title, required this.endsIn, this.onTap});
+
   final String title;
   final Duration endsIn;
   final VoidCallback? onTap;
-
-  const NoonFlashDealStrip({
-    super.key,
-    required this.title,
-    required this.endsIn,
-    this.onTap,
-  });
 
   @override
   State<NoonFlashDealStrip> createState() => _NoonFlashDealStripState();
@@ -66,38 +55,18 @@ class _NoonFlashDealStripState extends State<NoonFlashDealStrip> {
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFFFF6B35), Color(0xFFFF3D00)],
-          ),
-          borderRadius: AppBorderRadius.card,
+          gradient: KayanDesignTokens.gradOrange,
+          borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
         ),
         child: Row(
           children: [
             const Icon(Icons.flash_on_rounded, color: Colors.white),
             const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                widget.title,
-                style: AppTextStyles.titleSmall.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
+            Expanded(child: Text(widget.title, style: KayanDesignTokens.cairo(color: Colors.white, fontWeight: FontWeight.w800))),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.black26,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                '⏱ $_timeText',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w800,
-                  fontFeatures: [FontFeature.tabularFigures()],
-                ),
-              ),
+              decoration: BoxDecoration(color: Colors.black26, borderRadius: BorderRadius.circular(8)),
+              child: Text('⏱ $_timeText', style: KayanDesignTokens.cairo(color: Colors.white, fontWeight: FontWeight.w800).copyWith(fontFeatures: const [FontFeature.tabularFigures()])),
             ),
           ],
         ),
@@ -106,13 +75,7 @@ class _NoonFlashDealStripState extends State<NoonFlashDealStrip> {
   }
 }
 
-/// DARI/BYTAK-style verified provider badge row.
 class ServiceVerifiedProviderRow extends StatelessWidget {
-  final String name;
-  final double rating;
-  final int jobsDone;
-  final bool isVerified;
-
   const ServiceVerifiedProviderRow({
     super.key,
     required this.name,
@@ -121,23 +84,27 @@ class ServiceVerifiedProviderRow extends StatelessWidget {
     this.isVerified = true,
   });
 
+  final String name;
+  final double rating;
+  final int jobsDone;
+  final bool isVerified;
+
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.dark
-            ? AppColors.darkCardBg
-            : AppColors.lightCardBg,
-        borderRadius: AppBorderRadius.card,
-        border: Border.all(color: AppColors.turquoise.withValues(alpha: 0.35)),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
+        border: Border.all(color: KayanDesignTokens.kGreen.withValues(alpha: 0.35)),
+        boxShadow: KayanDesignTokens.shadowS,
       ),
       child: Row(
         children: [
           CircleAvatar(
-            backgroundColor: AppColors.turquoise.withValues(alpha: 0.15),
-            child: const Icon(Icons.handyman, color: AppColors.turquoise),
+            backgroundColor: KayanDesignTokens.kGreen.withValues(alpha: 0.12),
+            child: const Icon(Icons.handyman, color: KayanDesignTokens.kGreen),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -146,27 +113,14 @@ class ServiceVerifiedProviderRow extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Flexible(
-                      child: Text(
-                        name,
-                        style: AppTextStyles.titleSmall.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
+                    Flexible(child: Text(name, style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800))),
                     if (isVerified) ...[
                       const SizedBox(width: 6),
-                      const Icon(Icons.verified_rounded,
-                          color: AppColors.skyBlue, size: 18),
+                      const Icon(Icons.verified_rounded, color: KayanDesignTokens.kBlue, size: 18),
                     ],
                   ],
                 ),
-                Text(
-                  '⭐ $rating · $jobsDone ${jobsDone == 1 ? 'job' : 'jobs'}',
-                  style: AppTextStyles.bodySmall.copyWith(
-                    color: AppColors.lightSubtext,
-                  ),
-                ),
+                Text('⭐ $rating · $jobsDone ${jobsDone == 1 ? 'job' : 'jobs'}', style: KayanDesignTokens.cairo(fontSize: 12, color: KayanDesignTokens.muted)),
               ],
             ),
           ),
@@ -176,18 +130,12 @@ class ServiceVerifiedProviderRow extends StatelessWidget {
   }
 }
 
-/// Open Sooq-style seller action buttons (call, chat, WhatsApp).
 class ClassifiedsSellerActions extends StatelessWidget {
+  const ClassifiedsSellerActions({super.key, this.onCall, this.onChat, this.onWhatsApp});
+
   final VoidCallback? onCall;
   final VoidCallback? onChat;
   final VoidCallback? onWhatsApp;
-
-  const ClassifiedsSellerActions({
-    super.key,
-    this.onCall,
-    this.onChat,
-    this.onWhatsApp,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -195,51 +143,22 @@ class ClassifiedsSellerActions extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: [
-          Expanded(
-            child: FilledButton.icon(
-              onPressed: onCall,
-              icon: const Icon(Icons.phone_rounded, size: 18),
-              label: const Text('اتصال'),
-              style: FilledButton.styleFrom(
-                backgroundColor: AppColors.callBlue,
-              ),
-            ),
-          ),
+          Expanded(child: FilledButton.icon(onPressed: onCall, icon: const Icon(Icons.phone_rounded, size: 18), label: const Text('اتصال'), style: FilledButton.styleFrom(backgroundColor: KayanDesignTokens.kBlue))),
           const SizedBox(width: 8),
-          Expanded(
-            child: OutlinedButton.icon(
-              onPressed: onChat,
-              icon: const Icon(Icons.chat_bubble_outline, size: 18),
-              label: const Text('محادثة'),
-            ),
-          ),
+          Expanded(child: OutlinedButton.icon(onPressed: onChat, icon: const Icon(Icons.chat_bubble_outline, size: 18), label: const Text('محادثة'))),
           const SizedBox(width: 8),
-          Expanded(
-            child: FilledButton.icon(
-              onPressed: onWhatsApp,
-              icon: const Icon(Icons.chat_rounded, size: 18),
-              label: const Text('واتساب'),
-              style: FilledButton.styleFrom(
-                backgroundColor: AppColors.whatsappGreen,
-              ),
-            ),
-          ),
+          Expanded(child: FilledButton.icon(onPressed: onWhatsApp, icon: const Icon(Icons.chat_rounded, size: 18), label: const Text('واتساب'), style: FilledButton.styleFrom(backgroundColor: KayanDesignTokens.kGreen))),
         ],
       ),
     );
   }
 }
 
-/// NOON-style checkout step indicator.
 class CheckoutStepIndicator extends StatelessWidget {
+  const CheckoutStepIndicator({super.key, required this.currentStep, required this.labels});
+
   final int currentStep;
   final List<String> labels;
-
-  const CheckoutStepIndicator({
-    super.key,
-    required this.currentStep,
-    required this.labels,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -257,31 +176,13 @@ class CheckoutStepIndicator extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 14,
-                        backgroundColor: active
-                            ? AppColors.pepsiBlue
-                            : AppColors.silver.withValues(alpha: 0.4),
+                        backgroundColor: active ? KayanDesignTokens.kBlue : KayanDesignTokens.muted.withValues(alpha: 0.3),
                         child: done
                             ? const Icon(Icons.check, size: 14, color: Colors.white)
-                            : Text(
-                                '${i + 1}',
-                                style: TextStyle(
-                                  color: active ? Colors.white : AppColors.lightSubtext,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
+                            : Text('${i + 1}', style: KayanDesignTokens.cairo(color: active ? Colors.white : KayanDesignTokens.muted, fontSize: 11, fontWeight: FontWeight.w700)),
                       ),
                       const SizedBox(height: 4),
-                      Text(
-                        labels[i],
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: AppTextStyles.caption.copyWith(
-                          color: active ? AppColors.lightText : AppColors.lightSubtext,
-                          fontWeight: active ? FontWeight.w600 : FontWeight.w400,
-                        ),
-                      ),
+                      Text(labels[i], maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: KayanDesignTokens.cairo(fontSize: 10, fontWeight: active ? FontWeight.w700 : FontWeight.w400, color: active ? KayanDesignTokens.text2 : KayanDesignTokens.muted)),
                     ],
                   ),
                 ),
@@ -290,9 +191,7 @@ class CheckoutStepIndicator extends StatelessWidget {
                     child: Container(
                       height: 2,
                       margin: const EdgeInsets.only(bottom: 18),
-                      color: i < currentStep
-                          ? AppColors.pepsiBlue
-                          : AppColors.silver.withValues(alpha: 0.35),
+                      color: i < currentStep ? KayanDesignTokens.kBlue : KayanDesignTokens.muted.withValues(alpha: 0.25),
                     ),
                   ),
               ],
@@ -304,16 +203,11 @@ class CheckoutStepIndicator extends StatelessWidget {
   }
 }
 
-/// Service booking timeline (DARI pattern).
 class ServiceBookingTimeline extends StatelessWidget {
+  const ServiceBookingTimeline({super.key, required this.steps, required this.activeIndex});
+
   final List<String> steps;
   final int activeIndex;
-
-  const ServiceBookingTimeline({
-    super.key,
-    required this.steps,
-    required this.activeIndex,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -328,38 +222,16 @@ class ServiceBookingTimeline extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  Icon(
-                    done
-                        ? Icons.check_circle_rounded
-                        : active
-                            ? Icons.radio_button_checked
-                            : Icons.radio_button_off,
-                    color: done || active
-                        ? AppColors.turquoise
-                        : AppColors.silver,
-                    size: 22,
-                  ),
+                  Icon(done ? Icons.check_circle_rounded : active ? Icons.radio_button_checked : Icons.radio_button_off, color: done || active ? KayanDesignTokens.kGreen : KayanDesignTokens.muted, size: 22),
                   if (i < steps.length - 1)
-                    Container(
-                      width: 2,
-                      height: 28,
-                      color: done
-                          ? AppColors.turquoise
-                          : AppColors.silver.withValues(alpha: 0.4),
-                    ),
+                    Container(width: 2, height: 28, color: done ? KayanDesignTokens.kGreen : KayanDesignTokens.muted.withValues(alpha: 0.3)),
                 ],
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 20),
-                  child: Text(
-                    steps[i],
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      fontWeight: active ? FontWeight.w700 : FontWeight.w400,
-                      color: active ? AppColors.lightText : AppColors.lightSubtext,
-                    ),
-                  ),
+                  child: Text(steps[i], style: KayanDesignTokens.cairo(fontWeight: active ? FontWeight.w800 : FontWeight.w400, color: active ? KayanDesignTokens.text2 : KayanDesignTokens.muted)),
                 ),
               ),
             ],

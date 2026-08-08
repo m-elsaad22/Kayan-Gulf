@@ -1,89 +1,59 @@
-// ============================================================
-// KAYAN — Product Card Widget
-// lib/shared/widgets/cards/product_card.dart
-//
-// Used on: Home (recommendations, featured, flash deals),
-//          Search results, Category products, Vendor page
-// Variants: grid (default), horizontal (list mode)
-// ============================================================
-
+// Product card — light design
 import 'dart:async';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_gradients.dart';
-import '../../../core/theme/app_text_styles.dart';
-import '../../../core/theme/app_border_radius.dart';
-import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/kayan_design_tokens.dart';
 import '../../../core/theme/kayan_motion.dart';
 import '../../../features/home/data/models/home_models.dart';
 import '../loaders/shimmer_loader.dart';
 
 class ProductCard extends StatefulWidget {
-  final ProductCardModel product;
-  final bool             isHorizontal;  // horizontal list variant
-  final bool             showTimer;     // show flash deal countdown
-  final VoidCallback?    onTap;
-  final VoidCallback?    onFavorite;
-  final bool             isFavorited;
-
   const ProductCard({
     super.key,
     required this.product,
     this.isHorizontal = false,
-    this.showTimer    = false,
+    this.showTimer = false,
     this.onTap,
     this.onFavorite,
-    this.isFavorited  = false,
+    this.isFavorited = false,
   });
+
+  final ProductCardModel product;
+  final bool isHorizontal;
+  final bool showTimer;
+  final VoidCallback? onTap;
+  final VoidCallback? onFavorite;
+  final bool isFavorited;
 
   @override
   State<ProductCard> createState() => _ProductCardState();
 }
 
-class _ProductCardState extends State<ProductCard>
-    with SingleTickerProviderStateMixin {
-
-  late final AnimationController _pressCtrl;
-  late final Animation<double>   _pressScale;
-
-  // Flash deal countdown
-  Timer?    _timer;
-  Duration  _remaining = Duration.zero;
+class _ProductCardState extends State<ProductCard> {
+  Timer? _timer;
+  Duration _remaining = Duration.zero;
 
   @override
   void initState() {
     super.initState();
-
-    _pressCtrl = AnimationController(
-      vsync:    this,
-      duration: const Duration(milliseconds: 120),
-    );
-    _pressScale = Tween<double>(begin: 1.0, end: 0.96)
-        .chain(CurveTween(curve: Curves.easeOut))
-        .animate(_pressCtrl);
-
     if (widget.showTimer && widget.product.flashDealEndsAt != null) {
-      _updateRemaining();
-      _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-        if (mounted) _updateRemaining();
-      });
+      _tick();
+      _timer = Timer.periodic(const Duration(seconds: 1), (_) => _tick());
     }
   }
 
-  void _updateRemaining() {
-    final end = widget.product.flashDealEndsAt!;
+  void _tick() {
+    final end = widget.product.flashDealEndsAt;
+    if (end == null) return;
     final now = DateTime.now();
-    setState(() {
-      _remaining = end.isAfter(now) ? end.difference(now) : Duration.zero;
-    });
+    if (mounted) setState(() => _remaining = end.isAfter(now) ? end.difference(now) : Duration.zero);
   }
 
   @override
   void dispose() {
-    _pressCtrl.dispose();
     _timer?.cancel();
     super.dispose();
   }
@@ -95,396 +65,162 @@ class _ProductCardState extends State<ProductCard>
     return h > 0 ? '$h:$m:$s' : '$m:$s';
   }
 
-  void _handleTap() {
-    KayanMotion.hapticLight();
-    widget.onTap?.call();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return widget.isHorizontal
-        ? _buildHorizontal()
-        : _buildGrid();
-  }
-
-  // ──────────────────────────────────────────────────────────
-  // GRID VARIANT (default — 2 per row)
-  // ──────────────────────────────────────────────────────────
-  BoxDecoration _productCardDecoration(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return BoxDecoration(
-      color: isDark ? AppColors.bgCard : AppColors.lightCardBg,
-      borderRadius: AppBorderRadius.card,
-      border: Border.all(
-        color: isDark ? AppColors.borderSubtle : AppColors.royalBlueOp(0.08),
-      ),
-      boxShadow: isDark
-          ? [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.22),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ]
-          : [
-              BoxShadow(
-                color: AppColors.pureWhite.withValues(alpha: 0.9),
-                blurRadius: 10,
-                offset: const Offset(-3, -3),
-              ),
-              BoxShadow(
-                color: AppColors.royalBlue.withValues(alpha: 0.10),
-                blurRadius: 14,
-                offset: const Offset(4, 6),
-              ),
-            ],
-    );
+    return widget.isHorizontal ? _buildHorizontal() : _buildGrid();
   }
 
   Widget _buildGrid() {
-    final product = widget.product;
-    final discount = product.discountPercent;
+    final p = widget.product;
+    final discount = p.discountPercent;
 
     return GestureDetector(
-      onTapDown:   (_) => _pressCtrl.forward(),
-      onTapUp:     (_) { _pressCtrl.reverse(); _handleTap(); },
-      onTapCancel: ()  => _pressCtrl.reverse(),
-      child: AnimatedBuilder(
-        animation: _pressScale,
-        builder: (_, child) => Transform.scale(
-          scale: _pressScale.value,
-          child: child,
+      onTap: () {
+        KayanMotion.hapticLight();
+        widget.onTap?.call();
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
+          border: Border.all(color: KayanDesignTokens.border),
+          boxShadow: KayanDesignTokens.shadowS,
         ),
-        child: Container(
-          decoration: _productCardDecoration(context),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // ── Image ──────────────────────────────────
-              Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(AppBorderRadius.card.topLeft.x),
-                    ),
-                    child: AspectRatio(
-                      aspectRatio: 1,
-                      child: product.imageUrl != null
-                          ? CachedNetworkImage(
-                              imageUrl:    product.imageUrl!,
-                              fit:         BoxFit.cover,
-                              placeholder: (_, __) => const ShimmerBox(
-                                width: double.infinity,
-                                height: double.infinity,
-                              ),
-                              errorWidget: (_, __, ___) => Container(
-                                color:  AppColors.bgCard2,
-                                child: const Icon(
-                                  Icons.image_not_supported_outlined,
-                                  color: AppColors.textMuted,
-                                  size:  40,
-                                ),
-                              ),
-                            )
-                          : Container(
-                              color: AppColors.bgCard2,
-                              child: const Icon(
-                                Icons.shopping_bag_outlined,
-                                color: AppColors.textMuted,
-                                size: 40,
-                              ),
-                            ),
-                    ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(KayanDesignTokens.radiusM)),
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: p.imageUrl != null
+                        ? CachedNetworkImage(
+                            imageUrl: p.imageUrl!,
+                            fit: BoxFit.cover,
+                            placeholder: (_, __) => const ShimmerBox(width: double.infinity, height: double.infinity),
+                            errorWidget: (_, __, ___) => Container(color: KayanDesignTokens.bg, child: const Icon(Icons.image_outlined, color: KayanDesignTokens.muted)),
+                          )
+                        : Container(color: KayanDesignTokens.bg, child: const Icon(Icons.shopping_bag_outlined, color: KayanDesignTokens.muted, size: 32)),
                   ),
-
-                  // Discount badge
-                  if (discount > 0)
-                    Positioned(
-                      top: 8,
-                      left: 8,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 3,
-                        ),
-                        decoration: BoxDecoration(
-                          color:        AppColors.badgeSale,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          '-${discount.toInt()}%',
-                          style: AppTextStyles.badge.copyWith(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                  // Flash deal timer
-                  if (widget.showTimer && _remaining > Duration.zero)
-                    Positioned(
-                      bottom: 0, left: 0, right: 0,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 5),
-                        decoration: const BoxDecoration(
-                          gradient: AppGradients.flashDeal,
-                        ),
-                        child: Center(
-                          child: Text(
-                            '⏱ $_timerText',
-                            style: AppTextStyles.countdownSmall,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                  // Favorite button
+                ),
+                if (discount > 0)
                   Positioned(
-                    top: 6, right: 6,
-                    child: GestureDetector(
-                      onTap: () {
-                        HapticFeedback.lightImpact();
-                        widget.onFavorite?.call();
-                      },
-                      child: Container(
-                        width:  32, height: 32,
-                        decoration: BoxDecoration(
-                          color:        AppColors.bgModal.withOpacity(0.8),
-                          shape:        BoxShape.circle,
-                        ),
-                        child: Icon(
-                          widget.isFavorited
-                              ? Icons.favorite_rounded
-                              : Icons.favorite_border_rounded,
-                          size:  16,
-                          color: widget.isFavorited
-                              ? AppColors.error
-                              : AppColors.textMuted,
-                        ),
+                    top: 8,
+                    left: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                      decoration: BoxDecoration(color: KayanDesignTokens.danger, borderRadius: BorderRadius.circular(6)),
+                      child: Text('-${discount.toInt()}%', style: KayanDesignTokens.cairo(fontSize: 10, fontWeight: FontWeight.w800, color: Colors.white)),
+                    ),
+                  ),
+                if (widget.showTimer && _remaining > Duration.zero)
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      color: KayanDesignTokens.oOrange,
+                      child: Center(child: Text('⏱ $_timerText', style: KayanDesignTokens.cairo(fontSize: 10, fontWeight: FontWeight.w800, color: Colors.white))),
+                    ),
+                  ),
+                Positioned(
+                  top: 6,
+                  right: 6,
+                  child: GestureDetector(
+                    onTap: () {
+                      HapticFeedback.lightImpact();
+                      widget.onFavorite?.call();
+                    },
+                    child: Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.9), shape: BoxShape.circle),
+                      child: Icon(
+                        widget.isFavorited ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                        size: 16,
+                        color: widget.isFavorited ? KayanDesignTokens.danger : KayanDesignTokens.muted,
                       ),
                     ),
                   ),
-
-                  // Out of stock overlay
-                  if (product.isOutOfStock)
-                    Positioned.fill(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(AppBorderRadius.card.topLeft.x),
-                        ),
-                        child: Container(
-                          color: Colors.black.withOpacity(0.5),
-                          child: Center(
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                color:        AppColors.bgCard2,
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                'نفد المخزون',
-                                style: AppTextStyles.badgeMedium.copyWith(
-                                  color: AppColors.textSecondary,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-
-              // ── Info ─────────────────────────────────────
-              Padding(
-                padding: const EdgeInsets.all(AppSpacing.sm),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Product name
-                    Text(
-                      product.nameAr,
-                      style: AppTextStyles.arabicBodyMedium.copyWith(
-                        fontSize: 12,
-                        height:   1.3,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-
-                    const SizedBox(height: 4),
-
-                    // Rating row
-                    if (product.reviewCount > 0)
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.star_rounded,
-                            size: 12, color: AppColors.starFilled,
-                          ),
-                          const SizedBox(width: 2),
-                          Text(
-                            product.rating.toStringAsFixed(1),
-                            style: AppTextStyles.caption.copyWith(
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                          const SizedBox(width: 2),
-                          Text(
-                            '(${product.reviewCount})',
-                            style: AppTextStyles.caption.copyWith(
-                              color: AppColors.textMuted,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                    const SizedBox(height: 6),
-
-                    // Price row
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(p.nameAr, style: KayanDesignTokens.cairo(fontSize: 12, fontWeight: FontWeight.w700), maxLines: 2, overflow: TextOverflow.ellipsis),
+                  const SizedBox(height: 6),
+                  if (p.reviewCount > 0)
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              if (product.originalPrice != null)
-                                Text(
-                                  '${product.originalPrice!.toInt()} ر.س',
-                                  style: AppTextStyles.priceOriginal,
-                                ),
-                              Text(
-                                '${product.price.toInt()} ر.س',
-                                style: AppTextStyles.priceMedium,
-                              ),
-                            ],
-                          ),
-                        ),
-                        // Add to cart mini button
-                        GestureDetector(
-                          onTap: () => HapticFeedback.lightImpact(),
-                          child: Container(
-                            width:  28, height: 28,
-                            decoration: BoxDecoration(
-                              gradient:     AppGradients.primaryButton,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Icon(
-                              Icons.add_rounded,
-                              size: 16, color: Colors.white,
-                            ),
-                          ),
-                        ),
+                        const Icon(Icons.star_rounded, size: 12, color: KayanDesignTokens.oOrange),
+                        Text(' ${p.rating.toStringAsFixed(1)}', style: KayanDesignTokens.cairo(fontSize: 11, color: KayanDesignTokens.muted)),
                       ],
                     ),
-                  ],
-                ),
+                  const SizedBox(height: 4),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text('${p.price.toStringAsFixed(0)} ر.س', style: KayanDesignTokens.cairo(fontSize: 14, fontWeight: FontWeight.w900, color: KayanDesignTokens.oOrange)),
+                      if (p.originalPrice != null) ...[
+                        const SizedBox(width: 6),
+                        Text(p.originalPrice!.toStringAsFixed(0), style: KayanDesignTokens.cairo(fontSize: 11, color: KayanDesignTokens.muted).copyWith(decoration: TextDecoration.lineThrough)),
+                      ],
+                    ],
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  // ──────────────────────────────────────────────────────────
-  // HORIZONTAL VARIANT (list mode)
-  // ──────────────────────────────────────────────────────────
   Widget _buildHorizontal() {
-    final product = widget.product;
-
+    final p = widget.product;
     return GestureDetector(
-      onTap: _handleTap,
+      onTap: () {
+        KayanMotion.hapticLight();
+        widget.onTap?.call();
+      },
       child: Container(
-        height:      110,
-        decoration:  _productCardDecoration(context).copyWith(
-          borderRadius: AppBorderRadius.md,
+        height: 110,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
+          border: Border.all(color: KayanDesignTokens.border),
+          boxShadow: KayanDesignTokens.shadowS,
         ),
         child: Row(
           children: [
-            // Image
             ClipRRect(
-              borderRadius: BorderRadius.horizontal(
-                left: Radius.circular(AppBorderRadius.md.topLeft.x),
-              ),
+              borderRadius: const BorderRadius.horizontal(left: Radius.circular(KayanDesignTokens.radiusM)),
               child: SizedBox(
-                width: 100,
-                child: product.imageUrl != null
-                    ? CachedNetworkImage(
-                        imageUrl:    product.imageUrl!,
-                        fit:         BoxFit.cover,
-                        placeholder: (_, __) => const ShimmerBox(
-                          width: 100, height: double.infinity),
-                        errorWidget: (_, __, ___) => Container(
-                          color: AppColors.bgCard2,
-                          child: const Icon(Icons.image_not_supported_outlined,
-                              color: AppColors.textMuted),
-                        ),
-                      )
-                    : Container(
-                        color: AppColors.bgCard2,
-                        child: const Icon(Icons.shopping_bag_outlined,
-                            color: AppColors.textMuted),
-                      ),
+                width: 110,
+                height: 110,
+                child: p.imageUrl != null
+                    ? CachedNetworkImage(imageUrl: p.imageUrl!, fit: BoxFit.cover)
+                    : Container(color: KayanDesignTokens.bg, child: const Icon(Icons.shopping_bag_outlined)),
               ),
             ),
-
-            // Info
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.md),
+                padding: const EdgeInsets.all(12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment:  MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      product.nameAr,
-                      style:    AppTextStyles.arabicTitleSmall,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    if (product.vendorName != null)
-                      Text(
-                        product.vendorName!,
-                        style: AppTextStyles.caption.copyWith(
-                          color: AppColors.textMuted,
-                        ),
-                      ),
-                    const SizedBox(height: 6),
-                    Row(
-                      children: [
-                        Text(
-                          '${product.price.toInt()} ر.س',
-                          style: AppTextStyles.priceMedium,
-                        ),
-                        if (product.originalPrice != null) ...[
-                          const SizedBox(width: 6),
-                          Text(
-                            '${product.originalPrice!.toInt()} ر.س',
-                            style: AppTextStyles.priceOriginal,
-                          ),
-                        ],
-                      ],
-                    ),
+                    Text(p.nameAr, style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800), maxLines: 2, overflow: TextOverflow.ellipsis),
+                    const Spacer(),
+                    Text('${p.price.toStringAsFixed(0)} ر.س', style: KayanDesignTokens.cairo(fontWeight: FontWeight.w900, color: KayanDesignTokens.oOrange)),
                   ],
                 ),
-              ),
-            ),
-
-            // Favorite
-            Padding(
-              padding: const EdgeInsets.only(right: AppSpacing.sm),
-              child: Icon(
-                widget.isFavorited
-                    ? Icons.favorite_rounded
-                    : Icons.favorite_border_rounded,
-                size:  18,
-                color: widget.isFavorited
-                    ? AppColors.error
-                    : AppColors.textMuted,
               ),
             ),
           ],

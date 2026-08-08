@@ -1,4 +1,3 @@
-// TODO: connect to real backend
 class MockUser {
   final String id;
   final String name;

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/services/admin_data_service.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/theme/kayan_design_tokens.dart';
 import '../../../../routing/app_routes.dart';
-import '../widgets/admin_scaffold.dart';
+import '../../../../shared/widgets/design/kayan_entry_widgets.dart';
 
+/// دخول لوحة الإدارة — light design
 class AdminLoginScreen extends StatefulWidget {
   const AdminLoginScreen({super.key});
 
@@ -47,52 +47,50 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AdminScaffold(
-      title: 'دخول الإدارة',
-      body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: KayanEntryScaffold(
+        smallHero: true,
+        heroHeight: 220,
+        hero: const Padding(
+          padding: EdgeInsets.fromLTRB(24, 24, 24, 32),
+          child: Column(
+            children: [
+              KayanBrandLogo(size: 64),
+              SizedBox(height: 14),
+              KayanEntryTitle(before: 'دخول ', highlight: 'الإدارة'),
+              SizedBox(height: 8),
+              KayanEntrySubtitle('لوحة تحكم كيان — CMS'),
+            ],
+          ),
+        ),
+        sheet: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Image.asset('assets/images/kayan_logo.png', height: 100),
-            const SizedBox(height: 24),
-            Text(
-              'لوحة تحكم كيان',
-              style: AppTextStyles.arabicHeadlineSmall,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 32),
-            TextField(
+            KayanDesignTextField(
+              label: 'اسم المستخدم',
               controller: _userCtrl,
-              decoration: const InputDecoration(
-                labelText: 'اسم المستخدم',
-                prefixIcon: Icon(Icons.person_outline),
-              ),
+              hint: 'admin',
+              icon: Icons.person_outline_rounded,
             ),
             const SizedBox(height: 16),
-            TextField(
+            KayanDesignTextField(
+              label: 'كلمة المرور',
               controller: _passCtrl,
+              hint: '••••••••',
+              icon: Icons.lock_outline_rounded,
               obscureText: true,
-              decoration: const InputDecoration(
-                labelText: 'كلمة المرور',
-                prefixIcon: Icon(Icons.lock_outline),
-              ),
-              onSubmitted: (_) => _login(),
             ),
             if (_error != null) ...[
               const SizedBox(height: 12),
-              Text(_error!, style: const TextStyle(color: AppColors.error)),
+              Text(_error!, style: KayanDesignTokens.cairo(fontSize: 12, color: KayanDesignTokens.danger)),
             ],
-            const SizedBox(height: 24),
-            FilledButton(
+            const SizedBox(height: 20),
+            KayanCtaButton(
+              label: 'تسجيل الدخول',
+              loading: _loading,
+              variant: KayanCtaVariant.blue,
               onPressed: _loading ? null : _login,
-              child: _loading
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Text('تسجيل الدخول'),
             ),
           ],
         ),

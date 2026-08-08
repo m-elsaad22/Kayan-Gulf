@@ -1,4 +1,4 @@
-// TODO: connect to real backend
+// Presentation screen with local demo content.
 import 'package:flutter/material.dart';
 
 import '../../../shared/presentation/widgets/phase4_commerce_widgets.dart';
@@ -8,7 +8,7 @@ class ProductReviewsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Phase4CommerceScaffold(
+    return const Phase4CommerceScaffold(
       titleAr: 'تقييمات المنتج',
       titleEn: 'Product Reviews',
       subtitleAr: 'آراء العملاء وتقييماتهم حول المنتج.',

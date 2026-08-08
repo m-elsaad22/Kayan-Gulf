@@ -1,227 +1,104 @@
-// KAYAN — Edit Profile Screen
-// lib/features/profile/presentation/screens/edit_profile_screen.dart
-
+// Edit profile — light design (13-profile edit)
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_gradients.dart';
-import '../../../../core/theme/app_text_styles.dart';
-import '../../../../core/theme/app_border_radius.dart';
-import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/kayan_design_tokens.dart';
 import '../../../../shared/providers/locale_provider.dart';
+import '../../../../shared/widgets/design/kayan_design_widgets.dart';
+import '../../../../shared/widgets/design/kayan_entry_widgets.dart';
 
 class EditProfileScreen extends ConsumerStatefulWidget {
   const EditProfileScreen({super.key});
+
   @override
-  ConsumerState<EditProfileScreen> createState() => _EditProfileState();
+  ConsumerState<EditProfileScreen> createState() => _EditProfileScreenState();
 }
 
-class _EditProfileState extends ConsumerState<EditProfileScreen> {
-  final _firstCtrl  = TextEditingController(text: 'محمود');
-  final _lastCtrl   = TextEditingController(text: 'السعد');
-  final _emailCtrl  = TextEditingController(text: 'mahmoud@example.com');
-  final _phoneCtrl  = TextEditingController(text: '+966 50 123 4567');
-  final _bioCtrl    = TextEditingController(text: 'مطور WordPress ومهتم بالتقنية');
-  bool  _saving     = false;
-  String _gender    = 'male';
+class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
+  final _nameCtrl = TextEditingController(text: 'محمود السعد');
+  final _emailCtrl = TextEditingController(text: 'mahmoud@example.com');
+  final _phoneCtrl = TextEditingController(text: '+966 50 123 4567');
+  final _bioCtrl = TextEditingController(text: 'مهتم بالتقنية والتسوق');
+  bool _saving = false;
 
   @override
   void dispose() {
-    _firstCtrl.dispose(); _lastCtrl.dispose();
-    _emailCtrl.dispose(); _phoneCtrl.dispose();
+    _nameCtrl.dispose();
+    _emailCtrl.dispose();
+    _phoneCtrl.dispose();
     _bioCtrl.dispose();
     super.dispose();
   }
 
   Future<void> _save() async {
     setState(() => _saving = true);
-    await Future.delayed(const Duration(seconds: 1));
-    if (mounted) {
-      setState(() => _saving = false);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(ref.read(isArabicProvider) ? 'تم حفظ التغييرات ✓' : 'Changes saved ✓'),
-        backgroundColor: AppColors.success, behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: AppBorderRadius.sm),
-      ));
-      context.pop();
-    }
+    await Future.delayed(const Duration(milliseconds: 800));
+    if (!mounted) return;
+    setState(() => _saving = false);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(ref.read(isArabicProvider) ? 'تم حفظ التغييرات' : 'Changes saved'), behavior: SnackBarBehavior.floating),
+    );
+    context.pop();
   }
 
   @override
   Widget build(BuildContext context) {
     final ar = ref.watch(isArabicProvider);
 
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-        backgroundColor: AppColors.bgScaffold,
-        appBar: AppBar(
-          backgroundColor: AppColors.bgSurface, centerTitle: true,
-          title: Text(ar ? 'تعديل الملف الشخصي' : 'Edit Profile', style: ar ? AppTextStyles.arabicTitleMedium : AppTextStyles.titleMedium),
-          leading: IconButton(icon: Icon(ar ? Icons.arrow_forward_ios_rounded : Icons.arrow_back_ios_new_rounded, size: 20), onPressed: () => context.pop()),
-          actions: [TextButton(onPressed: _saving ? null : _save, child: _saving
-              ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.royalBlue))
-              : Text(ar ? 'حفظ' : 'Save', style: AppTextStyles.labelLarge.copyWith(color: AppColors.royalBlue)))],
-        ),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppSpacing.pagePadding),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-
-            // Avatar editor
-            Center(child: Stack(children: [
-              Container(width: 90, height: 90, decoration: BoxDecoration(gradient: AppGradients.primaryButton, shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.borderGold, width: 2)),
-                child: const Center(child: Text('م', style: TextStyle(fontSize: 38, fontWeight: FontWeight.w800, color: Colors.white)))),
-              Positioned(bottom: 0, right: 0, child: GestureDetector(
-                onTap: () => HapticFeedback.lightImpact(),
-                child: Container(width: 28, height: 28, decoration: BoxDecoration(gradient: AppGradients.goldButton, shape: BoxShape.circle, border: Border.all(color: AppColors.bgScaffold, width: 2)),
-                  child: const Icon(Icons.camera_alt_rounded, size: 14, color: Colors.white)))),
-            ])),
-            const SizedBox(height: 28),
-
-            // First name
-            _Label(ar ? 'الاسم الأول *' : 'First Name *', ar),
-            const SizedBox(height: 8),
-            TextField(controller: _firstCtrl, textDirection: ar ? TextDirection.rtl : TextDirection.ltr,
-                style: ar ? AppTextStyles.arabicBodyMedium : AppTextStyles.bodyMedium,
-                decoration: InputDecoration(hintText: ar ? 'مثال: محمود' : 'e.g. Ahmed')),
-            const SizedBox(height: 16),
-
-            // Last name
-            _Label(ar ? 'اسم العائلة *' : 'Last Name *', ar),
-            const SizedBox(height: 8),
-            TextField(controller: _lastCtrl, textDirection: ar ? TextDirection.rtl : TextDirection.ltr,
-                style: ar ? AppTextStyles.arabicBodyMedium : AppTextStyles.bodyMedium),
-            const SizedBox(height: 16),
-
-            // Email
-            _Label(ar ? 'البريد الإلكتروني' : 'Email Address', ar),
-            const SizedBox(height: 8),
-            TextField(controller: _emailCtrl, textDirection: TextDirection.ltr, keyboardType: TextInputType.emailAddress,
-                style: AppTextStyles.bodyMedium, decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.email_outlined, size: 18, color: AppColors.textMuted))),
-            const SizedBox(height: 16),
-
-            // Phone (read-only)
-            _Label(ar ? 'رقم الهاتف' : 'Phone Number', ar),
-            const SizedBox(height: 8),
-            Container(padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-              decoration: BoxDecoration(color: AppColors.bgCard2, borderRadius: AppBorderRadius.sm, border: Border.all(color: AppColors.borderSubtle)),
-              child: Row(children: [
-                const Icon(Icons.phone_outlined, size: 18, color: AppColors.textMuted),
-                const SizedBox(width: 8),
-                Text(_phoneCtrl.text, style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary)),
-                const Spacer(),
-                Text(ar ? 'محمي' : 'Protected', style: AppTextStyles.caption.copyWith(color: AppColors.textMuted)),
-              ])),
-            const SizedBox(height: 16),
-
-            // Gender
-            _Label(ar ? 'الجنس' : 'Gender', ar),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Expanded(
-                  child: _GenderOption(
-                    selected: _gender == 'male',
-                    icon: Icons.male_rounded,
-                    label: ar ? 'ذكر' : 'Male',
-                    activeColor: AppColors.royalBlue,
-                    activeBackground: AppColors.royalBlue.withOpacity(0.1),
-                    onTap: () => setState(() => _gender = 'male'),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: _GenderOption(
-                    selected: _gender == 'female',
-                    icon: Icons.female_rounded,
-                    label: ar ? 'أنثى' : 'Female',
-                    activeColor: AppColors.error,
-                    activeBackground: AppColors.error.withOpacity(0.08),
-                    onTap: () => setState(() => _gender = 'female'),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-
-            // Bio
-            _Label(ar ? 'نبذة عنك (اختياري)' : 'Bio (Optional)', ar),
-            const SizedBox(height: 8),
-            TextField(controller: _bioCtrl, maxLines: 3, maxLength: 150,
-                textDirection: ar ? TextDirection.rtl : TextDirection.ltr,
-                style: ar ? AppTextStyles.arabicBodyMedium : AppTextStyles.bodyMedium,
-                decoration: InputDecoration(hintText: ar ? 'اكتب نبذة مختصرة عنك...' : 'Write a short bio...')),
-            const SizedBox(height: 28),
-
-            // Save button
-            GestureDetector(onTap: _saving ? null : _save,
-              child: Container(height: 52, decoration: BoxDecoration(gradient: AppGradients.primaryButton, borderRadius: AppBorderRadius.button,
-                  boxShadow: [BoxShadow(color: AppColors.royalBlue.withOpacity(0.35), blurRadius: 14, offset: const Offset(0, 4))]),
-                child: Center(child: _saving ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                    : Text(ar ? 'حفظ التغييرات' : 'Save Changes', style: ar ? AppTextStyles.arabicButton : AppTextStyles.buttonMedium)))),
-          ]),
-        ),
-      ),
-    );
-  }
-}
-
-Widget _Label(String text, bool ar) => Text(text, style: (ar ? AppTextStyles.arabicTitleSmall : AppTextStyles.titleSmall).copyWith(fontSize: 13));
-
-class _GenderOption extends StatelessWidget {
-  final bool selected;
-  final IconData icon;
-  final String label;
-  final Color activeColor;
-  final Color activeBackground;
-  final VoidCallback onTap;
-
-  const _GenderOption({
-    required this.selected,
-    required this.icon,
-    required this.label,
-    required this.activeColor,
-    required this.activeBackground,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        decoration: BoxDecoration(
-          color: selected ? activeBackground : AppColors.bgCard,
-          borderRadius: AppBorderRadius.sm,
-          border: Border.all(
-            color: selected ? activeColor : AppColors.borderSubtle,
-            width: selected ? 1.5 : 1,
-          ),
-        ),
-        child: Center(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Icon(
-                icon,
-                size: 18,
-                color: selected ? activeColor : AppColors.textMuted,
-              ),
-              const SizedBox(width: 6),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 13,
-                  color: selected ? activeColor : AppColors.textSecondary,
-                  fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+              KayanLightTopBar(title: ar ? 'تعديل الملف' : 'Edit profile', onBack: () => context.pop()),
+              Expanded(
+                child: ListView(
+                  children: [
+                    const SizedBox(height: 16),
+                    Center(
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: 88,
+                            height: 88,
+                            decoration: const BoxDecoration(gradient: KayanDesignTokens.gradBlue, shape: BoxShape.circle),
+                            alignment: Alignment.center,
+                            child: Text('م', style: KayanDesignTokens.cairo(fontSize: 32, fontWeight: FontWeight.w900, color: Colors.white)),
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Container(
+                              width: 28,
+                              height: 28,
+                              decoration: const BoxDecoration(gradient: KayanDesignTokens.gradGold, shape: BoxShape.circle),
+                              child: const Icon(Icons.camera_alt_rounded, size: 14, color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    KayanDesignTextField(label: ar ? 'الاسم' : 'Name', hint: ar ? 'الاسم الكامل' : 'Full name', icon: Icons.person_outline_rounded, controller: _nameCtrl),
+                    const SizedBox(height: 14),
+                    KayanDesignTextField(label: ar ? 'البريد' : 'Email', hint: 'email@example.com', icon: Icons.email_outlined, controller: _emailCtrl, keyboardType: TextInputType.emailAddress),
+                    const SizedBox(height: 14),
+                    KayanDesignTextField(label: ar ? 'الجوال' : 'Phone', hint: '+966', icon: Icons.phone_outlined, controller: _phoneCtrl, keyboardType: TextInputType.phone),
+                    const SizedBox(height: 14),
+                    KayanDesignTextField(label: ar ? 'نبذة' : 'Bio', hint: ar ? 'اكتب نبذة قصيرة' : 'Short bio', icon: Icons.notes_rounded, controller: _bioCtrl),
+                  ],
                 ),
+              ),
+              KayanCtaButton(
+                label: ar ? 'حفظ التغييرات' : 'Save changes',
+                trailingIcon: Icons.check_rounded,
+                variant: KayanCtaVariant.blue,
+                loading: _saving,
+                onPressed: _saving ? null : _save,
               ),
             ],
           ),

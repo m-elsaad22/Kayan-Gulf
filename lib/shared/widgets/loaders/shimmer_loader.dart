@@ -1,17 +1,16 @@
-// ============================================================
-// KAYAN — Shimmer Loader
-// lib/shared/widgets/loaders/shimmer_loader.dart
-// ============================================================
-
+// KAYAN — Shimmer Loader (light design)
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_border_radius.dart';
+
+import '../../../core/theme/kayan_design_tokens.dart';
+
+const _shimmerBase = KayanDesignTokens.border;
+const _shimmerHighlight = Color(0xFFF0F3F8);
 
 // ── Basic shimmer box ─────────────────────────────────────────
 class ShimmerBox extends StatelessWidget {
-  final double  width;
-  final double  height;
+  final double width;
+  final double height;
   final BorderRadius? borderRadius;
 
   const ShimmerBox({
@@ -24,14 +23,14 @@ class ShimmerBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor:      AppColors.shimmerBase,
-      highlightColor: AppColors.shimmerHighlight,
+      baseColor: _shimmerBase,
+      highlightColor: _shimmerHighlight,
       child: Container(
-        width:        width,
-        height:       height,
-        decoration:   BoxDecoration(
-          color:        AppColors.shimmerBase,
-          borderRadius: borderRadius ?? AppBorderRadius.sm,
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          color: _shimmerBase,
+          borderRadius: borderRadius ?? BorderRadius.circular(KayanDesignTokens.radiusS),
         ),
       ),
     );
@@ -45,25 +44,22 @@ class ProductCardShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor:      AppColors.shimmerBase,
-      highlightColor: AppColors.shimmerHighlight,
+      baseColor: _shimmerBase,
+      highlightColor: _shimmerHighlight,
       child: Container(
         decoration: BoxDecoration(
-          color:        AppColors.shimmerBase,
-          borderRadius: AppBorderRadius.card,
+          color: _shimmerBase,
+          borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image placeholder
             AspectRatio(
               aspectRatio: 1,
               child: Container(
-                decoration: BoxDecoration(
-                  color: AppColors.shimmerHighlight,
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(AppBorderRadius.card.topLeft.x),
-                  ),
+                decoration: const BoxDecoration(
+                  color: _shimmerHighlight,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(KayanDesignTokens.radiusM)),
                 ),
               ),
             ),
@@ -87,12 +83,13 @@ class ProductCardShimmer extends StatelessWidget {
   }
 
   Widget _shimmerLine(double w, double h) => Container(
-    width:        w, height: h,
-    decoration:   BoxDecoration(
-      color:        AppColors.shimmerHighlight,
-      borderRadius: BorderRadius.circular(4),
-    ),
-  );
+        width: w,
+        height: h,
+        decoration: BoxDecoration(
+          color: _shimmerHighlight,
+          borderRadius: BorderRadius.circular(4),
+        ),
+      );
 }
 
 // ── Banner skeleton ───────────────────────────────────────────
@@ -102,14 +99,14 @@ class BannerShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor:      AppColors.shimmerBase,
-      highlightColor: AppColors.shimmerHighlight,
+      baseColor: _shimmerBase,
+      highlightColor: _shimmerHighlight,
       child: Container(
-        height:     180,
-        margin:     const EdgeInsets.symmetric(horizontal: 16),
+        height: 180,
+        margin: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
-          color:        AppColors.shimmerBase,
-          borderRadius: AppBorderRadius.card,
+          color: _shimmerBase,
+          borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
         ),
       ),
     );
@@ -123,23 +120,25 @@ class CategoryShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor:      AppColors.shimmerBase,
-      highlightColor: AppColors.shimmerHighlight,
+      baseColor: _shimmerBase,
+      highlightColor: _shimmerHighlight,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 60, height: 60,
+            width: 60,
+            height: 60,
             decoration: BoxDecoration(
-              color:        AppColors.shimmerBase,
-              borderRadius: AppBorderRadius.md,
+              color: _shimmerBase,
+              borderRadius: BorderRadius.circular(KayanDesignTokens.radiusS),
             ),
           ),
           const SizedBox(height: 6),
           Container(
-            width: 48, height: 10,
+            width: 48,
+            height: 10,
             decoration: BoxDecoration(
-              color:        AppColors.shimmerHighlight,
+              color: _shimmerHighlight,
               borderRadius: BorderRadius.circular(4),
             ),
           ),
@@ -156,17 +155,27 @@ class SectionHeaderShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor:      AppColors.shimmerBase,
-      highlightColor: AppColors.shimmerHighlight,
+      baseColor: _shimmerBase,
+      highlightColor: _shimmerHighlight,
       child: Row(
         children: [
-          Container(width: 120, height: 16,
+          Container(
+            width: 120,
+            height: 16,
             decoration: BoxDecoration(
-              color: AppColors.shimmerBase, borderRadius: BorderRadius.circular(4))),
+              color: _shimmerBase,
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
           const Spacer(),
-          Container(width: 60, height: 12,
+          Container(
+            width: 60,
+            height: 12,
             decoration: BoxDecoration(
-              color: AppColors.shimmerBase, borderRadius: BorderRadius.circular(4))),
+              color: _shimmerBase,
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
         ],
       ),
     );

@@ -10,6 +10,8 @@
 // ============================================================
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/di/repository_providers.dart';
+import '../../features/auth/data/models/auth_models.dart';
 import '../services/local_storage_service.dart';
 
 // ──────────────────────────────────────────────────────────────
@@ -31,12 +33,11 @@ class AuthGuardState {
   });
 
   const AuthGuardState.authenticated({
-    required String userId,
+    required String this.userId,
     required bool profileComplete,
   })  : isAuthenticated   = true,
         isProfileComplete = profileComplete,
-        isGuest           = false,
-        userId            = userId;
+        isGuest           = false;
 
   const AuthGuardState.guest()
       : isAuthenticated   = false,
@@ -75,7 +76,8 @@ class AuthNotifier extends Notifier<AuthGuardState> {
   }
 
   Future<void> loginWithEmail(String email, String password) async {
-    await _completeMockAuth('email-${email.hashCode.abs()}');
+    final result = await ref.read(authRepositoryProvider).loginWithEmail(email, password);
+    await _completeAuth(result);
   }
 
   Future<void> loginWithGoogle() async => _completeMockAuth('google-user');
@@ -88,13 +90,29 @@ class AuthNotifier extends Notifier<AuthGuardState> {
     required String phone,
     required String password,
   }) async {
-    await _completeMockAuth('signup-${email.hashCode.abs()}');
+    final result = await ref.read(authRepositoryProvider).signUp(
+          name: name,
+          email: email,
+          phone: phone,
+          password: password,
+        );
+    await _completeAuth(result);
   }
 
   Future<void> continueAsGuest() async {
     await LocalStorageService.markOnboardingSeen();
     await LocalStorageService.setGuestMode(true);
     state = const AuthGuardState.guest();
+  }
+
+  Future<void> _completeAuth(AuthResult result) async {
+    await LocalStorageService.markOnboardingSeen();
+    setAuthenticated(
+      userId: result.userId,
+      accessToken: result.accessToken,
+      refreshToken: result.refreshToken,
+      isProfileComplete: result.isProfileComplete,
+    );
   }
 
   Future<void> _completeMockAuth(String userId) async {
@@ -138,7 +156,8 @@ class AuthNotifier extends Notifier<AuthGuardState> {
   }
 
   // Called on logout
-  void logout() {
+  Future<void> logout() async {
+    await ref.read(authRepositoryProvider).logout();
     LocalStorageService.clearAuth();
     state = const AuthGuardState.unauthenticated();
   }

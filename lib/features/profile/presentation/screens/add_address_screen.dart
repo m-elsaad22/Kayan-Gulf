@@ -1,26 +1,23 @@
-// ============================================================
-// KAYAN — Add Address Screen
-// ============================================================
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_spacing.dart';
-import '../../../../core/theme/app_text_styles.dart';
-import '../../../../shared/widgets/premium/premium_widgets.dart';
+import '../../../../core/theme/kayan_design_tokens.dart';
+import '../../../../shared/providers/locale_provider.dart';
+import '../../../../shared/widgets/design/kayan_design_widgets.dart';
+import '../../../../shared/widgets/design/kayan_entry_widgets.dart';
 
-class AddAddressScreen extends StatefulWidget {
+/// إضافة عنوان — light design
+class AddAddressScreen extends ConsumerStatefulWidget {
   const AddAddressScreen({super.key});
 
   @override
-  State<AddAddressScreen> createState() => _AddAddressScreenState();
+  ConsumerState<AddAddressScreen> createState() => _AddAddressScreenState();
 }
 
-class _AddAddressScreenState extends State<AddAddressScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _label = TextEditingController(text: 'Home');
-  final _city = TextEditingController(text: 'Riyadh');
+class _AddAddressScreenState extends ConsumerState<AddAddressScreen> {
+  final _label = TextEditingController(text: 'المنزل');
+  final _city = TextEditingController(text: 'الرياض');
   final _district = TextEditingController();
   final _street = TextEditingController();
   final _building = TextEditingController();
@@ -40,125 +37,93 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
   }
 
   Future<void> _save() async {
-    if (!_formKey.currentState!.validate()) return;
-    HapticFeedback.mediumImpact();
+    if (_district.text.trim().isEmpty || _street.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('يرجى إكمال الحي والشارع')),
+      );
+      return;
+    }
     setState(() => _saving = true);
     await Future.delayed(const Duration(milliseconds: 700));
     if (!mounted) return;
     setState(() => _saving = false);
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          Directionality.of(context) == TextDirection.rtl
-              ? 'تم حفظ العنوان'
-              : 'Address saved',
-        ),
-      ),
+      SnackBar(content: Text(ref.read(isArabicProvider) ? 'تم حفظ العنوان' : 'Address saved')),
     );
-    Navigator.pop(context);
+    context.pop();
   }
 
   @override
   Widget build(BuildContext context) {
-    final ar = Directionality.of(context) == TextDirection.rtl;
-    return PremiumScaffold(
-      title: ar ? 'إضافة عنوان' : 'Add Address',
-      subtitle: ar ? 'عنوان دقيق لتوصيل أسرع' : 'Precise address for faster delivery',
-      child: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            GlassPanel(
-              child: Row(
-                children: [
-                  Container(
-                    width: 54,
-                    height: 54,
-                    decoration: BoxDecoration(
-                      color: AppColors.royalBlue.withOpacity(0.12),
-                      shape: BoxShape.circle,
-                      border: Border.all(color: AppColors.borderActive),
+    final ar = ref.watch(isArabicProvider);
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              KayanLightTopBar(title: ar ? 'إضافة عنوان' : 'Add address', onBack: () => context.pop()),
+              Expanded(
+                child: ListView(
+                  children: [
+                    const SizedBox(height: 12),
+                    Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: KayanDesignTokens.kBlue.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
+                        border: Border.all(color: KayanDesignTokens.border),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.location_on_rounded, color: KayanDesignTokens.kBlue),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              ar ? 'أضف تفاصيل العنوان كما تظهر على الخريطة' : 'Add address details as shown on the map',
+                              style: KayanDesignTokens.cairo(fontSize: 13, color: KayanDesignTokens.text2),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    child: const Icon(Icons.location_on_rounded, color: AppColors.royalBlue),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      ar
-                          ? 'أضف تفاصيل العنوان كما تظهر على بوابة المبنى أو الخريطة.'
-                          : 'Add details as they appear on the building entrance or map.',
-                      style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                    const SizedBox(height: 16),
+                    KayanDesignTextField(controller: _label, label: ar ? 'اسم العنوان' : 'Label', hint: ar ? 'المنزل' : 'Home', icon: Icons.bookmark_outline_rounded),
+                    const SizedBox(height: 14),
+                    KayanDesignTextField(controller: _city, label: ar ? 'المدينة' : 'City', icon: Icons.location_city_outlined),
+                    const SizedBox(height: 14),
+                    KayanDesignTextField(controller: _district, label: ar ? 'الحي' : 'District', icon: Icons.map_outlined),
+                    const SizedBox(height: 14),
+                    KayanDesignTextField(controller: _street, label: ar ? 'الشارع' : 'Street', icon: Icons.signpost_outlined),
+                    const SizedBox(height: 14),
+                    KayanDesignTextField(controller: _building, label: ar ? 'رقم المبنى' : 'Building', icon: Icons.apartment_outlined, keyboardType: TextInputType.number),
+                    const SizedBox(height: 14),
+                    KayanDesignTextField(controller: _notes, label: ar ? 'ملاحظات' : 'Notes', hint: ar ? 'رقم الشقة، البوابة...' : 'Apt, gate...', icon: Icons.notes_outlined),
+                    const SizedBox(height: 8),
+                    SwitchListTile.adaptive(
+                      contentPadding: EdgeInsets.zero,
+                      value: _defaultAddress,
+                      onChanged: (v) => setState(() => _defaultAddress = v),
+                      title: Text(ar ? 'العنوان الافتراضي' : 'Default address', style: KayanDesignTokens.cairo(fontWeight: FontWeight.w700)),
+                      subtitle: Text(ar ? 'يُستخدم في الطلبات القادمة' : 'Used for upcoming orders', style: KayanDesignTokens.cairo(fontSize: 12, color: KayanDesignTokens.muted)),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 14),
-            GlassPanel(
-              child: Column(
-                children: [
-                  _Field(controller: _label, label: ar ? 'اسم العنوان' : 'Address label', icon: Icons.bookmark_rounded),
-                  const SizedBox(height: 12),
-                  _Field(controller: _city, label: ar ? 'المدينة' : 'City', icon: Icons.location_city_rounded),
-                  const SizedBox(height: 12),
-                  _Field(controller: _district, label: ar ? 'الحي' : 'District', icon: Icons.map_rounded),
-                  const SizedBox(height: 12),
-                  _Field(controller: _street, label: ar ? 'الشارع' : 'Street', icon: Icons.signpost_rounded),
-                  const SizedBox(height: 12),
-                  _Field(controller: _building, label: ar ? 'رقم المبنى' : 'Building number', icon: Icons.apartment_rounded, keyboardType: TextInputType.number),
-                  const SizedBox(height: 12),
-                  _Field(controller: _notes, label: ar ? 'ملاحظات اختيارية' : 'Optional notes', icon: Icons.notes_rounded, required: false, maxLines: 3),
-                  const SizedBox(height: 12),
-                  SwitchListTile.adaptive(
-                    contentPadding: EdgeInsets.zero,
-                    value: _defaultAddress,
-                    onChanged: (v) => setState(() => _defaultAddress = v),
-                    title: Text(ar ? 'اجعله العنوان الافتراضي' : 'Set as default address', style: AppTextStyles.bodyMedium),
-                    subtitle: Text(ar ? 'سيستخدم في الطلبات والحجوزات القادمة' : 'Used for upcoming orders and bookings', style: AppTextStyles.caption),
-                  ),
-                ],
+              KayanCtaButton(
+                label: ar ? 'حفظ العنوان' : 'Save address',
+                trailingIcon: Icons.check_rounded,
+                variant: KayanCtaVariant.blue,
+                loading: _saving,
+                onPressed: _saving ? null : _save,
               ),
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            PremiumActionButton(
-              label: _saving ? (ar ? 'جار الحفظ...' : 'Saving...') : (ar ? 'حفظ العنوان' : 'Save Address'),
-              icon: Icons.check_rounded,
-              onTap: _saving ? null : _save,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    );
-  }
-}
-
-class _Field extends StatelessWidget {
-  final TextEditingController controller;
-  final String label;
-  final IconData icon;
-  final TextInputType? keyboardType;
-  final bool required;
-  final int maxLines;
-
-  const _Field({
-    required this.controller,
-    required this.label,
-    required this.icon,
-    this.keyboardType,
-    this.required = true,
-    this.maxLines = 1,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: keyboardType,
-      maxLines: maxLines,
-      validator: required
-          ? (value) => value == null || value.trim().isEmpty ? label : null
-          : null,
-      decoration: InputDecoration(prefixIcon: Icon(icon), labelText: label),
     );
   }
 }

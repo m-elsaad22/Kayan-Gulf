@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/services/admin_data_service.dart';
-import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/theme/kayan_design_tokens.dart';
 import '../widgets/admin_scaffold.dart';
 
 class AdminServicesScreen extends StatefulWidget {
@@ -90,13 +90,25 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
         itemCount: _services.length,
         itemBuilder: (_, i) {
           final s = _services[i];
-          return Card(
+          return Container(
+            margin: const EdgeInsets.only(bottom: 8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
+              border: Border.all(color: KayanDesignTokens.border),
+            ),
             child: ListTile(
-              title: Text(s.nameAr, style: AppTextStyles.arabicTitleSmall),
-              subtitle: Text('${s.categorySlug} • ${s.price.toInt()} ر.س • ${s.durationMin} د'),
+              leading: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(gradient: KayanDesignTokens.gradGreen, borderRadius: BorderRadius.circular(10)),
+                child: const Icon(Icons.handyman_outlined, color: Colors.white, size: 20),
+              ),
+              title: Text(s.nameAr, style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800)),
+              subtitle: Text('${s.categorySlug} • ${s.price.toInt()} ر.س • ${s.durationMin} د', style: KayanDesignTokens.cairo(fontSize: 12, color: KayanDesignTokens.muted)),
               onTap: () => _openForm(s),
               trailing: IconButton(
-                icon: const Icon(Icons.delete_outline),
+                icon: const Icon(Icons.delete_outline, color: KayanDesignTokens.danger),
                 onPressed: () async {
                   final list = List<AdminServiceItem>.from(_services)..removeAt(i);
                   await AdminDataService.instance.saveServices(list);

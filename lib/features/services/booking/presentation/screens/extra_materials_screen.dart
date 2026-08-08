@@ -1,4 +1,4 @@
-// TODO: connect to real backend
+// Presentation screen with local demo content.
 import 'package:flutter/material.dart';
 
 import '../../../shared/presentation/widgets/phase3_service_widgets.dart';
@@ -8,7 +8,7 @@ class ExtraMaterialsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Phase3ServiceScaffold(
+    return const Phase3ServiceScaffold(
       titleAr: 'مواد إضافية',
       titleEn: 'Extra Materials',
       subtitleAr: 'أضف مواد أو قطع غيار مطلوبة للخدمة.',

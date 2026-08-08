@@ -1,20 +1,10 @@
-// TODO: connect to real backend
+// Classifieds phase widgets — light design
 import 'package:flutter/material.dart';
 
-import '../../../../../core/theme/app_border_radius.dart';
-import '../../../../../core/theme/app_colors.dart';
-import '../../../../../core/theme/app_gradients.dart';
-import '../../../../../core/theme/app_spacing.dart';
-import '../../../../../core/theme/app_text_styles.dart';
+import '../../../../../core/theme/kayan_design_tokens.dart';
+import '../../../../../shared/widgets/design/kayan_design_widgets.dart';
 
 class Phase5ClassifiedsScaffold extends StatelessWidget {
-  final String titleAr;
-  final String titleEn;
-  final String subtitleAr;
-  final String subtitleEn;
-  final List<Widget> children;
-  final List<Widget>? actions;
-
   const Phase5ClassifiedsScaffold({
     super.key,
     required this.titleAr,
@@ -25,36 +15,41 @@ class Phase5ClassifiedsScaffold extends StatelessWidget {
     this.actions,
   });
 
+  final String titleAr;
+  final String titleEn;
+  final String subtitleAr;
+  final String subtitleEn;
+  final List<Widget> children;
+  final List<Widget>? actions;
+
   @override
   Widget build(BuildContext context) {
     final isArabic = Directionality.of(context) == TextDirection.rtl;
     return Scaffold(
-      backgroundColor: AppColors.bgScaffold,
-      appBar: AppBar(
-        title: Text(isArabic ? titleAr : titleEn),
-        actions: actions,
-      ),
-      body: Container(
-        decoration: const BoxDecoration(gradient: AppGradients.heroDiagonal),
-        child: ListView(
-          padding: const EdgeInsets.all(AppSpacing.pagePadding),
-          children: [
-            Text(
-              isArabic ? titleAr : titleEn,
-              style: isArabic
-                  ? AppTextStyles.arabicHeadlineSmall
-                  : AppTextStyles.headlineSmall,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              isArabic ? subtitleAr : subtitleEn,
-              style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.textSecondary,
+      backgroundColor: KayanDesignTokens.bg,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  Expanded(child: KayanLightTopBar(title: isArabic ? titleAr : titleEn, onBack: () => Navigator.maybePop(context))),
+                  if (actions != null) ...actions!,
+                ],
               ),
-            ),
-            const SizedBox(height: 20),
-            ...children,
-          ],
+              Expanded(
+                child: ListView(
+                  children: [
+                    Text(isArabic ? subtitleAr : subtitleEn, style: KayanDesignTokens.cairo(color: KayanDesignTokens.muted, height: 1.6)),
+                    const SizedBox(height: 16),
+                    ...children,
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -62,14 +57,6 @@ class Phase5ClassifiedsScaffold extends StatelessWidget {
 }
 
 class Phase5ClassifiedsCard extends StatelessWidget {
-  final IconData icon;
-  final String titleAr;
-  final String titleEn;
-  final String bodyAr;
-  final String bodyEn;
-  final Color color;
-  final VoidCallback? onTap;
-
   const Phase5ClassifiedsCard({
     super.key,
     required this.icon,
@@ -77,9 +64,17 @@ class Phase5ClassifiedsCard extends StatelessWidget {
     required this.titleEn,
     required this.bodyAr,
     required this.bodyEn,
-    this.color = AppColors.metallicGold,
+    this.color = KayanDesignTokens.kBlue,
     this.onTap,
   });
+
+  final IconData icon;
+  final String titleAr;
+  final String titleEn;
+  final String bodyAr;
+  final String bodyEn;
+  final Color color;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -90,19 +85,17 @@ class Phase5ClassifiedsCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppColors.bgCard,
-          borderRadius: AppBorderRadius.card,
-          border: Border.all(color: AppColors.borderSubtle),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
+          border: Border.all(color: KayanDesignTokens.border),
+          boxShadow: KayanDesignTokens.shadowS,
         ),
         child: Row(
           children: [
             Container(
               width: 44,
               height: 44,
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.15),
-                borderRadius: AppBorderRadius.md,
-              ),
+              decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(12)),
               child: Icon(icon, color: color),
             ),
             const SizedBox(width: 14),
@@ -110,19 +103,9 @@ class Phase5ClassifiedsCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    isArabic ? titleAr : titleEn,
-                    style: isArabic
-                        ? AppTextStyles.arabicTitleSmall
-                        : AppTextStyles.titleSmall,
-                  ),
+                  Text(isArabic ? titleAr : titleEn, style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800)),
                   const SizedBox(height: 4),
-                  Text(
-                    isArabic ? bodyAr : bodyEn,
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
+                  Text(isArabic ? bodyAr : bodyEn, style: KayanDesignTokens.cairo(fontSize: 12, color: KayanDesignTokens.muted)),
                 ],
               ),
             ),

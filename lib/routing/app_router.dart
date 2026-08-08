@@ -8,7 +8,7 @@
 //   │  ├─ /              → SplashScreen                   │
 //   │  ├─ /onboarding    → OnboardingScreen               │
 //   │  ├─ /auth/*        → Auth flow                      │
-//   │  ├─ /cart          → CartScreen (root nav)          │
+//   │  ├─ /cart          → ShopCartScreen (root nav)      │
 //   │  ├─ /checkout/*    → Checkout flow (root nav)       │
 //   │  ├─ /orders/*      → Orders (root nav)              │
 //   │  ├─ /chat/*        → Chat (root nav)                │
@@ -33,8 +33,8 @@ import 'app_routes.dart';
 import 'main_shell.dart';
 import '../shared/providers/auth_provider.dart';
 import '../shared/services/local_storage_service.dart';
-import '../core/theme/app_colors.dart';
-import '../core/theme/app_text_styles.dart';
+import '../core/theme/kayan_design_tokens.dart';
+import '../shared/widgets/design/kayan_entry_widgets.dart';
 
 // ─── Feature Screen Imports ───────────────────────────────────
 // Splash & Onboarding
@@ -63,8 +63,6 @@ import '../features/ecommerce/shop/presentation/screens/shop_checkout_screen.dar
 import '../features/ecommerce/shop/presentation/screens/shop_success_screen.dart';
 import '../features/ecommerce/notifications/presentation/screens/shop_notifications_screen.dart';
 import '../features/ecommerce/categories/presentation/screens/categories_screen.dart';
-import '../features/ecommerce/product/presentation/screens/product_list_screen.dart';
-import '../features/ecommerce/product/presentation/screens/product_detail_screen.dart';
 import '../features/ecommerce/search/presentation/screens/search_screen.dart';
 import '../features/ecommerce/flash_deals/presentation/screens/flash_deals_screen.dart';
 import '../features/ecommerce/vendors/presentation/screens/vendor_profile_screen.dart';
@@ -85,14 +83,11 @@ import '../features/returns/presentation/screens/return_details_screen.dart';
 import '../features/returns/presentation/screens/return_status_screen.dart';
 
 // Cart & Checkout
-import '../features/cart/presentation/screens/cart_screen.dart';
-import '../features/checkout/presentation/screens/checkout_screen.dart';
 import '../features/checkout/presentation/screens/payment_screen.dart';
-import '../features/checkout/presentation/screens/order_success_screen.dart';
+import '../features/checkout/presentation/screens/order_success_light_screen.dart';
 // Orders
-import '../features/orders/presentation/screens/orders_list_screen.dart';
-import '../features/orders/presentation/screens/order_detail_screen.dart';
-import '../features/orders/presentation/screens/order_tracking_screen.dart';
+import '../features/orders/presentation/screens/order_detail_light_screen.dart';
+import '../features/orders/presentation/screens/order_tracking_light_screen.dart';
 // Services
 import '../features/services/categories/presentation/screens/services_home_screen.dart';
 import '../features/services/browse/presentation/screens/services_list_screen.dart';
@@ -101,7 +96,7 @@ import '../features/services/booking/presentation/screens/booking_calendar_scree
 import '../features/services/booking/presentation/screens/booking_confirmation_screen.dart';
 import '../features/services/booking/presentation/screens/booking_success_screen.dart';
 import '../features/services/booking/presentation/screens/services_bookings_light_screen.dart';
-import '../features/services/booking/presentation/screens/booking_detail_screen.dart';
+import '../features/services/booking/presentation/screens/booking_detail_light_screen.dart';
 import '../features/services/tracking/presentation/screens/service_tracking_light_screen.dart';
 import '../features/services/browse/presentation/screens/services_filters_screen.dart';
 import '../features/services/browse/presentation/screens/service_subcategories_screen.dart';
@@ -147,11 +142,11 @@ import '../shared/screens/fullscreen_gallery_screen.dart';
 import '../shared/widgets/no_internet_widget.dart';
 import '../shared/widgets/welcome_offer_screen.dart';
 // Chat
-import '../features/chat/presentation/screens/conversations_screen.dart';
-import '../features/chat/presentation/screens/chat_screen.dart';
+import '../features/chat/presentation/screens/conversations_light_screen.dart';
+import '../features/chat/presentation/screens/chat_light_screen.dart';
 // Profile
 import '../features/profile/presentation/screens/favorites_screen.dart' as fav_screen;
-import '../features/profile/presentation/screens/profile_screen.dart';
+import '../features/profile/presentation/screens/profile_home_screen.dart';
 import '../features/profile/presentation/screens/edit_profile_screen.dart';
 import '../features/profile/presentation/screens/addresses_screen.dart';
 import '../features/profile/presentation/screens/add_address_screen.dart';
@@ -160,14 +155,17 @@ import '../features/profile/presentation/screens/live_chat_screen.dart';
 import '../features/profile/presentation/screens/rate_app_screen.dart';
 import '../features/profile/presentation/screens/about_kayan_screen.dart';
 import '../features/profile/presentation/screens/security_screen.dart';
+import '../features/profile/presentation/screens/change_password_screen.dart';
 import '../features/profile/presentation/screens/two_fa_setup_screen.dart';
 import '../features/profile/presentation/screens/two_fa_verify_screen.dart';
 import '../features/profile/presentation/screens/connected_devices_screen.dart';
+import '../features/profile/presentation/screens/delete_account_screen.dart';
 import '../features/profile/presentation/screens/privacy_policy_screen.dart';
 import '../features/profile/presentation/screens/terms_screen.dart';
 import '../features/profile/presentation/screens/faq_general_screen.dart';
 import '../features/profile/presentation/screens/contact_support_screen.dart';
 import '../features/profile/presentation/screens/loyalty_cards_screen.dart';
+import '../features/profile/presentation/screens/unified_wishlist_screen.dart';
 import '../features/profile/presentation/screens/referrals_screen.dart';
 import '../features/profile/presentation/screens/subscriptions_screen.dart';
 import '../features/profile/presentation/screens/manage_subscription_screen.dart';
@@ -179,9 +177,9 @@ import '../features/wallet/presentation/screens/earnings_history_screen.dart';
 import '../features/wallet/presentation/screens/payment_receipt_screen.dart';
 
 // Notifications
-import '../features/notifications/presentation/screens/notifications_screen.dart';
+import '../features/notifications/presentation/screens/notifications_light_screen.dart';
 // Wallet
-import '../features/wallet/presentation/screens/wallet_screen.dart';
+import '../features/wallet/presentation/screens/wallet_light_screen.dart';
 import '../features/delivery/presentation/screens/delivery_home_screen.dart';
 import '../features/delivery/presentation/screens/delivery_vendor_list_screen.dart';
 import '../features/delivery/presentation/screens/delivery_vendor_detail_screen.dart';
@@ -197,8 +195,49 @@ import '../features/delivery/presentation/screens/delivery_favorites_screen.dart
 import '../features/delivery/presentation/screens/delivery_coupons_screen.dart';
 import '../features/delivery/presentation/screens/delivery_rate_order_screen.dart';
 // Settings
-import '../features/settings/presentation/screens/settings_screen.dart';
+import '../features/settings/presentation/screens/settings_light_screen.dart';
+import '../features/notifications/presentation/screens/profile_notifications_light_screen.dart';
 import '../features/settings/presentation/screens/settings_detail_screens.dart';
+// Admin
+import '../features/admin/presentation/screens/admin_login_screen.dart';
+import '../features/admin/presentation/screens/admin_dashboard_screen.dart';
+import '../features/admin/presentation/screens/admin_products_screen.dart';
+import '../features/admin/presentation/screens/admin_categories_screen.dart';
+import '../features/admin/presentation/screens/admin_services_screen.dart';
+import '../features/admin/presentation/screens/admin_ads_screen.dart';
+import '../features/admin/presentation/screens/admin_banners_screen.dart';
+import '../features/admin/presentation/screens/admin_colors_screen.dart';
+import '../features/admin/presentation/screens/admin_fonts_screen.dart';
+import '../features/admin/presentation/screens/admin_screens_screen.dart';
+import '../features/admin/presentation/screens/admin_settings_screen.dart';
+// Super Admin
+import '../features/super_admin/screens/super_admin_dashboard.dart';
+import '../features/super_admin/screens/color_control_screen.dart';
+import '../features/super_admin/screens/typography_screen.dart';
+import '../features/super_admin/screens/radius_shadow_screen.dart';
+import '../features/super_admin/screens/animations_screen.dart';
+// Wallet extras
+import '../features/wallet/presentation/screens/points_refund_screen.dart';
+// Service notifications
+import '../features/services/notifications/presentation/screens/service_notifications_screen.dart';
+// Utility screens
+import '../shared/screens/advanced_search_results_screen.dart';
+import '../shared/screens/map_location_picker_screen.dart';
+import '../shared/screens/call_screen.dart';
+import '../features/services/browse/presentation/screens/search_services_screen.dart';
+import '../features/ecommerce/search/presentation/screens/product_filters_screen.dart';
+import '../shared/screens/whats_new_screen.dart';
+import '../shared/screens/qr_display_screen.dart';
+import '../shared/screens/empty_state_screen.dart';
+import '../shared/screens/virtual_tour_screen.dart';
+import '../shared/screens/cancel_otp_screen.dart';
+import '../shared/screens/review_reply_screen.dart';
+import '../shared/screens/app_permissions_screen.dart';
+import '../features/orders/presentation/screens/unified_orders_screen.dart';
+import '../features/classifieds/post_ad/presentation/screens/post_ad_success_screen.dart';
+import '../features/services/booking/presentation/screens/cancel_booking_screen.dart';
+import '../features/services/booking/presentation/screens/reschedule_booking_screen.dart';
+import '../features/services/booking/presentation/screens/report_issue_screen.dart';
 
 // ──────────────────────────────────────────────────────────────
 // NAVIGATOR KEYS
@@ -272,6 +311,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         '/auth/',
         '/onboarding',
         '/language-region',
+        '/admin/',
+        '/super-admin/',
         '/404',
         '/no-internet',
         '/maintenance',
@@ -429,7 +470,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path:        AppRoutes.cart,
         pageBuilder: (context, state) => _buildSlidePage(
           key:   state.pageKey,
-          child: const CartScreen(),
+          child: const ShopCartScreen(),
         ),
       ),
 
@@ -485,7 +526,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path:        AppRoutes.checkout,
         pageBuilder: (context, state) => _buildSlidePage(
           key:   state.pageKey,
-          child: const CheckoutScreen(),
+          child: const ShopCheckoutScreen(),
         ),
         routes: [
           GoRoute(
@@ -501,7 +542,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             path:        'success/:orderId',
             pageBuilder: (context, state) => _buildFadePage(
               key:   state.pageKey,
-              child: OrderSuccessScreen(
+              child: OrderSuccessLightScreen(
                 orderId: state.pathParameters['orderId']!,
               ),
             ),
@@ -517,14 +558,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path:        AppRoutes.orders,
         pageBuilder: (context, state) => _buildSlidePage(
           key:   state.pageKey,
-          child: const OrdersListScreen(),
+          child: const ShopOrdersScreen(),
         ),
         routes: [
           GoRoute(
             path:        ':orderId',
             pageBuilder: (context, state) => _buildSlidePage(
               key:   state.pageKey,
-              child: OrderDetailScreen(
+              child: OrderDetailLightScreen(
                 orderId: state.pathParameters['orderId']!,
               ),
             ),
@@ -533,7 +574,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 path:        'tracking',
                 pageBuilder: (context, state) => _buildSlidePage(
                   key:   state.pageKey,
-                  child: OrderTrackingScreen(
+                  child: OrderTrackingLightScreen(
                     orderId: state.pathParameters['orderId']!,
                   ),
                 ),
@@ -551,7 +592,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path:        AppRoutes.conversations,
         pageBuilder: (context, state) => _buildSlidePage(
           key:   state.pageKey,
-          child: const ConversationsScreen(),
+          child: const ConversationsLightScreen(),
         ),
         routes: [
           GoRoute(
@@ -560,7 +601,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               final extra = state.extra as Map<String, dynamic>?;
               return _buildSlidePage(
                 key:   state.pageKey,
-                child: ChatScreen(
+                child: ChatLightScreen(
                   convId: state.pathParameters['conversationId']!,
                   adTitle: extra?['adTitle'] as String?,
                   adImage: extra?['adImage'] as String?,
@@ -614,6 +655,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.changePassword,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ChangePasswordScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
         path: AppRoutes.twoFASetup,
         pageBuilder: (context, state) => _buildSlidePage(
           key: state.pageKey,
@@ -634,6 +683,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildSlidePage(
           key: state.pageKey,
           child: const ConnectedDevicesScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.deleteAccount,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const DeleteAccountScreen(),
         ),
       ),
       GoRoute(
@@ -674,6 +731,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildSlidePage(
           key: state.pageKey,
           child: const LoyaltyCardsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.unifiedWishlist,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const UnifiedWishlistScreen(),
         ),
       ),
       GoRoute(
@@ -746,6 +811,340 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildSlidePage(
           key: state.pageKey,
           child: const PaymentReceiptScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.pointsRefund,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const PointsRefundScreen(),
+        ),
+      ),
+
+      // ════════════════════════════════════════════════════
+      // ADMIN & SUPER ADMIN
+      // ════════════════════════════════════════════════════
+      GoRoute(
+        path: AppRoutes.adminLogin,
+        pageBuilder: (context, state) => _buildFadePage(
+          key: state.pageKey,
+          child: const AdminLoginScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminDashboard,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdminDashboardScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminProducts,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdminProductsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminCategories,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdminCategoriesScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminServices,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdminServicesScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminAds,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdminAdsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminBanners,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdminBannersScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminColors,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdminColorsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminFonts,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdminFontsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminScreens,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdminScreensScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.adminSettings,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdminSettingsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.superAdminDashboard,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const SuperAdminDashboardScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.superAdminColors,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ColorControlScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.superAdminTypography,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const TypographyScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.superAdminRadius,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const RadiusShadowScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.superAdminAnimations,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AnimationsScreen(),
+        ),
+      ),
+
+      // ════════════════════════════════════════════════════
+      // DEEP-LINK COMPATIBILITY (legacy URL paths → light screens)
+      // ════════════════════════════════════════════════════
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.compatProductList,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: ShopCatalogScreen(
+            categorySlug: state.uri.queryParameters['category'],
+          ),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.compatProductDetail,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: ShopProductScreen(
+            slug: state.pathParameters['productSlug']!,
+          ),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.compatLiveTracking,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: ServiceTrackingLightScreen(
+            bookingId: state.pathParameters['bookingId']!,
+          ),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.compatProfile,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ProfileHomeScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.compatSettings,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const SettingsLightScreen(),
+        ),
+      ),
+
+      // ════════════════════════════════════════════════════
+      // UTILITY SCREENS (search, map, call, filters)
+      // ════════════════════════════════════════════════════
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.advancedSearch,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdvancedSearchResultsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.mapPicker,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const MapLocationPickerScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.callScreen,
+        pageBuilder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return _buildFadePage(
+            key: state.pageKey,
+            child: CallScreen(
+              name: extra?['name'] as String?,
+              avatar: extra?['avatar'] as String?,
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.searchServices,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const SearchServicesScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.shopFilters,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ProductFiltersScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.whatsNew,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const WhatsNewScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.qrDisplay,
+        pageBuilder: (context, state) {
+          final extra = state.extra;
+          final code = extra is String ? extra : extra is Map<String, dynamic> ? extra['code'] as String? : null;
+          return _buildSlidePage(
+            key: state.pageKey,
+            child: QrDisplayScreen(code: code),
+          );
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.emptyState,
+        pageBuilder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return _buildFadePage(
+            key: state.pageKey,
+            child: EmptyStateScreen(
+              title: extra?['title'] as String?,
+              message: extra?['message'] as String?,
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.virtualTour,
+        pageBuilder: (context, state) {
+          final extra = state.extra;
+          final title = extra is String ? extra : extra is Map<String, dynamic> ? extra['title'] as String? : null;
+          return _buildSlidePage(
+            key: state.pageKey,
+            child: VirtualTourScreen(title: title),
+          );
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.cancelOtp,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const CancelOtpScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.reviewReply,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ReviewReplyScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.appPermissions,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AppPermissionsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.unifiedOrders,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const UnifiedOrdersScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.postAdSuccess,
+        pageBuilder: (context, state) => _buildFadePage(
+          key: state.pageKey,
+          child: const PostAdSuccessScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.cancelBooking,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const CancelBookingScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.rescheduleBooking,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const RescheduleBookingScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.reportIssue,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ReportIssueScreen(),
         ),
       ),
 
@@ -1006,7 +1405,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     path:        'notifications',
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
-                      child: const NotificationsScreen(),
+                      child: const NotificationsLightScreen(),
                     ),
                   ),
                 ],
@@ -1178,8 +1577,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     path:        AppRoutes.$categoryProducts,
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
-                      child: ProductListScreen(
-                        categorySlug: state.pathParameters['categorySlug']!,
+                      child: ShopCatalogScreen(
+                        categorySlug: state.pathParameters['categorySlug'],
                       ),
                     ),
                   ),
@@ -1266,7 +1665,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                         path:        ':bookingId',
                         pageBuilder: (context, state) => _buildSlidePage(
                           key:   state.pageKey,
-                          child: BookingDetailScreen(
+                          child: BookingDetailLightScreen(
                             bookingId: state.pathParameters['bookingId']!,
                           ),
                         ),
@@ -1301,6 +1700,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                       child: ServiceTrackingLightScreen(
                         bookingId: state.pathParameters['bookingId']!,
                       ),
+                    ),
+                  ),
+                  GoRoute(
+                    path:        'notifications',
+                    pageBuilder: (context, state) => _buildSlidePage(
+                      key:   state.pageKey,
+                      child: const ServiceNotificationsScreen(),
                     ),
                   ),
                   // Service detail (slug-based)
@@ -1549,7 +1955,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 path:        AppRoutes.profile,
                 pageBuilder: (context, state) => _buildNoTransitionPage(
                   key:   state.pageKey,
-                  child: const ProfileScreen(),
+                  child: const ProfileHomeScreen(),
                 ),
                 routes: [
                   GoRoute(
@@ -1579,14 +1985,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     path:        AppRoutes.$notifications,
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
-                      child: const NotificationsScreen(),
+                      child: const ProfileNotificationsLightScreen(),
                     ),
                   ),
                   GoRoute(
                     path:        AppRoutes.$wallet,
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
-                      child: const WalletScreen(),
+                      child: const WalletLightScreen(),
                     ),
                   ),
                   GoRoute(
@@ -1600,7 +2006,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     path:        AppRoutes.$settings,
                     pageBuilder: (context, state) => _buildSlidePage(
                       key:   state.pageKey,
-                      child: const SettingsScreen(),
+                      child: const SettingsLightScreen(),
                     ),
                     routes: [
                       GoRoute(
@@ -1805,33 +2211,20 @@ class _RouterErrorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bgScaffold,
+      backgroundColor: KayanDesignTokens.bg,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(32),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.error_outline_rounded,
-                  size: 64, color: AppColors.error),
+              const Icon(Icons.error_outline_rounded, size: 64, color: KayanDesignTokens.danger),
               const SizedBox(height: 20),
-              Text('Page not found',
-                  style: AppTextStyles.titleLarge,
-                  textAlign: TextAlign.center),
+              Text('Page not found', style: KayanDesignTokens.cairo(fontSize: 20, fontWeight: FontWeight.w800), textAlign: TextAlign.center),
               const SizedBox(height: 8),
-              Text(error,
-                  style: AppTextStyles.bodySmall,
-                  textAlign: TextAlign.center,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis),
+              Text(error, style: KayanDesignTokens.cairo(fontSize: 12, color: KayanDesignTokens.muted), textAlign: TextAlign.center, maxLines: 3, overflow: TextOverflow.ellipsis),
               const SizedBox(height: 32),
-              SizedBox(
-                width: 200,
-                child: ElevatedButton(
-                  onPressed: () => context.go(AppRoutes.home),
-                  child: const Text('Go to Home'),
-                ),
-              ),
+              KayanCtaButton(label: 'Go to Home', variant: KayanCtaVariant.blue, onPressed: () => context.go(AppRoutes.home)),
             ],
           ),
         ),
@@ -1846,26 +2239,18 @@ class _NotFoundScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bgScaffold,
+      backgroundColor: KayanDesignTokens.bg,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('404',
-                style: AppTextStyles.displaySmall.copyWith(
-                  color: AppColors.royalBlue.withOpacity(0.4),
-                  fontWeight: FontWeight.w800,
-                )),
+            Text('404', style: KayanDesignTokens.cairo(fontSize: 56, fontWeight: FontWeight.w900, color: KayanDesignTokens.kBlue.withValues(alpha: 0.35))),
             const SizedBox(height: 12),
-            Text('الصفحة غير موجودة',
-                style: AppTextStyles.arabicTitleLarge),
+            Text('الصفحة غير موجودة', style: KayanDesignTokens.cairo(fontSize: 18, fontWeight: FontWeight.w800)),
             const SizedBox(height: 4),
-            Text('Page not found', style: AppTextStyles.bodySmall),
+            Text('Page not found', style: KayanDesignTokens.cairo(color: KayanDesignTokens.muted)),
             const SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: () => context.go(AppRoutes.home),
-              child: const Text('الصفحة الرئيسية'),
-            ),
+            KayanCtaButton(label: 'الصفحة الرئيسية', variant: KayanCtaVariant.blue, onPressed: () => context.go(AppRoutes.home)),
           ],
         ),
       ),
@@ -1879,7 +2264,7 @@ class _NoInternetScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bgScaffold,
+      backgroundColor: KayanDesignTokens.bg,
       body: NoInternetWidget(
         isArabic: true,
         onRetry: () => context.go(AppRoutes.dashboard),
@@ -1894,36 +2279,24 @@ class _MaintenanceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bgScaffold,
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [AppColors.royalNavy, AppColors.bgCard, AppColors.deepBlue],
-          ),
-        ),
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(32),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 104,
-                  height: 104,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(colors: [AppColors.metallicGold, AppColors.goldLight]),
-                  ),
-                  child: const Icon(Icons.engineering_rounded, color: AppColors.bgPrimary, size: 52),
-                ),
-                const SizedBox(height: 24),
-                Text('تحديثات فاخرة قيد التنفيذ', style: AppTextStyles.arabicTitleLarge, textAlign: TextAlign.center),
-                const SizedBox(height: 8),
-                Text('KAYAN is being refined. Please try again shortly.', style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary), textAlign: TextAlign.center),
-              ],
-            ),
+      backgroundColor: KayanDesignTokens.bg,
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 100,
+                height: 100,
+                decoration: const BoxDecoration(gradient: KayanDesignTokens.gradBlue, shape: BoxShape.circle),
+                child: const Icon(Icons.engineering_rounded, color: Colors.white, size: 48),
+              ),
+              const SizedBox(height: 24),
+              Text('تحديثات قيد التنفيذ', style: KayanDesignTokens.cairo(fontSize: 20, fontWeight: FontWeight.w900), textAlign: TextAlign.center),
+              const SizedBox(height: 8),
+              Text('KAYAN is being refined. Please try again shortly.', style: KayanDesignTokens.cairo(color: KayanDesignTokens.muted), textAlign: TextAlign.center),
+            ],
           ),
         ),
       ),

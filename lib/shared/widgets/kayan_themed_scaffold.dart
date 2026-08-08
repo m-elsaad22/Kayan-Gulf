@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_spacing.dart';
-import '../../core/theme/app_text_styles.dart';
+import '../../core/theme/kayan_design_tokens.dart';
 import '../providers/locale_provider.dart';
+import 'design/kayan_design_widgets.dart';
 
-/// Consistent themed scaffold for KAYAN screens (light/dark aware).
+/// Consistent light scaffold for KAYAN screens.
 class KayanThemedScaffold extends ConsumerWidget {
   final String titleAr;
   final String titleEn;
@@ -29,55 +28,25 @@ class KayanThemedScaffold extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isArabic = ref.watch(isArabicProvider);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBg : AppColors.lightBg,
-      extendBodyBehindAppBar: false,
-      appBar: AppBar(
-        backgroundColor: isDark
-            ? AppColors.darkCardBg.withValues(alpha: 0.94)
-            : AppColors.pureWhite.withValues(alpha: 0.92),
-        foregroundColor: isDark ? AppColors.darkText : AppColors.lightText,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        shadowColor: AppColors.royalBlue.withValues(alpha: 0.06),
-        surfaceTintColor: Colors.transparent,
-        leading: showBack
-            ? IconButton(
-                icon: Icon(
-                  isArabic
-                      ? Icons.arrow_forward_ios_rounded
-                      : Icons.arrow_back_ios_new_rounded,
-                  size: 20,
-                ),
-                onPressed: () => context.pop(),
-              )
-            : null,
-        title: Text(
-          isArabic ? titleAr : titleEn,
-          style: isArabic
-              ? AppTextStyles.arabicTitleMedium
-              : AppTextStyles.titleMedium,
-        ),
-        actions: actions,
-      ),
+      backgroundColor: KayanDesignTokens.bg,
       floatingActionButton: floatingActionButton,
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: isDark
-              ? null
-              : const LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [AppColors.lightBg, AppColors.lightCardBg],
-                ),
-          color: isDark ? AppColors.darkBg : null,
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.pagePadding),
-            child: body,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              KayanLightTopBar(
+                title: isArabic ? titleAr : titleEn,
+                onBack: showBack ? () => context.pop() : () {},
+                trailing: actions != null && actions!.isNotEmpty
+                    ? Row(mainAxisSize: MainAxisSize.min, children: actions!)
+                    : null,
+              ),
+              Expanded(child: body),
+            ],
           ),
         ),
       ),

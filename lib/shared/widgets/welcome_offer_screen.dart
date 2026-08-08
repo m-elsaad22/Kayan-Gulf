@@ -1,12 +1,12 @@
-// TODO: connect to real backend
+// Welcome offer — light design
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_gradients.dart';
-import '../../core/theme/app_text_styles.dart';
+import '../../core/theme/kayan_design_tokens.dart';
 import '../providers/locale_provider.dart';
+import '../widgets/design/kayan_design_widgets.dart';
+import '../widgets/design/kayan_entry_widgets.dart';
 
 class WelcomeOfferScreen extends ConsumerWidget {
   const WelcomeOfferScreen({super.key});
@@ -16,50 +16,45 @@ class WelcomeOfferScreen extends ConsumerWidget {
     final ar = ref.watch(isArabicProvider);
 
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(gradient: AppGradients.heroDiagonal),
-        padding: const EdgeInsets.all(24),
-        child: SafeArea(
+      backgroundColor: KayanDesignTokens.bg,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Align(
                 alignment: AlignmentDirectional.topEnd,
-                child: IconButton(
-                  onPressed: () => context.pop(),
-                  icon: const Icon(Icons.close_rounded),
-                ),
+                child: IconButton(onPressed: () => context.pop(), icon: const Icon(Icons.close_rounded)),
               ),
               const Spacer(),
-              const Icon(Icons.card_giftcard_rounded,
-                  size: 80, color: AppColors.metallicGold),
+              Container(
+                width: 88,
+                height: 88,
+                decoration: const BoxDecoration(gradient: KayanDesignTokens.gradOrange, shape: BoxShape.circle),
+                child: const Icon(Icons.card_giftcard_rounded, size: 44, color: Colors.white),
+              ),
               const SizedBox(height: 24),
               Text(
-                ar ? 'هدية ترحيب 🎁' : 'Welcome Gift 🎁',
+                ar ? 'هدية ترحيب 🎁' : 'Welcome gift 🎁',
                 textAlign: TextAlign.center,
-                style: ar
-                    ? AppTextStyles.arabicHeadlineMedium
-                    : AppTextStyles.headlineMedium,
+                style: KayanDesignTokens.cairo(fontSize: 24, fontWeight: FontWeight.w900, color: KayanDesignTokens.kBlueDeep),
               ),
               const SizedBox(height: 12),
               Text(
-                ar
-                    ? 'احصل على خصم 15% على أول طلب لك في كيان.'
-                    : 'Get 15% off your first KAYAN order.',
+                ar ? 'احصل على خصم 15% على أول طلب لك في كيان.' : 'Get 15% off your first KAYAN order.',
                 textAlign: TextAlign.center,
-                style: AppTextStyles.bodyLarge.copyWith(
-                  color: AppColors.textSecondary,
-                ),
+                style: KayanDesignTokens.cairo(fontSize: 14, color: KayanDesignTokens.muted, height: 1.6),
               ),
               const Spacer(),
-              FilledButton(
-                onPressed: () => context.pop(),
-                child: Text(ar ? 'استخدم العرض' : 'Claim Offer'),
+              KayanOfferBanner(
+                title: ar ? 'كود: WELCOME15' : 'Code: WELCOME15',
+                subtitle: ar ? 'صالح لمدة 7 أيام' : 'Valid for 7 days',
+                gradient: KayanDesignTokens.gradOrange,
               ),
-              TextButton(
-                onPressed: () => context.pop(),
-                child: Text(ar ? 'تخطي' : 'Skip'),
-              ),
+              const SizedBox(height: 16),
+              KayanCtaButton(label: ar ? 'استخدم العرض' : 'Claim offer', variant: KayanCtaVariant.orange, onPressed: () => context.pop()),
+              TextButton(onPressed: () => context.pop(), child: Text(ar ? 'تخطي' : 'Skip', style: KayanDesignTokens.cairo(fontWeight: FontWeight.w700, color: KayanDesignTokens.muted))),
             ],
           ),
         ),

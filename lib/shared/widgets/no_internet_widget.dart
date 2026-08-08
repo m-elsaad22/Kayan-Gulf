@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_text_styles.dart';
+import '../../core/theme/kayan_design_tokens.dart';
+import '../widgets/design/kayan_entry_widgets.dart';
 
 class NoInternetWidget extends StatelessWidget {
+  const NoInternetWidget({super.key, this.onRetry, this.isArabic = false});
+
   final VoidCallback? onRetry;
   final bool isArabic;
-
-  const NoInternetWidget({
-    super.key,
-    this.onRetry,
-    this.isArabic = false,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,34 +17,18 @@ class NoInternetWidget extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
-              Icons.wifi_off_rounded,
-              size: 64,
-              color: AppColors.textMuted,
-            ),
+            Icon(Icons.wifi_off_rounded, size: 64, color: KayanDesignTokens.muted.withValues(alpha: 0.6)),
             const SizedBox(height: 16),
-            Text(
-              isArabic ? 'لا يوجد اتصال' : 'No Internet',
-              style: isArabic
-                  ? AppTextStyles.arabicTitleMedium
-                  : AppTextStyles.titleMedium,
-            ),
+            Text(isArabic ? 'لا يوجد اتصال' : 'No Internet', style: KayanDesignTokens.cairo(fontSize: 18, fontWeight: FontWeight.w800)),
             const SizedBox(height: 8),
             Text(
-              isArabic
-                  ? 'تحقق من اتصالك وحاول مرة أخرى.'
-                  : 'Check your connection and try again.',
+              isArabic ? 'تحقق من اتصالك وحاول مرة أخرى.' : 'Check your connection and try again.',
               textAlign: TextAlign.center,
-              style: AppTextStyles.bodySmall.copyWith(
-                color: AppColors.textSecondary,
-              ),
+              style: KayanDesignTokens.cairo(fontSize: 13, color: KayanDesignTokens.muted),
             ),
             if (onRetry != null) ...[
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: onRetry,
-                child: Text(isArabic ? 'إعادة المحاولة' : 'Retry'),
-              ),
+              KayanCtaButton(label: isArabic ? 'إعادة المحاولة' : 'Retry', variant: KayanCtaVariant.blue, onPressed: onRetry),
             ],
           ],
         ),

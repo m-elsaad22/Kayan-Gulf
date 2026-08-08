@@ -1,4 +1,3 @@
-// TODO: connect to real backend
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -6,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../../routing/app_routes.dart';
 import '../../../../../shared/providers/locale_provider.dart';
 import '../../../shared/presentation/widgets/phase5_classifieds_widgets.dart';
-import '../../data/models/ad_models.dart';
+import '../../../presentation/providers/classifieds_providers.dart';
 
 class SearchAdsScreen extends ConsumerStatefulWidget {
   const SearchAdsScreen({super.key});
@@ -27,12 +26,10 @@ class _SearchAdsScreenState extends ConsumerState<SearchAdsScreen> {
   @override
   Widget build(BuildContext context) {
     final ar = ref.watch(isArabicProvider);
-    final q = _queryCtrl.text.trim().toLowerCase();
-    final results = mockAds.where((a) {
-      if (q.isEmpty) return true;
-      return a.title.toLowerCase().contains(q) ||
-          a.city.toLowerCase().contains(q);
-    }).toList();
+    final q = _queryCtrl.text.trim();
+    final resultsAsync = ref.watch(
+      adsListProvider(AdFilter(search: q.isEmpty ? null : q)),
+    );
 
     return Phase5ClassifiedsScaffold(
       titleAr: 'بحث الإعلانات',
@@ -50,14 +47,22 @@ class _SearchAdsScreenState extends ConsumerState<SearchAdsScreen> {
           ),
         ),
         const SizedBox(height: 16),
-        ...results.map(
-          (ad) => Phase5ClassifiedsCard(
-            icon: Icons.campaign_outlined,
-            titleAr: ad.title,
-            titleEn: ad.title,
-            bodyAr: '${ad.city} • ${ad.timeAgo(true)}',
-            bodyEn: '${ad.city} • ${ad.timeAgo(false)}',
-            onTap: () => context.push(AppRoutes.adPath(ad.slug)),
+        resultsAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, _) => Text(e.toString()),
+          data: (results) => Column(
+            children: results
+                .map(
+                  (ad) => Phase5ClassifiedsCard(
+                    icon: Icons.campaign_outlined,
+                    titleAr: ad.title,
+                    titleEn: ad.title,
+                    bodyAr: '${ad.city} • ${ad.timeAgo(true)}',
+                    bodyEn: '${ad.city} • ${ad.timeAgo(false)}',
+                    onTap: () => context.push(AppRoutes.adPath(ad.slug)),
+                  ),
+                )
+                .toList(),
           ),
         ),
       ],

@@ -1,41 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../shared/widgets/kayan_themed_scaffold.dart';
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_text_styles.dart';
+import '../../core/theme/kayan_design_tokens.dart';
+import '../../routing/app_routes.dart';
 import '../../shared/providers/locale_provider.dart';
+import '../../shared/widgets/design/kayan_entry_widgets.dart';
 
-/// KAYAN Screen — Empty State
+/// حالة فارغة — light design
 class EmptyStateScreen extends ConsumerWidget {
-  const EmptyStateScreen({super.key});
+  const EmptyStateScreen({super.key, this.title, this.message});
+
+  final String? title;
+  final String? message;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isArabic = ref.watch(isArabicProvider);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final ar = ref.watch(isArabicProvider);
 
-    return KayanThemedScaffold(
-      titleAr: 'لا يوجد محتوى',
-      titleEn: 'Empty State',
-      body: ListView(
-        children: [
-          Icon(Icons.layers_outlined, size: 64, color: isDark ? AppColors.skyBlue : AppColors.pepsiBlue),
-          const SizedBox(height: 16),
-          Text(
-            isArabic ? 'لا يوجد محتوى' : 'Empty State',
-            style: isArabic ? AppTextStyles.arabicHeadlineSmall : AppTextStyles.headlineSmall,
+    return Scaffold(
+      backgroundColor: KayanDesignTokens.bg,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  color: KayanDesignTokens.kBlue.withValues(alpha: 0.08),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.inbox_outlined, size: 48, color: KayanDesignTokens.kBlue),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                title ?? (ar ? 'لا يوجد محتوى' : 'Nothing here yet'),
+                style: KayanDesignTokens.cairo(fontSize: 20, fontWeight: FontWeight.w900, color: KayanDesignTokens.kBlueDeep),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                message ?? (ar ? 'لم نجد أي عناصر لعرضها حالياً' : 'We could not find any items to show'),
+                textAlign: TextAlign.center,
+                style: KayanDesignTokens.cairo(color: KayanDesignTokens.text2),
+              ),
+              const SizedBox(height: 28),
+              KayanCtaButton(
+                label: ar ? 'العودة للرئيسية' : 'Go to home',
+                variant: KayanCtaVariant.blue,
+                trailingIcon: Icons.home_rounded,
+                onPressed: () => context.go(AppRoutes.home),
+              ),
+            ],
           ),
-          const SizedBox(height: 8),
-          Text(
-            isArabic
-                ? 'شاشة كيان — تجربة احترافية مع دعم الوضع الفاتح/الداكن والعربية/الإنجليزية.'
-                : 'KAYAN screen with light/dark mode and Arabic/English support.',
-            style: AppTextStyles.bodyMedium.copyWith(
-              color: isDark ? AppColors.darkSubtext : AppColors.lightSubtext,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

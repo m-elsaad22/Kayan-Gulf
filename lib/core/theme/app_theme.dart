@@ -1,730 +1,339 @@
-// ============================================================
-// KAYAN Super App — Complete ThemeData
-// lib/core/theme/app_theme.dart
-//
-// Primary: Dark Mode (Royal Navy + Royal Blue + Metallic Gold)
-// Secondary: Light Mode (optional fallback)
-//
-// Covers all Material 3 component themes:
-//   AppBar, BottomNav, NavigationBar, Buttons (3 types),
-//   InputDecoration, Card, Chip, Dialog, BottomSheet,
-//   SnackBar, TabBar, Divider, Slider, Switch, Checkbox,
-//   Radio, ListTile, Icon, FAB, PopupMenu, Tooltip,
-//   Scrollbar, Drawer, ExpansionTile, PageTransitions
-// ============================================================
-
+// KAYAN Super App — ThemeData (light-first, KayanDesignTokens)
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../services/admin_data_service.dart';
-import 'app_colors.dart';
-import 'app_gradients.dart';
-import 'app_text_styles.dart';
 import 'app_border_radius.dart';
 import 'app_spacing.dart';
+import 'kayan_design_tokens.dart';
 
 abstract class AppTheme {
-  // ──────────────────────────────────────────────────────────
-  // 📱 SYSTEM UI OVERLAY STYLE
-  // (Status bar appearance)
-  // ──────────────────────────────────────────────────────────
-
   static const SystemUiOverlayStyle systemUiDark = SystemUiOverlayStyle(
-    statusBarColor:               Colors.transparent,
-    statusBarIconBrightness:      Brightness.light,
-    statusBarBrightness:          Brightness.dark,
-    systemNavigationBarColor:     AppColors.bgSurface,
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: Brightness.light,
+    statusBarBrightness: Brightness.dark,
+    systemNavigationBarColor: KayanDesignTokens.kBlueDeep,
     systemNavigationBarIconBrightness: Brightness.light,
-    systemNavigationBarDividerColor:   Colors.transparent,
+    systemNavigationBarDividerColor: Colors.transparent,
   );
 
   static const SystemUiOverlayStyle systemUiLight = SystemUiOverlayStyle(
-    statusBarColor:               Colors.transparent,
-    statusBarIconBrightness:      Brightness.dark,
-    statusBarBrightness:          Brightness.light,
-    systemNavigationBarColor:     Colors.white,
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: Brightness.dark,
+    statusBarBrightness: Brightness.light,
+    systemNavigationBarColor: KayanDesignTokens.surface,
     systemNavigationBarIconBrightness: Brightness.dark,
   );
 
-  // ──────────────────────────────────────────────────────────
-  // 🌑 DARK THEME (Primary — الثيم الأساسي)
-  // ──────────────────────────────────────────────────────────
+  static TextTheme _textTheme(Brightness brightness) {
+    final fg = brightness == Brightness.dark ? Colors.white : KayanDesignTokens.text;
+    final muted = brightness == Brightness.dark ? Colors.white70 : KayanDesignTokens.text2;
+    return TextTheme(
+      displayLarge: KayanDesignTokens.cairo(fontSize: 32, fontWeight: FontWeight.w800, color: fg),
+      displayMedium: KayanDesignTokens.cairo(fontSize: 28, fontWeight: FontWeight.w700, color: fg),
+      headlineLarge: KayanDesignTokens.cairo(fontSize: 24, fontWeight: FontWeight.w700, color: fg),
+      headlineMedium: KayanDesignTokens.cairo(fontSize: 20, fontWeight: FontWeight.w700, color: fg),
+      titleLarge: KayanDesignTokens.cairo(fontSize: 18, fontWeight: FontWeight.w700, color: fg),
+      titleMedium: KayanDesignTokens.cairo(fontSize: 16, fontWeight: FontWeight.w600, color: fg),
+      bodyLarge: KayanDesignTokens.cairo(fontSize: 16, fontWeight: FontWeight.w500, color: fg),
+      bodyMedium: KayanDesignTokens.cairo(fontSize: 14, fontWeight: FontWeight.w500, color: fg),
+      bodySmall: KayanDesignTokens.cairo(fontSize: 12, fontWeight: FontWeight.w500, color: muted),
+      labelLarge: KayanDesignTokens.cairo(fontSize: 14, fontWeight: FontWeight.w700, color: fg),
+      labelMedium: KayanDesignTokens.cairo(fontSize: 12, fontWeight: FontWeight.w600, color: muted),
+      labelSmall: KayanDesignTokens.cairo(fontSize: 10, fontWeight: FontWeight.w600, color: muted),
+    );
+  }
 
-  static ThemeData get dark => ThemeData(
-    useMaterial3:              true,
-    brightness:                Brightness.dark,
-    colorScheme:               AppColors.darkColorScheme,
+  static ColorScheme _scheme(Brightness brightness) {
+    if (brightness == Brightness.dark) {
+      return const ColorScheme(
+        brightness: Brightness.dark,
+        primary: KayanDesignTokens.kBlueLight,
+        onPrimary: Colors.white,
+        primaryContainer: KayanDesignTokens.kBlueDeep,
+        onPrimaryContainer: Colors.white,
+        secondary: KayanDesignTokens.gold,
+        onSecondary: KayanDesignTokens.kBlueDeep,
+        secondaryContainer: Color(0xFF2A2010),
+        onSecondaryContainer: KayanDesignTokens.gold,
+        tertiary: KayanDesignTokens.kGreenLight,
+        onTertiary: Colors.white,
+        error: KayanDesignTokens.danger,
+        onError: Colors.white,
+        surface: Color(0xFF132038),
+        onSurface: Colors.white,
+        onSurfaceVariant: Colors.white70,
+        outline: Color(0x33FFFFFF),
+        shadow: Colors.black,
+        scrim: Colors.black54,
+        inverseSurface: KayanDesignTokens.surface,
+        onInverseSurface: KayanDesignTokens.text,
+        inversePrimary: KayanDesignTokens.kBlue,
+        surfaceTint: KayanDesignTokens.kBlueLight,
+      );
+    }
 
-    // ── Scaffold ────────────────────────────────────────────
-    scaffoldBackgroundColor:   AppColors.bgScaffold,
-    canvasColor:               AppColors.bgPrimary,
-    dialogBackgroundColor:     AppColors.bgModal,
-    indicatorColor:            AppColors.royalBlue,
+    return const ColorScheme(
+      brightness: Brightness.light,
+      primary: KayanDesignTokens.kBlue,
+      onPrimary: Colors.white,
+      primaryContainer: Color(0xFFE8F0FA),
+      onPrimaryContainer: KayanDesignTokens.kBlueDeep,
+      secondary: KayanDesignTokens.kBlueLight,
+      onSecondary: Colors.white,
+      secondaryContainer: KayanDesignTokens.bg,
+      onSecondaryContainer: KayanDesignTokens.kBlue,
+      tertiary: KayanDesignTokens.kGreen,
+      onTertiary: Colors.white,
+      error: KayanDesignTokens.danger,
+      onError: Colors.white,
+      surface: KayanDesignTokens.surface,
+      onSurface: KayanDesignTokens.text,
+      onSurfaceVariant: KayanDesignTokens.text2,
+      outline: KayanDesignTokens.border,
+      shadow: Colors.black26,
+      scrim: Colors.black54,
+      inverseSurface: KayanDesignTokens.kBlueDeep,
+      onInverseSurface: Colors.white,
+      inversePrimary: KayanDesignTokens.kBlueLight,
+      surfaceTint: KayanDesignTokens.kBlue,
+    );
+  }
 
-    // ── Typography ──────────────────────────────────────────
-    textTheme:                 AppTextStyles.textTheme,
-    fontFamily:                GoogleFonts.inter().fontFamily,
+  static ThemeData _build(Brightness brightness) {
+    final isDark = brightness == Brightness.dark;
+    final scheme = _scheme(brightness);
+    final textTheme = _textTheme(brightness);
+    final surface = scheme.surface;
+    final onSurface = scheme.onSurface;
+    final border = isDark ? scheme.outline : KayanDesignTokens.border;
 
-    // ──────────────────────────────────────────────────────
-    // APP BAR
-    // ──────────────────────────────────────────────────────
-    appBarTheme: AppBarTheme(
-      backgroundColor:          AppColors.bgSurface,
-      foregroundColor:          AppColors.textPrimary,
-      elevation:                0,
-      scrolledUnderElevation:   0,
-      centerTitle:              true,
-      iconTheme:                const IconThemeData(
-        color: AppColors.textPrimary,
-        size: 22,
+    return ThemeData(
+      useMaterial3: true,
+      brightness: brightness,
+      colorScheme: scheme,
+      scaffoldBackgroundColor: isDark ? KayanDesignTokens.kBlueDeep : KayanDesignTokens.bg,
+      canvasColor: surface,
+      primaryColor: scheme.primary,
+      textTheme: textTheme,
+      appBarTheme: AppBarTheme(
+        backgroundColor: surface,
+        foregroundColor: onSurface,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        centerTitle: true,
+        systemOverlayStyle: isDark ? systemUiDark : systemUiLight,
+        titleTextStyle: textTheme.titleLarge,
+        iconTheme: IconThemeData(color: onSurface, size: 22),
+        surfaceTintColor: Colors.transparent,
+        shape: Border(bottom: BorderSide(color: border, width: 1)),
       ),
-      actionsIconTheme:         const IconThemeData(
-        color: AppColors.textPrimary,
-        size: 22,
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: surface,
+        selectedItemColor: scheme.primary,
+        unselectedItemColor: isDark ? Colors.white54 : KayanDesignTokens.muted,
+        elevation: isDark ? 0 : 8,
+        type: BottomNavigationBarType.fixed,
+        selectedLabelStyle: KayanDesignTokens.cairo(fontSize: 10, fontWeight: FontWeight.w700),
+        unselectedLabelStyle: KayanDesignTokens.cairo(fontSize: 10, fontWeight: FontWeight.w500),
       ),
-      titleTextStyle:           AppTextStyles.titleLarge.copyWith(
-        color: AppColors.textPrimary,
-        fontWeight: FontWeight.w600,
-        fontSize: 18,
-      ),
-      systemOverlayStyle:       systemUiDark,
-      shape: const Border(
-        bottom: BorderSide(
-          color: AppColors.borderSubtle,
-          width: 1,
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: surface,
+        indicatorColor: scheme.primary.withValues(alpha: 0.12),
+        labelTextStyle: WidgetStatePropertyAll(
+          KayanDesignTokens.cairo(fontSize: 11, fontWeight: FontWeight.w600),
         ),
-      ),
-      surfaceTintColor:         Colors.transparent,
-    ),
-
-    // ──────────────────────────────────────────────────────
-    // BOTTOM NAVIGATION BAR
-    // ──────────────────────────────────────────────────────
-    bottomNavigationBarTheme: BottomNavigationBarThemeData(
-      backgroundColor:          AppColors.navBackground,
-      selectedItemColor:        AppColors.navActive,
-      unselectedItemColor:      AppColors.navInactive,
-      elevation:                0,
-      type:                     BottomNavigationBarType.fixed,
-      showSelectedLabels:       true,
-      showUnselectedLabels:     true,
-      selectedLabelStyle: GoogleFonts.inter(
-        fontSize: 10,
-        fontWeight: FontWeight.w600,
-      ),
-      unselectedLabelStyle: GoogleFonts.inter(
-        fontSize: 10,
-        fontWeight: FontWeight.w400,
-      ),
-    ),
-
-    // ──────────────────────────────────────────────────────
-    // NAVIGATION BAR (Material 3)
-    // ──────────────────────────────────────────────────────
-    navigationBarTheme: NavigationBarThemeData(
-      backgroundColor:          AppColors.navBackground,
-      surfaceTintColor:         Colors.transparent,
-      indicatorColor:           AppColors.royalBlue.withOpacity(0.15),
-      iconTheme: MaterialStateProperty.resolveWith((states) {
-        if (states.contains(MaterialState.selected)) {
-          return const IconThemeData(color: AppColors.navActive, size: 22);
-        }
-        return const IconThemeData(color: AppColors.navInactive, size: 22);
-      }),
-      labelTextStyle: MaterialStateProperty.resolveWith((states) {
-        if (states.contains(MaterialState.selected)) {
-          return GoogleFonts.inter(
-            fontSize: 10,
-            fontWeight: FontWeight.w600,
-            color: AppColors.navActive,
-          );
-        }
-        return GoogleFonts.inter(
-          fontSize: 10,
-          fontWeight: FontWeight.w400,
-          color: AppColors.navInactive,
-        );
-      }),
-      height:               64,
-      labelBehavior:        NavigationDestinationLabelBehavior.alwaysShow,
-      elevation:            0,
-      overlayColor:         MaterialStateProperty.all(AppColors.royalBlue.withOpacity(0.06)),
-    ),
-
-    // ──────────────────────────────────────────────────────
-    // ELEVATED BUTTON (Primary CTA)
-    // Background: Royal Blue gradient
-    // ──────────────────────────────────────────────────────
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.disabled)) {
-            return AppColors.royalBlue.withOpacity(0.25);
+        iconTheme: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return IconThemeData(color: scheme.primary, size: 22);
           }
-          if (states.contains(MaterialState.pressed)) {
-            return const Color(0xFF3558C8);
-          }
-          return AppColors.royalBlue;
+          return IconThemeData(color: isDark ? Colors.white54 : KayanDesignTokens.muted, size: 22);
         }),
-        foregroundColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.disabled)) {
-            return AppColors.textDisabled;
-          }
-          return AppColors.textPrimary;
+      ),
+      cardTheme: CardThemeData(
+        color: surface,
+        elevation: isDark ? 0 : 2,
+        shadowColor: scheme.primary.withValues(alpha: 0.08),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
+          side: BorderSide(color: border),
+        ),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: scheme.primary,
+          foregroundColor: scheme.onPrimary,
+          elevation: 0,
+          minimumSize: const Size(double.infinity, 52),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl, vertical: AppSpacing.md),
+          shape: RoundedRectangleBorder(borderRadius: AppBorderRadius.button),
+          textStyle: KayanDesignTokens.cairo(fontWeight: FontWeight.w700),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: scheme.primary,
+          side: BorderSide(color: scheme.primary.withValues(alpha: 0.5)),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl, vertical: AppSpacing.md),
+          shape: RoundedRectangleBorder(borderRadius: AppBorderRadius.button),
+          textStyle: KayanDesignTokens.cairo(fontWeight: FontWeight.w700),
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: scheme.primary,
+          textStyle: KayanDesignTokens.cairo(fontWeight: FontWeight.w700),
+        ),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: isDark ? const Color(0xFF1A2840) : KayanDesignTokens.bg,
+        contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md),
+        hintStyle: textTheme.bodyMedium?.copyWith(color: KayanDesignTokens.muted),
+        labelStyle: textTheme.bodyMedium,
+        errorStyle: textTheme.bodySmall?.copyWith(color: KayanDesignTokens.danger),
+        border: OutlineInputBorder(borderRadius: AppBorderRadius.input, borderSide: BorderSide(color: border)),
+        enabledBorder: OutlineInputBorder(borderRadius: AppBorderRadius.input, borderSide: BorderSide(color: border)),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: AppBorderRadius.input,
+          borderSide: BorderSide(color: scheme.primary, width: 2),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: AppBorderRadius.input,
+          borderSide: const BorderSide(color: KayanDesignTokens.danger),
+        ),
+      ),
+      chipTheme: ChipThemeData(
+        backgroundColor: isDark ? const Color(0xFF1A2840) : KayanDesignTokens.bg,
+        selectedColor: scheme.primary.withValues(alpha: 0.15),
+        labelStyle: textTheme.labelMedium!,
+        side: BorderSide(color: border),
+        shape: RoundedRectangleBorder(borderRadius: AppBorderRadius.pill),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
+      ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: surface,
+        elevation: 8,
+        shape: RoundedRectangleBorder(borderRadius: AppBorderRadius.dialog),
+        titleTextStyle: textTheme.titleLarge,
+        contentTextStyle: textTheme.bodyMedium,
+      ),
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: surface,
+        modalBackgroundColor: surface,
+        shape: RoundedRectangleBorder(borderRadius: AppBorderRadius.bottomSheet),
+        dragHandleColor: border,
+      ),
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: isDark ? const Color(0xFF1A2840) : KayanDesignTokens.kBlueDeep,
+        contentTextStyle: KayanDesignTokens.cairo(color: Colors.white),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: AppBorderRadius.md),
+      ),
+      tabBarTheme: TabBarThemeData(
+        labelColor: scheme.primary,
+        unselectedLabelColor: isDark ? Colors.white54 : KayanDesignTokens.muted,
+        indicatorColor: scheme.primary,
+        dividerColor: border,
+        labelStyle: KayanDesignTokens.cairo(fontWeight: FontWeight.w700),
+        unselectedLabelStyle: KayanDesignTokens.cairo(fontWeight: FontWeight.w500),
+      ),
+      dividerTheme: DividerThemeData(color: border, thickness: 1),
+      sliderTheme: SliderThemeData(
+        activeTrackColor: scheme.primary,
+        inactiveTrackColor: isDark ? Colors.white12 : KayanDesignTokens.border,
+        thumbColor: scheme.primary,
+        overlayColor: scheme.primary.withValues(alpha: 0.1),
+      ),
+      switchTheme: SwitchThemeData(
+        thumbColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) return scheme.primary;
+          return isDark ? Colors.white54 : KayanDesignTokens.muted;
         }),
-        overlayColor: MaterialStateProperty.all(
-          AppColors.whiteOp(0.08),
-        ),
-        elevation: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.pressed)) return 0;
-          return 4;
+        trackColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) return scheme.primary.withValues(alpha: 0.35);
+          return isDark ? Colors.white12 : KayanDesignTokens.border;
         }),
-        shadowColor: MaterialStateProperty.all(
-          AppColors.royalBlue.withOpacity(0.4),
-        ),
-        shape: MaterialStateProperty.all(
-          RoundedRectangleBorder(
-            borderRadius: AppBorderRadius.button,
-          ),
-        ),
-        padding: MaterialStateProperty.all(
-          const EdgeInsets.symmetric(
-            horizontal: AppSpacing.xl,
-            vertical: AppSpacing.md,
-          ),
-        ),
-        textStyle: MaterialStateProperty.all(AppTextStyles.buttonMedium),
-        minimumSize: MaterialStateProperty.all(const Size(double.infinity, 52)),
-        maximumSize: MaterialStateProperty.all(const Size(double.infinity, 52)),
-        animationDuration: const Duration(milliseconds: 200),
-        splashFactory: InkRipple.splashFactory,
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
-    ),
-
-    // ──────────────────────────────────────────────────────
-    // OUTLINED BUTTON (Secondary CTA)
-    // Border: Royal Blue, transparent background
-    // ──────────────────────────────────────────────────────
-    outlinedButtonTheme: OutlinedButtonThemeData(
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(Colors.transparent),
-        foregroundColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.disabled)) {
-            return AppColors.textDisabled;
-          }
-          return AppColors.royalBlue;
+      checkboxTheme: CheckboxThemeData(
+        fillColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) return scheme.primary;
+          return Colors.transparent;
         }),
-        overlayColor: MaterialStateProperty.all(
-          AppColors.royalBlue.withOpacity(0.06),
-        ),
-        side: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.disabled)) {
-            return const BorderSide(color: AppColors.borderSubtle, width: 1);
-          }
-          if (states.contains(MaterialState.focused) || states.contains(MaterialState.pressed)) {
-            return const BorderSide(color: AppColors.royalBlue, width: 1.5);
-          }
-          return const BorderSide(color: AppColors.borderActive, width: 1.5);
+        checkColor: WidgetStateProperty.all(scheme.onPrimary),
+        side: BorderSide(color: border, width: 1.5),
+      ),
+      radioTheme: RadioThemeData(
+        fillColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) return scheme.primary;
+          return border;
         }),
-        shape: MaterialStateProperty.all(
-          RoundedRectangleBorder(borderRadius: AppBorderRadius.button),
+      ),
+      listTileTheme: ListTileThemeData(
+        iconColor: isDark ? Colors.white70 : KayanDesignTokens.text2,
+        textColor: onSurface,
+        tileColor: Colors.transparent,
+        selectedTileColor: scheme.primary.withValues(alpha: 0.08),
+        contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.xs),
+        shape: RoundedRectangleBorder(borderRadius: AppBorderRadius.sm),
+      ),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: scheme.primary,
+        foregroundColor: scheme.onPrimary,
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM)),
+      ),
+      popupMenuTheme: PopupMenuThemeData(
+        color: surface,
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: AppBorderRadius.md,
+          side: BorderSide(color: border),
         ),
-        padding: MaterialStateProperty.all(
-          const EdgeInsets.symmetric(horizontal: AppSpacing.xl, vertical: AppSpacing.md),
-        ),
-        textStyle: MaterialStateProperty.all(AppTextStyles.buttonMedium),
-        minimumSize: MaterialStateProperty.all(const Size(double.infinity, 52)),
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        textStyle: textTheme.bodyMedium,
       ),
-    ),
-
-    // ──────────────────────────────────────────────────────
-    // TEXT BUTTON (Tertiary CTA, links)
-    // ──────────────────────────────────────────────────────
-    textButtonTheme: TextButtonThemeData(
-      style: ButtonStyle(
-        foregroundColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.disabled)) {
-            return AppColors.textDisabled;
-          }
-          return AppColors.skyBlue;
-        }),
-        overlayColor: MaterialStateProperty.all(
-          AppColors.royalBlue.withOpacity(0.08),
+      tooltipTheme: TooltipThemeData(
+        decoration: BoxDecoration(
+          color: KayanDesignTokens.kBlueDeep,
+          borderRadius: AppBorderRadius.sm,
         ),
-        shape: MaterialStateProperty.all(
-          RoundedRectangleBorder(borderRadius: AppBorderRadius.sm),
-        ),
-        textStyle: MaterialStateProperty.all(
-          AppTextStyles.buttonMedium.copyWith(color: AppColors.skyBlue),
-        ),
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        padding: MaterialStateProperty.all(
-          const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+        textStyle: KayanDesignTokens.cairo(fontSize: 12, color: Colors.white),
+      ),
+      drawerTheme: DrawerThemeData(
+        backgroundColor: surface,
+        scrimColor: Colors.black54,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.horizontal(right: Radius.circular(KayanDesignTokens.radiusM)),
         ),
       ),
-    ),
+      expansionTileTheme: ExpansionTileThemeData(
+        iconColor: isDark ? Colors.white70 : KayanDesignTokens.text2,
+        collapsedIconColor: isDark ? Colors.white54 : KayanDesignTokens.muted,
+        textColor: onSurface,
+        collapsedTextColor: onSurface,
+      ),
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: {
+          TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+        },
+      ),
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: scheme.primary,
+        selectionColor: scheme.primary.withValues(alpha: 0.3),
+        selectionHandleColor: scheme.primary,
+      ),
+    );
+  }
 
-    // ──────────────────────────────────────────────────────
-    // INPUT / TEXT FIELD
-    // ──────────────────────────────────────────────────────
-    inputDecorationTheme: InputDecorationTheme(
-      filled:          true,
-      fillColor:       AppColors.bgInput,
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.lg,
-        vertical: AppSpacing.md,
-      ),
-      hintStyle: AppTextStyles.bodyMedium.copyWith(
-        color: AppColors.textMuted,
-      ),
-      labelStyle: AppTextStyles.bodyMedium.copyWith(
-        color: AppColors.textSecondary,
-      ),
-      floatingLabelStyle: MaterialStateTextStyle.resolveWith((states) {
-        if (states.contains(MaterialState.error)) {
-          return AppTextStyles.bodySmall.copyWith(color: AppColors.error);
-        }
-        if (states.contains(MaterialState.focused)) {
-          return AppTextStyles.bodySmall.copyWith(color: AppColors.skyBlue);
-        }
-        return AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary);
-      }),
-      errorStyle: AppTextStyles.bodySmall.copyWith(
-        color: AppColors.error,
-      ),
-      helperStyle: AppTextStyles.bodySmall.copyWith(
-        color: AppColors.textMuted,
-      ),
-      prefixIconColor: MaterialStateColor.resolveWith((states) {
-        if (states.contains(MaterialState.focused)) return AppColors.skyBlue;
-        return AppColors.textMuted;
-      }),
-      suffixIconColor: AppColors.textMuted,
-
-      // Borders
-      border: OutlineInputBorder(
-        borderRadius: AppBorderRadius.input,
-        borderSide: const BorderSide(color: AppColors.borderSubtle, width: 1),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: AppBorderRadius.input,
-        borderSide: const BorderSide(color: AppColors.borderDefault, width: 1),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: AppBorderRadius.input,
-        borderSide: const BorderSide(color: AppColors.borderActiveBold, width: 1.5),
-      ),
-      errorBorder: OutlineInputBorder(
-        borderRadius: AppBorderRadius.input,
-        borderSide: const BorderSide(color: AppColors.borderError, width: 1.5),
-      ),
-      focusedErrorBorder: OutlineInputBorder(
-        borderRadius: AppBorderRadius.input,
-        borderSide: const BorderSide(color: AppColors.error, width: 2),
-      ),
-      disabledBorder: OutlineInputBorder(
-        borderRadius: AppBorderRadius.input,
-        borderSide: const BorderSide(color: AppColors.borderSubtle, width: 1),
-      ),
-      isDense: false,
-    ),
-
-    // ──────────────────────────────────────────────────────
-    // CARD
-    // ──────────────────────────────────────────────────────
-    cardTheme: CardThemeData(
-      color:          AppColors.bgCard,
-      elevation:      0,
-      margin:         EdgeInsets.zero,
-      shape:          RoundedRectangleBorder(
-        borderRadius: AppBorderRadius.card,
-        side: const BorderSide(color: AppColors.borderSubtle, width: 1),
-      ),
-      clipBehavior:   Clip.antiAlias,
-      surfaceTintColor: Colors.transparent,
-    ),
-
-    // ──────────────────────────────────────────────────────
-    // CHIP
-    // ──────────────────────────────────────────────────────
-    chipTheme: ChipThemeData(
-      backgroundColor:   AppColors.bgCard2,
-      labelStyle:        AppTextStyles.labelMedium.copyWith(
-        color: AppColors.textSecondary,
-      ),
-      side:              const BorderSide(color: AppColors.borderSubtle, width: 1),
-      shape:             RoundedRectangleBorder(
-        borderRadius: AppBorderRadius.pill,
-      ),
-      padding:           const EdgeInsets.symmetric(
-        horizontal: AppSpacing.sm,
-        vertical: AppSpacing.xs,
-      ),
-      selectedColor:     AppColors.royalBlue.withOpacity(0.2),
-      checkmarkColor:    AppColors.skyBlue,
-      showCheckmark:     false,
-      elevation:         0,
-      pressElevation:    0,
-      deleteIconColor:   AppColors.textMuted,
-      brightness:        Brightness.dark,
-      surfaceTintColor:  Colors.transparent,
-    ),
-
-    // ──────────────────────────────────────────────────────
-    // DIALOG
-    // ──────────────────────────────────────────────────────
-    dialogTheme: DialogThemeData(
-      backgroundColor:  AppColors.bgModal,
-      elevation:        24,
-      shadowColor:      Colors.black54,
-      surfaceTintColor: Colors.transparent,
-      shape:            RoundedRectangleBorder(
-        borderRadius: AppBorderRadius.xl,
-      ),
-      titleTextStyle:   AppTextStyles.titleLarge.copyWith(
-        color: AppColors.textPrimary,
-      ),
-      contentTextStyle: AppTextStyles.bodyMedium.copyWith(
-        color: AppColors.textSecondary,
-      ),
-    ),
-
-    // ──────────────────────────────────────────────────────
-    // BOTTOM SHEET
-    // ──────────────────────────────────────────────────────
-    bottomSheetTheme: const BottomSheetThemeData(
-      backgroundColor:       AppColors.bgBottomSheet,
-      modalBackgroundColor:  AppColors.bgBottomSheet,
-      surfaceTintColor:      Colors.transparent,
-      elevation:             0,
-      modalElevation:        16,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      dragHandleColor: AppColors.borderDefault,
-      dragHandleSize:  Size(40, 4),
-      showDragHandle:  true,
-      clipBehavior:    Clip.antiAlias,
-    ),
-
-    // ──────────────────────────────────────────────────────
-    // SNACK BAR
-    // ──────────────────────────────────────────────────────
-    snackBarTheme: SnackBarThemeData(
-      backgroundColor: AppColors.bgCard2,
-      contentTextStyle: AppTextStyles.bodyMedium.copyWith(
-        color: AppColors.textPrimary,
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: AppBorderRadius.md,
-        side: const BorderSide(color: AppColors.borderSubtle, width: 1),
-      ),
-      behavior:         SnackBarBehavior.floating,
-      elevation:        8,
-      actionTextColor:  AppColors.skyBlue,
-      dismissDirection: DismissDirection.horizontal,
-    ),
-
-    // ──────────────────────────────────────────────────────
-    // TAB BAR
-    // ──────────────────────────────────────────────────────
-    tabBarTheme: TabBarThemeData(
-      labelColor:            AppColors.royalBlue,
-      unselectedLabelColor:  AppColors.textMuted,
-      indicator: BoxDecoration(
-        borderRadius: AppBorderRadius.pill,
-        color:        AppColors.royalBlue.withOpacity(0.15),
-        border:       Border.all(color: AppColors.borderActive, width: 1),
-      ),
-      indicatorSize:     TabBarIndicatorSize.tab,
-      labelStyle:        AppTextStyles.bodyMedium.copyWith(
-        fontWeight: FontWeight.w600,
-      ),
-      unselectedLabelStyle: AppTextStyles.bodyMedium,
-      dividerColor:      AppColors.borderSubtle,
-      overlayColor:      MaterialStateProperty.all(
-        AppColors.royalBlue.withOpacity(0.08),
-      ),
-      splashFactory: InkRipple.splashFactory,
-    ),
-
-    // ──────────────────────────────────────────────────────
-    // DIVIDER
-    // ──────────────────────────────────────────────────────
-    dividerTheme: const DividerThemeData(
-      color:     AppColors.borderSubtle,
-      thickness: 1,
-      space:     1,
-    ),
-
-    // ──────────────────────────────────────────────────────
-    // PROGRESS INDICATOR
-    // ──────────────────────────────────────────────────────
-    progressIndicatorTheme: const ProgressIndicatorThemeData(
-      color:                AppColors.royalBlue,
-      linearTrackColor:     AppColors.bgCard2,
-      circularTrackColor:   Colors.transparent,
-      refreshBackgroundColor: AppColors.bgCard,
-      linearMinHeight:      3,
-    ),
-
-    // ──────────────────────────────────────────────────────
-    // SLIDER
-    // ──────────────────────────────────────────────────────
-    sliderTheme: SliderThemeData(
-      activeTrackColor:        AppColors.royalBlue,
-      inactiveTrackColor:      AppColors.bgCard2,
-      thumbColor:              AppColors.royalBlue,
-      overlayColor:            AppColors.royalBlue.withOpacity(0.1),
-      valueIndicatorColor:     AppColors.bgCard,
-      activeTickMarkColor:     Colors.transparent,
-      inactiveTickMarkColor:   Colors.transparent,
-      valueIndicatorTextStyle: AppTextStyles.bodySmall.copyWith(
-        color: AppColors.textPrimary,
-      ),
-      trackHeight:   4,
-      thumbShape:    const RoundSliderThumbShape(enabledThumbRadius: 10),
-      overlayShape:  const RoundSliderOverlayShape(overlayRadius: 20),
-    ),
-
-    // ──────────────────────────────────────────────────────
-    // SWITCH
-    // ──────────────────────────────────────────────────────
-    switchTheme: SwitchThemeData(
-      thumbColor: MaterialStateProperty.resolveWith((states) {
-        if (states.contains(MaterialState.selected)) {
-          return AppColors.textPrimary;
-        }
-        return AppColors.textMuted;
-      }),
-      trackColor: MaterialStateProperty.resolveWith((states) {
-        if (states.contains(MaterialState.selected)) {
-          return AppColors.royalBlue;
-        }
-        return AppColors.bgCard2;
-      }),
-      trackOutlineColor: MaterialStateProperty.all(Colors.transparent),
-      overlayColor: MaterialStateProperty.all(
-        AppColors.royalBlue.withOpacity(0.08),
-      ),
-    ),
-
-    // ──────────────────────────────────────────────────────
-    // CHECKBOX
-    // ──────────────────────────────────────────────────────
-    checkboxTheme: CheckboxThemeData(
-      fillColor: MaterialStateProperty.resolveWith((states) {
-        if (states.contains(MaterialState.selected)) {
-          return AppColors.royalBlue;
-        }
-        return Colors.transparent;
-      }),
-      checkColor: MaterialStateProperty.all(AppColors.textPrimary),
-      side:       const BorderSide(color: AppColors.borderDefault, width: 1.5),
-      shape:      RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-      overlayColor: MaterialStateProperty.all(
-        AppColors.royalBlue.withOpacity(0.08),
-      ),
-      splashRadius: 20,
-    ),
-
-    // ──────────────────────────────────────────────────────
-    // RADIO
-    // ──────────────────────────────────────────────────────
-    radioTheme: RadioThemeData(
-      fillColor: MaterialStateProperty.resolveWith((states) {
-        if (states.contains(MaterialState.selected)) {
-          return AppColors.royalBlue;
-        }
-        return AppColors.borderDefault;
-      }),
-      overlayColor: MaterialStateProperty.all(
-        AppColors.royalBlue.withOpacity(0.08),
-      ),
-    ),
-
-    // ──────────────────────────────────────────────────────
-    // LIST TILE
-    // ──────────────────────────────────────────────────────
-    listTileTheme: ListTileThemeData(
-      tileColor:          Colors.transparent,
-      selectedTileColor:  AppColors.royalBlue.withOpacity(0.08),
-      iconColor:          AppColors.textSecondary,
-      textColor:          AppColors.textPrimary,
-      subtitleTextStyle:  AppTextStyles.bodySmall.copyWith(
-        color: AppColors.textSecondary,
-      ),
-      titleTextStyle:     AppTextStyles.bodyMedium,
-      contentPadding:     const EdgeInsets.symmetric(
-        horizontal: AppSpacing.lg,
-        vertical: AppSpacing.xs,
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: AppBorderRadius.sm,
-      ),
-      dense:           false,
-      minLeadingWidth: 24,
-    ),
-
-    // ──────────────────────────────────────────────────────
-    // ICONS
-    // ──────────────────────────────────────────────────────
-    iconTheme: const IconThemeData(
-      color: AppColors.textSecondary,
-      size: 22,
-    ),
-    primaryIconTheme: const IconThemeData(
-      color: AppColors.textPrimary,
-      size: 22,
-    ),
-
-    // ──────────────────────────────────────────────────────
-    // FLOATING ACTION BUTTON
-    // ──────────────────────────────────────────────────────
-    floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor:   AppColors.royalBlue,
-      foregroundColor:   AppColors.textPrimary,
-      splashColor:       AppColors.whiteOp(0.1),
-      shape: RoundedRectangleBorder(
-        borderRadius: AppBorderRadius.xl,
-      ),
-      elevation:          6,
-      focusElevation:     8,
-      hoverElevation:     8,
-      highlightElevation: 2,
-      extendedTextStyle:  AppTextStyles.buttonMedium,
-      extendedPadding:    const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-    ),
-
-    // ──────────────────────────────────────────────────────
-    // POPUP MENU
-    // ──────────────────────────────────────────────────────
-    popupMenuTheme: PopupMenuThemeData(
-      color:        AppColors.bgCard2,
-      elevation:    12,
-      shadowColor:  Colors.black54,
-      surfaceTintColor: Colors.transparent,
-      shape: RoundedRectangleBorder(
-        borderRadius: AppBorderRadius.md,
-        side: const BorderSide(color: AppColors.borderSubtle, width: 1),
-      ),
-      textStyle: AppTextStyles.bodyMedium.copyWith(
-        color: AppColors.textPrimary,
-      ),
-      labelTextStyle: MaterialStateProperty.all(
-        AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
-      ),
-    ),
-
-    // ──────────────────────────────────────────────────────
-    // TOOLTIP
-    // ──────────────────────────────────────────────────────
-    tooltipTheme: TooltipThemeData(
-      decoration: BoxDecoration(
-        color:        AppColors.bgCard2,
-        borderRadius: AppBorderRadius.sm,
-        border:       Border.all(color: AppColors.borderSubtle, width: 1),
-        boxShadow: [
-          BoxShadow(
-            color:      Colors.black.withOpacity(0.3),
-            blurRadius: 8,
-            offset:     const Offset(0, 2),
-          ),
-        ],
-      ),
-      textStyle: AppTextStyles.bodySmall.copyWith(
-        color: AppColors.textPrimary,
-      ),
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.sm,
-        vertical: AppSpacing.xs,
-      ),
-      waitDuration:  const Duration(milliseconds: 500),
-      showDuration:  const Duration(seconds: 2),
-    ),
-
-    // ──────────────────────────────────────────────────────
-    // EXPANSION TILE
-    // ──────────────────────────────────────────────────────
-    expansionTileTheme: const ExpansionTileThemeData(
-      backgroundColor:          Colors.transparent,
-      collapsedBackgroundColor: Colors.transparent,
-      iconColor:                AppColors.textSecondary,
-      collapsedIconColor:       AppColors.textMuted,
-      textColor:                AppColors.textPrimary,
-      collapsedTextColor:       AppColors.textPrimary,
-      tilePadding: EdgeInsets.symmetric(
-        horizontal: AppSpacing.lg,
-        vertical: AppSpacing.xs,
-      ),
-      childrenPadding: EdgeInsets.zero,
-      expandedAlignment: Alignment.centerLeft,
-    ),
-
-    // ──────────────────────────────────────────────────────
-    // DRAWER
-    // ──────────────────────────────────────────────────────
-    drawerTheme: const DrawerThemeData(
-      backgroundColor: AppColors.bgSurface,
-      scrimColor:      AppColors.overlayDark,
-      elevation:       0,
-      surfaceTintColor: Colors.transparent,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.horizontal(right: Radius.circular(0)),
-      ),
-      width: 280,
-    ),
-
-    // ──────────────────────────────────────────────────────
-    // SCROLLBAR
-    // ──────────────────────────────────────────────────────
-    scrollbarTheme: ScrollbarThemeData(
-      thumbColor: MaterialStateProperty.all(
-        AppColors.royalBlue.withOpacity(0.3),
-      ),
-      trackColor: MaterialStateProperty.all(Colors.transparent),
-      trackBorderColor: MaterialStateProperty.all(Colors.transparent),
-      radius:       const Radius.circular(2),
-      thickness:    MaterialStateProperty.all(3),
-      crossAxisMargin: 2,
-      mainAxisMargin: 4,
-    ),
-
-    // ──────────────────────────────────────────────────────
-    // PAGE TRANSITIONS
-    // Cupertino-style slide transition for both platforms
-    // ──────────────────────────────────────────────────────
-    pageTransitionsTheme: const PageTransitionsTheme(
-      builders: {
-        TargetPlatform.android: const CupertinoPageTransitionsBuilder(),
-        TargetPlatform.iOS:     const CupertinoPageTransitionsBuilder(),
-      },
-    ),
-
-    // ──────────────────────────────────────────────────────
-    // TEXT SELECTION
-    // ──────────────────────────────────────────────────────
-    textSelectionTheme: TextSelectionThemeData(
-      cursorColor:              AppColors.royalBlue,
-      selectionColor:           AppColors.royalBlue.withOpacity(0.3),
-      selectionHandleColor:     AppColors.royalBlue,
-    ),
-  ); // end dark ThemeData
-
-  // ──────────────────────────────────────────────────────────
-  // 🌕 LIGHT THEME (Optional fallback)
-  // ──────────────────────────────────────────────────────────
+  static ThemeData get dark => _build(Brightness.dark);
+  static ThemeData get light => _build(Brightness.light);
 
   static ThemeData lightWithAdmin(AdminThemeColors? colors) {
-    final primary = colors != null
-        ? AppColors.fromHex(colors.primaryHex.replaceFirst('#', ''))
-        : AppColors.royalBlue;
-    final accent = colors != null
-        ? AppColors.fromHex(colors.accentHex.replaceFirst('#', ''))
-        : AppColors.pepsiBlue;
+    if (colors == null) return light;
+    final primary = KayanDesignTokens.colorFromHex(colors.primaryHex);
+    final accent = KayanDesignTokens.colorFromHex(colors.accentHex);
     return light.copyWith(
       colorScheme: ColorScheme.fromSeed(
         seedColor: primary,
@@ -737,150 +346,63 @@ abstract class AppTheme {
   }
 
   static ThemeData darkWithAdmin(AdminThemeColors? colors) {
-    final primary = colors != null
-        ? AppColors.fromHex(colors.primaryHex.replaceFirst('#', ''))
-        : AppColors.royalBlue;
+    if (colors == null) return dark;
+    final primary = KayanDesignTokens.colorFromHex(colors.primaryHex);
     return dark.copyWith(
       colorScheme: dark.colorScheme.copyWith(primary: primary),
       primaryColor: primary,
     );
   }
-
-  static ThemeData get light => ThemeData(
-    useMaterial3:       true,
-    brightness:         Brightness.light,
-    colorScheme: ColorScheme.fromSeed(
-      seedColor:  AppColors.royalBlue,
-      brightness: Brightness.light,
-      primary:    AppColors.royalBlue,
-      secondary:  AppColors.pepsiBlue,
-    ),
-    scaffoldBackgroundColor: AppColors.lightBg,
-    canvasColor: AppColors.pureWhite,
-    fontFamily: GoogleFonts.inter().fontFamily,
-    textTheme: AppTextStyles.textTheme.apply(
-      bodyColor:    const Color(0xFF1E293B),
-      displayColor: const Color(0xFF0F172A),
-    ),
-    appBarTheme: AppBarTheme(
-      backgroundColor:    Colors.white,
-      foregroundColor:    AppColors.royalNavy,
-      elevation:          0,
-      centerTitle:        true,
-      systemOverlayStyle: systemUiLight,
-      titleTextStyle:     AppTextStyles.titleLarge.copyWith(
-        color: AppColors.royalNavy,
-      ),
-      shape: const Border(
-        bottom: BorderSide(color: Color(0x1A000000), width: 1),
-      ),
-    ),
-    cardTheme: CardThemeData(
-      color:       Colors.white,
-      elevation:   2,
-      shadowColor: AppColors.royalNavy.withOpacity(0.08),
-      shape: RoundedRectangleBorder(borderRadius: AppBorderRadius.card),
-    ),
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(AppColors.pepsiBlue),
-        foregroundColor: MaterialStateProperty.all(Colors.white),
-        shape: MaterialStateProperty.all(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-        minimumSize: MaterialStateProperty.all(const Size(double.infinity, 52)),
-        textStyle: MaterialStateProperty.all(AppTextStyles.buttonMedium),
-      ),
-    ),
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor: Colors.white,
-      selectedItemColor: AppColors.pepsiBlue,
-      unselectedItemColor: AppColors.silver,
-      elevation: 8,
-      type: BottomNavigationBarType.fixed,
-    ),
-  );
 }
 
-// ──────────────────────────────────────────────────────────────
-// 🎨 DECORATION HELPERS — Box decorations for custom widgets
-// These are used when you need custom painted containers,
-// not covered by ThemeData component themes.
-// ──────────────────────────────────────────────────────────────
-
-/// Blue gradient button decoration (for custom gradient buttons)
+// Decoration helpers for custom widgets
 BoxDecoration get kayanPrimaryButtonDecoration => BoxDecoration(
-  gradient:     AppGradients.primaryButton,
-  borderRadius: AppBorderRadius.button,
-  boxShadow: [
-    BoxShadow(
-      color:      AppColors.royalBlue.withOpacity(0.35),
-      blurRadius: 16,
-      offset:     const Offset(0, 4),
-    ),
-  ],
-);
+      gradient: KayanDesignTokens.gradBlue,
+      borderRadius: AppBorderRadius.button,
+      boxShadow: KayanDesignTokens.shadowS,
+    );
 
-/// Gold gradient button decoration (for premium CTAs)
 BoxDecoration get kayanGoldButtonDecoration => BoxDecoration(
-  gradient:     AppGradients.goldButton,
-  borderRadius: AppBorderRadius.button,
-  boxShadow: [
-    BoxShadow(
-      color:      AppColors.metallicGold.withOpacity(0.35),
-      blurRadius: 16,
-      offset:     const Offset(0, 4),
-    ),
-  ],
-);
+      gradient: KayanDesignTokens.gradGold,
+      borderRadius: AppBorderRadius.button,
+      boxShadow: [
+        BoxShadow(
+          color: KayanDesignTokens.gold.withValues(alpha: 0.35),
+          blurRadius: 16,
+          offset: const Offset(0, 4),
+        ),
+      ],
+    );
 
-/// Default KAYAN card decoration
 BoxDecoration get kayanCardDecoration => BoxDecoration(
-  gradient:     AppGradients.card,
-  borderRadius: AppBorderRadius.card,
-  border:       Border.all(color: AppColors.borderSubtle, width: 1),
-  boxShadow: [
-    BoxShadow(
-      color:      Colors.black.withOpacity(0.3),
-      blurRadius: 12,
-      offset:     const Offset(0, 4),
-    ),
-  ],
-);
+      color: KayanDesignTokens.surface,
+      borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
+      border: Border.all(color: KayanDesignTokens.border),
+      boxShadow: KayanDesignTokens.shadowS,
+    );
 
-/// Gold-bordered card (featured, premium items)
 BoxDecoration get kayanPremiumCardDecoration => BoxDecoration(
-  gradient:     AppGradients.card,
-  borderRadius: AppBorderRadius.card,
-  border:       Border.all(color: AppColors.borderGold, width: 1),
-  boxShadow: [
-    BoxShadow(
-      color:      AppColors.metallicGold.withOpacity(0.12),
-      blurRadius: 20,
-      spreadRadius: 0,
-      offset:     const Offset(0, 4),
-    ),
-    BoxShadow(
-      color:      Colors.black.withOpacity(0.25),
-      blurRadius: 8,
-      offset:     const Offset(0, 2),
-    ),
-  ],
-);
+      color: KayanDesignTokens.surface,
+      borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
+      border: Border.all(color: KayanDesignTokens.gold.withValues(alpha: 0.5)),
+      boxShadow: [
+        BoxShadow(
+          color: KayanDesignTokens.gold.withValues(alpha: 0.12),
+          blurRadius: 20,
+          offset: const Offset(0, 4),
+        ),
+      ],
+    );
 
-/// Blue-glow card (active/selected state)
 BoxDecoration get kayanActiveCardDecoration => BoxDecoration(
-  gradient:     AppGradients.card,
-  borderRadius: AppBorderRadius.card,
-  border:       Border.all(color: AppColors.borderActiveBold, width: 1.5),
-  boxShadow: [
-    BoxShadow(
-      color:      AppColors.royalBlue.withOpacity(0.2),
-      blurRadius: 20,
-      spreadRadius: 0,
-      offset:     const Offset(0, 4),
-    ),
-  ],
-);
+      color: KayanDesignTokens.surface,
+      borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
+      border: Border.all(color: KayanDesignTokens.kBlue, width: 1.5),
+      boxShadow: [
+        BoxShadow(
+          color: KayanDesignTokens.kBlue.withValues(alpha: 0.2),
+          blurRadius: 20,
+          offset: const Offset(0, 4),
+        ),
+      ],
+    );

@@ -8,7 +8,7 @@ import '../../../../../routing/app_routes.dart';
 import '../../../../../shared/providers/locale_provider.dart';
 import '../../../../../shared/widgets/design/kayan_design_widgets.dart';
 import '../../../../../shared/widgets/design/kayan_entry_widgets.dart';
-import '../../../browse/data/models/service_models.dart';
+import '../../../presentation/providers/service_providers.dart';
 
 class ServicesBookingsLightScreen extends ConsumerStatefulWidget {
   const ServicesBookingsLightScreen({super.key});
@@ -20,14 +20,12 @@ class ServicesBookingsLightScreen extends ConsumerStatefulWidget {
 class _ServicesBookingsLightScreenState extends ConsumerState<ServicesBookingsLightScreen> {
   int _tab = 0;
 
-  List<BookingModel> get _filtered {
-    return switch (_tab) {
-      1 => mockBookings.where((b) => b.status == 'CONFIRMED').toList(),
-      2 => mockBookings.where((b) => b.status == 'IN_PROGRESS').toList(),
-      3 => mockBookings.where((b) => b.status == 'COMPLETED').toList(),
-      _ => mockBookings,
-    };
-  }
+  String? get _statusFilter => switch (_tab) {
+        1 => 'CONFIRMED',
+        2 => 'IN_PROGRESS',
+        3 => 'COMPLETED',
+        _ => null,
+      };
 
   Color _color(String status) => switch (status) {
         'CONFIRMED' => KayanDesignTokens.kBlue,
@@ -57,7 +55,7 @@ class _ServicesBookingsLightScreenState extends ConsumerState<ServicesBookingsLi
   Widget build(BuildContext context) {
     final ar = ref.watch(isArabicProvider);
     final tabs = ar ? ['الكل', 'قادمة', 'جارية', 'مكتملة'] : ['All', 'Upcoming', 'Active', 'Done'];
-    final bookings = _filtered;
+    final bookingsAsync = ref.watch(serviceBookingsProvider(_statusFilter));
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -72,7 +70,10 @@ class _ServicesBookingsLightScreenState extends ConsumerState<ServicesBookingsLi
               KayanFilterSlotRow(labels: tabs, selectedIndex: _tab, onSelected: (i) => setState(() => _tab = i)),
               const SizedBox(height: 14),
               Expanded(
-                child: ListView(
+                child: bookingsAsync.when(
+                  loading: () => const Center(child: CircularProgressIndicator()),
+                  error: (e, _) => Center(child: Text(e.toString())),
+                  data: (bookings) => ListView(
                   children: bookings.map((b) {
                     final color = _color(b.status);
                     return Container(
@@ -112,6 +113,7 @@ class _ServicesBookingsLightScreenState extends ConsumerState<ServicesBookingsLi
                       ),
                     );
                   }).toList(),
+                ),
                 ),
               ),
             ],

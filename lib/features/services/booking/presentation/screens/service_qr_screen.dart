@@ -1,4 +1,4 @@
-// TODO: connect to real backend
+// Presentation screen with local demo content.
 import 'package:flutter/material.dart';
 
 import '../../../shared/presentation/widgets/phase3_service_widgets.dart';
@@ -8,7 +8,7 @@ class ServiceQrScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Phase3ServiceScaffold(
+    return const Phase3ServiceScaffold(
       titleAr: 'رمز الخدمة',
       titleEn: 'Service QR',
       subtitleAr: 'رمز آمن للتحقق من الحجز والفني.',

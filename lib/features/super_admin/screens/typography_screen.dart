@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/kayan_design_tokens.dart';
 import '../../../routing/app_routes.dart';
 import '../services/design_engine_service.dart';
 import '../widgets/super_admin_shell.dart';
@@ -60,7 +60,7 @@ class _TypographyScreenState extends State<TypographyScreen> {
 
   Widget _levelSlider(String title, TypographyLevel level, void Function(TypographyLevel) onChanged) {
     return Card(
-      color: AppColors.bgCard.withValues(alpha: 0.75),
+      color: KayanDesignTokens.surface,
       margin: const EdgeInsets.only(bottom: 10),
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -120,14 +120,14 @@ class _TypographyScreenState extends State<TypographyScreen> {
         padding: const EdgeInsets.all(16),
         children: [
           Card(
-            color: AppColors.bgCard.withValues(alpha: 0.75),
+            color: KayanDesignTokens.surface,
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   DropdownButtonFormField<String>(
-                    value: _typo.arabicFont,
+                    initialValue: _typo.arabicFont,
                     decoration: const InputDecoration(labelText: 'خط عربي', filled: true),
                     items: TypographySettings.arabicFonts
                         .map((f) => DropdownMenuItem(value: f, child: Text(f)))
@@ -136,7 +136,7 @@ class _TypographyScreenState extends State<TypographyScreen> {
                   ),
                   const SizedBox(height: 12),
                   DropdownButtonFormField<String>(
-                    value: _typo.englishFont,
+                    initialValue: _typo.englishFont,
                     decoration: const InputDecoration(labelText: 'خط إنجليزي', filled: true),
                     items: TypographySettings.englishFonts
                         .map((f) => DropdownMenuItem(value: f, child: Text(f)))
@@ -148,7 +148,7 @@ class _TypographyScreenState extends State<TypographyScreen> {
                       padding: EdgeInsets.only(top: 8),
                       child: Text(
                         '⚠️ هذا الخط قد لا يدعم العربية بشكل كامل',
-                        style: TextStyle(color: AppColors.warning),
+                        style: TextStyle(color: KayanDesignTokens.kOrange),
                       ),
                     ),
                 ],
@@ -157,7 +157,7 @@ class _TypographyScreenState extends State<TypographyScreen> {
           ),
           const SizedBox(height: 16),
           Card(
-            color: AppColors.bgCard.withValues(alpha: 0.8),
+            color: KayanDesignTokens.surface,
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -193,7 +193,7 @@ class _TypographyScreenState extends State<TypographyScreen> {
           _levelSlider('Label Large', _typo.labelLarge, (l) => _typo = _typo.copyWith(labelLarge: l)),
           const SizedBox(height: 8),
           Card(
-            color: AppColors.bgCard.withValues(alpha: 0.7),
+            color: KayanDesignTokens.surface,
             child: ListTile(
               leading: const Icon(Icons.insights),
               title: const Text('إحصائيات الخطوط'),

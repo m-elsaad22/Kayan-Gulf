@@ -1,41 +1,100 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../shared/widgets/kayan_themed_scaffold.dart';
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_text_styles.dart';
+import '../../core/theme/kayan_design_tokens.dart';
 import '../../shared/providers/locale_provider.dart';
+import '../../shared/widgets/design/kayan_design_widgets.dart';
+import '../../shared/widgets/design/kayan_entry_widgets.dart';
 
-/// KAYAN Screen — Pick Location
-class MapLocationPickerScreen extends ConsumerWidget {
+/// اختيار الموقع على الخريطة — light design
+class MapLocationPickerScreen extends ConsumerStatefulWidget {
   const MapLocationPickerScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isArabic = ref.watch(isArabicProvider);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+  ConsumerState<MapLocationPickerScreen> createState() => _MapLocationPickerScreenState();
+}
 
-    return KayanThemedScaffold(
-      titleAr: 'اختيار الموقع',
-      titleEn: 'Pick Location',
-      body: ListView(
-        children: [
-          Icon(Icons.layers_outlined, size: 64, color: isDark ? AppColors.skyBlue : AppColors.pepsiBlue),
-          const SizedBox(height: 16),
-          Text(
-            isArabic ? 'اختيار الموقع' : 'Pick Location',
-            style: isArabic ? AppTextStyles.arabicHeadlineSmall : AppTextStyles.headlineSmall,
+class _MapLocationPickerScreenState extends ConsumerState<MapLocationPickerScreen> {
+  final _addressCtrl = TextEditingController(text: 'الرياض، حي النرجس، شارع الأمير سلطان');
+
+  @override
+  void dispose() {
+    _addressCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ar = ref.watch(isArabicProvider);
+
+    return Scaffold(
+      backgroundColor: KayanDesignTokens.bg,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              KayanLightTopBar(title: ar ? 'اختيار الموقع' : 'Pick location', onBack: () => context.pop()),
+              const SizedBox(height: 12),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: KayanDesignTokens.kGreen.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: KayanDesignTokens.border),
+                  ),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      const Icon(Icons.map_rounded, size: 64, color: KayanDesignTokens.kGreen),
+                      Positioned(
+                        bottom: 16,
+                        left: 16,
+                        right: 16,
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(color: KayanDesignTokens.border),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.location_on_rounded, color: KayanDesignTokens.kBlue),
+                              const SizedBox(width: 8),
+                              Expanded(child: Text(_addressCtrl.text, style: KayanDesignTokens.cairo(fontSize: 12, fontWeight: FontWeight.w700))),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              KayanDesignTextField(
+                label: ar ? 'العنوان التفصيلي' : 'Detailed address',
+                controller: _addressCtrl,
+                hint: ar ? 'الحي، الشارع، رقم المبنى' : 'District, street, building',
+                icon: Icons.edit_location_alt_outlined,
+              ),
+              const SizedBox(height: 12),
+              KayanCtaButton(
+                label: ar ? 'تأكيد الموقع' : 'Confirm location',
+                variant: KayanCtaVariant.green,
+                trailingIcon: Icons.check_rounded,
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(ar ? 'تم حفظ الموقع' : 'Location saved')),
+                  );
+                  context.pop(_addressCtrl.text);
+                },
+              ),
+            ],
           ),
-          const SizedBox(height: 8),
-          Text(
-            isArabic
-                ? 'شاشة كيان — تجربة احترافية مع دعم الوضع الفاتح/الداكن والعربية/الإنجليزية.'
-                : 'KAYAN screen with light/dark mode and Arabic/English support.',
-            style: AppTextStyles.bodyMedium.copyWith(
-              color: isDark ? AppColors.darkSubtext : AppColors.lightSubtext,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

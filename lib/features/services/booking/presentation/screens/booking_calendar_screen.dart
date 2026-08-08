@@ -1,51 +1,48 @@
-// KAYAN — Booking Calendar Screen
-// lib/features/services/booking/presentation/screens/booking_calendar_screen.dart
-
+// Booking calendar — light design
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../../core/theme/kayan_design_tokens.dart';
-import '../../../../../shared/widgets/design/kayan_entry_widgets.dart';
-import '../../../../../core/theme/app_colors.dart';
-import '../../../../../core/theme/app_gradients.dart';
-import '../../../../../core/theme/app_text_styles.dart';
-import '../../../../../core/theme/app_border_radius.dart';
-import '../../../../../core/theme/app_spacing.dart';
 import '../../../../../routing/app_routes.dart';
 import '../../../../../shared/providers/locale_provider.dart';
+import '../../../../../shared/widgets/design/kayan_design_widgets.dart';
+import '../../../../../shared/widgets/design/kayan_entry_widgets.dart';
 import '../../../../services/browse/data/models/service_models.dart';
 
 class BookingCalendarScreen extends ConsumerStatefulWidget {
-  final String serviceSlug;
   const BookingCalendarScreen({super.key, required this.serviceSlug});
+
+  final String serviceSlug;
+
   @override
-  ConsumerState<BookingCalendarScreen> createState() => _BCS();
+  ConsumerState<BookingCalendarScreen> createState() => _BookingCalendarScreenState();
 }
 
-class _BCS extends ConsumerState<BookingCalendarScreen> {
-  DateTime  _selectedDate  = DateTime.now().add(const Duration(days: 1));
+class _BookingCalendarScreenState extends ConsumerState<BookingCalendarScreen> {
+  DateTime _selectedDate = DateTime.now().add(const Duration(days: 1));
   TimeSlot? _selectedSlot;
-  int       _selectedAddr  = 0;
-  String    _notes         = '';
-  bool      _isLoading     = false;
+  int _selectedAddr = 0;
+  final _notesCtrl = TextEditingController();
 
-  // 14-day calendar
+  @override
+  void dispose() {
+    _notesCtrl.dispose();
+    super.dispose();
+  }
+
   late final List<DateTime> _days = List.generate(14, (i) => DateTime.now().add(Duration(days: i + 1)));
+  final _addresses = ['حي النخيل، شارع الملك فهد، الرياض', 'حي العليا، الرياض', 'إضافة عنوان جديد...'];
 
   List<TimeSlot> get _slots => generateSlots(_selectedDate);
 
-  final _addresses = ['حي النخيل، شارع الملك فهد، الرياض', 'حي العليا، الرياض', 'إضافة عنوان جديد...'];
-
-  void _proceed() async {
+  void _proceed() {
+    final ar = ref.read(isArabicProvider);
     if (_selectedSlot == null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(ref.read(isArabicProvider) ? 'يرجى اختيار وقت' : 'Please select a time slot'),
-        backgroundColor: AppColors.error,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: AppBorderRadius.sm),
-      ));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(ar ? 'يرجى اختيار وقت' : 'Please select a time slot'), backgroundColor: KayanDesignTokens.danger),
+      );
       return;
     }
     HapticFeedback.mediumImpact();
@@ -55,195 +52,187 @@ class _BCS extends ConsumerState<BookingCalendarScreen> {
       'slot': _selectedSlot!.id,
       'slotLabel': _selectedSlot!.label,
       'address': _addresses[_selectedAddr < 2 ? _selectedAddr : 0],
-      'notes': _notes,
+      'notes': _notesCtrl.text,
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final ar = ref.watch(isArabicProvider);
+    final dayNames = ar ? ['أح', 'إث', 'ث', 'أر', 'خ', 'ج', 'س'] : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    final monthNames = ar
+        ? ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر']
+        : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     return Scaffold(
       backgroundColor: KayanDesignTokens.bg,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        foregroundColor: KayanDesignTokens.kBlueDeep,
-        elevation: 0,
-        centerTitle: true,
-        title: Text(
-          ar ? 'اختر الموعد' : 'Choose date & time',
-          style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800),
-        ),
-        leading: IconButton(
-          icon: Icon(ar ? Icons.arrow_forward_ios_rounded : Icons.arrow_back_ios_new_rounded, size: 20),
-          onPressed: () => context.pop()),
-        bottom: PreferredSize(preferredSize: const Size.fromHeight(1),
-            child: Container(height: 1, color: AppColors.borderSubtle)),
-      ),
-      body: Column(children: [
-        Expanded(child: SingleChildScrollView(padding: const EdgeInsets.only(bottom: 16), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const SizedBox(height: 16),
-
-          // Date picker row
-          _SecLabel(ar ? 'اختر التاريخ' : 'Select Date', ar),
-          const SizedBox(height: 10),
-          SizedBox(height: 80, child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.pagePadding),
-            itemCount: _days.length,
-            itemBuilder: (_, i) {
-              final d = _days[i];
-              final sel = _isSameDay(d, _selectedDate);
-              final dayNames = ar
-                  ? ['أح', 'إث', 'ث', 'أر', 'خ', 'ج', 'س']
-                  : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-              final monthNames = ar
-                  ? ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر']
-                  : ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-              return GestureDetector(
-                onTap: () { HapticFeedback.selectionClick(); setState(() { _selectedDate = d; _selectedSlot = null; }); },
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  width: 58, margin: const EdgeInsets.only(right: 8),
-                  decoration: BoxDecoration(
-                    gradient: sel ? AppGradients.primaryButton : null,
-                    color: sel ? null : AppColors.bgCard,
-                    borderRadius: AppBorderRadius.md,
-                    border: Border.all(color: sel ? Colors.transparent : AppColors.borderSubtle),
-                    boxShadow: sel ? [BoxShadow(color: AppColors.royalBlue.withOpacity(0.3), blurRadius: 10)] : [],
-                  ),
-                  child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    Text(dayNames[d.weekday % 7], style: AppTextStyles.caption.copyWith(color: sel ? Colors.white70 : AppColors.textMuted)),
-                    const SizedBox(height: 4),
-                    Text('${d.day}', style: AppTextStyles.titleMedium.copyWith(color: sel ? Colors.white : AppColors.textPrimary)),
-                    const SizedBox(height: 2),
-                    Text(monthNames[d.month - 1], style: AppTextStyles.caption.copyWith(fontSize: 8, color: sel ? Colors.white60 : AppColors.textMuted)),
-                  ]),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              KayanLightTopBar(title: ar ? 'اختر الموعد' : 'Choose date & time', onBack: () => context.pop()),
+              Expanded(
+                child: ListView(
+                  children: [
+                    _SectionLabel(ar ? 'اختر التاريخ' : 'Select date'),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      height: 80,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: _days.length,
+                        itemBuilder: (_, i) {
+                          final d = _days[i];
+                          final sel = _isSameDay(d, _selectedDate);
+                          return GestureDetector(
+                            onTap: () {
+                              HapticFeedback.selectionClick();
+                              setState(() {
+                                _selectedDate = d;
+                                _selectedSlot = null;
+                              });
+                            },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              width: 58,
+                              margin: const EdgeInsets.only(left: 8),
+                              decoration: BoxDecoration(
+                                gradient: sel ? KayanDesignTokens.gradGreen : null,
+                                color: sel ? null : Colors.white,
+                                borderRadius: BorderRadius.circular(14),
+                                border: Border.all(color: sel ? Colors.transparent : KayanDesignTokens.border),
+                                boxShadow: sel ? KayanDesignTokens.shadowS : null,
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(dayNames[d.weekday % 7], style: KayanDesignTokens.cairo(fontSize: 10, color: sel ? Colors.white70 : KayanDesignTokens.muted)),
+                                  Text('${d.day}', style: KayanDesignTokens.cairo(fontSize: 16, fontWeight: FontWeight.w800, color: sel ? Colors.white : KayanDesignTokens.text2)),
+                                  Text(monthNames[d.month - 1], style: KayanDesignTokens.cairo(fontSize: 8, color: sel ? Colors.white60 : KayanDesignTokens.muted)),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    _SectionLabel(ar ? 'اختر الوقت' : 'Select time'),
+                    const SizedBox(height: 10),
+                    Wrap(
+                      spacing: 10,
+                      runSpacing: 10,
+                      children: _slots.map((slot) {
+                        final sel = _selectedSlot?.id == slot.id;
+                        final avail = slot.isAvailable;
+                        return GestureDetector(
+                          onTap: avail
+                              ? () {
+                                  HapticFeedback.selectionClick();
+                                  setState(() => _selectedSlot = slot);
+                                }
+                              : null,
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                            decoration: BoxDecoration(
+                              gradient: sel ? KayanDesignTokens.gradGreen : null,
+                              color: sel ? null : (avail ? Colors.white : KayanDesignTokens.bg),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: sel ? Colors.transparent : KayanDesignTokens.border),
+                            ),
+                            child: Text(
+                              slot.label,
+                              style: KayanDesignTokens.cairo(
+                                fontWeight: FontWeight.w700,
+                                color: sel ? Colors.white : (avail ? KayanDesignTokens.text2 : KayanDesignTokens.muted),
+                              ).copyWith(decoration: !avail ? TextDecoration.lineThrough : null),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 20),
+                    _SectionLabel(ar ? 'عنوان الخدمة' : 'Service address'),
+                    const SizedBox(height: 10),
+                    ...List.generate(_addresses.length, (i) {
+                      final isAdd = i == _addresses.length - 1;
+                      final sel = _selectedAddr == i;
+                      return GestureDetector(
+                        onTap: () {
+                          HapticFeedback.selectionClick();
+                          setState(() => _selectedAddr = i);
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: sel && !isAdd ? KayanDesignTokens.kGreen.withValues(alpha: 0.08) : Colors.white,
+                            borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
+                            border: Border.all(color: sel ? KayanDesignTokens.kGreen : KayanDesignTokens.border, width: sel ? 1.5 : 1),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(isAdd ? Icons.add_location_alt_outlined : Icons.location_on_outlined, size: 18, color: KayanDesignTokens.kGreen),
+                              const SizedBox(width: 10),
+                              Expanded(child: Text(_addresses[i], style: KayanDesignTokens.cairo(fontSize: 13, fontWeight: sel ? FontWeight.w700 : FontWeight.w500, color: isAdd ? KayanDesignTokens.kBlue : KayanDesignTokens.text2))),
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
+                    const SizedBox(height: 16),
+                    _SectionLabel(ar ? 'ملاحظات (اختياري)' : 'Notes (optional)'),
+                    const SizedBox(height: 8),
+                    KayanDesignTextField(
+                      label: ar ? 'ملاحظات' : 'Notes',
+                      hint: ar ? 'أي تفاصيل إضافية للفني...' : 'Any additional details...',
+                      icon: Icons.note_outlined,
+                      controller: _notesCtrl,
+                    ),
+                  ],
                 ),
-              );
-            },
-          )),
-
-          const SizedBox(height: 20),
-
-          // Time slots
-          _SecLabel(ar ? 'اختر الوقت' : 'Select Time Slot', ar),
-          const SizedBox(height: 10),
-          Padding(padding: const EdgeInsets.symmetric(horizontal: AppSpacing.pagePadding),
-            child: Wrap(spacing: 10, runSpacing: 10, children: _slots.map((slot) {
-              final sel  = _selectedSlot?.id == slot.id;
-              final avail = slot.isAvailable;
-              return GestureDetector(
-                onTap: avail ? () { HapticFeedback.selectionClick(); setState(() => _selectedSlot = slot); } : null,
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  decoration: BoxDecoration(
-                    gradient: sel ? AppGradients.primaryButton : null,
-                    color: sel ? null : (avail ? AppColors.bgCard : AppColors.bgCard2),
-                    borderRadius: AppBorderRadius.sm,
-                    border: Border.all(color: sel ? Colors.transparent : (avail ? AppColors.borderDefault : AppColors.borderSubtle)),
-                    boxShadow: sel ? [BoxShadow(color: AppColors.royalBlue.withOpacity(0.3), blurRadius: 8)] : [],
-                  ),
-                  child: Text(slot.label,
-                      style: AppTextStyles.labelMedium.copyWith(
-                        color: sel ? Colors.white : (avail ? AppColors.textPrimary : AppColors.textDisabled),
-                        decoration: !avail ? TextDecoration.lineThrough : null,
-                      )),
-                ),
-              );
-            }).toList())),
-
-          const SizedBox(height: 20),
-
-          // Address selection
-          _SecLabel(ar ? 'عنوان الخدمة' : 'Service Address', ar),
-          const SizedBox(height: 10),
-          Padding(padding: const EdgeInsets.symmetric(horizontal: AppSpacing.pagePadding),
-            child: Column(children: List.generate(_addresses.length, (i) {
-              final isAdd = i == _addresses.length - 1;
-              final sel = _selectedAddr == i;
-              return GestureDetector(
-                onTap: () { HapticFeedback.selectionClick(); setState(() => _selectedAddr = i); },
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  margin: const EdgeInsets.only(bottom: 8),
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: sel && !isAdd ? AppColors.royalBlue.withOpacity(0.07) : AppColors.bgCard,
-                    borderRadius: AppBorderRadius.sm,
-                    border: Border.all(color: sel && !isAdd ? AppColors.borderActiveBold : (isAdd ? AppColors.borderActive : AppColors.borderSubtle), width: sel ? 1.5 : 1),
-                  ),
-                  child: Row(children: [
-                    if (!isAdd) AnimatedContainer(duration: const Duration(milliseconds: 200),
-                      width: 18, height: 18, decoration: BoxDecoration(shape: BoxShape.circle,
-                          border: Border.all(color: sel ? AppColors.royalBlue : AppColors.borderDefault, width: sel ? 2 : 1.5),
-                          color: sel ? AppColors.royalBlue : Colors.transparent),
-                      child: sel ? const Icon(Icons.check_rounded, color: Colors.white, size: 10) : null),
-                    if (isAdd) const Icon(Icons.add_location_alt_outlined, size: 18, color: AppColors.royalBlue),
-                    const SizedBox(width: 10),
-                    Expanded(child: Text(_addresses[i],
-                        style: (ar ? AppTextStyles.arabicBodySmall : AppTextStyles.bodySmall).copyWith(
-                          color: isAdd ? AppColors.royalBlue : (sel ? AppColors.royalBlue : AppColors.textPrimary)))),
-                  ]),
-                ),
-              );
-            }))),
-
-          const SizedBox(height: 16),
-
-          // Notes
-          _SecLabel(ar ? 'ملاحظات (اختياري)' : 'Notes (Optional)', ar),
-          const SizedBox(height: 8),
-          Padding(padding: const EdgeInsets.symmetric(horizontal: AppSpacing.pagePadding),
-            child: TextField(
-              maxLines: 3,
-              textDirection: ar ? TextDirection.rtl : TextDirection.ltr,
-              style: ar ? AppTextStyles.arabicBodyMedium : AppTextStyles.bodyMedium,
-              decoration: InputDecoration(
-                hintText: ar ? 'أي تفاصيل إضافية للفني...' : 'Any additional details for the technician...',
-                hintStyle: (ar ? AppTextStyles.arabicBodySmall : AppTextStyles.bodySmall).copyWith(color: AppColors.textMuted),
               ),
-              onChanged: (v) => _notes = v,
-            )),
-        ]))),
-
-        // Confirm bar
-        Container(
-          padding: EdgeInsets.fromLTRB(16, 12, 16, MediaQuery.paddingOf(context).bottom + 12),
-          decoration: BoxDecoration(color: AppColors.bgSurface,
-              border: const Border(top: BorderSide(color: AppColors.borderSubtle)),
-              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.25), blurRadius: 16, offset: const Offset(0, -4))]),
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
-            if (_selectedSlot != null)
-              Padding(padding: const EdgeInsets.only(bottom: 8), child: Container(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(color: AppColors.royalBlue.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
-                child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  const Icon(Icons.event_rounded, size: 14, color: AppColors.royalBlue),
-                  const SizedBox(width: 6),
-                  Text('${_selectedDate.day}/${_selectedDate.month} — ${_selectedSlot!.label}',
-                      style: AppTextStyles.labelMedium.copyWith(color: AppColors.royalBlue)),
-                ]))),
-            GestureDetector(
-              onTap: _proceed,
-              child: Container(height: 52,
-                decoration: BoxDecoration(
-                  gradient: _selectedSlot != null ? AppGradients.primaryButton : const LinearGradient(colors: [AppColors.bgCard2, AppColors.bgCard2]),
-                  borderRadius: AppBorderRadius.button,
-                  boxShadow: _selectedSlot != null ? [BoxShadow(color: AppColors.royalBlue.withOpacity(0.35), blurRadius: 14, offset: const Offset(0, 4))] : [],
+              if (_selectedSlot != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(color: KayanDesignTokens.kGreen.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(10)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.event_rounded, size: 14, color: KayanDesignTokens.kGreen),
+                        const SizedBox(width: 6),
+                        Text('${_selectedDate.day}/${_selectedDate.month} — ${_selectedSlot!.label}', style: KayanDesignTokens.cairo(fontSize: 12, fontWeight: FontWeight.w700, color: KayanDesignTokens.kGreen)),
+                      ],
+                    ),
+                  ),
                 ),
-                child: Center(child: Text(ar ? 'متابعة لتأكيد الحجز' : 'Continue to Confirm',
-                    style: (ar ? AppTextStyles.arabicButton : AppTextStyles.buttonMedium).copyWith(
-                      color: _selectedSlot != null ? Colors.white : AppColors.textDisabled)))),
-            ),
-          ]),
+              KayanCtaButton(
+                label: ar ? 'متابعة لتأكيد الحجز' : 'Continue to confirm',
+                variant: KayanCtaVariant.green,
+                onPressed: _selectedSlot != null ? _proceed : null,
+              ),
+            ],
+          ),
         ),
-      ]),
+      ),
     );
   }
 
   bool _isSameDay(DateTime a, DateTime b) => a.year == b.year && a.month == b.month && a.day == b.day;
 }
 
-Widget _SecLabel(String t, bool ar) => Padding(padding: const EdgeInsets.symmetric(horizontal: AppSpacing.pagePadding),
-  child: Text(t, style: ar ? AppTextStyles.arabicTitleSmall : AppTextStyles.titleSmall));
+class _SectionLabel extends StatelessWidget {
+  const _SectionLabel(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(text, style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800, fontSize: 14));
+  }
+}

@@ -48,13 +48,13 @@ class _LanguageRegionScreenState extends ConsumerState<LanguageRegionScreen> {
     return KayanEntryScaffold(
       smallHero: true,
       heroHeight: 200,
-      hero: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 16, 24, 40),
+      hero: const Padding(
+        padding: EdgeInsets.fromLTRB(24, 16, 24, 40),
         child: Column(
           children: [
-            const KayanBrandLogo(size: 56),
-            const SizedBox(height: 16),
-            const KayanEntryTitle(before: 'اختر ', highlight: 'لغتك ودولتك'),
+            KayanBrandLogo(size: 56),
+            SizedBox(height: 16),
+            KayanEntryTitle(before: 'اختر ', highlight: 'لغتك ودولتك'),
           ],
         ),
       ),

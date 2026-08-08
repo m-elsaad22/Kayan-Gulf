@@ -1,17 +1,10 @@
-// ============================================================
 // KAYAN — Light-first bottom navigation (5 tabs)
-// ============================================================
-
 import 'package:flutter/material.dart';
 
-import '../../core/theme/app_colors.dart';
+import '../../core/theme/kayan_design_tokens.dart';
 import '../../core/theme/kayan_motion.dart';
 
 class KayanBottomNav extends StatelessWidget {
-  final int selectedIndex;
-  final ValueChanged<int> onItemSelected;
-  final bool isArabic;
-
   const KayanBottomNav({
     super.key,
     required this.selectedIndex,
@@ -19,13 +12,12 @@ class KayanBottomNav extends StatelessWidget {
     this.isArabic = true,
   });
 
+  final int selectedIndex;
+  final ValueChanged<int> onItemSelected;
+  final bool isArabic;
+
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bg = isDark ? AppColors.darkCardBg : AppColors.lightBg;
-    final selected = isDark ? AppColors.skyBlue : AppColors.pepsiBlue;
-    final unselected = AppColors.silver;
-
     final items = isArabic
         ? const [
             ('الرئيسية', Icons.home_outlined, Icons.home_rounded),
@@ -44,38 +36,37 @@ class KayanBottomNav extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: bg,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.05),
-            blurRadius: 8,
-            offset: const Offset(0, -2),
-          ),
-        ],
+        color: Colors.white,
+        border: const Border(top: BorderSide(color: KayanDesignTokens.border)),
+        boxShadow: KayanDesignTokens.shadowS,
       ),
       child: SafeArea(
         top: false,
-        child: BottomNavigationBar(
-          backgroundColor: bg,
-          selectedItemColor: selected,
-          unselectedItemColor: unselected,
-          currentIndex: selectedIndex,
-          type: BottomNavigationBarType.fixed,
-          elevation: 0,
-          selectedFontSize: 11,
-          unselectedFontSize: 10,
-          onTap: (i) {
-            KayanMotion.hapticSelection();
-            onItemSelected(i);
-          },
-          items: [
-            for (var i = 0; i < items.length; i++)
-              BottomNavigationBarItem(
-                icon: Icon(items[i].$2),
-                activeIcon: Icon(items[i].$3),
-                label: items[i].$1,
-              ),
-          ],
+        child: SizedBox(
+          height: 58,
+          child: Row(
+            children: List.generate(items.length, (i) {
+              final active = i == selectedIndex;
+              final color = active ? KayanDesignTokens.kBlue : KayanDesignTokens.muted;
+              return Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    KayanMotion.hapticSelection();
+                    onItemSelected(i);
+                  },
+                  behavior: HitTestBehavior.opaque,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(active ? items[i].$3 : items[i].$2, size: 22, color: color),
+                      const SizedBox(height: 2),
+                      Text(items[i].$1, style: KayanDesignTokens.cairo(fontSize: 10, fontWeight: active ? FontWeight.w700 : FontWeight.w500, color: color)),
+                    ],
+                  ),
+                ),
+              );
+            }),
+          ),
         ),
       ),
     );

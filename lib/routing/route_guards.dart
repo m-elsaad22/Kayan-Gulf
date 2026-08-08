@@ -12,7 +12,7 @@
 //   6. No redirect (null)
 // ============================================================
 
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -142,11 +142,6 @@ class RouteGuards {
     };
     return profileRequired.any((r) => location.startsWith(r));
   }
-
-  /// Debug — log guard decision
-  static void _log(String message) {
-    if (kDebugMode) debugPrint('🛡️ [Guard] $message');
-  }
 }
 
 // ──────────────────────────────────────────────────────────────
@@ -167,11 +162,10 @@ class AuthGuardState {
   });
 
   const AuthGuardState.authenticated({
-    required String userId,
+    required String this.userId,
     required bool profileComplete,
   })  : isAuthenticated = true,
-        isProfileComplete = profileComplete,
-        userId = userId;
+        isProfileComplete = profileComplete;
 
   const AuthGuardState.unauthenticated()
       : isAuthenticated = false,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/services/admin_data_service.dart';
+import '../../../../shared/widgets/design/kayan_entry_widgets.dart';
 import '../widgets/admin_scaffold.dart';
 
 class AdminSettingsScreen extends StatefulWidget {
@@ -11,7 +12,6 @@ class AdminSettingsScreen extends StatefulWidget {
 }
 
 class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
-  late AdminSettings _settings;
   late TextEditingController _appName;
   late TextEditingController _logoUrl;
   late TextEditingController _banners;
@@ -24,15 +24,15 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
   @override
   void initState() {
     super.initState();
-    _settings = AdminDataService.instance.getSettings();
-    _appName = TextEditingController(text: _settings.appName);
-    _logoUrl = TextEditingController(text: _settings.logoUrl);
-    _banners = TextEditingController(text: _settings.bannerUrls.join('\n'));
-    _featured = TextEditingController(text: _settings.featuredProductIds.join(', '));
-    _offerText = TextEditingController(text: _settings.welcomeOfferText);
-    _offerCode = TextEditingController(text: _settings.welcomeOfferCode);
-    _phone = TextEditingController(text: _settings.contactPhone);
-    _email = TextEditingController(text: _settings.contactEmail);
+    final s = AdminDataService.instance.getSettings();
+    _appName = TextEditingController(text: s.appName);
+    _logoUrl = TextEditingController(text: s.logoUrl);
+    _banners = TextEditingController(text: s.bannerUrls.join('\n'));
+    _featured = TextEditingController(text: s.featuredProductIds.join(', '));
+    _offerText = TextEditingController(text: s.welcomeOfferText);
+    _offerCode = TextEditingController(text: s.welcomeOfferCode);
+    _phone = TextEditingController(text: s.contactPhone);
+    _email = TextEditingController(text: s.contactEmail);
   }
 
   @override
@@ -49,21 +49,20 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
   }
 
   Future<void> _save() async {
-    final updated = AdminSettings(
-      appName: _appName.text,
-      logoUrl: _logoUrl.text.trim(),
-      bannerUrls: _banners.text.split('\n').where((s) => s.trim().isNotEmpty).toList(),
-      featuredProductIds: _featured.text.split(',').map((s) => s.trim()).where((s) => s.isNotEmpty).toList(),
-      welcomeOfferText: _offerText.text,
-      welcomeOfferCode: _offerCode.text,
-      contactPhone: _phone.text,
-      contactEmail: _email.text,
+    await AdminDataService.instance.saveSettings(
+      AdminSettings(
+        appName: _appName.text,
+        logoUrl: _logoUrl.text.trim(),
+        bannerUrls: _banners.text.split('\n').where((s) => s.trim().isNotEmpty).toList(),
+        featuredProductIds: _featured.text.split(',').map((s) => s.trim()).where((s) => s.isNotEmpty).toList(),
+        welcomeOfferText: _offerText.text,
+        welcomeOfferCode: _offerCode.text,
+        contactPhone: _phone.text,
+        contactEmail: _email.text,
+      ),
     );
-    await AdminDataService.instance.saveSettings(updated);
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('تم حفظ الإعدادات')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تم حفظ الإعدادات')));
     }
   }
 
@@ -72,18 +71,25 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
     return AdminScaffold(
       title: 'الإعدادات العامة',
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(12),
         children: [
-          TextField(controller: _appName, decoration: const InputDecoration(labelText: 'اسم التطبيق')),
-          TextField(controller: _logoUrl, decoration: const InputDecoration(labelText: 'رابط الشعار أو assets/images/kayan_logo.png')),
-          TextField(controller: _banners, maxLines: 3, decoration: const InputDecoration(labelText: 'روابط البانر (سطر لكل صورة)')),
-          TextField(controller: _featured, decoration: const InputDecoration(labelText: 'معرفات المنتجات المميزة')),
-          TextField(controller: _offerText, decoration: const InputDecoration(labelText: 'نص عرض الترحيب')),
-          TextField(controller: _offerCode, decoration: const InputDecoration(labelText: 'كود العرض')),
-          TextField(controller: _phone, decoration: const InputDecoration(labelText: 'هاتف التواصل')),
-          TextField(controller: _email, decoration: const InputDecoration(labelText: 'البريد الإلكتروني')),
-          const SizedBox(height: 24),
-          FilledButton(onPressed: _save, child: const Text('حفظ الإعدادات')),
+          KayanDesignTextField(label: 'اسم التطبيق', controller: _appName, icon: Icons.apps_rounded),
+          const SizedBox(height: 12),
+          KayanDesignTextField(label: 'رابط الشعار', controller: _logoUrl, icon: Icons.image_outlined),
+          const SizedBox(height: 12),
+          KayanDesignTextField(label: 'روابط البانر', controller: _banners, icon: Icons.view_carousel_outlined),
+          const SizedBox(height: 12),
+          KayanDesignTextField(label: 'معرفات المنتجات المميزة', controller: _featured, icon: Icons.star_outline_rounded),
+          const SizedBox(height: 12),
+          KayanDesignTextField(label: 'نص عرض الترحيب', controller: _offerText, icon: Icons.local_offer_outlined),
+          const SizedBox(height: 12),
+          KayanDesignTextField(label: 'كود العرض', controller: _offerCode, icon: Icons.confirmation_number_outlined),
+          const SizedBox(height: 12),
+          KayanDesignTextField(label: 'هاتف التواصل', controller: _phone, icon: Icons.phone_outlined),
+          const SizedBox(height: 12),
+          KayanDesignTextField(label: 'البريد الإلكتروني', controller: _email, icon: Icons.email_outlined),
+          const SizedBox(height: 20),
+          KayanCtaButton(label: 'حفظ الإعدادات', variant: KayanCtaVariant.blue, trailingIcon: Icons.save_rounded, onPressed: _save),
         ],
       ),
     );

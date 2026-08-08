@@ -8,14 +8,7 @@ import '../../../../../routing/app_routes.dart';
 import '../../../../../shared/providers/locale_provider.dart';
 import '../../../../../shared/widgets/design/kayan_design_widgets.dart';
 import '../../../../../shared/widgets/loaders/shimmer_loader.dart';
-import '../../data/models/service_models.dart';
-
-final servicesListProvider = FutureProvider.autoDispose.family<List<ServiceDetailModel>, String?>((ref, categoryId) async {
-  await Future.delayed(const Duration(milliseconds: 300));
-  final services = mockServiceCategories.map((category) => mockServiceDetail(category.slug)).toList();
-  if (categoryId == null || categoryId.isEmpty) return services;
-  return services.where((s) => s.slug == categoryId || s.categorySlug == categoryId).toList();
-});
+import '../../../presentation/providers/service_providers.dart';
 
 class ServicesListScreen extends ConsumerWidget {
   const ServicesListScreen({super.key, this.categoryId});

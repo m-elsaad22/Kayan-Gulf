@@ -1,16 +1,12 @@
-// ============================================================
 // KAYAN — Minimal Luxury design system (Gulf Super App)
 // Glassmorphism · Neumorphism · Micro-interactions
-// ============================================================
 
 export 'luxury_glass.dart';
 export 'luxury_neumorphic.dart';
 
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/app_border_radius.dart';
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_text_styles.dart';
+import '../../../core/theme/kayan_design_tokens.dart';
 import '../../../core/theme/kayan_motion.dart';
 import 'luxury_glass.dart';
 import 'luxury_neumorphic.dart';
@@ -36,10 +32,7 @@ class LuxuryHubCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final fg = darkText
-        ? AppColors.royalBlue
-        : (isDark ? AppColors.darkText : AppColors.pureWhite);
+    final fg = darkText ? KayanDesignTokens.kBlue : KayanDesignTokens.surface;
 
     return LuxuryNeumorphicCard(
       onTap: onTap,
@@ -51,8 +44,8 @@ class LuxuryHubCard extends StatelessWidget {
           LuxuryGlassPanel(
             padding: EdgeInsets.zero,
             blurSigma: 14,
-            borderRadius: AppBorderRadius.md,
-            borderColor: AppColors.whiteOp(darkText ? 0.35 : 0.22),
+            borderRadius: BorderRadius.circular(KayanDesignTokens.radiusS),
+            borderColor: KayanDesignTokens.surface.withValues(alpha: darkText ? 0.35 : 0.22),
             child: SizedBox(
               width: 64,
               height: 64,
@@ -67,15 +60,17 @@ class LuxuryHubCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: AppTextStyles.titleLarge.copyWith(
-                    color: fg,
+                  style: KayanDesignTokens.cairo(
+                    fontSize: 18,
                     fontWeight: FontWeight.w800,
+                    color: fg,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   subtitle,
-                  style: AppTextStyles.bodySmall.copyWith(
+                  style: KayanDesignTokens.cairo(
+                    fontSize: 12,
                     color: fg.withValues(alpha: 0.82),
                   ),
                 ),
@@ -117,26 +112,29 @@ class LuxuryStatTile extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: AppColors.metallicGold.withValues(alpha: 0.15),
+              color: KayanDesignTokens.gold.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: AppColors.metallicGold.withValues(alpha: 0.35),
+                color: KayanDesignTokens.gold.withValues(alpha: 0.35),
               ),
             ),
-            child: Icon(icon, color: AppColors.metallicGold, size: 22),
+            child: Icon(icon, color: KayanDesignTokens.gold, size: 22),
           ),
           const Spacer(),
           Text(
             value,
-            style: AppTextStyles.arabicHeadlineSmall.copyWith(
+            style: KayanDesignTokens.cairo(
+              fontSize: 22,
               fontWeight: FontWeight.w800,
+              color: KayanDesignTokens.text,
             ),
           ),
           const SizedBox(height: 4),
           Text(
             label,
-            style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.textSecondary,
+            style: KayanDesignTokens.cairo(
+              fontSize: 12,
+              color: KayanDesignTokens.text2,
             ),
           ),
         ],
@@ -166,15 +164,15 @@ class LuxuryAdminMenuTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       child: Row(
         children: [
-          Icon(icon, color: AppColors.skyBlue, size: 24),
+          Icon(icon, color: KayanDesignTokens.kBlueLight, size: 24),
           const SizedBox(width: 14),
           Expanded(
             child: Text(
               title,
-              style: AppTextStyles.arabicTitleSmall,
+              style: KayanDesignTokens.cairo(fontWeight: FontWeight.w700),
             ),
           ),
-          const Icon(Icons.chevron_left, color: AppColors.textMuted),
+          const Icon(Icons.chevron_left, color: KayanDesignTokens.muted),
         ],
       ),
     );

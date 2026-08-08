@@ -5,11 +5,22 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_gradients.dart';
+import '../../../core/theme/kayan_design_tokens.dart';
 import '../../../core/theme/dynamic_theme.dart';
 import '../../../core/theme/kayan_motion.dart';
 import '../services/design_engine_service.dart';
+
+Color _colorFromHex(String hex, {Color fallback = KayanDesignTokens.kBlue}) {
+  try {
+    final buffer = StringBuffer();
+    final cleaned = hex.replaceFirst('#', '');
+    if (cleaned.length == 6 || cleaned.length == 7) buffer.write('ff');
+    buffer.write(cleaned);
+    return Color(int.parse(buffer.toString(), radix: 16));
+  } catch (_) {
+    return fallback;
+  }
+}
 
 class AnimatedStatCard extends StatefulWidget {
   final String label;
@@ -24,7 +35,7 @@ class AnimatedStatCard extends StatefulWidget {
     required this.value,
     required this.icon,
     required this.sparkline,
-    this.iconGradient = AppGradients.primaryButton,
+    this.iconGradient = KayanDesignTokens.gradBlue,
   });
 
   @override
@@ -40,29 +51,23 @@ class _AnimatedStatCardState extends State<AnimatedStatCard> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.bgCard.withValues(alpha: 0.65),
+        color: KayanDesignTokens.surface,
         borderRadius: BorderRadius.circular(rs.cardRadius),
-        border: Border.all(color: AppColors.whiteOp(0.1)),
+        border: Border.all(color: KayanDesignTokens.border),
         boxShadow: rs.neumorphismEnabled
             ? [
                 BoxShadow(
-                  color: AppColors.whiteOp(0.05),
+                  color: KayanDesignTokens.surface.withValues(alpha: 0.95),
                   blurRadius: 12,
                   offset: const Offset(-3, -3),
                 ),
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.35),
+                  color: KayanDesignTokens.kBlueDeep.withValues(alpha: 0.08),
                   blurRadius: 16,
                   offset: const Offset(4, 6),
                 ),
               ]
-            : [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.2),
-                  blurRadius: rs.cardElevation * 2,
-                  offset: Offset(0, rs.cardElevation / 2),
-                ),
-              ],
+            : KayanDesignTokens.shadowS,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,7 +80,7 @@ class _AnimatedStatCardState extends State<AnimatedStatCard> {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.skyBlue.withValues(alpha: 0.3),
+                  color: KayanDesignTokens.kBlueLight.withValues(alpha: 0.3),
                   blurRadius: 10,
                 ),
               ],
@@ -89,15 +94,15 @@ class _AnimatedStatCardState extends State<AnimatedStatCard> {
             curve: Curves.easeOutCubic,
             builder: (_, v, __) => Text(
               v.toInt().toString(),
-              style: const TextStyle(
+              style: KayanDesignTokens.cairo(
                 fontSize: 28,
                 fontWeight: FontWeight.w900,
-                color: Colors.white,
+                color: KayanDesignTokens.text,
               ),
             ),
           ),
           const SizedBox(height: 4),
-          Text(widget.label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+          Text(widget.label, style: KayanDesignTokens.cairo(fontSize: 12, color: KayanDesignTokens.text2)),
           const SizedBox(height: 8),
           SizedBox(
             height: 32,
@@ -113,12 +118,12 @@ class _AnimatedStatCardState extends State<AnimatedStatCard> {
                         FlSpot(i.toDouble(), widget.sparkline[i]),
                     ],
                     isCurved: true,
-                    color: AppColors.metallicGold,
+                    color: KayanDesignTokens.gold,
                     barWidth: 2,
                     dotData: const FlDotData(show: false),
                     belowBarData: BarAreaData(
                       show: true,
-                      color: AppColors.metallicGold.withValues(alpha: 0.12),
+                      color: KayanDesignTokens.gold.withValues(alpha: 0.12),
                     ),
                   ),
                 ],
@@ -169,29 +174,30 @@ class RecentActivityList extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: AppColors.whiteOp(0.08),
+            color: KayanDesignTokens.surface.withValues(alpha: 0.92),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.whiteOp(0.12)),
+            border: Border.all(color: KayanDesignTokens.border),
+            boxShadow: KayanDesignTokens.shadowS,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 'أحدث النشاطات',
-                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
+                style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800, fontSize: 16),
               ),
               const SizedBox(height: 12),
               ...activities.take(5).map(
                     (a) => ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: CircleAvatar(
-                        backgroundColor: AppColors.royalBlue.withValues(alpha: 0.25),
-                        child: Icon(_icon(a.icon), size: 18, color: AppColors.skyBlue),
+                        backgroundColor: KayanDesignTokens.kBlue.withValues(alpha: 0.12),
+                        child: Icon(_icon(a.icon), size: 18, color: KayanDesignTokens.kBlue),
                       ),
-                      title: Text(a.titleAr, style: const TextStyle(fontSize: 13)),
+                      title: Text(a.titleAr, style: KayanDesignTokens.cairo(fontSize: 13)),
                       trailing: Text(
                         _timeAgo(a.at),
-                        style: const TextStyle(fontSize: 11, color: AppColors.textMuted),
+                        style: KayanDesignTokens.cairo(fontSize: 11, color: KayanDesignTokens.muted),
                       ),
                     ),
                   ),
@@ -215,13 +221,7 @@ class PhoneMockupPreview extends StatelessWidget {
     this.isDark = false,
   });
 
-  Color _c(String hex) {
-    try {
-      return AppColors.fromHex(hex.replaceFirst('#', ''));
-    } catch (_) {
-      return AppColors.royalBlue;
-    }
-  }
+  Color _c(String hex) => _colorFromHex(hex);
 
   @override
   Widget build(BuildContext context) {
@@ -353,8 +353,7 @@ class _HsvColorPickerDialogState extends State<HsvColorPickerDialog> {
               decoration: const InputDecoration(labelText: 'HEX'),
               onSubmitted: (v) {
                 try {
-                  final c = AppColors.fromHex(v.replaceFirst('#', ''));
-                  _update(c);
+                  _update(_colorFromHex(v));
                 } catch (_) {}
               },
             ),
@@ -405,7 +404,7 @@ class _ColorWheel extends StatelessWidget {
 
   void _handle(Offset local, BuildContext context) {
     const size = 200.0;
-    final center = const Offset(size / 2, size / 2);
+    const center = Offset(size / 2, size / 2);
     final delta = local - center;
     final dist = delta.distance.clamp(0.0, size / 2);
     final angle = math.atan2(delta.dy, delta.dx);

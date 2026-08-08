@@ -74,9 +74,9 @@ class AdStatsScreen extends ConsumerWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 4),
                         child: Container(
                           height: 88 * h,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             gradient: KayanDesignTokens.gradBlue,
-                            borderRadius: const BorderRadius.vertical(top: Radius.circular(6)),
+                            borderRadius: BorderRadius.vertical(top: Radius.circular(6)),
                           ),
                         ),
                       ),

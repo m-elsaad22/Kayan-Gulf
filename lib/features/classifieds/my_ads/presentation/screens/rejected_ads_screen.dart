@@ -96,7 +96,7 @@ class RejectedAdsScreen extends ConsumerWidget {
                                         children: [
                                           Row(
                                             children: [
-                                              Icon(Icons.block_rounded, size: 14, color: KayanDesignTokens.danger),
+                                              const Icon(Icons.block_rounded, size: 14, color: KayanDesignTokens.danger),
                                               const SizedBox(width: 4),
                                               Text(
                                                 ar ? 'مرفوض' : 'Rejected',

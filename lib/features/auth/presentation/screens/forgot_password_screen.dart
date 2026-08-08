@@ -1,19 +1,22 @@
-// TODO: connect to real backend
+// Forgot password — light design (11-forgot-password.html)
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/theme/app_spacing.dart';
-import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/theme/kayan_design_tokens.dart';
 import '../../../../routing/app_routes.dart';
+import '../../../../shared/providers/locale_provider.dart';
+import '../../../../shared/widgets/design/kayan_design_widgets.dart';
+import '../../../../shared/widgets/design/kayan_entry_widgets.dart';
 
-class ForgotPasswordScreen extends StatefulWidget {
+class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
 
   @override
-  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+  ConsumerState<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
 }
 
-class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   final _emailCtrl = TextEditingController();
 
   @override
@@ -24,30 +27,37 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isArabic = Directionality.of(context) == TextDirection.rtl;
+    final ar = ref.watch(isArabicProvider);
+
     return Scaffold(
-      appBar: AppBar(title: Text(isArabic ? 'استعادة كلمة المرور' : 'Forgot Password')),
-      body: ListView(
-        padding: const EdgeInsets.all(AppSpacing.pagePadding),
-        children: [
-          Text(
-            isArabic
-                ? 'أدخل بريدك الإلكتروني لإرسال رمز التحقق'
-                : 'Enter your email to receive a verification PIN',
-            style: AppTextStyles.bodyMedium,
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              KayanLightTopBar(title: ar ? 'نسيت كلمة المرور' : 'Forgot password', onBack: () => context.pop()),
+              const SizedBox(height: 20),
+              Text(ar ? 'أدخل بريدك لإرسال رمز التحقق' : 'Enter your email to receive a verification code', style: KayanDesignTokens.cairo(color: KayanDesignTokens.text2, height: 1.8)),
+              const SizedBox(height: 20),
+              KayanDesignTextField(
+                label: ar ? 'البريد الإلكتروني' : 'Email',
+                hint: 'name@example.com',
+                icon: Icons.email_outlined,
+                controller: _emailCtrl,
+                keyboardType: TextInputType.emailAddress,
+              ),
+              const Spacer(),
+              KayanCtaButton(
+                label: ar ? 'إرسال الرمز' : 'Send code',
+                trailingIcon: Icons.arrow_back_rounded,
+                variant: KayanCtaVariant.blue,
+                onPressed: () => context.push(AppRoutes.resetPassword),
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
-          TextField(
-            controller: _emailCtrl,
-            keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(labelText: isArabic ? 'البريد الإلكتروني' : 'Email'),
-          ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () => context.push(AppRoutes.emailPin, extra: _emailCtrl.text.trim()),
-            child: Text(isArabic ? 'إرسال الرمز' : 'Send PIN'),
-          ),
-        ],
+        ),
       ),
     );
   }

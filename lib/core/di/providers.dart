@@ -8,6 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 abstract class AppDI {
   /// Production overrides — empty in production.
   /// In tests: swap with mocks, e.g.:
-  ///   overrides: [apiClientProvider.overrideWith((_) => MockApiClient())]
+  ///   overrides: [
+  ///     homeRepositoryProvider.overrideWithValue(MockHomeRepository()),
+  ///   ]
   static List<Override> get overrides => const [];
 }

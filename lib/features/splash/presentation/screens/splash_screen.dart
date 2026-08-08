@@ -48,15 +48,15 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       backgroundColor: KayanDesignTokens.kBlueDeep,
       body: KayanHeroBackdrop(
         minHeight: MediaQuery.sizeOf(context).height,
-        child: Stack(
+        child: const Stack(
           children: [
             Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const KayanBrandLogo(size: 150),
-                  const SizedBox(height: 22),
-                  const KayanWordmark(),
+                  KayanBrandLogo(size: 150),
+                  SizedBox(height: 22),
+                  KayanWordmark(),
                 ],
               ),
             ),
@@ -64,7 +64,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
               left: 0,
               right: 0,
               bottom: 50,
-              child: const Center(child: KayanSplashProgress()),
+              child: Center(child: KayanSplashProgress()),
             ),
           ],
         ),

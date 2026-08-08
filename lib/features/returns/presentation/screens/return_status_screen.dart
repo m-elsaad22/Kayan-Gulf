@@ -1,4 +1,4 @@
-// TODO: connect to real backend
+// Presentation screen with local demo content.
 import 'package:flutter/material.dart';
 
 import '../../../ecommerce/shared/presentation/widgets/phase4_commerce_widgets.dart';
@@ -8,7 +8,7 @@ class ReturnStatusScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Phase4CommerceScaffold(
+    return const Phase4CommerceScaffold(
       titleAr: 'حالة الإرجاع',
       titleEn: 'Return Status',
       subtitleAr: 'تابع مراحل معالجة طلب الإرجاع.',

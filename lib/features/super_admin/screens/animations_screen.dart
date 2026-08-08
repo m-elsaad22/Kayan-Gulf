@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/kayan_design_tokens.dart';
 import '../../../core/theme/dynamic_theme.dart';
 import '../../../core/theme/kayan_motion.dart';
 import '../../../routing/app_routes.dart';
@@ -58,11 +58,11 @@ class _AnimationsScreenState extends State<AnimationsScreen>
 
   Widget _demoChild(int i) {
     final colors = [
-      AppColors.royalBlue,
-      AppColors.pepsiBlue,
-      AppColors.turquoise,
-      AppColors.metallicGold,
-      AppColors.skyBlue,
+      KayanDesignTokens.kBlue,
+      KayanDesignTokens.kBlueDeep,
+      KayanDesignTokens.kGreenLight,
+      KayanDesignTokens.gold,
+      KayanDesignTokens.kBlueLight,
     ];
     return Container(
       width: 80,
@@ -117,14 +117,14 @@ class _AnimationsScreenState extends State<AnimationsScreen>
         padding: const EdgeInsets.all(16),
         children: [
           Card(
-            color: AppColors.bgCard.withValues(alpha: 0.75),
+            color: KayanDesignTokens.surface,
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   DropdownButtonFormField<String>(
-                    value: _motion.transitionType,
+                    initialValue: _motion.transitionType,
                     decoration: const InputDecoration(labelText: 'نوع الانتقال', filled: true),
                     items: MotionSettings.transitionTypes
                         .map((t) => DropdownMenuItem(value: t, child: Text(t)))
@@ -145,7 +145,7 @@ class _AnimationsScreenState extends State<AnimationsScreen>
                     }),
                   ),
                   DropdownButtonFormField<String>(
-                    value: _motion.curveName,
+                    initialValue: _motion.curveName,
                     decoration: const InputDecoration(labelText: 'منحنى الحركة', filled: true),
                     items: MotionSettings.curveNames
                         .map((c) => DropdownMenuItem(value: c, child: Text(c)))
@@ -154,7 +154,7 @@ class _AnimationsScreenState extends State<AnimationsScreen>
                   ),
                   const SizedBox(height: 12),
                   DropdownButtonFormField<String>(
-                    value: _motion.hoverEffect,
+                    initialValue: _motion.hoverEffect,
                     decoration: const InputDecoration(labelText: 'Hover (ويب)', filled: true),
                     items: MotionSettings.hoverEffects
                         .map((e) => DropdownMenuItem(value: e, child: Text(e)))
@@ -162,7 +162,7 @@ class _AnimationsScreenState extends State<AnimationsScreen>
                     onChanged: (v) => setState(() => _motion = _motion.copyWith(hoverEffect: v)),
                   ),
                   DropdownButtonFormField<String>(
-                    value: _motion.hapticFeedback,
+                    initialValue: _motion.hapticFeedback,
                     decoration: const InputDecoration(labelText: 'ردود فعل لمسية', filled: true),
                     items: MotionSettings.hapticModes
                         .map((h) => DropdownMenuItem(value: h, child: Text(h)))
@@ -170,7 +170,7 @@ class _AnimationsScreenState extends State<AnimationsScreen>
                     onChanged: (v) => setState(() => _motion = _motion.copyWith(hapticFeedback: v)),
                   ),
                   DropdownButtonFormField<String>(
-                    value: _motion.scrollEffect,
+                    initialValue: _motion.scrollEffect,
                     decoration: const InputDecoration(labelText: 'تأثير التمرير', filled: true),
                     items: MotionSettings.scrollEffects
                         .map((s) => DropdownMenuItem(value: s, child: Text(s)))
@@ -199,11 +199,10 @@ class _AnimationsScreenState extends State<AnimationsScreen>
             onPressed: () async {
               final json = const JsonEncoder.withIndent('  ').convert(_motion.toJson());
               await Clipboard.setData(ClipboardData(text: json));
-              if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('تم نسخ JSON للتأثير')),
-                );
-              }
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('تم نسخ JSON للتأثير')),
+              );
             },
             icon: const Icon(Icons.download),
             label: const Text('تحميل التأثير كـ JSON'),

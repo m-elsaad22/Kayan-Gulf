@@ -20,18 +20,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_gradients.dart';
-import '../../../../core/theme/app_text_styles.dart';
-import '../../../../core/theme/app_border_radius.dart';
-import '../../../../core/theme/screen_theme.dart';
-import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/data/mock_data_catalog.dart';
+import '../../../../core/theme/kayan_design_tokens.dart';
 import '../../../../routing/app_routes.dart';
 import '../../../../shared/providers/auth_provider.dart';
 import '../../../../shared/providers/locale_provider.dart';
+import '../../../ecommerce/product/presentation/providers/product_providers.dart';
 import '../../../../shared/widgets/loaders/shimmer_loader.dart';
 import '../providers/home_providers.dart';
 import '../widgets/home_widgets.dart';
@@ -74,16 +70,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final isArabic  = ref.watch(isArabicProvider);
     final authState = ref.watch(authStateProvider);
     final homeAsync = ref.watch(homeDataProvider);
+    final cartBadgeCount = ref.watch(cartItemCountProvider);
+    final displayName = authState.isAuthenticated
+        ? MockDataCatalog.signedInUser.name
+        : null;
 
     return Scaffold(
-      backgroundColor: context.screenBackground,
+      backgroundColor: KayanDesignTokens.bg,
       extendBodyBehindAppBar: true,
 
       // ── Custom App Bar ─────────────────────────────────────
       appBar: _HomeAppBar(
         isScrolled: _isScrolled,
         isArabic:   isArabic,
-        userName:   authState.userId != null ? 'محمود' : null, // TODO: real name
+        userName:   displayName,
+        cartBadgeCount: cartBadgeCount,
         onSearch:   () => context.push(AppRoutes.search),
         onCart:     () => context.push(AppRoutes.cart),
         onNotif:    () => context.push(AppRoutes.notifications),
@@ -99,13 +100,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(Icons.error_outline_rounded,
-                  size: 56, color: AppColors.textMuted),
+                  size: 56, color: KayanDesignTokens.muted),
               const SizedBox(height: 16),
               Text(
                 isArabic ? 'حدث خطأ في التحميل' : 'Failed to load',
                 style: isArabic
-                    ? AppTextStyles.arabicTitleSmall
-                    : AppTextStyles.titleSmall,
+                    ? KayanDesignTokens.cairo(fontSize: 14, fontWeight: FontWeight.w700)
+                    : KayanDesignTokens.cairo(fontSize: 14, fontWeight: FontWeight.w700),
               ),
               const SizedBox(height: 20),
               ElevatedButton.icon(
@@ -120,7 +121,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         // ── Data state ──────────────────────────────────────
         data: (home) => RefreshIndicator(
           onRefresh:   _onRefresh,
-          color:       AppColors.royalBlue,
+          color:       KayanDesignTokens.kBlue,
           strokeWidth: 2,
           child: CustomScrollView(
             controller: _scroll,
@@ -310,6 +311,7 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool       isScrolled;
   final bool       isArabic;
   final String?    userName;
+  final int        cartBadgeCount;
   final VoidCallback onSearch;
   final VoidCallback onCart;
   final VoidCallback onNotif;
@@ -318,6 +320,7 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.isScrolled,
     required this.isArabic,
     this.userName,
+    this.cartBadgeCount = 0,
     required this.onSearch,
     required this.onCart,
     required this.onNotif,
@@ -332,8 +335,8 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 250),
       decoration: BoxDecoration(
-        color: isDark ? null : AppColors.lightBg,
-        gradient: isDark ? AppGradients.hero : null,
+        color: isDark ? null : Colors.white,
+        gradient: isDark ? KayanDesignTokens.gradBlue : null,
         boxShadow: isScrolled ? [
           BoxShadow(
             color:      Colors.black.withValues(alpha: isDark ? 0.3 : 0.06),
@@ -348,7 +351,7 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             // ── Top row: logo + greeting + actions ──────────────
             Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.pagePadding,
+                horizontal: 24,
                 vertical:   8,
               ),
               child: Row(
@@ -369,29 +372,22 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                               ? _greetingAr()
                               : _greetingEn(),
                           style: (isArabic
-                                  ? AppTextStyles.arabicCaption
-                                  : AppTextStyles.caption)
-                              .copyWith(color: AppColors.textSecondary),
+                                  ? KayanDesignTokens.cairo(fontSize: 11, color: KayanDesignTokens.muted)
+                                  : KayanDesignTokens.cairo(fontSize: 11, color: KayanDesignTokens.muted))
+                              .copyWith(color: KayanDesignTokens.muted),
                         ),
                         if (userName != null)
                           Text(
                             userName!,
                             style: isArabic
-                                ? AppTextStyles.arabicTitleMedium
-                                : AppTextStyles.titleMedium,
+                                ? KayanDesignTokens.cairo(fontSize: 16, fontWeight: FontWeight.w800)
+                                : KayanDesignTokens.cairo(fontSize: 16, fontWeight: FontWeight.w800),
                           ),
                         // KAYAN logo if no user
                         if (userName == null)
-                          ShaderMask(
-                            shaderCallback: (bounds) =>
-                                AppGradients.goldShimmer.createShader(bounds),
-                            child: Text(
-                              'KAYAN',
-                              style: AppTextStyles.titleLarge.copyWith(
-                                letterSpacing: 4,
-                                color: Colors.white,
-                              ),
-                            ),
+                          Text(
+                            'KAYAN',
+                            style: KayanDesignTokens.cairo(fontSize: 22, fontWeight: FontWeight.w900, color: KayanDesignTokens.kBlueDeep).copyWith(letterSpacing: 4),
                           ),
                       ],
                     ),
@@ -401,7 +397,6 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                   _AppBarIconButton(
                     icon:    Icons.notifications_outlined,
                     onTap:   onNotif,
-                    badgeCount: 3, // TODO: real count
                   ),
                   const SizedBox(width: 8),
 
@@ -409,7 +404,7 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                   _AppBarIconButton(
                     icon:    Icons.shopping_cart_outlined,
                     onTap:   onCart,
-                    badgeCount: 2, // TODO: real count
+                    badgeCount: cartBadgeCount > 0 ? cartBadgeCount : null,
                   ),
                 ],
               ),
@@ -421,18 +416,18 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: Container(
                 height: 42,
                 margin: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.pagePadding,
+                  horizontal: 24,
                 ).copyWith(bottom: 8),
                 decoration: BoxDecoration(
-                  color:        AppColors.bgInput,
-                  borderRadius: AppBorderRadius.pill,
-                  border:       Border.all(color: AppColors.borderDefault),
+                  color:        KayanDesignTokens.bg,
+                  borderRadius: BorderRadius.circular(99),
+                  border:       Border.all(color: KayanDesignTokens.border),
                 ),
                 child: Row(
                   children: [
                     const SizedBox(width: 14),
                     const Icon(Icons.search_rounded,
-                        color: AppColors.textMuted, size: 20),
+                        color: KayanDesignTokens.muted, size: 20),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
@@ -440,9 +435,9 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                             ? 'ابحث عن منتجات، خدمات، إعلانات...'
                             : 'Search products, services, ads...',
                         style: (isArabic
-                                ? AppTextStyles.arabicBodyMedium
-                                : AppTextStyles.bodyMedium)
-                            .copyWith(color: AppColors.textMuted),
+                                ? KayanDesignTokens.cairo(fontSize: 14, color: KayanDesignTokens.text2)
+                                : KayanDesignTokens.cairo(fontSize: 14, color: KayanDesignTokens.text2))
+                            .copyWith(color: KayanDesignTokens.muted),
                       ),
                     ),
                     // Mic icon
@@ -450,7 +445,7 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                       padding: EdgeInsets.only(right: 12),
                       child: Icon(
                         Icons.mic_none_rounded,
-                        color: AppColors.textMuted, size: 20,
+                        color: KayanDesignTokens.muted, size: 20,
                       ),
                     ),
                   ],
@@ -506,11 +501,11 @@ class _AppBarIconButton extends StatelessWidget {
           Container(
             width: 40, height: 40,
             decoration: BoxDecoration(
-              color:        AppColors.bgCard.withOpacity(0.6),
-              borderRadius: AppBorderRadius.sm,
-              border:       Border.all(color: AppColors.borderSubtle),
+              color:        Colors.white.withValues(alpha: 0.6),
+              borderRadius: BorderRadius.circular(12),
+              border:       Border.all(color: KayanDesignTokens.border),
             ),
-            child: Icon(icon, color: AppColors.textPrimary, size: 20),
+            child: Icon(icon, color: KayanDesignTokens.text2, size: 20),
           ),
           if (badgeCount != null && badgeCount! > 0)
             Positioned(
@@ -518,7 +513,7 @@ class _AppBarIconButton extends StatelessWidget {
               child: Container(
                 width:  16, height: 16,
                 decoration: const BoxDecoration(
-                  color:  AppColors.error,
+                  color:  KayanDesignTokens.danger,
                   shape:  BoxShape.circle,
                 ),
                 child: Center(

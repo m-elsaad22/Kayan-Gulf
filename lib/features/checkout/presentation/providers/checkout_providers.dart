@@ -165,7 +165,7 @@ class CheckoutNotifier extends AutoDisposeNotifier<CheckoutState> {
     await Future.delayed(const Duration(seconds: 2));
 
     // 95% success rate for demo
-    final success = true;
+    const success = true;
 
     if (success) {
       final orderId = 'KYN-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}';
@@ -173,14 +173,8 @@ class CheckoutNotifier extends AutoDisposeNotifier<CheckoutState> {
         orderStatus: OrderStatus.success,
         orderId:     orderId,
       );
-      return true;
-    } else {
-      state = state.copyWith(
-        orderStatus:  OrderStatus.failed,
-        errorMessage: 'فشلت عملية الدفع. يرجى المحاولة مجدداً.',
-      );
-      return false;
     }
+    return success;
   }
 
   void reset() => state = build();

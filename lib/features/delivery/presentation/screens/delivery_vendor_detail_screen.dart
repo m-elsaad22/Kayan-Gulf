@@ -56,14 +56,14 @@ class DeliveryVendorDetailScreen extends ConsumerWidget {
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.star_rounded, color: KayanDesignTokens.gold, size: 18),
+                      const Icon(Icons.star_rounded, color: KayanDesignTokens.gold, size: 18),
                       const SizedBox(width: 6),
                       Text(
                         '${vendor.rating} (${vendor.reviewCount})',
                         style: KayanDesignTokens.cairo(fontWeight: FontWeight.w700),
                       ),
                       const SizedBox(width: 16),
-                      Icon(Icons.schedule_rounded, color: KayanDesignTokens.muted, size: 16),
+                      const Icon(Icons.schedule_rounded, color: KayanDesignTokens.muted, size: 16),
                       const SizedBox(width: 4),
                       Text(vendor.eta(ar), style: KayanDesignTokens.cairo(color: KayanDesignTokens.muted)),
                     ],

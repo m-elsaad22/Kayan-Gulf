@@ -2,7 +2,17 @@
 import 'dart:math' as math;
 
 class ServiceCategory { final String id,slug,nameAr,nameEn,emoji,colorHex; final int serviceCount; final bool isEmergency;
-  const ServiceCategory({required this.id,required this.slug,required this.nameAr,required this.nameEn,required this.emoji,required this.colorHex,this.serviceCount=0,this.isEmergency=false}); }
+  const ServiceCategory({required this.id,required this.slug,required this.nameAr,required this.nameEn,required this.emoji,required this.colorHex,this.serviceCount=0,this.isEmergency=false});
+  factory ServiceCategory.fromJson(Map<String,dynamic> j)=>ServiceCategory(
+    id:j['id'] as String,
+    slug:j['slug'] as String,
+    nameAr:j['nameAr'] as String,
+    nameEn:j['name'] as String? ?? j['nameEn'] as String? ?? '',
+    emoji:j['emoji'] as String? ?? '🔧',
+    colorHex:j['colorHex'] as String? ?? '#3B82F6',
+    serviceCount:j['serviceCount'] as int? ?? 0,
+    isEmergency:j['isEmergency'] as bool? ?? false,
+  ); }
 
 class TechnicianModel { final String id,name; final String? avatarUrl; final double rating; final int reviewCount,completedJobs; final bool isVerified,isAvailable; final List<String> specializations;
   const TechnicianModel({required this.id,required this.name,this.avatarUrl,this.rating=0,this.reviewCount=0,this.completedJobs=0,this.isVerified=true,this.isAvailable=true,this.specializations=const[]}); }
@@ -17,7 +27,29 @@ class ServiceFaq { final String questionAr,questionEn,answerAr,answerEn; const S
 
 class ServiceDetailModel { final String id,slug,nameAr,nameEn; final String? descriptionAr,descriptionEn,imageUrl,categoryNameAr,categorySlug; final List<String> galleryUrls; final double basePrice,rating; final double? discountedPrice; final String pricingType,currency; final int totalRatings,totalBookings,estimatedDurationMin; final bool isEmergency,isAvailable; final List<TechnicianModel> technicians; final List<ServiceFeature> features; final List<ServiceReview> reviews; final List<ServiceFaq> faqs; final List<String> whatToExpect;
   const ServiceDetailModel({required this.id,required this.slug,required this.nameAr,required this.nameEn,this.descriptionAr,this.descriptionEn,required this.basePrice,this.discountedPrice,this.pricingType='FIXED',this.currency='SAR',this.imageUrl,this.galleryUrls=const[],this.rating=0,this.totalRatings=0,this.totalBookings=0,this.isEmergency=false,this.isAvailable=true,this.categoryNameAr,this.categorySlug,this.estimatedDurationMin=60,this.technicians=const[],this.features=const[],this.reviews=const[],this.faqs=const[],this.whatToExpect=const[]});
-  bool get hasDiscount=>discountedPrice!=null&&discountedPrice!<basePrice; double get finalPrice=>discountedPrice??basePrice; }
+  bool get hasDiscount=>discountedPrice!=null&&discountedPrice!<basePrice; double get finalPrice=>discountedPrice??basePrice;
+  factory ServiceDetailModel.fromJson(Map<String,dynamic> j)=>ServiceDetailModel(
+    id:j['id'] as String,
+    slug:j['slug'] as String,
+    nameAr:j['nameAr'] as String,
+    nameEn:j['name'] as String? ?? j['nameEn'] as String? ?? '',
+    descriptionAr:j['descriptionAr'] as String?,
+    descriptionEn:j['descriptionEn'] as String?,
+    basePrice:(j['basePrice'] as num?)?.toDouble() ?? (j['price'] as num).toDouble(),
+    discountedPrice:(j['discountedPrice'] as num?)?.toDouble(),
+    pricingType:j['pricingType'] as String? ?? 'FIXED',
+    currency:j['currency'] as String? ?? 'SAR',
+    imageUrl:j['imageUrl'] as String?,
+    galleryUrls:(j['galleryUrls'] as List?)?.cast<String>() ?? [],
+    rating:(j['rating'] as num?)?.toDouble() ?? 0,
+    totalRatings:j['totalRatings'] as int? ?? 0,
+    totalBookings:j['totalBookings'] as int? ?? 0,
+    isEmergency:j['isEmergency'] as bool? ?? false,
+    isAvailable:j['isAvailable'] as bool? ?? true,
+    categoryNameAr:j['categoryNameAr'] as String?,
+    categorySlug:j['categorySlug'] as String?,
+    estimatedDurationMin:j['estimatedDurationMin'] as int? ?? 60,
+  ); }
 
 class TimeSlot { final String id; final DateTime startTime,endTime; final bool isAvailable;
   const TimeSlot({required this.id,required this.startTime,required this.endTime,this.isAvailable=true});
@@ -25,7 +57,20 @@ class TimeSlot { final String id; final DateTime startTime,endTime; final bool i
 
 class BookingModel { final String id,bookingNumber,serviceNameAr,serviceNameEn,serviceId,status,addressLine; final double price; final String currency; final DateTime scheduledAt; final TechnicianModel? technician; final String? notes;
   const BookingModel({required this.id,required this.bookingNumber,required this.serviceNameAr,required this.serviceNameEn,required this.serviceId,required this.price,this.currency='SAR',required this.scheduledAt,this.status='CONFIRMED',this.technician,required this.addressLine,this.notes});
-  String statusAr()=>switch(status){'PENDING'=>'قيد الانتظار','CONFIRMED'=>'مؤكد','IN_PROGRESS'=>'جاري التنفيذ','COMPLETED'=>'مكتمل','CANCELLED'=>'ملغي',_=>status}; }
+  String statusAr()=>switch(status){'PENDING'=>'قيد الانتظار','CONFIRMED'=>'مؤكد','IN_PROGRESS'=>'جاري التنفيذ','COMPLETED'=>'مكتمل','CANCELLED'=>'ملغي',_=>status};
+  factory BookingModel.fromJson(Map<String,dynamic> j)=>BookingModel(
+    id:j['id'] as String,
+    bookingNumber:j['bookingNumber'] as String,
+    serviceNameAr:j['serviceNameAr'] as String,
+    serviceNameEn:j['serviceNameEn'] as String? ?? '',
+    serviceId:j['serviceId'] as String,
+    price:(j['price'] as num).toDouble(),
+    currency:j['currency'] as String? ?? 'SAR',
+    scheduledAt:DateTime.tryParse(j['scheduledAt'] as String? ?? '') ?? DateTime.now(),
+    status:j['status'] as String? ?? 'CONFIRMED',
+    addressLine:j['addressLine'] as String? ?? '',
+    notes:j['notes'] as String?,
+  ); }
 
 class TechPosition { final double lat,lng,bearing; final int etaMinutes; const TechPosition({required this.lat,required this.lng,this.bearing=0,this.etaMinutes=0}); }
 

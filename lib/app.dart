@@ -18,7 +18,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/services/admin_data_service.dart';
-import 'core/theme/app_theme.dart';
 import 'core/theme/dynamic_theme.dart';
 import 'features/super_admin/services/design_engine_service.dart';
 import 'l10n/app_localizations.dart';

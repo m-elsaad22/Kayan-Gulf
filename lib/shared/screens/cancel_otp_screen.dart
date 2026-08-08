@@ -1,41 +1,77 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:pinput/pinput.dart';
 
-import '../../shared/widgets/kayan_themed_scaffold.dart';
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_text_styles.dart';
+import '../../core/theme/kayan_design_tokens.dart';
 import '../../shared/providers/locale_provider.dart';
+import '../../shared/widgets/design/kayan_design_widgets.dart';
+import '../../shared/widgets/design/kayan_entry_widgets.dart';
 
-/// KAYAN Screen — Cancel Confirmation
+/// تأكيد الإلغاء برمز OTP — light design
 class CancelOtpScreen extends ConsumerWidget {
   const CancelOtpScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isArabic = ref.watch(isArabicProvider);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final ar = ref.watch(isArabicProvider);
 
-    return KayanThemedScaffold(
-      titleAr: 'تأكيد الإلغاء',
-      titleEn: 'Cancel Confirmation',
-      body: ListView(
-        children: [
-          Icon(Icons.layers_outlined, size: 64, color: isDark ? AppColors.skyBlue : AppColors.pepsiBlue),
-          const SizedBox(height: 16),
-          Text(
-            isArabic ? 'تأكيد الإلغاء' : 'Cancel Confirmation',
-            style: isArabic ? AppTextStyles.arabicHeadlineSmall : AppTextStyles.headlineSmall,
+    final pinTheme = PinTheme(
+      width: 48,
+      height: 52,
+      textStyle: KayanDesignTokens.cairo(fontSize: 20, fontWeight: FontWeight.w800),
+      decoration: BoxDecoration(
+        color: KayanDesignTokens.bg,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: KayanDesignTokens.border),
+      ),
+    );
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              KayanLightTopBar(title: ar ? 'تأكيد الإلغاء' : 'Confirm cancellation', onBack: () => context.pop()),
+              const SizedBox(height: 20),
+              Text(
+                ar ? 'أدخل رمز التأكيد المرسل لجوالك' : 'Enter the confirmation code sent to your phone',
+                textAlign: TextAlign.center,
+                style: KayanDesignTokens.cairo(color: KayanDesignTokens.text2),
+              ),
+              const SizedBox(height: 28),
+              Pinput(
+                length: 6,
+                defaultPinTheme: pinTheme,
+                focusedPinTheme: pinTheme.copyWith(
+                  decoration: pinTheme.decoration!.copyWith(
+                    border: Border.all(color: KayanDesignTokens.danger, width: 1.5),
+                  ),
+                ),
+                onCompleted: (_) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(ar ? 'تم إلغاء الحجز' : 'Booking cancelled')),
+                  );
+                  context.pop(true);
+                },
+              ),
+              const Spacer(),
+              KayanCtaButton(
+                label: ar ? 'إعادة إرسال الرمز' : 'Resend code',
+                variant: KayanCtaVariant.blue,
+                trailingIcon: Icons.refresh_rounded,
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(ar ? 'تم إرسال رمز جديد' : 'New code sent')),
+                  );
+                },
+              ),
+            ],
           ),
-          const SizedBox(height: 8),
-          Text(
-            isArabic
-                ? 'شاشة كيان — تجربة احترافية مع دعم الوضع الفاتح/الداكن والعربية/الإنجليزية.'
-                : 'KAYAN screen with light/dark mode and Arabic/English support.',
-            style: AppTextStyles.bodyMedium.copyWith(
-              color: isDark ? AppColors.darkSubtext : AppColors.lightSubtext,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

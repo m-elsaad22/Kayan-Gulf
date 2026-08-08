@@ -1,20 +1,10 @@
-// TODO: connect to real backend
+// Service phase widgets — light design
 import 'package:flutter/material.dart';
 
-import '../../../../../core/theme/app_border_radius.dart';
-import '../../../../../core/theme/app_colors.dart';
-import '../../../../../core/theme/app_gradients.dart';
-import '../../../../../core/theme/app_spacing.dart';
-import '../../../../../core/theme/app_text_styles.dart';
+import '../../../../../core/theme/kayan_design_tokens.dart';
+import '../../../../../shared/widgets/design/kayan_design_widgets.dart';
 
 class Phase3ServiceScaffold extends StatelessWidget {
-  final String titleAr;
-  final String titleEn;
-  final String subtitleAr;
-  final String subtitleEn;
-  final List<Widget> children;
-  final Widget? footer;
-
   const Phase3ServiceScaffold({
     super.key,
     required this.titleAr,
@@ -25,37 +15,37 @@ class Phase3ServiceScaffold extends StatelessWidget {
     this.footer,
   });
 
+  final String titleAr;
+  final String titleEn;
+  final String subtitleAr;
+  final String subtitleEn;
+  final List<Widget> children;
+  final Widget? footer;
+
   @override
   Widget build(BuildContext context) {
     final isArabic = Directionality.of(context) == TextDirection.rtl;
     return Scaffold(
-      backgroundColor: AppColors.bgScaffold,
-      appBar: AppBar(title: Text(isArabic ? titleAr : titleEn)),
-      body: Container(
-        decoration: const BoxDecoration(gradient: AppGradients.heroDiagonal),
-        child: ListView(
-          padding: const EdgeInsets.all(AppSpacing.pagePadding),
-          children: [
-            Text(
-              isArabic ? titleAr : titleEn,
-              style: isArabic
-                  ? AppTextStyles.arabicHeadlineSmall
-                  : AppTextStyles.headlineSmall,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              isArabic ? subtitleAr : subtitleEn,
-              style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.textSecondary,
+      backgroundColor: KayanDesignTokens.bg,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              KayanLightTopBar(title: isArabic ? titleAr : titleEn, onBack: () => Navigator.maybePop(context)),
+              Expanded(
+                child: ListView(
+                  children: [
+                    Text(isArabic ? subtitleAr : subtitleEn, style: KayanDesignTokens.cairo(color: KayanDesignTokens.muted, height: 1.6)),
+                    const SizedBox(height: 16),
+                    ...children,
+                    if (footer != null) ...[const SizedBox(height: 16), footer!],
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            ...children,
-            if (footer != null) ...[
-              const SizedBox(height: 20),
-              footer!,
             ],
-          ],
+          ),
         ),
       ),
     );
@@ -63,6 +53,17 @@ class Phase3ServiceScaffold extends StatelessWidget {
 }
 
 class Phase3ServiceCard extends StatelessWidget {
+  const Phase3ServiceCard({
+    super.key,
+    required this.icon,
+    required this.titleAr,
+    required this.titleEn,
+    required this.bodyAr,
+    required this.bodyEn,
+    this.color = KayanDesignTokens.kGreen,
+    this.onTap,
+  });
+
   final IconData icon;
   final String titleAr;
   final String titleEn;
@@ -71,41 +72,27 @@ class Phase3ServiceCard extends StatelessWidget {
   final Color color;
   final VoidCallback? onTap;
 
-  const Phase3ServiceCard({
-    super.key,
-    required this.icon,
-    required this.titleAr,
-    required this.titleEn,
-    required this.bodyAr,
-    required this.bodyEn,
-    this.color = AppColors.royalBlue,
-    this.onTap,
-  });
-
   @override
   Widget build(BuildContext context) {
     final isArabic = Directionality.of(context) == TextDirection.rtl;
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: InkWell(
+      child: GestureDetector(
         onTap: onTap,
-        borderRadius: AppBorderRadius.card,
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: AppColors.bgCard,
-            borderRadius: AppBorderRadius.card,
-            border: Border.all(color: AppColors.borderSubtle),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
+            border: Border.all(color: KayanDesignTokens.border),
+            boxShadow: KayanDesignTokens.shadowS,
           ),
           child: Row(
             children: [
               Container(
                 width: 48,
                 height: 48,
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.12),
-                  borderRadius: AppBorderRadius.md,
-                ),
+                decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(12)),
                 child: Icon(icon, color: color),
               ),
               const SizedBox(width: 12),
@@ -113,28 +100,13 @@ class Phase3ServiceCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      isArabic ? titleAr : titleEn,
-                      style: AppTextStyles.titleSmall.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
+                    Text(isArabic ? titleAr : titleEn, style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800)),
                     const SizedBox(height: 4),
-                    Text(
-                      isArabic ? bodyAr : bodyEn,
-                      style: AppTextStyles.bodySmall.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
+                    Text(isArabic ? bodyAr : bodyEn, style: KayanDesignTokens.cairo(fontSize: 12, color: KayanDesignTokens.muted)),
                   ],
                 ),
               ),
-              if (onTap != null)
-                const Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  size: 16,
-                  color: AppColors.textMuted,
-                ),
+              if (onTap != null) const Icon(Icons.arrow_forward_ios_rounded, size: 14, color: KayanDesignTokens.muted),
             ],
           ),
         ),

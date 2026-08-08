@@ -8,6 +8,7 @@ import '../../../../../routing/app_routes.dart';
 import '../../../../../shared/providers/locale_provider.dart';
 import '../../../../../shared/widgets/design/kayan_design_widgets.dart';
 import '../../../browse/data/models/ad_models.dart';
+import '../../../presentation/providers/classifieds_providers.dart';
 
 class SimilarAdsScreen extends ConsumerStatefulWidget {
   const SimilarAdsScreen({super.key, required this.adSlug});
@@ -36,17 +37,12 @@ class _SimilarAdsScreenState extends ConsumerState<SimilarAdsScreen> {
   @override
   Widget build(BuildContext context) {
     final ar = ref.watch(isArabicProvider);
-    final current = mockAds.firstWhere((a) => a.slug == widget.adSlug, orElse: () => mockAds.first);
-    var similar = mockAds.where((a) => a.slug != widget.adSlug && a.categorySlug == current.categorySlug).toList();
+    final similarAsync = ref.watch(similarAdsProvider(widget.adSlug));
 
-    if (similar.length < 2) {
-      similar = [
-        ...similar,
-        ...mockAds.where((a) => a.slug != widget.adSlug).take(4),
-      ];
-    }
-
-    return Scaffold(
+    return similarAsync.when(
+      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      error: (e, _) => Scaffold(body: Center(child: Text(e.toString()))),
+      data: (similar) => Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
@@ -91,6 +87,7 @@ class _SimilarAdsScreenState extends ConsumerState<SimilarAdsScreen> {
           ),
         ),
       ),
+    ),
     );
   }
 }

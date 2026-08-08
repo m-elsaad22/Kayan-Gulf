@@ -1,34 +1,59 @@
-// TODO: connect to real backend
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../../ecommerce/shared/presentation/widgets/phase4_commerce_widgets.dart';
+import '../../../../routing/app_routes.dart';
+import '../../../../shared/providers/locale_provider.dart';
+import '../../../../shared/widgets/design/kayan_design_widgets.dart';
+import '../../../../shared/widgets/design/kayan_entry_widgets.dart';
 
-class DigitalWalletScreen extends StatelessWidget {
+/// المحفظة الرقمية — light design
+class DigitalWalletScreen extends ConsumerStatefulWidget {
   const DigitalWalletScreen({super.key});
 
   @override
+  ConsumerState<DigitalWalletScreen> createState() => _DigitalWalletScreenState();
+}
+
+class _DigitalWalletScreenState extends ConsumerState<DigitalWalletScreen> {
+  int _wallet = 0;
+
+  @override
   Widget build(BuildContext context) {
-    return Phase4CommerceScaffold(
-      titleAr: 'المحفظة الرقمية',
-      titleEn: 'Digital Wallet',
-      subtitleAr: 'استخدم المحافظ الرقمية للدفع السريع.',
-      subtitleEn: 'Use digital wallets for fast checkout.',
-      children: [
-          Phase4CommerceCard(
-            icon: Icons.phone_iphone_rounded,
-            titleAr: 'Apple Pay',
-            titleEn: 'Apple Pay',
-            bodyAr: 'دفع سريع عبر جهازك.',
-            bodyEn: 'Fast payment through your device.',
+    final ar = ref.watch(isArabicProvider);
+    final options = ar ? ['Apple Pay', 'محفظة كيان'] : ['Apple Pay', 'KAYAN Wallet'];
+    final icons = [Icons.phone_iphone_rounded, Icons.account_balance_wallet_rounded];
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              KayanLightTopBar(title: ar ? 'المحفظة الرقمية' : 'Digital wallet', onBack: () => context.pop()),
+              const SizedBox(height: 14),
+              Expanded(
+                child: ListView(
+                  children: List.generate(options.length, (i) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: KayanPayOptionRow(icon: icons[i], label: options[i], selected: _wallet == i, onTap: () => setState(() => _wallet = i)),
+                    );
+                  }),
+                ),
+              ),
+              KayanCtaButton(
+                label: ar ? 'ادفع الآن' : 'Pay now',
+                trailingIcon: Icons.check_rounded,
+                variant: KayanCtaVariant.blue,
+                onPressed: () => context.push(AppRoutes.orderConfirmation),
+              ),
+            ],
           ),
-          Phase4CommerceCard(
-            icon: Icons.account_balance_wallet_rounded,
-            titleAr: 'محفظة كيان',
-            titleEn: 'KAYAN Wallet',
-            bodyAr: 'استخدم الرصيد والنقاط.',
-            bodyEn: 'Use balance and points.',
-          ),
-      ],
+        ),
+      ),
     );
   }
 }

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/services/admin_data_service.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/theme/kayan_design_tokens.dart';
 import '../widgets/admin_scaffold.dart';
 
 class AdminAdsScreen extends StatefulWidget {
@@ -42,9 +41,15 @@ class _AdminAdsScreenState extends State<AdminAdsScreen> {
   }
 
   Color _statusColor(String s) => switch (s) {
-        'approved' => AppColors.success,
-        'rejected' => AppColors.error,
-        _ => AppColors.warning,
+        'approved' => KayanDesignTokens.kGreen,
+        'rejected' => KayanDesignTokens.danger,
+        _ => KayanDesignTokens.oOrange,
+      };
+
+  String _statusLabel(String s) => switch (s) {
+        'approved' => 'موافق',
+        'rejected' => 'مرفوض',
+        _ => 'قيد المراجعة',
       };
 
   @override
@@ -56,38 +61,52 @@ class _AdminAdsScreenState extends State<AdminAdsScreen> {
         itemCount: _ads.length,
         itemBuilder: (_, i) {
           final a = _ads[i];
-          return Card(
+          return Container(
+            margin: const EdgeInsets.only(bottom: 8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
+              border: Border.all(color: KayanDesignTokens.border),
+            ),
             child: ExpansionTile(
-              title: Text(a.title, style: AppTextStyles.arabicTitleSmall),
-              subtitle: Text('${a.city} • ${a.status}'),
+              tilePadding: const EdgeInsets.symmetric(horizontal: 14),
+              title: Text(a.title, style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800)),
+              subtitle: Text('${a.city} • ${_statusLabel(a.status)}', style: KayanDesignTokens.cairo(fontSize: 12, color: KayanDesignTokens.muted)),
               leading: CircleAvatar(
-                backgroundColor: _statusColor(a.status).withValues(alpha: 0.2),
-                child: Icon(Icons.campaign, color: _statusColor(a.status)),
+                backgroundColor: _statusColor(a.status).withValues(alpha: 0.15),
+                child: Icon(Icons.campaign_outlined, color: _statusColor(a.status), size: 20),
               ),
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Text(a.descriptionAr.isEmpty ? 'لا يوجد وصف' : a.descriptionAr),
+                  padding: const EdgeInsets.fromLTRB(14, 0, 14, 8),
+                  child: Text(a.descriptionAr.isEmpty ? 'لا يوجد وصف' : a.descriptionAr, style: KayanDesignTokens.cairo(fontSize: 13, color: KayanDesignTokens.text2)),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    TextButton(
-                      onPressed: () => _setStatus(i, 'approved'),
-                      child: const Text('موافقة'),
-                    ),
-                    TextButton(
-                      onPressed: () => _setStatus(i, 'rejected'),
-                      child: const Text('رفض'),
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        _ads.removeAt(i);
-                        await _save();
-                      },
-                      child: const Text('حذف', style: TextStyle(color: AppColors.error)),
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => _setStatus(i, 'approved'),
+                          child: Text('موافقة', style: KayanDesignTokens.cairo(fontSize: 12, fontWeight: FontWeight.w700, color: KayanDesignTokens.kGreen)),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => _setStatus(i, 'rejected'),
+                          child: Text('رفض', style: KayanDesignTokens.cairo(fontSize: 12, fontWeight: FontWeight.w700, color: KayanDesignTokens.danger)),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          _ads.removeAt(i);
+                          await _save();
+                        },
+                        icon: const Icon(Icons.delete_outline, color: KayanDesignTokens.danger),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

@@ -19,11 +19,7 @@ import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_gradients.dart';
-import '../../../../core/theme/app_text_styles.dart';
-import '../../../../core/theme/app_border_radius.dart';
-import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/kayan_design_tokens.dart';
 import '../../../../routing/app_routes.dart';
 import '../../../../shared/widgets/loaders/shimmer_loader.dart';
 import '../../../../shared/widgets/cards/product_card.dart';
@@ -52,7 +48,7 @@ class SectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.pagePadding),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -60,7 +56,7 @@ class SectionHeader extends StatelessWidget {
           Container(
             width: 3, height: 18,
             decoration: BoxDecoration(
-              gradient:     AppGradients.goldButton,
+              gradient:     KayanDesignTokens.gradOrange,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -68,8 +64,8 @@ class SectionHeader extends StatelessWidget {
           Text(
             isArabic ? titleAr : titleEn,
             style: isArabic
-                ? AppTextStyles.arabicTitleMedium
-                : AppTextStyles.titleMedium,
+                ? KayanDesignTokens.cairo(fontSize: 16, fontWeight: FontWeight.w800)
+                : KayanDesignTokens.cairo(fontSize: 16, fontWeight: FontWeight.w800),
           ),
           const Spacer(),
           if (trailing != null)
@@ -81,7 +77,7 @@ class SectionHeader extends StatelessWidget {
                 children: [
                   Text(
                     isArabic ? 'عرض الكل' : 'See All',
-                    style: AppTextStyles.seeAll,
+                    style: KayanDesignTokens.cairo(fontSize: 12, fontWeight: FontWeight.w700, color: KayanDesignTokens.kBlue),
                   ),
                   const SizedBox(width: 4),
                   Icon(
@@ -89,7 +85,7 @@ class SectionHeader extends StatelessWidget {
                         ? Icons.arrow_back_ios_rounded
                         : Icons.arrow_forward_ios_rounded,
                     size:  11,
-                    color: AppColors.skyBlue,
+                    color: KayanDesignTokens.kBlueLight,
                   ),
                 ],
               ),
@@ -186,9 +182,9 @@ class _HeroBannerSliderState extends State<HeroBannerSlider> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(3),
                 gradient: active
-                    ? AppGradients.goldButton
+                    ? KayanDesignTokens.gradOrange
                     : null,
-                color: active ? null : AppColors.borderDefault,
+                color: active ? null : KayanDesignTokens.border,
               ),
             );
           }),
@@ -211,9 +207,9 @@ class _BannerSlide extends StatelessWidget {
         if (banner.actionRoute != null) context.push(banner.actionRoute!);
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.pagePadding),
+        padding: const EdgeInsets.symmetric(horizontal: 24),
         child: ClipRRect(
-          borderRadius: AppBorderRadius.card,
+          borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
           child: Stack(
             fit: StackFit.expand,
             children: [
@@ -221,12 +217,12 @@ class _BannerSlide extends StatelessWidget {
               CachedNetworkImage(
                 imageUrl:    banner.imageUrl,
                 fit:         BoxFit.cover,
-                placeholder: (_, __) => Container(color: AppColors.bgCard2),
+                placeholder: (_, __) => Container(color: KayanDesignTokens.bg),
                 errorWidget: (_, __, ___) => Container(
-                  color: AppColors.bgCard,
+                  color: Colors.white,
                   child: const Icon(
                     Icons.image_outlined,
-                    color: AppColors.textMuted, size: 40,
+                    color: KayanDesignTokens.muted, size: 40,
                   ),
                 ),
               ),
@@ -234,7 +230,7 @@ class _BannerSlide extends StatelessWidget {
               // Gradient overlay
               const DecoratedBox(
                 decoration: BoxDecoration(
-                  gradient: AppGradients.imageOverlayBottom,
+                  gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Colors.transparent, Colors.black54]),
                 ),
               ),
 
@@ -254,8 +250,8 @@ class _BannerSlide extends StatelessWidget {
                               ? (banner.titleAr ?? banner.titleEn ?? '')
                               : (banner.titleEn ?? banner.titleAr ?? ''),
                           style: isArabic
-                              ? AppTextStyles.arabicTitleLarge
-                              : AppTextStyles.titleLarge,
+                              ? KayanDesignTokens.cairo(fontSize: 22, fontWeight: FontWeight.w900)
+                              : KayanDesignTokens.cairo(fontSize: 22, fontWeight: FontWeight.w800),
                           maxLines: 1,
                         ),
                       if (banner.subtitleAr != null || banner.subtitleEn != null)
@@ -264,9 +260,9 @@ class _BannerSlide extends StatelessWidget {
                               ? (banner.subtitleAr ?? banner.subtitleEn ?? '')
                               : (banner.subtitleEn ?? banner.subtitleAr ?? ''),
                           style: (isArabic
-                                  ? AppTextStyles.arabicBodySmall
-                                  : AppTextStyles.bodySmall)
-                              .copyWith(color: AppColors.silverLight),
+                                  ? KayanDesignTokens.cairo(fontSize: 12, color: KayanDesignTokens.muted)
+                                  : KayanDesignTokens.cairo(fontSize: 12, color: KayanDesignTokens.muted))
+                              .copyWith(color: KayanDesignTokens.muted),
                         ),
                     ],
                   ),
@@ -301,7 +297,7 @@ class CategoryGrid extends StatelessWidget {
       height: 95,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        padding:         const EdgeInsets.symmetric(horizontal: AppSpacing.pagePadding),
+        padding:         const EdgeInsets.symmetric(horizontal: 24),
         itemCount:       categories.length,
         itemBuilder:     (_, i) => _CategoryItem(
           category:    categories[i],
@@ -329,7 +325,7 @@ class _CategoryItem extends StatelessWidget {
       final hex = category.color ?? '#4169E1';
       return Color(int.parse('FF${hex.replaceFirst('#', '')}', radix: 16));
     } catch (_) {
-      return AppColors.royalBlue;
+      return KayanDesignTokens.kBlue;
     }
   }
 
@@ -351,15 +347,15 @@ class _CategoryItem extends StatelessWidget {
               duration: const Duration(milliseconds: 150),
               width:    60, height: 60,
               decoration: BoxDecoration(
-                color:        _color.withOpacity(0.12),
-                borderRadius: AppBorderRadius.md,
+                color:        _color.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(14),
                 border:       Border.all(
-                  color: _color.withOpacity(0.25), width: 1,
+                  color: _color.withValues(alpha: 0.25), width: 1,
                 ),
               ),
               child: category.iconUrl != null
                   ? ClipRRect(
-                      borderRadius: AppBorderRadius.md,
+                      borderRadius: BorderRadius.circular(14),
                       child: Padding(
                         padding: const EdgeInsets.all(10),
                         child: CachedNetworkImage(
@@ -379,9 +375,9 @@ class _CategoryItem extends StatelessWidget {
             Text(
               isArabic ? category.nameAr : category.nameEn,
               style: (isArabic
-                      ? AppTextStyles.arabicCaption
-                      : AppTextStyles.caption)
-                  .copyWith(color: AppColors.textSecondary),
+                      ? KayanDesignTokens.cairo(fontSize: 11, color: KayanDesignTokens.muted)
+                      : KayanDesignTokens.cairo(fontSize: 11, color: KayanDesignTokens.muted))
+                  .copyWith(color: KayanDesignTokens.muted),
               textAlign: TextAlign.center,
               maxLines:  2,
               overflow:  TextOverflow.ellipsis,
@@ -429,12 +425,12 @@ class FlashDealSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.pagePadding),
+      margin: const EdgeInsets.symmetric(horizontal: 24),
       decoration: BoxDecoration(
-        gradient:     AppGradients.flashDealCard,
-        borderRadius: AppBorderRadius.card,
+        gradient:     KayanDesignTokens.gradOrange,
+        borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
         border:       Border.all(
-          color: AppColors.error.withOpacity(0.2), width: 1,
+          color: KayanDesignTokens.danger.withValues(alpha: 0.2), width: 1,
         ),
       ),
       child: Column(
@@ -443,14 +439,14 @@ class FlashDealSection extends StatelessWidget {
           // Header inside the red card
           Padding(
             padding: const EdgeInsets.fromLTRB(
-              AppSpacing.md, AppSpacing.md, AppSpacing.md, 0,
+              16, 16, 16, 0,
             ),
             child: Row(
               children: [
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color:        AppColors.badgeSale,
+                    color:        KayanDesignTokens.danger,
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Row(
@@ -459,7 +455,7 @@ class FlashDealSection extends StatelessWidget {
                       const SizedBox(width: 4),
                       Text(
                         isArabic ? 'صفقات اليوم' : 'Flash Deals',
-                        style: AppTextStyles.badgeMedium,
+                        style: KayanDesignTokens.cairo(fontSize: 11, fontWeight: FontWeight.w800, color: Colors.white),
                       ),
                     ],
                   ),
@@ -469,8 +465,8 @@ class FlashDealSection extends StatelessWidget {
                   onTap: () => context.push(AppRoutes.flashDeals),
                   child: Text(
                     isArabic ? 'عرض الكل' : 'See All',
-                    style: AppTextStyles.seeAll.copyWith(
-                      color: AppColors.errorLight,
+                    style: KayanDesignTokens.cairo(fontSize: 12, fontWeight: FontWeight.w700, color: KayanDesignTokens.kBlue).copyWith(
+                      color: KayanDesignTokens.oOrange,
                     ),
                   ),
                 ),
@@ -486,7 +482,7 @@ class FlashDealSection extends StatelessWidget {
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               padding:         const EdgeInsets.only(
-                left: AppSpacing.md, right: AppSpacing.md, bottom: AppSpacing.md,
+                left: 16, right: 16, bottom: 16,
               ),
               itemCount:   products.length,
               itemBuilder: (_, i) => Padding(
@@ -531,7 +527,7 @@ class HorizontalProductsRow extends StatelessWidget {
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding:         const EdgeInsets.symmetric(
-          horizontal: AppSpacing.pagePadding,
+          horizontal: 24,
         ),
         itemCount:   products.length,
         itemBuilder: (_, i) => Padding(
@@ -572,7 +568,7 @@ class FeaturedServicesRow extends StatelessWidget {
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding:         const EdgeInsets.symmetric(
-          horizontal: AppSpacing.pagePadding,
+          horizontal: 24,
         ),
         itemCount:   services.length,
         itemBuilder: (_, i) => _ServiceCard(
@@ -606,9 +602,9 @@ class _ServiceCard extends StatelessWidget {
         width:  160,
         margin: const EdgeInsets.only(right: 12),
         decoration: BoxDecoration(
-          color:        AppColors.bgCard,
-          borderRadius: AppBorderRadius.card,
-          border:       Border.all(color: AppColors.borderSubtle),
+          color:        Colors.white,
+          borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
+          border:       Border.all(color: KayanDesignTokens.border),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -616,7 +612,7 @@ class _ServiceCard extends StatelessWidget {
             // Image
             ClipRRect(
               borderRadius: BorderRadius.vertical(
-                top: Radius.circular(AppBorderRadius.card.topLeft.x),
+                top: Radius.circular(BorderRadius.circular(KayanDesignTokens.radiusM).topLeft.x),
               ),
               child: SizedBox(
                 height: 95, width: double.infinity,
@@ -628,37 +624,37 @@ class _ServiceCard extends StatelessWidget {
                           width: double.infinity, height: 95,
                         ),
                         errorWidget: (_, __, ___) => Container(
-                          color: AppColors.bgCard2,
+                          color: KayanDesignTokens.bg,
                           child: const Icon(Icons.build_outlined,
-                              color: AppColors.textMuted),
+                              color: KayanDesignTokens.muted),
                         ),
                       )
                     : Container(
-                        color: AppColors.bgCard2,
+                        color: KayanDesignTokens.bg,
                         child: const Icon(Icons.build_outlined,
-                            color: AppColors.textMuted, size: 32),
+                            color: KayanDesignTokens.muted, size: 32),
                       ),
               ),
             ),
 
             Padding(
-              padding: const EdgeInsets.all(AppSpacing.sm),
+              padding: const EdgeInsets.all(10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (service.categoryNameAr != null)
                     Text(
                       isArabic ? service.categoryNameAr! : service.nameEn,
-                      style: AppTextStyles.caption.copyWith(
-                        color: AppColors.skyBlue,
+                      style: KayanDesignTokens.cairo(fontSize: 11, color: KayanDesignTokens.muted).copyWith(
+                        color: KayanDesignTokens.kBlueLight,
                       ),
                     ),
                   Text(
                     isArabic ? service.nameAr : service.nameEn,
                     style: isArabic
-                        ? AppTextStyles.arabicBodySmall
+                        ? KayanDesignTokens.cairo(fontSize: 12, color: KayanDesignTokens.muted)
                             .copyWith(fontWeight: FontWeight.w600)
-                        : AppTextStyles.titleSmall,
+                        : KayanDesignTokens.cairo(fontSize: 14, fontWeight: FontWeight.w700),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -667,15 +663,15 @@ class _ServiceCard extends StatelessWidget {
                     children: [
                       Text(
                         'من ${service.basePrice.toInt()} ر.س',
-                        style: AppTextStyles.priceSmall,
+                        style: KayanDesignTokens.cairo(fontSize: 13, fontWeight: FontWeight.w800, color: KayanDesignTokens.oOrange),
                       ),
                       const Spacer(),
                       const Icon(Icons.star_rounded,
-                          size: 11, color: AppColors.starFilled),
+                          size: 11, color: KayanDesignTokens.oOrange),
                       const SizedBox(width: 2),
                       Text(
                         service.rating.toStringAsFixed(1),
-                        style: AppTextStyles.caption,
+                        style: KayanDesignTokens.cairo(fontSize: 11, color: KayanDesignTokens.muted),
                       ),
                     ],
                   ),
@@ -710,7 +706,7 @@ class RecentAdsRow extends StatelessWidget {
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding:         const EdgeInsets.symmetric(
-          horizontal: AppSpacing.pagePadding,
+          horizontal: 24,
         ),
         itemCount:   ads.length,
         itemBuilder: (_, i) => _AdCard(
@@ -742,16 +738,16 @@ class _AdCard extends StatelessWidget {
         width:  150,
         margin: const EdgeInsets.only(right: 12),
         decoration: BoxDecoration(
-          color:        AppColors.bgCard,
-          borderRadius: AppBorderRadius.card,
+          color:        Colors.white,
+          borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
           border:       Border.all(
             color: ad.isBoosted
-                ? AppColors.borderGold
-                : AppColors.borderSubtle,
+                ? KayanDesignTokens.oOrange
+                : KayanDesignTokens.border,
           ),
           boxShadow: ad.isBoosted ? [
             BoxShadow(
-              color:      AppColors.metallicGold.withOpacity(0.1),
+              color:      KayanDesignTokens.oOrange.withValues(alpha: 0.1),
               blurRadius: 10,
             ),
           ] : [],
@@ -762,7 +758,7 @@ class _AdCard extends StatelessWidget {
             // Image
             ClipRRect(
               borderRadius: BorderRadius.vertical(
-                top: Radius.circular(AppBorderRadius.card.topLeft.x),
+                top: Radius.circular(BorderRadius.circular(KayanDesignTokens.radiusM).topLeft.x),
               ),
               child: SizedBox(
                 height: 95, width: double.infinity,
@@ -774,19 +770,19 @@ class _AdCard extends StatelessWidget {
                           width: double.infinity, height: 95,
                         ),
                         errorWidget: (_, __, ___) => Container(
-                          color: AppColors.bgCard2,
+                          color: KayanDesignTokens.bg,
                           child: const Icon(Icons.image_outlined,
-                              color: AppColors.textMuted),
+                              color: KayanDesignTokens.muted),
                         ),
                       )
-                    : Container(color: AppColors.bgCard2,
+                    : Container(color: KayanDesignTokens.bg,
                         child: const Icon(Icons.image_outlined,
-                            color: AppColors.textMuted)),
+                            color: KayanDesignTokens.muted)),
               ),
             ),
 
             Padding(
-              padding: const EdgeInsets.all(AppSpacing.sm),
+              padding: const EdgeInsets.all(10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -795,19 +791,19 @@ class _AdCard extends StatelessWidget {
                       margin: const EdgeInsets.only(bottom: 3),
                       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
                       decoration: BoxDecoration(
-                        color:        AppColors.metallicGold.withOpacity(0.15),
+                        color:        KayanDesignTokens.oOrange.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text('مميز ⭐',
-                          style: AppTextStyles.badge.copyWith(
-                              color: AppColors.metallicGold)),
+                          style: KayanDesignTokens.cairo(fontSize: 10, fontWeight: FontWeight.w800).copyWith(
+                              color: KayanDesignTokens.oOrange)),
                     ),
                   Text(
                     ad.title,
                     style: isArabic
-                        ? AppTextStyles.arabicBodySmall
+                        ? KayanDesignTokens.cairo(fontSize: 12, color: KayanDesignTokens.muted)
                             .copyWith(fontWeight: FontWeight.w600)
-                        : AppTextStyles.titleSmall,
+                        : KayanDesignTokens.cairo(fontSize: 14, fontWeight: FontWeight.w700),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -815,28 +811,28 @@ class _AdCard extends StatelessWidget {
                   if (ad.price != null)
                     Text(
                       '${ad.price!.toInt()} ر.س',
-                      style: AppTextStyles.priceSmall,
+                      style: KayanDesignTokens.cairo(fontSize: 13, fontWeight: FontWeight.w800, color: KayanDesignTokens.oOrange),
                     )
                   else
                     Text(
                       isArabic ? 'مجاني' : 'Free',
-                      style: AppTextStyles.priceSmall.copyWith(
-                        color: AppColors.success,
+                      style: KayanDesignTokens.cairo(fontSize: 13, fontWeight: FontWeight.w800, color: KayanDesignTokens.oOrange).copyWith(
+                        color: KayanDesignTokens.kGreen,
                       ),
                     ),
                   const SizedBox(height: 3),
                   Row(
                     children: [
                       const Icon(Icons.location_on_outlined,
-                          size: 10, color: AppColors.textMuted),
+                          size: 10, color: KayanDesignTokens.muted),
                       const SizedBox(width: 2),
                       Text(ad.city,
-                          style: AppTextStyles.caption.copyWith(
-                              color: AppColors.textMuted)),
+                          style: KayanDesignTokens.cairo(fontSize: 11, color: KayanDesignTokens.muted).copyWith(
+                              color: KayanDesignTokens.muted)),
                       const Spacer(),
                       Text(ad.timeAgo,
-                          style: AppTextStyles.caption.copyWith(
-                              color: AppColors.textMuted,
+                          style: KayanDesignTokens.cairo(fontSize: 11, color: KayanDesignTokens.muted).copyWith(
+                              color: KayanDesignTokens.muted,
                               fontSize: 9)),
                     ],
                   ),
@@ -864,16 +860,16 @@ class EmergencyStrip extends StatelessWidget {
     return GestureDetector(
       onTap: () => context.push('${AppRoutes.services}/categories?emergency=true'),
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: AppSpacing.pagePadding),
+        margin: const EdgeInsets.symmetric(horizontal: 24),
         padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.lg, vertical: AppSpacing.md,
+          horizontal: 20, vertical: 16,
         ),
         decoration: BoxDecoration(
-          gradient:     AppGradients.emergency,
-          borderRadius: AppBorderRadius.md,
+          gradient:     const LinearGradient(colors: [KayanDesignTokens.danger, Color(0xFFB71C1C)]),
+          borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
-              color:      AppColors.error.withOpacity(0.3),
+              color:      KayanDesignTokens.danger.withValues(alpha: 0.3),
               blurRadius: 16,
               offset:     const Offset(0, 4),
             ),
@@ -890,16 +886,16 @@ class EmergencyStrip extends StatelessWidget {
                   Text(
                     isArabic ? 'خدمة طوارئ ٢٤/٧' : '24/7 Emergency Service',
                     style: isArabic
-                        ? AppTextStyles.arabicTitleSmall
-                        : AppTextStyles.titleSmall,
+                        ? KayanDesignTokens.cairo(fontSize: 14, fontWeight: FontWeight.w700)
+                        : KayanDesignTokens.cairo(fontSize: 14, fontWeight: FontWeight.w700),
                   ),
                   Text(
                     isArabic
                         ? 'فنيون يصلون إليك في أسرع وقت'
                         : 'Technicians reach you ASAP',
                     style: (isArabic
-                            ? AppTextStyles.arabicBodySmall
-                            : AppTextStyles.bodySmall)
+                            ? KayanDesignTokens.cairo(fontSize: 12, color: KayanDesignTokens.muted)
+                            : KayanDesignTokens.cairo(fontSize: 12, color: KayanDesignTokens.muted))
                         .copyWith(color: Colors.white70),
                   ),
                 ],

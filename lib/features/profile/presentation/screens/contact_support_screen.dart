@@ -1,34 +1,151 @@
-// TODO: connect to real backend
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-import '../widgets/phase2_profile_widgets.dart';
+import '../../../../core/theme/kayan_design_tokens.dart';
+import '../../../../routing/app_routes.dart';
+import '../../../../shared/widgets/design/kayan_design_widgets.dart';
+import '../../../../shared/widgets/design/kayan_entry_widgets.dart';
 
-class ContactSupportScreen extends StatelessWidget {
+/// 90-pr-contact — تواصل مع الدعم
+class ContactSupportScreen extends StatefulWidget {
   const ContactSupportScreen({super.key});
 
   @override
+  State<ContactSupportScreen> createState() => _ContactSupportScreenState();
+}
+
+class _ContactSupportScreenState extends State<ContactSupportScreen> {
+  final _subject = TextEditingController();
+  final _message = TextEditingController();
+  String _topic = 'عام';
+
+  @override
+  void dispose() {
+    _subject.dispose();
+    _message.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Phase2ProfileScaffold(
-      titleAr: 'تواصل مع الدعم',
-      titleEn: 'Contact Support',
-      subtitleAr: 'فريقنا جاهز لمساعدتك.',
-      subtitleEn: 'Our team is ready to help.',
-      children: [
-          Phase2InfoCard(
-            icon: Icons.email_rounded,
-            titleAr: 'البريد الإلكتروني',
-            titleEn: 'Email',
-            bodyAr: 'support@kayan.sa',
-            bodyEn: 'support@kayan.sa',
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              KayanLightTopBar(title: 'تواصل مع الدعم', onBack: () => context.pop()),
+              Expanded(
+                child: ListView(
+                  children: [
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _ContactChip(
+                            icon: Icons.chat_bubble_outline_rounded,
+                            label: 'محادثة',
+                            onTap: () => context.push(AppRoutes.liveChat),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: _ContactChip(
+                            icon: Icons.phone_outlined,
+                            label: 'اتصال',
+                            onTap: () {},
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Text('أرسل رسالة', style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800, fontSize: 16)),
+                    const SizedBox(height: 12),
+                    DropdownButtonFormField<String>(
+                      initialValue: _topic,
+                      decoration: InputDecoration(
+                        labelText: 'نوع الاستفسار',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
+                        ),
+                      ),
+                      items: ['عام', 'طلب', 'دفع', 'حساب']
+                          .map((t) => DropdownMenuItem(value: t, child: Text(t)))
+                          .toList(),
+                      onChanged: (v) => setState(() => _topic = v ?? 'عام'),
+                    ),
+                    const SizedBox(height: 14),
+                    KayanDesignTextField(
+                      controller: _subject,
+                      label: 'الموضوع',
+                      hint: 'موضوع الرسالة',
+                      icon: Icons.subject_rounded,
+                    ),
+                    const SizedBox(height: 14),
+                    KayanDesignTextField(
+                      controller: _message,
+                      label: 'التفاصيل',
+                      hint: 'اشرح مشكلتك بالتفصيل...',
+                      icon: Icons.notes_rounded,
+                    ),
+                  ],
+                ),
+              ),
+              KayanCtaButton(
+                label: 'إرسال',
+                trailingIcon: Icons.send_rounded,
+                variant: KayanCtaVariant.blue,
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('تم إرسال رسالتك — سنرد خلال 24 ساعة')),
+                  );
+                  context.pop();
+                },
+              ),
+            ],
           ),
-          Phase2InfoCard(
-            icon: Icons.phone_in_talk_rounded,
-            titleAr: 'مركز الاتصال',
-            titleEn: 'Call Center',
-            bodyAr: '920000000',
-            bodyEn: '920000000',
+        ),
+      ),
+    );
+  }
+}
+
+class _ContactChip extends StatelessWidget {
+  const _ContactChip({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: KayanDesignTokens.surface,
+      borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
+            border: Border.all(color: KayanDesignTokens.border),
           ),
-      ],
+          child: Column(
+            children: [
+              Icon(icon, color: KayanDesignTokens.kBlue, size: 28),
+              const SizedBox(height: 8),
+              Text(label, style: KayanDesignTokens.cairo(fontWeight: FontWeight.w700)),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
