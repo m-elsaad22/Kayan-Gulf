@@ -93,7 +93,12 @@ class _SettingsLightScreenState extends ConsumerState<SettingsLightScreen> {
           ),
           const SizedBox(width: 14),
           Expanded(child: Text(title, style: KayanDesignTokens.cairo(fontSize: 14, fontWeight: FontWeight.w700, color: KayanDesignTokens.kBlueDeep))),
-          Switch.adaptive(value: value, onChanged: onChanged, activeColor: KayanDesignTokens.kBlue),
+          Switch.adaptive(
+            value: value,
+            onChanged: onChanged,
+            activeTrackColor: KayanDesignTokens.kBlue.withValues(alpha: 0.35),
+            activeThumbColor: KayanDesignTokens.kBlue,
+          ),
         ],
       ),
     );

@@ -418,7 +418,12 @@ class _SwitchRow extends StatelessWidget {
           ),
           const SizedBox(width: 14),
           Expanded(child: Text(title, style: KayanDesignTokens.cairo(fontWeight: FontWeight.w700))),
-          Switch.adaptive(value: value, onChanged: onChanged, activeColor: KayanDesignTokens.kBlue),
+          Switch.adaptive(
+            value: value,
+            onChanged: onChanged,
+            activeTrackColor: KayanDesignTokens.kBlue.withValues(alpha: 0.35),
+            activeThumbColor: KayanDesignTokens.kBlue,
+          ),
         ],
       ),
     );

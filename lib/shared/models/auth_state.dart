@@ -1,10 +1,12 @@
 // KAYAN — Auth State Model (simplified — no code generation needed)
+enum AuthStatus { initial, loading, authenticated, unauthenticated }
+
 class AuthState {
   final String? userId;
   final String? accessToken;
   final String? refreshToken;
   final bool isProfileComplete;
-  final _AuthStatus status;
+  final AuthStatus status;
 
   const AuthState._({
     required this.status,
@@ -14,28 +16,26 @@ class AuthState {
     this.isProfileComplete = false,
   });
 
-  factory AuthState.initial() => const AuthState._(status: _AuthStatus.initial);
-  factory AuthState.loading() => const AuthState._(status: _AuthStatus.loading);
-  factory AuthState.unauthenticated() => const AuthState._(status: _AuthStatus.unauthenticated);
+  factory AuthState.initial() => const AuthState._(status: AuthStatus.initial);
+  factory AuthState.loading() => const AuthState._(status: AuthStatus.loading);
+  factory AuthState.unauthenticated() => const AuthState._(status: AuthStatus.unauthenticated);
   factory AuthState.authenticated({
     required String userId,
     required String accessToken,
     required String refreshToken,
     required bool isProfileComplete,
   }) => AuthState._(
-    status: _AuthStatus.authenticated,
+    status: AuthStatus.authenticated,
     userId: userId,
     accessToken: accessToken,
     refreshToken: refreshToken,
     isProfileComplete: isProfileComplete,
   );
 
-  bool get isAuthenticated => status == _AuthStatus.authenticated;
-  bool get isInitial => status == _AuthStatus.initial;
-  bool get isLoading => status == _AuthStatus.loading;
+  bool get isAuthenticated => status == AuthStatus.authenticated;
+  bool get isInitial => status == AuthStatus.initial;
+  bool get isLoading => status == AuthStatus.loading;
 
   @override
   String toString() => 'AuthState(status: $status, userId: $userId)';
 }
-
-enum _AuthStatus { initial, loading, authenticated, unauthenticated }

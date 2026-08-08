@@ -199,11 +199,10 @@ class _AnimationsScreenState extends State<AnimationsScreen>
             onPressed: () async {
               final json = const JsonEncoder.withIndent('  ').convert(_motion.toJson());
               await Clipboard.setData(ClipboardData(text: json));
-              if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('تم نسخ JSON للتأثير')),
-                );
-              }
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('تم نسخ JSON للتأثير')),
+              );
             },
             icon: const Icon(Icons.download),
             label: const Text('تحميل التأثير كـ JSON'),

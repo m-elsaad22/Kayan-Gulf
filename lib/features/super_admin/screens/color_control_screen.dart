@@ -206,11 +206,10 @@ class _ColorControlScreenState extends State<ColorControlScreen> {
               OutlinedButton.icon(
                 onPressed: () async {
                   await engine.saveForFuture();
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('حُفظت للإصدارات القادمة')),
-                    );
-                  }
+                  if (!context.mounted) return;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('حُفظت للإصدارات القادمة')),
+                  );
                 },
                 icon: const Icon(Icons.save_outlined),
                 label: const Text('حفظ للإصدارات القادمة'),
@@ -231,11 +230,10 @@ class _ColorControlScreenState extends State<ColorControlScreen> {
                   await Clipboard.setData(
                     ClipboardData(text: engine.exportJson()),
                   );
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('تم نسخ JSON')),
-                    );
-                  }
+                  if (!context.mounted) return;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('تم نسخ JSON')),
+                  );
                 },
                 icon: const Icon(Icons.upload),
                 label: const Text('تصدير JSON'),

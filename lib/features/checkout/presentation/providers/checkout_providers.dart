@@ -173,14 +173,8 @@ class CheckoutNotifier extends AutoDisposeNotifier<CheckoutState> {
         orderStatus: OrderStatus.success,
         orderId:     orderId,
       );
-      return true;
-    } else {
-      state = state.copyWith(
-        orderStatus:  OrderStatus.failed,
-        errorMessage: 'فشلت عملية الدفع. يرجى المحاولة مجدداً.',
-      );
-      return false;
     }
+    return success;
   }
 
   void reset() => state = build();

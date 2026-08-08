@@ -12,7 +12,7 @@
 //   6. No redirect (null)
 // ============================================================
 
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -141,11 +141,6 @@ class RouteGuards {
       AppRoutes.bookingConfirm,
     };
     return profileRequired.any((r) => location.startsWith(r));
-  }
-
-  /// Debug — log guard decision
-  static void _log(String message) {
-    if (kDebugMode) debugPrint('🛡️ [Guard] $message');
   }
 }
 
