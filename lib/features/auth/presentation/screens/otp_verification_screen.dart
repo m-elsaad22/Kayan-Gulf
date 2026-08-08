@@ -66,14 +66,14 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
       _loading = true;
       _error = null;
     });
-    final ok = await ref.read(verifyOtpProvider.notifier).verifyOtp(widget.phone, code);
+    final result = await ref.read(verifyOtpProvider.notifier).verifyOtp(widget.phone, code);
     if (!mounted) return;
-    if (ok) {
+    if (result.success && result.userId != null) {
       ref.read(authStateProvider.notifier).setAuthenticated(
-            userId: 'phone-${widget.phone.hashCode.abs()}',
-            accessToken: 'mock-phone-token',
-            refreshToken: 'mock-phone-refresh',
-            isProfileComplete: false,
+            userId: result.userId!,
+            accessToken: result.accessToken ?? '',
+            refreshToken: result.refreshToken ?? '',
+            isProfileComplete: result.isProfileComplete,
           );
       context.go(AppRoutes.profileSetup);
     } else {

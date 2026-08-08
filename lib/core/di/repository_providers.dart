@@ -2,6 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../config/app_config.dart';
 import '../network/api_client.dart';
+import '../../features/auth/data/repositories/auth_repository.dart';
+import '../../features/auth/data/repositories/mock_auth_repository.dart';
+import '../../features/auth/data/repositories/remote_auth_repository.dart';
 import '../../features/ecommerce/product/data/repositories/mock_product_repository.dart';
 import '../../features/ecommerce/product/data/repositories/product_repository.dart';
 import '../../features/ecommerce/product/data/repositories/remote_product_repository.dart';
@@ -23,4 +26,11 @@ final productRepositoryProvider = Provider<ProductRepository>((ref) {
     return const MockProductRepository();
   }
   return RemoteProductRepository(ref.watch(apiClientProvider));
+});
+
+final authRepositoryProvider = Provider<AuthRepository>((ref) {
+  if (AppConfig.useMockData) {
+    return const MockAuthRepository();
+  }
+  return RemoteAuthRepository(ref.watch(apiClientProvider));
 });

@@ -4,6 +4,7 @@
 // ============================================================
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/di/repository_providers.dart';
 
 // ──────────────────────────────────────────────────────────────
 // OTP STATE
@@ -46,10 +47,8 @@ class SendOtpNotifier extends AutoDisposeNotifier<OtpState> {
   Future<bool> sendOtp(String phone) async {
     state = state.copyWith(isLoading: true);
     try {
-      // TODO: inject AuthRepository and call sendOtp(phone)
-      // final repo = ref.read(authRepositoryProvider);
-      // await repo.sendOtp(phone);
-      await Future.delayed(const Duration(seconds: 1)); // Simulate
+      final repo = ref.read(authRepositoryProvider);
+      await repo.sendOtp(phone);
       state = state.copyWith(isLoading: false, success: true, resendCountdown: 60);
       return true;
     } catch (e) {
@@ -80,24 +79,34 @@ class VerifyOtpNotifier extends AutoDisposeNotifier<OtpState> {
   @override
   OtpState build() => const OtpState();
 
-  Future<bool> verifyOtp(String phone, String code) async {
+  Future<({bool success, String? userId, String? accessToken, String? refreshToken, bool isProfileComplete})> verifyOtp(
+    String phone,
+    String code,
+  ) async {
     state = state.copyWith(isLoading: true);
     try {
-      // TODO: inject AuthRepository
-      // final result = await repo.verifyOtp(phone, code);
-      await Future.delayed(const Duration(seconds: 1));
-
-      // On success: update global auth state
-      // ref.read(authStateProvider.notifier).setAuthenticated(...)
-
+      final repo = ref.read(authRepositoryProvider);
+      final result = await repo.verifyOtp(phone, code);
       state = state.copyWith(isLoading: false, success: true);
-      return true;
+      return (
+        success: true,
+        userId: result.userId,
+        accessToken: result.accessToken,
+        refreshToken: result.refreshToken,
+        isProfileComplete: result.isProfileComplete,
+      );
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
         error: _parseError(e),
       );
-      return false;
+      return (
+        success: false,
+        userId: null,
+        accessToken: null,
+        refreshToken: null,
+        isProfileComplete: false,
+      );
     }
   }
 
