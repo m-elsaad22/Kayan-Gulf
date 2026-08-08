@@ -1,0 +1,16 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../config/app_config.dart';
+import '../network/api_client.dart';
+import '../../features/home/data/repositories/home_repository.dart';
+import '../../features/home/data/repositories/mock_home_repository.dart';
+import '../../features/home/data/repositories/remote_home_repository.dart';
+
+final apiClientProvider = Provider<ApiClient>((ref) => ApiClient());
+
+final homeRepositoryProvider = Provider<HomeRepository>((ref) {
+  if (AppConfig.useMockData) {
+    return const MockHomeRepository();
+  }
+  return RemoteHomeRepository(ref.watch(apiClientProvider));
+});

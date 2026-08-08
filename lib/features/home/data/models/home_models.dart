@@ -240,4 +240,31 @@ class HomeData {
     this.featuredServices     = const [],
     this.recentAds            = const [],
   });
+
+  factory HomeData.fromJson(Map<String, dynamic> j) => HomeData(
+        banners: (j['banners'] as List<dynamic>? ?? [])
+            .map((e) => BannerModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        ecommerceCategories: (j['ecommerceCategories'] as List<dynamic>? ?? [])
+            .map((e) => CategoryModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        serviceCategories: (j['serviceCategories'] as List<dynamic>? ?? [])
+            .map((e) => CategoryModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        flashDeals: (j['flashDeals'] as List<dynamic>? ?? [])
+            .map((e) => ProductCardModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        featuredProducts: (j['featuredProducts'] as List<dynamic>? ?? [])
+            .map((e) => ProductCardModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        recommendations: (j['recommendations'] as List<dynamic>? ?? [])
+            .map((e) => ProductCardModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        featuredServices: (j['featuredServices'] as List<dynamic>? ?? [])
+            .map((e) => ServiceCardModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        recentAds: (j['recentAds'] as List<dynamic>? ?? [])
+            .map((e) => AdCardModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+      );
 }
