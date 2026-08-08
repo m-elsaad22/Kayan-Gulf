@@ -1,16 +1,15 @@
-// KAYAN — Categories Screen
+// Shop categories — light design
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../../core/services/admin_data_service.dart';
-import '../../../../../core/theme/app_colors.dart';
-import '../../../../../core/theme/app_text_styles.dart';
-import '../../../../../core/theme/app_border_radius.dart';
-import '../../../../../core/theme/app_spacing.dart';
+import '../../../../../core/theme/kayan_design_tokens.dart';
 import '../../../../../routing/app_routes.dart';
 import '../../../../../shared/providers/locale_provider.dart';
+import '../../../../../shared/widgets/design/kayan_design_widgets.dart';
 
 class CategoriesScreen extends ConsumerWidget {
   const CategoriesScreen({super.key});
@@ -21,79 +20,81 @@ class CategoriesScreen extends ConsumerWidget {
     final categories = AdminDataService.instance.getCategories();
 
     return Scaffold(
-      backgroundColor: AppColors.bgScaffold,
-      appBar: AppBar(
-        backgroundColor: AppColors.bgSurface,
-        centerTitle: true,
-        title: Text(
-          ar ? 'الفئات' : 'Categories',
-          style: ar ? AppTextStyles.arabicTitleMedium : AppTextStyles.titleMedium,
-        ),
-        leading: IconButton(
-          icon: Icon(
-            ar ? Icons.arrow_forward_ios_rounded : Icons.arrow_back_ios_new_rounded,
-            size: 20,
+      backgroundColor: KayanDesignTokens.bg,
+      body: Column(
+        children: [
+          KayanSectionHero(
+            title: ar ? 'الفئات' : 'Categories',
+            variant: KayanSectionHeroVariant.orange,
+            leading: KayanHeroIconButton(
+              icon: Icons.arrow_forward_ios_rounded,
+              onTap: () => context.pop(),
+            ),
           ),
-          onPressed: () => context.pop(),
-        ),
-      ),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(AppSpacing.pagePadding),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          crossAxisSpacing: 12,
-          mainAxisSpacing: 12,
-          childAspectRatio: 0.95,
-        ),
-        itemCount: categories.length,
-        itemBuilder: (_, i) {
-          final c = categories[i];
-          return GestureDetector(
-            onTap: () {
-              HapticFeedback.selectionClick();
-              context.push(AppRoutes.productListPath(c.id));
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                color: AppColors.bgCard,
-                borderRadius: AppBorderRadius.card,
-                border: Border.all(color: AppColors.borderSubtle),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: CachedNetworkImage(
-                      imageUrl: c.imageUrl,
-                      width: 60,
-                      height: 60,
-                      fit: BoxFit.cover,
-                      errorWidget: (_, __, ___) => Container(
-                        width: 60,
-                        height: 60,
-                        color: AppColors.bgCard2,
-                        child: const Icon(Icons.category_outlined, size: 28),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(24, 18, 24, 24),
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                  childAspectRatio: 0.82,
+                ),
+                itemCount: categories.length,
+                itemBuilder: (_, i) {
+                  final c = categories[i];
+                  return GestureDetector(
+                    onTap: () {
+                      HapticFeedback.selectionClick();
+                      context.push(AppRoutes.productListPath(c.id));
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
+                        border: Border.all(color: KayanDesignTokens.border),
+                        boxShadow: KayanDesignTokens.shadowS,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(14),
+                            child: CachedNetworkImage(
+                              imageUrl: c.imageUrl,
+                              width: 52,
+                              height: 52,
+                              fit: BoxFit.cover,
+                              errorWidget: (_, __, ___) => Container(
+                                width: 52,
+                                height: 52,
+                                decoration: BoxDecoration(
+                                  gradient: KayanDesignTokens.gradOrange,
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                                child: const Icon(Icons.category_outlined, color: Colors.white, size: 26),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            ar ? c.nameAr : c.nameEn,
+                            style: KayanDesignTokens.cairo(fontSize: 12, fontWeight: FontWeight.w700),
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: Text(
-                      ar ? c.nameAr : c.nameEn,
-                      style: (ar ? AppTextStyles.arabicBodySmall : AppTextStyles.bodySmall)
-                          .copyWith(fontWeight: FontWeight.w600),
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
+                  );
+                },
               ),
             ),
-          );
-        },
+          ),
+        ],
       ),
     );
   }

@@ -157,6 +157,7 @@ import '../features/profile/presentation/screens/live_chat_screen.dart';
 import '../features/profile/presentation/screens/rate_app_screen.dart';
 import '../features/profile/presentation/screens/about_kayan_screen.dart';
 import '../features/profile/presentation/screens/security_screen.dart';
+import '../features/profile/presentation/screens/change_password_screen.dart';
 import '../features/profile/presentation/screens/two_fa_setup_screen.dart';
 import '../features/profile/presentation/screens/two_fa_verify_screen.dart';
 import '../features/profile/presentation/screens/connected_devices_screen.dart';
@@ -658,6 +659,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildSlidePage(
           key: state.pageKey,
           child: const SecurityScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.changePassword,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ChangePasswordScreen(),
         ),
       ),
       GoRoute(
