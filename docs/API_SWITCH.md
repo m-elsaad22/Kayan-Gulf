@@ -75,19 +75,25 @@ Exact field names should match the models in each feature’s `data/models/` dir
 
 ## Authentication headers
 
-`ApiClient` currently sends `Accept: application/json`. When wiring production auth:
+`ApiClient` automatically attaches `Authorization: Bearer <accessToken>` on every request when a token is stored in `LocalStorageService` (via `AuthInterceptor` in `lib/core/network/auth_interceptor.dart`).
 
-1. Persist tokens via `LocalStorageService` (already used by `AuthNotifier`).
-2. Add a Dio interceptor on `ApiClient` to attach `Authorization: Bearer <accessToken>`.
-3. Handle 401 responses with token refresh in the remote auth repository.
+For tests or custom wiring, pass an explicit `tokenProvider` to `ApiClient`:
+
+```dart
+ApiClient(tokenProvider: () => 'staging-token');
+```
+
+### Token refresh (future)
+
+Handle 401 responses with token refresh in the remote auth repository when the backend supports it.
 
 ## Local storage in tests
 
 `AuthNotifier.setAuthenticated()` writes to Hive via `LocalStorageService`. Unit/integration tests that touch auth persistence must call `LocalStorageService.initialize()` after `Hive.init()`, or test only the repository layer (see `test/integration/app_data_flow_test.dart`).
 
-## Remaining screen-level TODOs
+## Remaining screen-level notes
 
-Some secondary screens still contain `// TODO: connect to real backend` in their headers. These are cosmetic markers for screens that use local UI state or admin mocks; they do not block the repository switch. New work should use feature providers backed by repositories.
+Some secondary screens use local demo UI content (booking flow steps, returns wizard, gallery). They are routed and styled but do not yet call remote repositories directly. New work should use feature providers backed by repositories.
 
 ## Verification checklist
 

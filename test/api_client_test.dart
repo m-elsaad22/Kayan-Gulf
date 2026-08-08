@@ -25,6 +25,27 @@ void main() {
       throwsA(isA<ApiException>()),
     );
   });
+
+  test('ApiClient attaches Bearer token via interceptor', () async {
+    RequestOptions? captured;
+    final dio = Dio();
+    dio.httpClientAdapter = _CaptureAdapter((options) {
+      captured = options;
+      return ResponseBody.fromString(
+        '{"ok":true}',
+        200,
+        headers: {Headers.contentTypeHeader: [Headers.jsonContentType]},
+      );
+    });
+
+    final client = ApiClient(
+      dio: dio,
+      tokenProvider: () => 'api-test-token',
+    );
+    final data = await client.getJson('/secure');
+    expect(data['ok'], isTrue);
+    expect(captured?.headers['Authorization'], 'Bearer api-test-token');
+  });
 }
 
 class _JsonAdapter implements HttpClientAdapter {
@@ -67,5 +88,23 @@ class _ErrorAdapter implements HttpClientAdapter {
       type: DioExceptionType.connectionError,
       message: 'offline',
     );
+  }
+}
+
+class _CaptureAdapter implements HttpClientAdapter {
+  _CaptureAdapter(this._onFetch);
+
+  final ResponseBody Function(RequestOptions options) _onFetch;
+
+  @override
+  void close({bool force = false}) {}
+
+  @override
+  Future<ResponseBody> fetch(
+    RequestOptions options,
+    Stream<List<int>>? requestStream,
+    Future<void>? cancelFuture,
+  ) async {
+    return _onFetch(options);
   }
 }

@@ -1,4 +1,4 @@
-// TODO: connect to real backend
+// Presentation screen with local demo content.
 import 'package:flutter/material.dart';
 
 import '../../../shared/presentation/widgets/phase4_commerce_widgets.dart';

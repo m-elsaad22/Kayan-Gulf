@@ -2,11 +2,14 @@ import 'package:dio/dio.dart';
 
 import '../config/app_config.dart';
 import 'api_exception.dart';
+import 'auth_interceptor.dart';
 
 /// Thin Dio wrapper used by remote repository implementations.
 class ApiClient {
-  ApiClient({Dio? dio})
-      : _dio = dio ??
+  ApiClient({
+    Dio? dio,
+    String? Function()? tokenProvider,
+  }) : _dio = dio ??
             Dio(
               BaseOptions(
                 baseUrl: AppConfig.apiBaseUrl,
@@ -14,7 +17,11 @@ class ApiClient {
                 receiveTimeout: AppConfig.networkTimeout,
                 headers: const {'Accept': 'application/json'},
               ),
-            );
+            ) {
+    _dio.interceptors.add(
+      AuthInterceptor(tokenProvider: tokenProvider),
+    );
+  }
 
   final Dio _dio;
 

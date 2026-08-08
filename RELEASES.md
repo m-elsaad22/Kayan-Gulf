@@ -46,6 +46,7 @@
 | phase-46-mock-data-consolidation | MockDataCatalog + ربط الشاشات + 65 اختبار | [kayan-phase-46-mock-data-consolidation-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-46-mock-data-consolidation-1.0.0/kayan-phase-46-mock-data-consolidation-1.0.0.zip) |
 | phase-47-integration-tests | Integration tests + تلميع الرئيسية + 74 اختبار | [kayan-phase-47-integration-tests-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-47-integration-tests-1.0.0/kayan-phase-47-integration-tests-1.0.0.zip) |
 | phase-48-release-candidate | Release candidate + توثيق المعمارية و API | [kayan-phase-48-release-candidate-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-48-release-candidate-1.0.0/kayan-phase-48-release-candidate-1.0.0.zip) |
+| phase-49-api-auth-interceptor | AuthInterceptor + تنظيف الشاشات + 78 اختبار | [kayan-phase-49-api-auth-interceptor-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-49-api-auth-interceptor-1.0.0/kayan-phase-49-api-auth-interceptor-1.0.0.zip) |
 
 ## كيف يُنشأ الـ ZIP؟
 

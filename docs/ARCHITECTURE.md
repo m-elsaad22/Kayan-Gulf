@@ -61,7 +61,7 @@ Presentation code should depend on **providers** (e.g. `productListProvider`), n
 
 ## Networking
 
-- `ApiClient` (`lib/core/network/api_client.dart`) wraps Dio with JSON helpers and `ApiException` mapping.
+- `ApiClient` (`lib/core/network/api_client.dart`) wraps Dio with JSON helpers, `ApiException` mapping, and `AuthInterceptor` for Bearer tokens.
 - Base URL and timeouts come from `AppConfig`.
 - Remote repositories translate API JSON into feature models; mock repositories read from `MockDataCatalog`.
 

@@ -1,4 +1,4 @@
-// TODO: connect to real backend
+// Presentation screen with local demo content.
 import 'package:flutter/material.dart';
 
 import '../../../post_ad/presentation/screens/post_ad_screen.dart';
