@@ -12,6 +12,15 @@ class AdCategory {
     required this.nameAr, required this.nameEn,
     required this.emoji, this.adCount = 0,
   });
+
+  factory AdCategory.fromJson(Map<String, dynamic> j) => AdCategory(
+        id: j['id'] as String,
+        slug: j['slug'] as String,
+        nameAr: j['nameAr'] as String,
+        nameEn: j['name'] as String? ?? j['nameEn'] as String? ?? '',
+        emoji: j['emoji'] as String? ?? '📦',
+        adCount: j['adCount'] as int? ?? 0,
+      );
 }
 
 // ── Ad Condition ──────────────────────────────────────────────
@@ -98,6 +107,34 @@ class AdModel {
 
   String get mainImageUrl => imageUrls.isNotEmpty ? imageUrls.first : '';
   bool   get hasImages    => imageUrls.isNotEmpty;
+
+  factory AdModel.fromJson(Map<String, dynamic> j) => AdModel(
+        id: j['id'] as String,
+        slug: j['slug'] as String,
+        title: j['title'] as String,
+        description: j['description'] as String?,
+        price: (j['price'] as num?)?.toDouble(),
+        isFree: j['isFree'] as bool? ?? false,
+        isNegotiable: j['isNegotiable'] as bool? ?? false,
+        city: j['city'] as String,
+        district: j['district'] as String? ?? '',
+        categoryId: j['categoryId'] as String,
+        categorySlug: j['categorySlug'] as String,
+        categoryNameAr: j['categoryNameAr'] as String?,
+        categoryNameEn: j['categoryNameEn'] as String?,
+        condition: AdCondition.values.firstWhere(
+          (c) => c.name == j['condition'],
+          orElse: () => AdCondition.good,
+        ),
+        imageUrls: (j['imageUrls'] as List?)?.cast<String>() ?? [],
+        createdAt: DateTime.tryParse(j['createdAt'] as String? ?? '') ??
+            DateTime.now(),
+        viewCount: j['viewCount'] as int? ?? 0,
+        favoriteCount: j['favoriteCount'] as int? ?? 0,
+        isBoosted: j['isBoosted'] as bool? ?? false,
+        isFeatured: j['isFeatured'] as bool? ?? false,
+        isFavorited: j['isFavorited'] as bool? ?? false,
+      );
 }
 
 // ── My Ad (owned by user) ─────────────────────────────────────
@@ -119,6 +156,13 @@ class MyAdModel {
     'EXPIRED' => 'منتهي',
     _         => status,
   };
+
+  factory MyAdModel.fromJson(Map<String, dynamic> j) => MyAdModel(
+        ad: AdModel.fromJson(j['ad'] as Map<String, dynamic>),
+        status: j['status'] as String? ?? 'ACTIVE',
+        daysLeft: j['daysLeft'] as int? ?? 0,
+        canBoost: j['canBoost'] as bool? ?? true,
+      );
 }
 
 // ──────────────────────────────────────────────────────────────

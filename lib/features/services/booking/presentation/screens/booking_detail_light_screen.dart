@@ -9,6 +9,7 @@ import '../../../../../shared/providers/locale_provider.dart';
 import '../../../../../shared/widgets/design/kayan_design_widgets.dart';
 import '../../../../../shared/widgets/design/kayan_entry_widgets.dart';
 import '../../../browse/data/models/service_models.dart';
+import '../../../presentation/providers/service_providers.dart';
 
 class BookingDetailLightScreen extends ConsumerWidget {
   const BookingDetailLightScreen({super.key, required this.bookingId});
@@ -37,7 +38,12 @@ class BookingDetailLightScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ar = ref.watch(isArabicProvider);
-    final booking = mockBookings.firstWhere((b) => b.id == bookingId, orElse: () => mockBookings.first);
+    final bookingAsync = ref.watch(serviceBookingProvider(bookingId));
+
+    return bookingAsync.when(
+      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      error: (e, _) => Scaffold(body: Center(child: Text(e.toString()))),
+      data: (booking) {
     final color = _statusColor(booking.status);
     final tech = booking.technician;
 
@@ -155,6 +161,8 @@ class BookingDetailLightScreen extends ConsumerWidget {
           ),
         ],
       ),
+    );
+      },
     );
   }
 }

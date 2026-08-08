@@ -4,17 +4,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../../core/services/admin_data_service.dart';
 import '../../../../../core/theme/kayan_design_tokens.dart';
 import '../../../../../routing/app_routes.dart';
 import '../../../../../shared/providers/locale_provider.dart';
 import '../../../../../shared/widgets/design/kayan_design_widgets.dart';
 import '../../../../../shared/widgets/design/kayan_entry_widgets.dart';
 import '../../data/models/ad_models.dart';
+import '../../../presentation/providers/classifieds_providers.dart';
 
-enum _SortOpt { newest, priceAsc, priceDesc }
-
-final _sortProvider = StateProvider<_SortOpt>((_) => _SortOpt.newest);
+final _sortProvider = StateProvider<AdSortOption>((_) => AdSortOption.newest);
 
 class AdsListScreen extends ConsumerStatefulWidget {
   const AdsListScreen({super.key, this.categorySlug});
@@ -65,34 +63,21 @@ class _AdsListScreenState extends ConsumerState<AdsListScreen> {
     return '${ad.price?.toStringAsFixed(0)} $unit';
   }
 
-  List<AdModel> _filtered(bool ar) {
-    var ads = AdminDataService.instance.getClassifiedAds().where((a) {
-      if (widget.categorySlug != null && a.categorySlug != widget.categorySlug) return false;
-      if (_query.isNotEmpty && !a.title.contains(_query) && !a.city.contains(_query)) return false;
-      return true;
-    }).toList();
-
-    final sort = ref.watch(_sortProvider);
-    switch (sort) {
-      case _SortOpt.priceAsc:
-        ads.sort((a, b) => (a.price ?? 0).compareTo(b.price ?? 0));
-      case _SortOpt.priceDesc:
-        ads.sort((a, b) => (b.price ?? 0).compareTo(a.price ?? 0));
-      case _SortOpt.newest:
-        ads.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-    }
-    return ads;
-  }
+  AdFilter get _filter => AdFilter(
+        categorySlug: widget.categorySlug,
+        search: _query.isEmpty ? null : _query,
+        sort: ref.watch(_sortProvider),
+      );
 
   @override
   Widget build(BuildContext context) {
     final ar = ref.watch(isArabicProvider);
     final sort = ref.watch(_sortProvider);
-    final ads = _filtered(ar);
+    final adsAsync = ref.watch(adsListProvider(_filter));
     final sortLabels = ar
         ? ['الأحدث', 'سعر ↑', 'سعر ↓']
         : ['Newest', 'Price ↑', 'Price ↓'];
-    final sortOpts = [_SortOpt.newest, _SortOpt.priceAsc, _SortOpt.priceDesc];
+    final sortOpts = [AdSortOption.newest, AdSortOption.priceAsc, AdSortOption.priceDesc];
 
     return Scaffold(
       backgroundColor: KayanDesignTokens.bg,
@@ -123,7 +108,10 @@ class _AdsListScreenState extends ConsumerState<AdsListScreen> {
             },
           ),
           Expanded(
-            child: ads.isEmpty
+            child: adsAsync.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (e, _) => Center(child: Text(e.toString())),
+              data: (ads) => ads.isEmpty
                 ? Center(
                     child: Text(ar ? 'لا توجد إعلانات' : 'No ads found', style: KayanDesignTokens.cairo(color: KayanDesignTokens.muted)),
                   )
@@ -144,6 +132,7 @@ class _AdsListScreenState extends ConsumerState<AdsListScreen> {
                       );
                     }).toList(),
                   ),
+            ),
           ),
         ],
       ),

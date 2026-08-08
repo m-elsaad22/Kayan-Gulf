@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../../core/theme/kayan_design_tokens.dart';
 import '../../../../../shared/providers/locale_provider.dart';
 import '../../../../../shared/widgets/design/kayan_design_widgets.dart';
-import '../../../browse/data/models/service_models.dart';
+import '../../../presentation/providers/service_providers.dart';
 
 class ServiceTrackingLightScreen extends ConsumerWidget {
   const ServiceTrackingLightScreen({super.key, required this.bookingId});
@@ -16,7 +16,12 @@ class ServiceTrackingLightScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ar = ref.watch(isArabicProvider);
-    final booking = mockBookings.firstWhere((b) => b.id == bookingId, orElse: () => mockBookings.first);
+    final bookingAsync = ref.watch(serviceBookingProvider(bookingId));
+
+    return bookingAsync.when(
+      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      error: (e, _) => Scaffold(body: Center(child: Text(e.toString()))),
+      data: (booking) {
     final tech = booking.technician;
 
     final steps = ar
@@ -105,6 +110,8 @@ class ServiceTrackingLightScreen extends ConsumerWidget {
           ),
         ],
       ),
+    );
+      },
     );
   }
 }

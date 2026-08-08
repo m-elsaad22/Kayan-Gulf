@@ -3,18 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../../core/services/admin_data_service.dart';
 import '../../../../../core/theme/kayan_design_tokens.dart';
 import '../../../../../routing/app_routes.dart';
 import '../../../../../shared/providers/locale_provider.dart';
 import '../../../../../shared/widgets/design/kayan_design_widgets.dart';
 import '../../../../../shared/widgets/design/kayan_entry_widgets.dart';
 import '../../data/models/ad_models.dart';
-
-final _classifiedsProvider = FutureProvider.autoDispose<List<AdModel>>((ref) async {
-  await Future.delayed(const Duration(milliseconds: 400));
-  return AdminDataService.instance.getClassifiedAds();
-});
+import '../../../presentation/providers/classifieds_providers.dart';
 
 const _homeCategories = [
   (Icons.directions_car_rounded, 'سيارات', 'Cars', 'vehicles'),
@@ -61,7 +56,7 @@ class _ClassifiedsHomeScreenState extends ConsumerState<ClassifiedsHomeScreen> {
   @override
   Widget build(BuildContext context) {
     final ar = ref.watch(isArabicProvider);
-    final adsAsync = ref.watch(_classifiedsProvider);
+    final adsAsync = ref.watch(adsListProvider(const AdFilter()));
 
     return Scaffold(
       backgroundColor: KayanDesignTokens.bg,

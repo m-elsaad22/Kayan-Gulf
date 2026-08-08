@@ -10,12 +10,7 @@ import '../../../../../routing/app_routes.dart';
 import '../../../../../shared/providers/locale_provider.dart';
 import '../../../../../shared/widgets/design/kayan_design_widgets.dart';
 import '../../../../../shared/widgets/design/kayan_entry_widgets.dart';
-import '../../data/models/service_models.dart';
-
-final _svcDetailProv = FutureProvider.autoDispose.family<ServiceDetailModel, String>((ref, slug) async {
-  await Future.delayed(const Duration(milliseconds: 600));
-  return mockServiceDetail(slug);
-});
+import '../../../presentation/providers/service_providers.dart';
 
 class ServiceDetailScreen extends ConsumerStatefulWidget {
   const ServiceDetailScreen({super.key, required this.slug});
@@ -33,7 +28,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final ar = ref.watch(isArabicProvider);
-    final svc = ref.watch(_svcDetailProv(widget.slug));
+    final svc = ref.watch(serviceDetailProvider(widget.slug));
 
     return Scaffold(
       backgroundColor: KayanDesignTokens.bg,

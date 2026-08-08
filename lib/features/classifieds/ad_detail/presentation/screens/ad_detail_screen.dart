@@ -10,11 +10,7 @@ import '../../../../../shared/providers/locale_provider.dart';
 import '../../../../../shared/widgets/design/kayan_design_widgets.dart';
 import '../../../../../shared/widgets/design/kayan_entry_widgets.dart';
 import '../../../browse/data/models/ad_models.dart';
-
-final _adDetailProvider = FutureProvider.autoDispose.family<AdModel, String>((ref, slug) async {
-  await Future.delayed(const Duration(milliseconds: 400));
-  return mockAds.firstWhere((a) => a.slug == slug, orElse: () => mockAds.first);
-});
+import '../../../presentation/providers/classifieds_providers.dart';
 
 class AdDetailScreen extends ConsumerStatefulWidget {
   const AdDetailScreen({super.key, required this.adSlug});
@@ -58,7 +54,7 @@ class _AdDetailScreenState extends ConsumerState<AdDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final ar = ref.watch(isArabicProvider);
-    final adAsync = ref.watch(_adDetailProvider(widget.adSlug));
+    final adAsync = ref.watch(adDetailProvider(widget.adSlug));
 
     return Scaffold(
       backgroundColor: KayanDesignTokens.bg,
