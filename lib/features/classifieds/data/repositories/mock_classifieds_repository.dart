@@ -1,3 +1,4 @@
+import '../../../../core/data/mock_data_catalog.dart';
 import '../../../../core/services/admin_data_service.dart';
 import '../../browse/data/models/ad_models.dart';
 import '../../domain/ad_filter.dart';
@@ -10,7 +11,7 @@ class MockClassifiedsRepository implements ClassifiedsRepository {
   @override
   Future<List<AdCategory>> getCategories() async {
     await Future.delayed(const Duration(milliseconds: 200));
-    return mockAdCategories;
+    return MockDataCatalog.adCategories;
   }
 
   @override
@@ -55,28 +56,22 @@ class MockClassifiedsRepository implements ClassifiedsRepository {
     final ads = AdminDataService.instance.getClassifiedAds();
     return ads.firstWhere(
       (a) => a.slug == slug,
-      orElse: () => mockAds.firstWhere(
-        (a) => a.slug == slug,
-        orElse: () => mockAds.first,
-      ),
+      orElse: () => MockDataCatalog.adBySlug(slug) ?? MockDataCatalog.ads.first,
     );
   }
 
   @override
   Future<List<MyAdModel>> getMyAds() async {
     await Future.delayed(const Duration(milliseconds: 400));
-    return mockMyAds;
+    return MockDataCatalog.myAds;
   }
 
   @override
   Future<List<AdModel>> getFeaturedAds() async {
     await Future.delayed(const Duration(milliseconds: 300));
-    final featured = AdminDataService.instance
-        .getClassifiedAds()
+    final featured = AdminDataService.instance.getClassifiedAds()
         .where((a) => a.isFeatured || a.isBoosted)
         .toList();
-    return featured.isEmpty
-        ? mockAds.where((a) => a.isFeatured || a.isBoosted).toList()
-        : featured;
+    return featured.isEmpty ? MockDataCatalog.featuredAds() : featured;
   }
 }

@@ -8,6 +8,7 @@ import '../../../../../routing/app_routes.dart';
 import '../../../../../shared/providers/locale_provider.dart';
 import '../../../../../shared/widgets/design/kayan_design_widgets.dart';
 import '../../data/models/ad_models.dart';
+import '../../../presentation/providers/classifieds_providers.dart';
 
 class FeaturedAdsScreen extends ConsumerStatefulWidget {
   const FeaturedAdsScreen({super.key});
@@ -34,10 +35,12 @@ class _FeaturedAdsScreenState extends ConsumerState<FeaturedAdsScreen> {
   @override
   Widget build(BuildContext context) {
     final ar = ref.watch(isArabicProvider);
-    final featured = mockAds.where((a) => a.isFeatured || a.isBoosted).toList();
-    final display = featured.isEmpty ? mockAds.take(5).toList() : featured;
+    final featuredAsync = ref.watch(featuredAdsProvider);
 
-    return Scaffold(
+    return featuredAsync.when(
+      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      error: (e, _) => Scaffold(body: Center(child: Text(e.toString()))),
+      data: (display) => Scaffold(
       backgroundColor: KayanDesignTokens.bg,
       body: Column(
         children: [
@@ -80,6 +83,7 @@ class _FeaturedAdsScreenState extends ConsumerState<FeaturedAdsScreen> {
           ),
         ],
       ),
+    ),
     );
   }
 }

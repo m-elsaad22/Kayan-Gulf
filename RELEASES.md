@@ -42,6 +42,8 @@
 | phase-42-api-layer | طبقة API + HomeRepository + Dio | [kayan-phase-42-api-layer-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-42-api-layer-1.0.0/kayan-phase-42-api-layer-1.0.0.zip) |
 | phase-43-product-repository | ProductRepository + فلاتر + 40 اختبار | [kayan-phase-43-product-repository-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-43-product-repository-1.0.0/kayan-phase-43-product-repository-1.0.0.zip) |
 | phase-44-auth-repository | AuthRepository + OTP + تسجيل دخول + 46 اختبار | [kayan-phase-44-auth-repository-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-44-auth-repository-1.0.0/kayan-phase-44-auth-repository-1.0.0.zip) |
+| phase-45-services-classifieds | ServiceRepository + ClassifiedsRepository + 58 اختبار | [kayan-phase-45-services-classifieds-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-45-services-classifieds-1.0.0/kayan-phase-45-services-classifieds-1.0.0.zip) |
+| phase-46-mock-data-consolidation | MockDataCatalog + ربط الشاشات + 65 اختبار | [kayan-phase-46-mock-data-consolidation-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-46-mock-data-consolidation-1.0.0/kayan-phase-46-mock-data-consolidation-1.0.0.zip) |
 
 ## كيف يُنشأ الـ ZIP؟
 

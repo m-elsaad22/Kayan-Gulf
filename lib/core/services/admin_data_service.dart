@@ -1,9 +1,10 @@
-// TODO: connect to real backend
+// Local admin + mock persistence for demo mode.
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../data/mock_data_catalog.dart';
 import '../data/mock/mock_products.dart';
 import '../../features/classifieds/browse/data/models/ad_models.dart';
 import '../../features/services/browse/data/models/service_models.dart';
@@ -482,7 +483,7 @@ class AdminDataService {
       )
       .toList();
 
-  List<AdminAdItem> _defaultAds() => mockAds
+  List<AdminAdItem> _defaultAds() => MockDataCatalog.ads
       .map(
         (a) => AdminAdItem(
           id: a.id,
@@ -530,7 +531,7 @@ class AdminDataService {
         .where((a) => a.status == 'approved')
         .map(_adminAdToModel)
         .toList();
-    return ads.isEmpty ? mockAds : ads;
+    return ads.isEmpty ? MockDataCatalog.ads : ads;
   }
 
   /// Home services for app screens — active admin services, fallback to mock.
@@ -540,9 +541,7 @@ class AdminDataService {
         .map(_adminServiceToModel)
         .toList();
 
-    List<ServiceDetailModel> fallback() => mockServiceCategories
-        .map((c) => mockServiceDetail(c.slug))
-        .toList();
+    List<ServiceDetailModel> fallback() => MockDataCatalog.serviceDetails();
 
     final list = services.isEmpty ? fallback() : services;
 

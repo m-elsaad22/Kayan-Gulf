@@ -9,7 +9,7 @@ import '../../../../../routing/app_routes.dart';
 import '../../../../../shared/providers/locale_provider.dart';
 import '../../../../../shared/widgets/design/kayan_design_widgets.dart';
 import '../../../../../shared/widgets/design/kayan_entry_widgets.dart';
-import '../../../browse/data/models/service_models.dart';
+import '../../../presentation/providers/service_providers.dart';
 
 class BookingConfirmationScreen extends ConsumerStatefulWidget {
   const BookingConfirmationScreen({super.key, required this.bookingData});
@@ -51,9 +51,13 @@ class _BookingConfirmationScreenState extends ConsumerState<BookingConfirmationS
   Widget build(BuildContext context) {
     final ar = ref.watch(isArabicProvider);
     final d = widget.bookingData;
-    final service = mockServiceDetail(d['serviceSlug'] as String? ?? 'ac');
+    final serviceSlug = d['serviceSlug'] as String? ?? 'ac';
+    final serviceAsync = ref.watch(serviceDetailProvider(serviceSlug));
 
-    return Scaffold(
+    return serviceAsync.when(
+      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      error: (e, _) => Scaffold(body: Center(child: Text(e.toString()))),
+      data: (service) => Scaffold(
       backgroundColor: KayanDesignTokens.bg,
       body: SafeArea(
         child: Padding(
@@ -164,6 +168,7 @@ class _BookingConfirmationScreenState extends ConsumerState<BookingConfirmationS
           ),
         ),
       ),
+    ),
     );
   }
 }

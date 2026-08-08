@@ -1,4 +1,3 @@
-// TODO: connect to real backend
 // KAYAN — Gulf marketplace mock product catalog (21 categories)
 
 class MockProductCategory {

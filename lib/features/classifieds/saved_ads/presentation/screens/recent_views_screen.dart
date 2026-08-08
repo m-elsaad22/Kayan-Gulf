@@ -8,6 +8,7 @@ import '../../../../../routing/app_routes.dart';
 import '../../../../../shared/providers/locale_provider.dart';
 import '../../../../../shared/widgets/design/kayan_design_widgets.dart';
 import '../../../browse/data/models/ad_models.dart';
+import '../../../presentation/providers/classifieds_providers.dart';
 
 class RecentViewsScreen extends ConsumerStatefulWidget {
   const RecentViewsScreen({super.key});
@@ -34,7 +35,13 @@ class _RecentViewsScreenState extends ConsumerState<RecentViewsScreen> {
   @override
   Widget build(BuildContext context) {
     final ar = ref.watch(isArabicProvider);
-    final recent = mockAds.take(6).toList();
+    final recentAsync = ref.watch(adsListProvider(const AdFilter()));
+
+    return recentAsync.when(
+      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      error: (e, _) => Scaffold(body: Center(child: Text(e.toString()))),
+      data: (recentAll) {
+    final recent = recentAll.take(6).toList();
 
     return Scaffold(
       backgroundColor: KayanDesignTokens.bg,
@@ -87,6 +94,8 @@ class _RecentViewsScreenState extends ConsumerState<RecentViewsScreen> {
           ),
         ],
       ),
+    );
+      },
     );
   }
 }
