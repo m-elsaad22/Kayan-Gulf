@@ -185,6 +185,53 @@ class ProductDetailModel {
   String get mainImageUrl =>
       images.firstWhere((i) => i.isMain, orElse: () =>
         images.isNotEmpty ? images.first : const ProductImage(id: '', url: '')).url;
+
+  factory ProductDetailModel.fromJson(Map<String, dynamic> j) => ProductDetailModel(
+    id:            j['id'] as String,
+    slug:          j['slug'] as String,
+    nameAr:        j['nameAr'] as String,
+    nameEn:        j['name'] as String? ?? j['nameEn'] as String? ?? '',
+    descriptionAr: j['descriptionAr'] as String?,
+    descriptionEn: j['descriptionEn'] as String?,
+    price:         (j['price'] as num).toDouble(),
+    compareAtPrice: (j['compareAtPrice'] as num?)?.toDouble(),
+    currency:      j['currency'] as String? ?? 'SAR',
+    status:        j['status'] as String? ?? 'ACTIVE',
+    stock:         j['stock'] as int? ?? 0,
+    images:        (j['images'] as List?)
+        ?.map((e) => ProductImage.fromJson(e as Map<String, dynamic>))
+        .toList() ?? [],
+    rating:        (j['rating'] as num?)?.toDouble() ?? 0,
+    totalRatings:  j['totalRatings'] as int? ?? 0,
+    ratingSummary: j['ratingSummary'] != null
+        ? RatingSummary(
+            avgRating: (j['ratingSummary']['avgRating'] as num).toDouble(),
+            totalReviews: j['ratingSummary']['totalReviews'] as int,
+            breakdown: (j['ratingSummary']['breakdown'] as Map).map(
+              (k, v) => MapEntry(int.parse(k.toString()), v as int),
+            ),
+          )
+        : null,
+    reviews: (j['reviews'] as List?)
+        ?.map((e) => ReviewModel.fromJson(e as Map<String, dynamic>))
+        .toList() ?? [],
+    colorOptions: (j['colorOptions'] as List?)
+        ?.map((e) => VariantOption.fromJson(e as Map<String, dynamic>))
+        .toList() ?? [],
+    sizeOptions: (j['sizeOptions'] as List?)
+        ?.map((e) => VariantOption.fromJson(e as Map<String, dynamic>))
+        .toList() ?? [],
+    modelOptions: (j['modelOptions'] as List?)
+        ?.map((e) => VariantOption.fromJson(e as Map<String, dynamic>))
+        .toList() ?? [],
+    upsells: const [],
+    vendorName:   j['vendorName'] as String?,
+    vendorSlug:   j['vendorSlug'] as String?,
+    isFeatured:   j['isFeatured'] as bool? ?? false,
+    tags:         (j['tags'] as List?)?.cast<String>() ?? [],
+    freeShipping: j['freeShipping'] as bool? ?? false,
+    deliveryDays: j['deliveryDays'] as int?,
+  );
 }
 
 // Simplified product for upsells list

@@ -5,8 +5,6 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'repository_providers.dart';
-
 abstract class AppDI {
   /// Production overrides — empty in production.
   /// In tests: swap with mocks, e.g.:
