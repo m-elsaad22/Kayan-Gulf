@@ -27,6 +27,8 @@
 | phase-27-auth-admin | مصادقة خفيفة + إدارة + محفظة | [kayan-phase-27-auth-admin-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-27-auth-admin-1.0.0/kayan-phase-27-auth-admin-1.0.0.zip) |
 | phase-28-legacy-screens | شاشات legacy → تصميم خفيف | [kayan-phase-28-legacy-screens-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-28-legacy-screens-1.0.0/kayan-phase-28-legacy-screens-1.0.0.zip) |
 | phase-29-admin-screens | إدارة خفيفة + بحث/خريطة/مكالمة | [kayan-phase-29-admin-screens-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-29-admin-screens-1.0.0/kayan-phase-29-admin-screens-1.0.0.zip) |
+| phase-30-shared-admin | شاشات مشتركة + إدارة خدمات/إعلانات | [kayan-phase-30-shared-admin-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-30-shared-admin-1.0.0/kayan-phase-30-shared-admin-1.0.0.zip) |
+| phase-31-admin-routes | إدارة كاملة + مسارات متبقية | [kayan-phase-31-admin-routes-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-31-admin-routes-1.0.0/kayan-phase-31-admin-routes-1.0.0.zip) |
 
 ## كيف يُنشأ الـ ZIP؟
 

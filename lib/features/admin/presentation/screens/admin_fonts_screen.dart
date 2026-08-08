@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/services/admin_data_service.dart';
-import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/kayan_design_tokens.dart';
+import '../../../../shared/widgets/design/kayan_entry_widgets.dart';
 import '../widgets/admin_scaffold.dart';
 
 class AdminFontsScreen extends StatefulWidget {
@@ -27,16 +28,10 @@ class _AdminFontsScreenState extends State<AdminFontsScreen> {
 
   Future<void> _save() async {
     await AdminDataService.instance.saveFontSettings(
-      AdminFontSettings(
-        titleScale: _title,
-        bodyScale: _body,
-        captionScale: _caption,
-      ),
+      AdminFontSettings(titleScale: _title, bodyScale: _body, captionScale: _caption),
     );
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('تم حفظ إعدادات الخط')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تم حفظ إعدادات الخط')));
     }
   }
 
@@ -45,37 +40,27 @@ class _AdminFontsScreenState extends State<AdminFontsScreen> {
     return AdminScaffold(
       title: 'إعدادات الخطوط',
       body: ListView(
+        padding: const EdgeInsets.all(12),
         children: [
-          Text('حجم العناوين: ${_title.toStringAsFixed(2)}x',
-              style: TextStyle(fontSize: 18 * _title)),
-          Slider(
-            value: _title,
-            min: 0.8,
-            max: 1.4,
-            onChanged: (v) => setState(() => _title = v),
-          ),
-          Text('حجم النص: ${_body.toStringAsFixed(2)}x',
-              style: TextStyle(fontSize: 14 * _body)),
-          Slider(
-            value: _body,
-            min: 0.8,
-            max: 1.4,
-            onChanged: (v) => setState(() => _body = v),
-          ),
-          Text('حجم التسميات: ${_caption.toStringAsFixed(2)}x',
-              style: TextStyle(fontSize: 12 * _caption)),
-          Slider(
-            value: _caption,
-            min: 0.8,
-            max: 1.4,
-            onChanged: (v) => setState(() => _caption = v),
-          ),
+          _slider('حجم العناوين', _title, 18, (v) => setState(() => _title = v)),
+          _slider('حجم النص', _body, 14, (v) => setState(() => _body = v)),
+          _slider('حجم التسميات', _caption, 12, (v) => setState(() => _caption = v)),
           const SizedBox(height: 16),
-          FilledButton(
-            onPressed: _save,
-            style: FilledButton.styleFrom(backgroundColor: AppColors.pepsiBlue),
-            child: const Text('حفظ'),
-          ),
+          KayanCtaButton(label: 'حفظ الخطوط', variant: KayanCtaVariant.blue, trailingIcon: Icons.save_rounded, onPressed: _save),
+        ],
+      ),
+    );
+  }
+
+  Widget _slider(String label, double value, double baseSize, ValueChanged<double> onChanged) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('$label: ${value.toStringAsFixed(2)}x', style: KayanDesignTokens.cairo(fontWeight: FontWeight.w700, color: KayanDesignTokens.kBlueDeep)),
+          Text('معاينة', style: KayanDesignTokens.cairo(fontSize: baseSize * value)),
+          Slider(value: value, min: 0.8, max: 1.4, activeColor: KayanDesignTokens.kBlue, onChanged: onChanged),
         ],
       ),
     );

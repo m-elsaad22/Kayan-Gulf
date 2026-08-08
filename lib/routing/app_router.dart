@@ -240,6 +240,11 @@ import '../shared/screens/virtual_tour_screen.dart';
 import '../shared/screens/cancel_otp_screen.dart';
 import '../shared/screens/review_reply_screen.dart';
 import '../shared/screens/app_permissions_screen.dart';
+import '../features/orders/presentation/screens/unified_orders_screen.dart';
+import '../features/classifieds/post_ad/presentation/screens/post_ad_success_screen.dart';
+import '../features/services/booking/presentation/screens/cancel_booking_screen.dart';
+import '../features/services/booking/presentation/screens/reschedule_booking_screen.dart';
+import '../features/services/booking/presentation/screens/report_issue_screen.dart';
 
 // ──────────────────────────────────────────────────────────────
 // NAVIGATOR KEYS
@@ -1099,6 +1104,46 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildSlidePage(
           key: state.pageKey,
           child: const AppPermissionsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.unifiedOrders,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const UnifiedOrdersScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.postAdSuccess,
+        pageBuilder: (context, state) => _buildFadePage(
+          key: state.pageKey,
+          child: const PostAdSuccessScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.cancelBooking,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const CancelBookingScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.rescheduleBooking,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const RescheduleBookingScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.reportIssue,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ReportIssueScreen(),
         ),
       ),
 

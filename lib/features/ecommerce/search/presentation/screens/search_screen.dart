@@ -1,26 +1,19 @@
-// KAYAN — Search Screen
-// lib/features/ecommerce/search/presentation/screens/search_screen.dart
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../../core/theme/app_colors.dart';
-import '../../../../../core/theme/app_gradients.dart';
-import '../../../../../core/theme/app_text_styles.dart';
-import '../../../../../core/theme/app_border_radius.dart';
-import '../../../../../core/theme/app_spacing.dart';
+import '../../../../../core/theme/kayan_design_tokens.dart';
 import '../../../../../routing/app_routes.dart';
 import '../../../../../shared/providers/locale_provider.dart';
-import '../../../../home/data/models/home_models.dart';
-import '../../../../ecommerce/product/presentation/providers/product_providers.dart';
-import '../../../../../shared/widgets/cards/product_card.dart';
-import '../../../../../shared/widgets/loaders/shimmer_loader.dart';
+import '../../../../../shared/widgets/design/kayan_design_widgets.dart';
+import '../../../../../shared/widgets/design/kayan_entry_widgets.dart';
+import '../../../product/presentation/providers/product_providers.dart';
 
+/// بحث المتجر — light design
 class SearchScreen extends ConsumerStatefulWidget {
-  final String? initialQuery;
   const SearchScreen({super.key, this.initialQuery});
+
+  final String? initialQuery;
 
   @override
   ConsumerState<SearchScreen> createState() => _SearchScreenState();
@@ -28,11 +21,10 @@ class SearchScreen extends ConsumerStatefulWidget {
 
 class _SearchScreenState extends ConsumerState<SearchScreen> {
   late final TextEditingController _ctrl;
-  final FocusNode _focus = FocusNode();
   bool _hasQuery = false;
 
-  final _recent = ['سماعات سوني', 'آيفون 15', 'تكييف سبليت', 'كامري 2022', 'ماك بوك'];
-  final _trending = ['سامسونج S24', 'بلايستيشن 5', 'شاشة 4K', 'AirPods Pro', 'Apple Watch'];
+  final _recent = ['سماعات سوني', 'آيفون 15', 'تكييف سبليت', 'كامري 2022'];
+  final _trending = ['سامسونج S24', 'بلايستيشن 5', 'شاشة 4K', 'AirPods Pro'];
 
   @override
   void initState() {
@@ -42,163 +34,133 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     if (_hasQuery) {
       ref.read(productFilterProvider.notifier).setSearch(_ctrl.text);
     }
-    WidgetsBinding.instance.addPostFrameCallback((_) => _focus.requestFocus());
+    _ctrl.addListener(() => _onSearch(_ctrl.text));
   }
 
   @override
-  void dispose() { _ctrl.dispose(); _focus.dispose(); super.dispose(); }
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
 
   void _onSearch(String q) {
     setState(() => _hasQuery = q.trim().isNotEmpty);
     ref.read(productFilterProvider.notifier).setSearch(q.trim().isEmpty ? null : q.trim());
   }
 
-  void _setQuery(String q) {
-    _ctrl.text = q;
-    _ctrl.selection = TextSelection.collapsed(offset: q.length);
-    _onSearch(q);
-  }
-
   @override
   Widget build(BuildContext context) {
-    final isArabic = ref.watch(isArabicProvider);
+    final ar = ref.watch(isArabicProvider);
     final products = ref.watch(productListProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.bgScaffold,
-      appBar: AppBar(
-        backgroundColor:        AppColors.bgSurface,
-        automaticallyImplyLeading: false,
-        titleSpacing: 0,
-        title: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Row(children: [
-            GestureDetector(
-              onTap: () { HapticFeedback.lightImpact(); context.pop(); },
-              child: const Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: AppColors.textPrimary),
-            ),
-            const SizedBox(width: 12),
-            Expanded(child: Container(
-              height: 40,
-              decoration: BoxDecoration(color: AppColors.bgInput, borderRadius: AppBorderRadius.pill, border: Border.all(color: AppColors.borderActive, width: 1.5)),
-              child: Row(children: [
-                const SizedBox(width: 12),
-                const Icon(Icons.search_rounded, size: 18, color: AppColors.royalBlue),
-                const SizedBox(width: 8),
-                Expanded(child: TextField(
-                  controller:   _ctrl,
-                  focusNode:    _focus,
-                  textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-                  style:        isArabic ? AppTextStyles.arabicBodyMedium : AppTextStyles.bodyMedium,
-                  decoration:   InputDecoration(
-                    hintText:  isArabic ? 'ابحث عن أي شيء...' : 'Search anything...',
-                    hintStyle: (isArabic ? AppTextStyles.arabicBodySmall : AppTextStyles.bodySmall).copyWith(color: AppColors.textMuted),
-                    border: InputBorder.none, contentPadding: EdgeInsets.zero,
-                    isDense: true,
-                  ),
-                  onChanged:   _onSearch,
-                  onSubmitted: _onSearch,
-                  textInputAction: TextInputAction.search,
-                )),
-                if (_hasQuery)
-                  GestureDetector(
-                    onTap: () => _setQuery(''),
-                    child: Padding(padding: const EdgeInsets.only(right: 10), child: Icon(Icons.close_rounded, size: 16, color: AppColors.textMuted)),
-                  ),
-              ]),
-            )),
-          ]),
+      backgroundColor: KayanDesignTokens.bg,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              KayanLightTopBar(title: ar ? 'بحث المتجر' : 'Shop search', onBack: () => context.pop()),
+              const SizedBox(height: 12),
+              KayanDesignTextField(
+                label: ar ? 'ابحث عن منتج' : 'Search products',
+                controller: _ctrl,
+                hint: ar ? 'ابحث عن أي شيء...' : 'Search anything...',
+                icon: Icons.search_rounded,
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  TextButton(onPressed: () => _onSearch(_ctrl.text), child: Text(ar ? 'بحث' : 'Search')),
+                  const Spacer(),
+                  TextButton(onPressed: () => context.push(AppRoutes.shopFilters), child: Text(ar ? 'فلاتر' : 'Filters')),
+                ],
+              ),
+              Expanded(
+                child: _hasQuery
+                    ? products.when(
+                        loading: () => const Center(child: CircularProgressIndicator()),
+                        error: (_, __) => Center(child: Text(ar ? 'تعذّر التحميل' : 'Load failed')),
+                        data: (list) => list.isEmpty
+                            ? Center(child: Text(ar ? 'لا توجد نتائج' : 'No results', style: KayanDesignTokens.cairo(color: KayanDesignTokens.muted)))
+                            : ListView(
+                                children: [
+                                  Text('${list.length} ${ar ? 'نتيجة' : 'results'}', style: KayanDesignTokens.cairo(fontSize: 12, color: KayanDesignTokens.muted)),
+                                  const SizedBox(height: 8),
+                                  for (final p in list)
+                                    Padding(
+                                      padding: const EdgeInsets.only(bottom: 10),
+                                      child: GestureDetector(
+                                        onTap: () => context.push(AppRoutes.productPath(p.slug)),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(14),
+                                          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM), border: Border.all(color: KayanDesignTokens.border)),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                width: 42,
+                                                height: 42,
+                                                decoration: BoxDecoration(gradient: KayanDesignTokens.gradOrange, borderRadius: BorderRadius.circular(12)),
+                                                child: const Icon(Icons.shopping_bag_outlined, color: Colors.white, size: 20),
+                                              ),
+                                              const SizedBox(width: 12),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(ar ? p.nameAr : p.nameEn, style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800)),
+                                                    Text('${p.price.toStringAsFixed(0)} ${ar ? 'ر.س' : 'SAR'}', style: KayanDesignTokens.cairo(fontSize: 12, color: KayanDesignTokens.muted)),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                      )
+                    : ListView(
+                        children: [
+                          Text(ar ? 'عمليات البحث الأخيرة' : 'Recent searches', style: KayanDesignTokens.cairo(fontWeight: FontWeight.w700, color: KayanDesignTokens.text2)),
+                          const SizedBox(height: 8),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: _recent.map((r) => GestureDetector(
+                              onTap: () {
+                                _ctrl.text = r;
+                                _onSearch(r);
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), border: Border.all(color: KayanDesignTokens.border)),
+                                child: Text(r, style: KayanDesignTokens.cairo(fontSize: 12, fontWeight: FontWeight.w700)),
+                              ),
+                            )).toList(),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(ar ? 'الأكثر بحثاً' : 'Trending', style: KayanDesignTokens.cairo(fontWeight: FontWeight.w700, color: KayanDesignTokens.text2)),
+                          const SizedBox(height: 8),
+                          for (final t in _trending)
+                            ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: const Icon(Icons.trending_up_rounded, color: KayanDesignTokens.oOrange),
+                              title: Text(t, style: KayanDesignTokens.cairo(fontWeight: FontWeight.w700)),
+                              onTap: () {
+                                _ctrl.text = t;
+                                _onSearch(t);
+                              },
+                            ),
+                        ],
+                      ),
+              ),
+            ],
+          ),
         ),
-        bottom: PreferredSize(preferredSize: const Size.fromHeight(1), child: Container(height: 1, color: AppColors.borderSubtle)),
-      ),
-      body: _hasQuery ? _ResultsView(products: products, isArabic: isArabic) : _SuggestionsView(
-        recent:   _recent, trending: _trending, isArabic: isArabic,
-        onSelect: _setQuery,
-        onClearRecent: () => setState(() {}),
       ),
     );
   }
-}
-
-class _SuggestionsView extends StatelessWidget {
-  final List<String> recent, trending;
-  final bool         isArabic;
-  final ValueChanged<String> onSelect;
-  final VoidCallback onClearRecent;
-  const _SuggestionsView({required this.recent, required this.trending, required this.isArabic, required this.onSelect, required this.onClearRecent});
-
-  @override
-  Widget build(BuildContext context) => ListView(padding: const EdgeInsets.all(AppSpacing.pagePadding), children: [
-    // Recent
-    Row(children: [
-      const Icon(Icons.history_rounded, size: 16, color: AppColors.textMuted),
-      const SizedBox(width: 8),
-      Text(isArabic ? 'عمليات البحث الأخيرة' : 'Recent Searches',
-          style: isArabic ? AppTextStyles.arabicTitleSmall : AppTextStyles.titleSmall),
-      const Spacer(),
-      GestureDetector(onTap: onClearRecent, child: Text(isArabic ? 'مسح الكل' : 'Clear All', style: AppTextStyles.seeAll)),
-    ]),
-    const SizedBox(height: 12),
-    Wrap(spacing: 8, runSpacing: 8, children: recent.map((r) => GestureDetector(
-      onTap: () => onSelect(r),
-      child: Container(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-        decoration: BoxDecoration(color: AppColors.bgCard, borderRadius: AppBorderRadius.pill, border: Border.all(color: AppColors.borderSubtle)),
-        child: Row(mainAxisSize: MainAxisSize.min, children: [
-          const Icon(Icons.history_rounded, size: 12, color: AppColors.textMuted),
-          const SizedBox(width: 6),
-          Text(r, style: AppTextStyles.labelSmall.copyWith(color: AppColors.textSecondary)),
-        ])),
-    )).toList()),
-    const SizedBox(height: 24),
-    // Trending
-    Row(children: [
-      const Icon(Icons.trending_up_rounded, size: 16, color: AppColors.metallicGold),
-      const SizedBox(width: 8),
-      Text(isArabic ? 'الأكثر بحثاً' : 'Trending Now',
-          style: isArabic ? AppTextStyles.arabicTitleSmall : AppTextStyles.titleSmall),
-    ]),
-    const SizedBox(height: 12),
-    ...trending.asMap().entries.map((e) => GestureDetector(
-      onTap: () => onSelect(e.value),
-      child: Padding(padding: const EdgeInsets.only(bottom: 12), child: Row(children: [
-        Container(width: 28, height: 28, decoration: BoxDecoration(color: AppColors.metallicGold.withOpacity(0.1), shape: BoxShape.circle),
-          child: Center(child: Text('${e.key + 1}', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700,
-              color: e.key < 3 ? AppColors.metallicGold : AppColors.textMuted)))),
-        const SizedBox(width: 12),
-        Expanded(child: Text(e.value, style: isArabic ? AppTextStyles.arabicBodyMedium : AppTextStyles.bodyMedium)),
-        const Icon(Icons.north_west_rounded, size: 14, color: AppColors.textMuted),
-      ])),
-    )),
-  ]);
-}
-
-class _ResultsView extends StatelessWidget {
-  final AsyncValue<List<ProductCardModel>> products;
-  final bool isArabic;
-  const _ResultsView({required this.products, required this.isArabic});
-
-  @override
-  Widget build(BuildContext context) => products.when(
-    loading: () => GridView.count(crossAxisCount: 2, shrinkWrap: true, padding: const EdgeInsets.all(16),
-        crossAxisSpacing: 12, mainAxisSpacing: 12, childAspectRatio: 0.65,
-        children: List.generate(6, (_) => const ProductCardShimmer())),
-    error: (_, __) => Center(child: Text(isArabic ? 'حدث خطأ' : 'Error loading')),
-    data: (list) => list.isEmpty
-        ? Center(child: Padding(padding: const EdgeInsets.all(40), child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            const Icon(Icons.search_off_rounded, size: 64, color: AppColors.textMuted),
-            const SizedBox(height: 16),
-            Text(isArabic ? 'لا توجد نتائج' : 'No results found', style: isArabic ? AppTextStyles.arabicTitleMedium : AppTextStyles.titleMedium),
-          ])))
-        : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Padding(padding: const EdgeInsets.fromLTRB(16, 12, 16, 8), child: Text(
-              isArabic ? '${list.length} نتيجة' : '${list.length} results',
-              style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary))),
-            Expanded(child: GridView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 12, mainAxisSpacing: 12, childAspectRatio: 0.65),
-              itemCount: list.length,
-              itemBuilder: (_, i) => ProductCard(product: list[i], onTap: () => context.push(AppRoutes.productPath(list[i].slug))),
-            )),
-          ]),
-  );
 }

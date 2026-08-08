@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/services/admin_data_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/kayan_design_tokens.dart';
+import '../../../../shared/widgets/design/kayan_entry_widgets.dart';
 import '../widgets/admin_scaffold.dart';
 
 class AdminColorsScreen extends StatefulWidget {
@@ -25,6 +27,9 @@ class _AdminColorsScreenState extends State<AdminColorsScreen> {
     _accent = TextEditingController(text: c.accentHex);
     _gold = TextEditingController(text: c.goldHex);
     _turquoise = TextEditingController(text: c.turquoiseHex);
+    for (final c in [_primary, _accent, _gold, _turquoise]) {
+      c.addListener(() => setState(() {}));
+    }
   }
 
   @override
@@ -40,7 +45,7 @@ class _AdminColorsScreenState extends State<AdminColorsScreen> {
     try {
       return AppColors.fromHex(hex.replaceFirst('#', ''));
     } catch (_) {
-      return AppColors.royalBlue;
+      return KayanDesignTokens.kBlue;
     }
   }
 
@@ -66,11 +71,15 @@ class _AdminColorsScreenState extends State<AdminColorsScreen> {
     return AdminScaffold(
       title: 'إعدادات الألوان',
       body: ListView(
+        padding: const EdgeInsets.all(12),
         children: [
-          _colorField('اللون الأساسي', _primary),
-          _colorField('لون التمييز', _accent),
-          _colorField('الذهبي', _gold),
-          _colorField('الفيروزي', _turquoise),
+          KayanDesignTextField(label: 'اللون الأساسي', controller: _primary, hint: '#0A2B5E', icon: Icons.palette_outlined),
+          const SizedBox(height: 12),
+          KayanDesignTextField(label: 'لون التمييز', controller: _accent, hint: '#1E6FD9', icon: Icons.color_lens_outlined),
+          const SizedBox(height: 12),
+          KayanDesignTextField(label: 'الذهبي', controller: _gold, hint: '#C9A227', icon: Icons.star_outline_rounded),
+          const SizedBox(height: 12),
+          KayanDesignTextField(label: 'الفيروزي', controller: _turquoise, hint: '#00B4A0', icon: Icons.water_drop_outlined),
           const SizedBox(height: 16),
           Row(
             children: [
@@ -80,38 +89,21 @@ class _AdminColorsScreenState extends State<AdminColorsScreen> {
               _swatch(_parse(_turquoise.text)),
             ],
           ),
-          const SizedBox(height: 24),
-          FilledButton(
-            onPressed: _save,
-            style: FilledButton.styleFrom(backgroundColor: AppColors.pepsiBlue),
-            child: const Text('حفظ الألوان'),
-          ),
+          const SizedBox(height: 20),
+          KayanCtaButton(label: 'حفظ الألوان', variant: KayanCtaVariant.blue, trailingIcon: Icons.save_rounded, onPressed: _save),
         ],
       ),
     );
   }
 
-  Widget _colorField(String label, TextEditingController c) => Padding(
-        padding: const EdgeInsets.only(bottom: 12),
-        child: TextField(
-          controller: c,
-          onChanged: (_) => setState(() {}),
-          decoration: InputDecoration(
-            labelText: label,
-            hintText: '#0A2B5E',
-            border: const OutlineInputBorder(),
-          ),
-        ),
-      );
-
   Widget _swatch(Color color) => Container(
         width: 48,
         height: 48,
-        margin: const EdgeInsets.only(right: 8),
+        margin: const EdgeInsets.only(left: 8),
         decoration: BoxDecoration(
           color: color,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: AppColors.silver),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: KayanDesignTokens.border),
         ),
       );
 }
