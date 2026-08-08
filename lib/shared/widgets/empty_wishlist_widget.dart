@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_text_styles.dart';
+import '../../core/theme/kayan_design_tokens.dart';
+import '../widgets/design/kayan_entry_widgets.dart';
 
 class EmptyWishlistWidget extends StatelessWidget {
+  const EmptyWishlistWidget({super.key, this.onBrowse, this.isArabic = false});
+
   final VoidCallback? onBrowse;
   final bool isArabic;
-
-  const EmptyWishlistWidget({
-    super.key,
-    this.onBrowse,
-    this.isArabic = false,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,34 +17,18 @@ class EmptyWishlistWidget extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
-              Icons.favorite_border_rounded,
-              size: 72,
-              color: AppColors.textMuted,
-            ),
+            Icon(Icons.favorite_border_rounded, size: 72, color: KayanDesignTokens.muted.withValues(alpha: 0.5)),
             const SizedBox(height: 16),
-            Text(
-              isArabic ? 'لا توجد مفضلات' : 'No favorites yet',
-              style: isArabic
-                  ? AppTextStyles.arabicTitleMedium
-                  : AppTextStyles.titleMedium,
-            ),
+            Text(isArabic ? 'لا توجد مفضلات' : 'No favorites yet', style: KayanDesignTokens.cairo(fontSize: 18, fontWeight: FontWeight.w800)),
             const SizedBox(height: 8),
             Text(
-              isArabic
-                  ? 'احفظ المنتجات التي تعجبك للوصول إليها لاحقاً.'
-                  : 'Save products you love for later.',
+              isArabic ? 'احفظ المنتجات التي تعجبك للوصول إليها لاحقاً.' : 'Save products you love for later.',
               textAlign: TextAlign.center,
-              style: AppTextStyles.bodySmall.copyWith(
-                color: AppColors.textSecondary,
-              ),
+              style: KayanDesignTokens.cairo(fontSize: 13, color: KayanDesignTokens.muted),
             ),
             if (onBrowse != null) ...[
               const SizedBox(height: 20),
-              OutlinedButton(
-                onPressed: onBrowse,
-                child: Text(isArabic ? 'تصفح المنتجات' : 'Browse Products'),
-              ),
+              KayanCtaButton(label: isArabic ? 'تصفح المنتجات' : 'Browse products', variant: KayanCtaVariant.blue, onPressed: onBrowse),
             ],
           ],
         ),

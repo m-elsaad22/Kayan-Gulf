@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_text_styles.dart';
+import '../../core/theme/kayan_design_tokens.dart';
+import '../widgets/design/kayan_entry_widgets.dart';
 
 class PushNotificationPermission extends StatelessWidget {
+  const PushNotificationPermission({super.key, this.isArabic = false, this.onAllow, this.onDeny});
+
   final bool isArabic;
   final VoidCallback? onAllow;
   final VoidCallback? onDeny;
-
-  const PushNotificationPermission({
-    super.key,
-    this.isArabic = false,
-    this.onAllow,
-    this.onDeny,
-  });
 
   static Future<void> showSheet(
     BuildContext context, {
@@ -24,6 +19,7 @@ class PushNotificationPermission extends StatelessWidget {
     return showModalBottomSheet<void>(
       context: context,
       showDragHandle: true,
+      backgroundColor: Colors.white,
       builder: (_) => PushNotificationPermission(
         isArabic: isArabic,
         onAllow: () {
@@ -45,40 +41,23 @@ class PushNotificationPermission extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(
-            Icons.notifications_active_rounded,
-            size: 56,
-            color: AppColors.royalBlue,
+          Container(
+            width: 64,
+            height: 64,
+            decoration: const BoxDecoration(gradient: KayanDesignTokens.gradBlue, shape: BoxShape.circle),
+            child: const Icon(Icons.notifications_active_rounded, size: 32, color: Colors.white),
           ),
           const SizedBox(height: 16),
-          Text(
-            isArabic ? 'فعّل الإشعارات' : 'Enable Notifications',
-            style: isArabic
-                ? AppTextStyles.arabicTitleMedium
-                : AppTextStyles.titleMedium,
-          ),
+          Text(isArabic ? 'فعّل الإشعارات' : 'Enable notifications', style: KayanDesignTokens.cairo(fontSize: 18, fontWeight: FontWeight.w800)),
           const SizedBox(height: 8),
           Text(
-            isArabic
-                ? 'ابقَ على اطلاع بالعروض والطلبات والرسائل.'
-                : 'Stay updated on deals, orders, and messages.',
+            isArabic ? 'ابقَ على اطلاع بالعروض والطلبات والرسائل.' : 'Stay updated on deals, orders, and messages.',
             textAlign: TextAlign.center,
-            style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.textSecondary,
-            ),
+            style: KayanDesignTokens.cairo(fontSize: 13, color: KayanDesignTokens.muted),
           ),
           const SizedBox(height: 24),
-          SizedBox(
-            width: double.infinity,
-            child: FilledButton(
-              onPressed: onAllow,
-              child: Text(isArabic ? 'السماح' : 'Allow'),
-            ),
-          ),
-          TextButton(
-            onPressed: onDeny,
-            child: Text(isArabic ? 'ليس الآن' : 'Not Now'),
-          ),
+          KayanCtaButton(label: isArabic ? 'السماح' : 'Allow', variant: KayanCtaVariant.blue, onPressed: onAllow),
+          TextButton(onPressed: onDeny, child: Text(isArabic ? 'ليس الآن' : 'Not now', style: KayanDesignTokens.cairo(color: KayanDesignTokens.muted))),
         ],
       ),
     );

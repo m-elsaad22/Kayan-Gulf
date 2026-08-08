@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../core/theme/app_text_styles.dart';
+import '../../core/theme/kayan_design_tokens.dart';
 
 class DeleteConfirmDialog extends StatelessWidget {
-  final String title;
-  final String message;
-  final String confirmLabel;
-  final String cancelLabel;
-
   const DeleteConfirmDialog({
     super.key,
     required this.title,
@@ -15,6 +10,11 @@ class DeleteConfirmDialog extends StatelessWidget {
     this.confirmLabel = 'Delete',
     this.cancelLabel = 'Cancel',
   });
+
+  final String title;
+  final String message;
+  final String confirmLabel;
+  final String cancelLabel;
 
   static Future<bool?> show(
     BuildContext context, {
@@ -37,14 +37,14 @@ class DeleteConfirmDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(title, style: AppTextStyles.titleMedium),
-      content: Text(message, style: AppTextStyles.bodyMedium),
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM)),
+      title: Text(title, style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800)),
+      content: Text(message, style: KayanDesignTokens.cairo(color: KayanDesignTokens.text2)),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text(cancelLabel),
-        ),
+        TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text(cancelLabel)),
         FilledButton(
+          style: FilledButton.styleFrom(backgroundColor: KayanDesignTokens.danger),
           onPressed: () => Navigator.of(context).pop(true),
           child: Text(confirmLabel),
         ),
