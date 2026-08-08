@@ -38,6 +38,7 @@
 | phase-38-legacy-cleanup | حذف ملفات الثيم القديمة + تنظيف الكود | [kayan-phase-38-legacy-cleanup-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-38-legacy-cleanup-1.0.0/kayan-phase-38-legacy-cleanup-1.0.0.zip) |
 | phase-39-analyze-zero | صفر تحذيرات flutter analyze | [kayan-phase-39-analyze-zero-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-39-analyze-zero-1.0.0/kayan-phase-39-analyze-zero-1.0.0.zip) |
 | phase-40-legacy-routes | حذف alias screens + اختبارات + deep links | [kayan-phase-40-legacy-routes-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-40-legacy-routes-1.0.0/kayan-phase-40-legacy-routes-1.0.0.zip) |
+| phase-41-test-suite | 27 اختبار + GitHub Actions CI | [kayan-phase-41-test-suite-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-41-test-suite-1.0.0/kayan-phase-41-test-suite-1.0.0.zip) |
 
 ## كيف يُنشأ الـ ZIP؟
 
