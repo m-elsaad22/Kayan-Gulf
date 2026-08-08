@@ -233,6 +233,13 @@ import '../shared/screens/map_location_picker_screen.dart';
 import '../shared/screens/call_screen.dart';
 import '../features/services/browse/presentation/screens/search_services_screen.dart';
 import '../features/ecommerce/search/presentation/screens/product_filters_screen.dart';
+import '../shared/screens/whats_new_screen.dart';
+import '../shared/screens/qr_display_screen.dart';
+import '../shared/screens/empty_state_screen.dart';
+import '../shared/screens/virtual_tour_screen.dart';
+import '../shared/screens/cancel_otp_screen.dart';
+import '../shared/screens/review_reply_screen.dart';
+import '../shared/screens/app_permissions_screen.dart';
 
 // ──────────────────────────────────────────────────────────────
 // NAVIGATOR KEYS
@@ -1022,6 +1029,76 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildSlidePage(
           key: state.pageKey,
           child: const ProductFiltersScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.whatsNew,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const WhatsNewScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.qrDisplay,
+        pageBuilder: (context, state) {
+          final extra = state.extra;
+          final code = extra is String ? extra : extra is Map<String, dynamic> ? extra['code'] as String? : null;
+          return _buildSlidePage(
+            key: state.pageKey,
+            child: QrDisplayScreen(code: code),
+          );
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.emptyState,
+        pageBuilder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return _buildFadePage(
+            key: state.pageKey,
+            child: EmptyStateScreen(
+              title: extra?['title'] as String?,
+              message: extra?['message'] as String?,
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.virtualTour,
+        pageBuilder: (context, state) {
+          final extra = state.extra;
+          final title = extra is String ? extra : extra is Map<String, dynamic> ? extra['title'] as String? : null;
+          return _buildSlidePage(
+            key: state.pageKey,
+            child: VirtualTourScreen(title: title),
+          );
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.cancelOtp,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const CancelOtpScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.reviewReply,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ReviewReplyScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.appPermissions,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AppPermissionsScreen(),
         ),
       ),
 

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/services/admin_data_service.dart';
-import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/kayan_design_tokens.dart';
+import '../../../../shared/widgets/design/kayan_entry_widgets.dart';
 import '../widgets/admin_scaffold.dart';
 
 class AdminBannersScreen extends StatefulWidget {
@@ -18,9 +19,7 @@ class _AdminBannersScreenState extends State<AdminBannersScreen> {
   void initState() {
     super.initState();
     final urls = AdminDataService.instance.getBannerUrls();
-    _controllers = urls
-        .map((u) => TextEditingController(text: u))
-        .toList();
+    _controllers = urls.map((u) => TextEditingController(text: u)).toList();
     if (_controllers.isEmpty) {
       _controllers.add(TextEditingController());
     }
@@ -35,10 +34,7 @@ class _AdminBannersScreenState extends State<AdminBannersScreen> {
   }
 
   Future<void> _save() async {
-    final urls = _controllers
-        .map((c) => c.text.trim())
-        .where((u) => u.isNotEmpty)
-        .toList();
+    final urls = _controllers.map((c) => c.text.trim()).where((u) => u.isNotEmpty).toList();
     await AdminDataService.instance.saveBanners(urls);
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -53,33 +49,32 @@ class _AdminBannersScreenState extends State<AdminBannersScreen> {
     return AdminScaffold(
       title: 'إدارة البانرات',
       body: ListView(
+        padding: const EdgeInsets.all(12),
         children: [
+          Text('روابط البانرات', style: KayanDesignTokens.cairo(fontSize: 13, fontWeight: FontWeight.w700, color: KayanDesignTokens.text2)),
+          const SizedBox(height: 10),
           ..._controllers.asMap().entries.map(
             (e) => Padding(
               padding: const EdgeInsets.only(bottom: 12),
-              child: TextField(
+              child: KayanDesignTextField(
+                label: 'البانر ${e.key + 1}',
                 controller: e.value,
-                decoration: InputDecoration(
-                  labelText: 'رابط البانر ${e.key + 1}',
-                  border: const OutlineInputBorder(),
-                ),
+                hint: 'https://...',
+                icon: Icons.image_outlined,
               ),
             ),
           ),
           OutlinedButton.icon(
-            onPressed: () => setState(
-              () => _controllers.add(TextEditingController()),
-            ),
-            icon: const Icon(Icons.add),
+            onPressed: () => setState(() => _controllers.add(TextEditingController())),
+            icon: const Icon(Icons.add_rounded),
             label: const Text('إضافة بانر'),
           ),
           const SizedBox(height: 16),
-          FilledButton(
+          KayanCtaButton(
+            label: 'حفظ البانرات',
+            variant: KayanCtaVariant.blue,
+            trailingIcon: Icons.save_rounded,
             onPressed: _save,
-            style: FilledButton.styleFrom(
-              backgroundColor: AppColors.pepsiBlue,
-            ),
-            child: const Text('حفظ البانرات'),
           ),
         ],
       ),
