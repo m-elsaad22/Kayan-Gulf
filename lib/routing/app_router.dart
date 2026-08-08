@@ -220,12 +220,6 @@ import '../features/super_admin/screens/animations_screen.dart';
 import '../features/wallet/presentation/screens/points_refund_screen.dart';
 // Service notifications
 import '../features/services/notifications/presentation/screens/service_notifications_screen.dart';
-// Legacy screen aliases
-import '../features/ecommerce/product/presentation/screens/product_list_screen.dart';
-import '../features/ecommerce/product/presentation/screens/product_detail_screen.dart';
-import '../features/services/tracking/presentation/screens/live_tracking_screen.dart';
-import '../features/profile/presentation/screens/profile_screen.dart';
-import '../features/settings/presentation/screens/settings_screen.dart';
 // Utility screens
 import '../shared/screens/advanced_search_results_screen.dart';
 import '../shared/screens/map_location_picker_screen.dart';
@@ -945,52 +939,52 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
 
       // ════════════════════════════════════════════════════
-      // LEGACY SCREEN ALIASES (light delegates)
+      // DEEP-LINK COMPATIBILITY (legacy URL paths → light screens)
       // ════════════════════════════════════════════════════
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,
-        path: AppRoutes.legacyProductList,
+        path: AppRoutes.compatProductList,
         pageBuilder: (context, state) => _buildSlidePage(
           key: state.pageKey,
-          child: ProductListScreen(
+          child: ShopCatalogScreen(
             categorySlug: state.uri.queryParameters['category'],
           ),
         ),
       ),
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,
-        path: AppRoutes.legacyProductDetail,
+        path: AppRoutes.compatProductDetail,
         pageBuilder: (context, state) => _buildSlidePage(
           key: state.pageKey,
-          child: ProductDetailScreen(
+          child: ShopProductScreen(
             slug: state.pathParameters['productSlug']!,
           ),
         ),
       ),
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,
-        path: AppRoutes.legacyLiveTracking,
+        path: AppRoutes.compatLiveTracking,
         pageBuilder: (context, state) => _buildSlidePage(
           key: state.pageKey,
-          child: LiveTrackingScreen(
+          child: ServiceTrackingLightScreen(
             bookingId: state.pathParameters['bookingId']!,
           ),
         ),
       ),
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,
-        path: AppRoutes.legacyProfile,
+        path: AppRoutes.compatProfile,
         pageBuilder: (context, state) => _buildSlidePage(
           key: state.pageKey,
-          child: const ProfileScreen(),
+          child: const ProfileHomeScreen(),
         ),
       ),
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,
-        path: AppRoutes.legacySettings,
+        path: AppRoutes.compatSettings,
         pageBuilder: (context, state) => _buildSlidePage(
           key: state.pageKey,
-          child: const SettingsScreen(),
+          child: const SettingsLightScreen(),
         ),
       ),
 
