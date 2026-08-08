@@ -33,10 +33,8 @@ import 'app_routes.dart';
 import 'main_shell.dart';
 import '../shared/providers/auth_provider.dart';
 import '../shared/services/local_storage_service.dart';
-import '../core/theme/app_colors.dart';
 import '../core/theme/kayan_design_tokens.dart';
 import '../shared/widgets/design/kayan_entry_widgets.dart';
-import '../core/theme/app_text_styles.dart';
 
 // ─── Feature Screen Imports ───────────────────────────────────
 // Splash & Onboarding

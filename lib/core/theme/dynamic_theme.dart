@@ -6,17 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../features/super_admin/services/design_engine_service.dart';
-import 'app_colors.dart';
 import 'app_theme.dart';
+import 'kayan_design_tokens.dart';
 
 abstract class DynamicTheme {
-  static Color _hex(String hex) {
-    try {
-      return AppColors.fromHex(hex.replaceFirst('#', ''));
-    } catch (_) {
-      return AppColors.royalBlue;
-    }
-  }
+  static Color _hex(String hex) => KayanDesignTokens.colorFromHex(hex);
 
   static Curve curveFromName(String name) {
     switch (name) {
@@ -274,11 +268,11 @@ class KayanDesignExtension extends ThemeExtension<KayanDesignExtension> {
         KayanDesignExtension(
           radiusShadows: DesignEngineService.instance.settings.radiusShadows,
           motion: DesignEngineService.instance.settings.motion,
-          gold: AppColors.lightGold,
-          turquoise: AppColors.turquoise,
-          success: AppColors.success,
-          warning: AppColors.warning,
-          info: AppColors.info,
+          gold: KayanDesignTokens.gold,
+          turquoise: KayanDesignTokens.kGreenLight,
+          success: KayanDesignTokens.success,
+          warning: KayanDesignTokens.kOrange,
+          info: KayanDesignTokens.kBlueLight,
         );
   }
 

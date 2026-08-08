@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/services/admin_data_service.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/kayan_design_tokens.dart';
 import '../../../../shared/widgets/design/kayan_entry_widgets.dart';
 import '../widgets/admin_scaffold.dart';
@@ -41,13 +40,7 @@ class _AdminColorsScreenState extends State<AdminColorsScreen> {
     super.dispose();
   }
 
-  Color _parse(String hex) {
-    try {
-      return AppColors.fromHex(hex.replaceFirst('#', ''));
-    } catch (_) {
-      return KayanDesignTokens.kBlue;
-    }
-  }
+  Color _parse(String hex) => KayanDesignTokens.colorFromHex(hex);
 
   Future<void> _save() async {
     await AdminDataService.instance.saveThemeColors(

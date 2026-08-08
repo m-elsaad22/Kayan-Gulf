@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 
-import 'app_colors.dart';
+import 'kayan_design_tokens.dart';
 
 /// Light-first screen colors (use instead of hardcoded dark scaffold).
 extension KayanScreenColors on BuildContext {
   bool get isKayanDark => Theme.of(this).brightness == Brightness.dark;
 
   Color get screenBackground =>
-      isKayanDark ? AppColors.darkBg : AppColors.lightBg;
+      isKayanDark ? KayanDesignTokens.kBlueDeep : KayanDesignTokens.bg;
 
   Color get screenCardBackground =>
-      isKayanDark ? AppColors.darkCardBg : AppColors.lightCardBg;
+      isKayanDark ? const Color(0xFF132038) : KayanDesignTokens.surface;
 
   Color get screenText =>
-      isKayanDark ? AppColors.darkText : AppColors.lightText;
+      isKayanDark ? Colors.white : KayanDesignTokens.text;
 
   Color get screenSubtext =>
-      isKayanDark ? AppColors.darkSubtext : AppColors.lightSubtext;
+      isKayanDark ? Colors.white70 : KayanDesignTokens.text2;
 }

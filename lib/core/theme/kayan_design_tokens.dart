@@ -122,4 +122,17 @@ abstract final class KayanDesignTokens {
       height: height,
     );
   }
+
+  /// Parse `#RRGGBB` or `RRGGBB` hex strings into a [Color].
+  static Color colorFromHex(String hex, {Color fallback = kBlue}) {
+    try {
+      final buffer = StringBuffer();
+      final cleaned = hex.replaceFirst('#', '');
+      if (cleaned.length == 6 || cleaned.length == 7) buffer.write('ff');
+      buffer.write(cleaned);
+      return Color(int.parse(buffer.toString(), radix: 16));
+    } catch (_) {
+      return fallback;
+    }
+  }
 }
