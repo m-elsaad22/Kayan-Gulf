@@ -35,6 +35,7 @@
 | phase-35-theme-cleanup | الرئيسية + product card + widgets مشتركة | [kayan-phase-35-theme-cleanup-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-35-theme-cleanup-1.0.0/kayan-phase-35-theme-cleanup-1.0.0.zip) |
 | phase-36-final-theme | حجز + shimmer + luxury + super admin | [kayan-phase-36-final-theme-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-36-final-theme-1.0.0/kayan-phase-36-final-theme-1.0.0.zip) |
 | phase-37-theme-core | طبقة الثيم الأساسية → KayanDesignTokens | [kayan-phase-37-theme-core-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-37-theme-core-1.0.0/kayan-phase-37-theme-core-1.0.0.zip) |
+| phase-38-legacy-cleanup | حذف ملفات الثيم القديمة + تنظيف الكود | [kayan-phase-38-legacy-cleanup-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-38-legacy-cleanup-1.0.0/kayan-phase-38-legacy-cleanup-1.0.0.zip) |
 
 ## كيف يُنشأ الـ ZIP؟
 
