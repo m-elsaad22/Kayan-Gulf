@@ -31,6 +31,7 @@
 | phase-31-admin-routes | إدارة كاملة + مسارات متبقية | [kayan-phase-31-admin-routes-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-31-admin-routes-1.0.0/kayan-phase-31-admin-routes-1.0.0.zip) |
 | phase-32-remaining-screens | متجر خفيف + تغيير كلمة المرور | [kayan-phase-32-remaining-screens-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-32-remaining-screens-1.0.0/kayan-phase-32-remaining-screens-1.0.0.zip) |
 | phase-33-commerce-screens | delegates + إعلانات/خدمات/حجز خفيف | [kayan-phase-33-commerce-screens-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-33-commerce-screens-1.0.0/kayan-phase-33-commerce-screens-1.0.0.zip) |
+| phase-34-shell-widgets | شريط تنقل + widgets + شاشات نظام | [kayan-phase-34-shell-widgets-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-34-shell-widgets-1.0.0/kayan-phase-34-shell-widgets-1.0.0.zip) |
 
 ## كيف يُنشأ الـ ZIP؟
 
