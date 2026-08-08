@@ -11,6 +11,10 @@ By default the app ships with **mock repositories** (`AppConfig.useMockData = tr
 
 Configuration is defined in `lib/core/config/app_config.dart` and read via `String.fromEnvironment` / `bool.fromEnvironment` at **compile time**.
 
+> **Phase 1 commercial API** lives in `/backend` (NestJS). Local base URL: `http://127.0.0.1:3000/v1`.  
+> Convenience scripts: `scripts/run_api_mode.sh`, `scripts/build_api_release.sh`.  
+> Roadmap: [COMMERCIAL_LAUNCH.md](./COMMERCIAL_LAUNCH.md).
+
 ## Run with mock data (default)
 
 ```bash
@@ -21,7 +25,20 @@ flutter build apk --release
 
 ## Run against a real backend
 
-### Debug / profile
+### Local NestJS API (Phase 1)
+
+```bash
+# Terminal 1
+cd backend && cp .env.example .env && npm install
+npx prisma migrate dev --name init && npm run seed && npm run start:dev
+
+# Terminal 2
+./scripts/run_api_mode.sh
+# → --dart-define=KAYAN_USE_MOCK_DATA=false
+# → --dart-define=KAYAN_API_BASE_URL=http://127.0.0.1:3000/v1
+```
+
+### Debug / profile (staging)
 
 ```bash
 flutter run \
@@ -29,13 +46,18 @@ flutter run \
   --dart-define=KAYAN_API_BASE_URL=https://staging.api.example.com/v1
 ```
 
-### Release APK
+### Release APK (production)
 
 ```bash
+KAYAN_API_BASE_URL=https://api.my-domain.com/v1 ./scripts/build_api_release.sh
+
+# or manually:
 flutter build apk --release \
   --dart-define=KAYAN_USE_MOCK_DATA=false \
-  --dart-define=KAYAN_API_BASE_URL=https://api.example.com/v1
+  --dart-define=KAYAN_API_BASE_URL=https://api.my-domain.com/v1
 ```
+
+Default `KAYAN_USE_MOCK_DATA` remains `true` so demos and CI tests work without a backend.
 
 ### CI / GitHub Actions
 
