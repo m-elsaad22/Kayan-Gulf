@@ -221,6 +221,12 @@ import '../features/super_admin/screens/animations_screen.dart';
 import '../features/wallet/presentation/screens/points_refund_screen.dart';
 // Service notifications
 import '../features/services/notifications/presentation/screens/service_notifications_screen.dart';
+// Legacy screen aliases
+import '../features/ecommerce/product/presentation/screens/product_list_screen.dart';
+import '../features/ecommerce/product/presentation/screens/product_detail_screen.dart';
+import '../features/services/tracking/presentation/screens/live_tracking_screen.dart';
+import '../features/profile/presentation/screens/profile_screen.dart';
+import '../features/settings/presentation/screens/settings_screen.dart';
 
 // ──────────────────────────────────────────────────────────────
 // NAVIGATOR KEYS
@@ -910,6 +916,56 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildSlidePage(
           key: state.pageKey,
           child: const AnimationsScreen(),
+        ),
+      ),
+
+      // ════════════════════════════════════════════════════
+      // LEGACY SCREEN ALIASES (light delegates)
+      // ════════════════════════════════════════════════════
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.legacyProductList,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: ProductListScreen(
+            categorySlug: state.uri.queryParameters['category'],
+          ),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.legacyProductDetail,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: ProductDetailScreen(
+            slug: state.pathParameters['productSlug']!,
+          ),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.legacyLiveTracking,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: LiveTrackingScreen(
+            bookingId: state.pathParameters['bookingId']!,
+          ),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.legacyProfile,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ProfileScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.legacySettings,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const SettingsScreen(),
         ),
       ),
 

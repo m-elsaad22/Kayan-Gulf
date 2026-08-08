@@ -328,6 +328,13 @@ abstract final class AppRoutes {
   static const String pointsRefund = '/profile/wallet/points-refund';
   static const String languageSettings = '/profile/settings/language';
 
+  // Legacy screen aliases (deep-link compatibility)
+  static const String legacyProductList = '/shop/product-list';
+  static const String legacyProductDetail = '/shop/product-detail/:productSlug';
+  static const String legacyLiveTracking = '/services/live-tracking/:bookingId';
+  static const String legacyProfile = '/profile/classic';
+  static const String legacySettings = '/settings/classic';
+
   // ──────────────────────────────────────────────────────────
   // 🔗 Relative path constants (used in GoRoute `path:`)
   //
@@ -424,6 +431,8 @@ abstract final class AppRoutes {
   static String serviceBookPath(String slug)    => '/services/$slug/book';
   static String bookingPath(String id)          => '/services/my-bookings/$id';
   static String trackingPath(String id)         => '/services/tracking/$id';
+  static String liveTrackingPath(String id)     => '/services/live-tracking/$id';
+  static String legacyProductDetailPath(String slug) => '/shop/product-detail/$slug';
   static String bookingSuccessPath(String id)   => '/services/booking/success/$id';
 
   // Classifieds

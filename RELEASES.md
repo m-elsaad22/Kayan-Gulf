@@ -25,6 +25,7 @@
 | phase-25-wallet-checkout | محفظة + مسار checkout كامل | [kayan-phase-25-wallet-checkout-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-25-wallet-checkout-1.0.0/kayan-phase-25-wallet-checkout-1.0.0.zip) |
 | phase-26-settings-tracking | إعدادات + تتبع الطلب | [kayan-phase-26-settings-tracking-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-26-settings-tracking-1.0.0/kayan-phase-26-settings-tracking-1.0.0.zip) |
 | phase-27-auth-admin | مصادقة خفيفة + إدارة + محفظة | [kayan-phase-27-auth-admin-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-27-auth-admin-1.0.0/kayan-phase-27-auth-admin-1.0.0.zip) |
+| phase-28-legacy-screens | شاشات legacy → تصميم خفيف | [kayan-phase-28-legacy-screens-1.0.0.zip](https://github.com/m-elsaad22/Kayan-Gulf/releases/download/phase-28-legacy-screens-1.0.0/kayan-phase-28-legacy-screens-1.0.0.zip) |
 
 ## كيف يُنشأ الـ ZIP؟
 
