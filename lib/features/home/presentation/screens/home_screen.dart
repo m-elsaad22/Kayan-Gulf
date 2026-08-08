@@ -20,11 +20,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/kayan_design_tokens.dart';
-import '../../../../shared/widgets/design/kayan_entry_widgets.dart';
 import '../../../../routing/app_routes.dart';
 import '../../../../shared/providers/auth_provider.dart';
 import '../../../../shared/providers/locale_provider.dart';
@@ -495,7 +493,7 @@ class _AppBarIconButton extends StatelessWidget {
           Container(
             width: 40, height: 40,
             decoration: BoxDecoration(
-              color:        Colors.white.withOpacity(0.6),
+              color:        Colors.white.withValues(alpha: 0.6),
               borderRadius: BorderRadius.circular(12),
               border:       Border.all(color: KayanDesignTokens.border),
             ),

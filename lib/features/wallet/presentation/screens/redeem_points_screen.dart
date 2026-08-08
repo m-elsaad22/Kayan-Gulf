@@ -58,7 +58,7 @@ class RedeemPointsScreen extends ConsumerWidget {
                               ),
                               const SizedBox(width: 12),
                               Expanded(child: Text(ar ? r.$2 : r.$3, style: KayanDesignTokens.cairo(fontWeight: FontWeight.w700))),
-                              Icon(Icons.chevron_left_rounded, color: KayanDesignTokens.muted),
+                              const Icon(Icons.chevron_left_rounded, color: KayanDesignTokens.muted),
                             ],
                           ),
                         ),

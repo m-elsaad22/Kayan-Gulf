@@ -97,7 +97,7 @@ class _MethodCard extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(Icons.chevron_left_rounded, color: KayanDesignTokens.muted),
+            const Icon(Icons.chevron_left_rounded, color: KayanDesignTokens.muted),
           ],
         ),
       ),

@@ -31,12 +31,11 @@ class AuthGuardState {
   });
 
   const AuthGuardState.authenticated({
-    required String userId,
+    required String this.userId,
     required bool profileComplete,
   })  : isAuthenticated   = true,
         isProfileComplete = profileComplete,
-        isGuest           = false,
-        userId            = userId;
+        isGuest           = false;
 
   const AuthGuardState.guest()
       : isAuthenticated   = false,

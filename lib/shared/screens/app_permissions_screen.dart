@@ -79,7 +79,7 @@ class _AppPermissionsScreenState extends ConsumerState<AppPermissionsScreen> {
                               ),
                               Switch(
                                 value: _enabled[i] ?? false,
-                                activeColor: KayanDesignTokens.kBlue,
+                                activeThumbColor: KayanDesignTokens.kBlue,
                                 onChanged: (v) => setState(() => _enabled[i] = v),
                               ),
                             ],

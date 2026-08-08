@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/kayan_design_tokens.dart';
 import '../../../../shared/providers/locale_provider.dart';
 import '../../../../shared/widgets/design/kayan_design_widgets.dart';
-import '../../../../shared/widgets/design/kayan_entry_widgets.dart';
 
 class ProfileNotificationsLightScreen extends ConsumerWidget {
   const ProfileNotificationsLightScreen({super.key});

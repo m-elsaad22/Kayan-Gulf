@@ -8,7 +8,7 @@ class ExclusiveOffersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Phase4CommerceScaffold(
+    return const Phase4CommerceScaffold(
       titleAr: 'عروض حصرية',
       titleEn: 'Exclusive Offers',
       subtitleAr: 'خصومات ومزايا خاصة لعملاء كيان.',

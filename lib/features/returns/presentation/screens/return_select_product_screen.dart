@@ -8,7 +8,7 @@ class ReturnSelectProductScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Phase4CommerceScaffold(
+    return const Phase4CommerceScaffold(
       titleAr: 'اختيار منتج للإرجاع',
       titleEn: 'Select Product to Return',
       subtitleAr: 'اختر المنتج الذي تريد إرجاعه من طلباتك.',

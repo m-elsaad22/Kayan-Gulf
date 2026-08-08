@@ -12,7 +12,7 @@ const deliveryCategories = <DeliveryCategory>[
 ];
 
 final mockDeliveryVendors = <DeliveryVendor>[
-  DeliveryVendor(
+  const DeliveryVendor(
     id: '1',
     slug: 'burger-house',
     nameAr: 'برجر هاوس',
@@ -26,7 +26,7 @@ final mockDeliveryVendors = <DeliveryVendor>[
     isOpen: true,
     deliveryFeeAr: 'توصيل مجاني',
     deliveryFeeEn: 'Free delivery',
-    menu: const [
+    menu: [
       DeliveryMenuItem(
         id: 'b1',
         nameAr: 'برجر كلاسيك',
@@ -56,7 +56,7 @@ final mockDeliveryVendors = <DeliveryVendor>[
       ),
     ],
   ),
-  DeliveryVendor(
+  const DeliveryVendor(
     id: '2',
     slug: 'pizza-hut',
     nameAr: 'بيتزا هت',
@@ -70,7 +70,7 @@ final mockDeliveryVendors = <DeliveryVendor>[
     isOpen: true,
     deliveryFeeAr: 'توصيل 5 ر.س',
     deliveryFeeEn: 'SAR 5 delivery',
-    menu: const [
+    menu: [
       DeliveryMenuItem(
         id: 'p1',
         nameAr: 'بيتزا مارجريتا',
@@ -91,7 +91,7 @@ final mockDeliveryVendors = <DeliveryVendor>[
       ),
     ],
   ),
-  DeliveryVendor(
+  const DeliveryVendor(
     id: '3',
     slug: 'spinneys',
     nameAr: 'سبينس سوبرماركت',
@@ -105,7 +105,7 @@ final mockDeliveryVendors = <DeliveryVendor>[
     isOpen: true,
     deliveryFeeAr: 'توصيل مجاني',
     deliveryFeeEn: 'Free delivery',
-    menu: const [
+    menu: [
       DeliveryMenuItem(
         id: 'g1',
         nameAr: 'حليب طازج 1 لتر',
@@ -126,7 +126,7 @@ final mockDeliveryVendors = <DeliveryVendor>[
       ),
     ],
   ),
-  DeliveryVendor(
+  const DeliveryVendor(
     id: '4',
     slug: 'nahdi',
     nameAr: 'صيدلية النهدي',
@@ -140,7 +140,7 @@ final mockDeliveryVendors = <DeliveryVendor>[
     isOpen: true,
     deliveryFeeAr: 'توصيل 7 ر.س',
     deliveryFeeEn: 'SAR 7 delivery',
-    menu: const [
+    menu: [
       DeliveryMenuItem(
         id: 'ph1',
         nameAr: 'باراسيتامول 500',

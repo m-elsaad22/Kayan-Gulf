@@ -30,7 +30,7 @@ HomeData _mockHomeData() {
   final bannerUrls = admin.getBannerUrls();
   final banners = bannerUrls.isEmpty
       ? [
-          BannerModel(
+          const BannerModel(
             id: '1',
             imageUrl: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800',
             titleAr: 'خصومات تصل إلى ٥٠٪',
@@ -49,22 +49,22 @@ HomeData _mockHomeData() {
   return HomeData(
   banners: banners,
   ecommerceCategories: [
-    CategoryModel(id: '1', slug: 'electronics', nameAr: 'إلكترونيات', nameEn: 'Electronics', color: '#4169E1'),
-    CategoryModel(id: '2', slug: 'fashion',     nameAr: 'أزياء',       nameEn: 'Fashion',      color: '#EC4899'),
-    CategoryModel(id: '3', slug: 'home',        nameAr: 'المنزل',      nameEn: 'Home',         color: '#10B981'),
-    CategoryModel(id: '4', slug: 'beauty',      nameAr: 'جمال',        nameEn: 'Beauty',       color: '#F97316'),
-    CategoryModel(id: '5', slug: 'sports',      nameAr: 'رياضة',       nameEn: 'Sports',       color: '#6366F1'),
-    CategoryModel(id: '6', slug: 'toys',        nameAr: 'ألعاب',       nameEn: 'Toys',         color: '#F59E0B'),
-    CategoryModel(id: '7', slug: 'food',        nameAr: 'طعام',        nameEn: 'Food',         color: '#14B8A6'),
-    CategoryModel(id: '8', slug: 'automotive',  nameAr: 'سيارات',      nameEn: 'Automotive',   color: '#64748B'),
+    const CategoryModel(id: '1', slug: 'electronics', nameAr: 'إلكترونيات', nameEn: 'Electronics', color: '#4169E1'),
+    const CategoryModel(id: '2', slug: 'fashion',     nameAr: 'أزياء',       nameEn: 'Fashion',      color: '#EC4899'),
+    const CategoryModel(id: '3', slug: 'home',        nameAr: 'المنزل',      nameEn: 'Home',         color: '#10B981'),
+    const CategoryModel(id: '4', slug: 'beauty',      nameAr: 'جمال',        nameEn: 'Beauty',       color: '#F97316'),
+    const CategoryModel(id: '5', slug: 'sports',      nameAr: 'رياضة',       nameEn: 'Sports',       color: '#6366F1'),
+    const CategoryModel(id: '6', slug: 'toys',        nameAr: 'ألعاب',       nameEn: 'Toys',         color: '#F59E0B'),
+    const CategoryModel(id: '7', slug: 'food',        nameAr: 'طعام',        nameEn: 'Food',         color: '#14B8A6'),
+    const CategoryModel(id: '8', slug: 'automotive',  nameAr: 'سيارات',      nameEn: 'Automotive',   color: '#64748B'),
   ],
   serviceCategories: [
-    CategoryModel(id: 's1', slug: 'plumbing',  nameAr: 'سباكة',     nameEn: 'Plumbing',   color: '#3B82F6'),
-    CategoryModel(id: 's2', slug: 'electrical',nameAr: 'كهرباء',    nameEn: 'Electrical', color: '#F59E0B', isEmergency: true),
-    CategoryModel(id: 's3', slug: 'ac',        nameAr: 'تكييف',     nameEn: 'AC',         color: '#06B6D4'),
-    CategoryModel(id: 's4', slug: 'cleaning',  nameAr: 'تنظيف',     nameEn: 'Cleaning',   color: '#10B981'),
-    CategoryModel(id: 's5', slug: 'painting',  nameAr: 'دهان',      nameEn: 'Painting',   color: '#8B5CF6'),
-    CategoryModel(id: 's6', slug: 'movers',    nameAr: 'نقل عفش',   nameEn: 'Movers',     color: '#F97316'),
+    const CategoryModel(id: 's1', slug: 'plumbing',  nameAr: 'سباكة',     nameEn: 'Plumbing',   color: '#3B82F6'),
+    const CategoryModel(id: 's2', slug: 'electrical',nameAr: 'كهرباء',    nameEn: 'Electrical', color: '#F59E0B', isEmergency: true),
+    const CategoryModel(id: 's3', slug: 'ac',        nameAr: 'تكييف',     nameEn: 'AC',         color: '#06B6D4'),
+    const CategoryModel(id: 's4', slug: 'cleaning',  nameAr: 'تنظيف',     nameEn: 'Cleaning',   color: '#10B981'),
+    const CategoryModel(id: 's5', slug: 'painting',  nameAr: 'دهان',      nameEn: 'Painting',   color: '#8B5CF6'),
+    const CategoryModel(id: 's6', slug: 'movers',    nameAr: 'نقل عفش',   nameEn: 'Movers',     color: '#F97316'),
   ],
   flashDeals: List.generate(6, (i) => ProductCardModel(
     id: 'fd$i', slug: 'flash-$i',

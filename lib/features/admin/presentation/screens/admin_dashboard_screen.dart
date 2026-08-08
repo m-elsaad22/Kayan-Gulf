@@ -136,7 +136,7 @@ class _MenuTile extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 Expanded(child: Text(title, style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800, color: KayanDesignTokens.kBlueDeep))),
-                Icon(Icons.chevron_left_rounded, color: KayanDesignTokens.muted),
+                const Icon(Icons.chevron_left_rounded, color: KayanDesignTokens.muted),
               ],
             ),
           ),

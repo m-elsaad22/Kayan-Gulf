@@ -8,7 +8,7 @@ class TechnicianArrivalScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Phase3ServiceScaffold(
+    return const Phase3ServiceScaffold(
       titleAr: 'وصول الفني',
       titleEn: 'Technician Arrival',
       subtitleAr: 'تابع وصول الفني وتحقق من بياناته.',

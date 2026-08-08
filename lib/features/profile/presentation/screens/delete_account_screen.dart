@@ -54,7 +54,7 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.warning_amber_rounded, color: KayanDesignTokens.danger),
+                              const Icon(Icons.warning_amber_rounded, color: KayanDesignTokens.danger),
                               const SizedBox(width: 8),
                               Text(ar ? 'تحذير' : 'Warning', style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800, color: KayanDesignTokens.danger)),
                             ],

@@ -8,7 +8,7 @@ class ProductReviewsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Phase4CommerceScaffold(
+    return const Phase4CommerceScaffold(
       titleAr: 'تقييمات المنتج',
       titleEn: 'Product Reviews',
       subtitleAr: 'آراء العملاء وتقييماتهم حول المنتج.',

@@ -168,7 +168,7 @@ class _PreviewButton extends StatelessWidget {
         boxShadow: neumorphic
             ? [
                 BoxShadow(color: KayanDesignTokens.surface.withValues(alpha: 0.95), blurRadius: 8, offset: const Offset(-2, -2)),
-                BoxShadow(color: Colors.black38, blurRadius: 10, offset: const Offset(3, 4)),
+                const BoxShadow(color: Colors.black38, blurRadius: 10, offset: Offset(3, 4)),
               ]
             : null,
       ),
@@ -215,7 +215,7 @@ class _PreviewCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(radius),
                 boxShadow: [
                   BoxShadow(color: KayanDesignTokens.surface.withValues(alpha: 0.95), blurRadius: 8, offset: const Offset(-2, -2)),
-                  BoxShadow(color: Colors.black45, blurRadius: 12, offset: const Offset(3, 5)),
+                  const BoxShadow(color: Colors.black45, blurRadius: 12, offset: Offset(3, 5)),
                 ],
               )
             : null,

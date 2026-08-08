@@ -29,7 +29,7 @@ class PaypalPaymentScreen extends ConsumerWidget {
                 child: ListView(
                   children: [
                     const SizedBox(height: 24),
-                    Center(child: Icon(Icons.account_balance_wallet_rounded, size: 64, color: KayanDesignTokens.kBlue)),
+                    const Center(child: Icon(Icons.account_balance_wallet_rounded, size: 64, color: KayanDesignTokens.kBlue)),
                     const SizedBox(height: 16),
                     Text(ar ? 'سيتم فتح بوابة PayPal الآمنة' : 'Secure PayPal gateway will open', textAlign: TextAlign.center, style: KayanDesignTokens.cairo(color: KayanDesignTokens.text2)),
                     const SizedBox(height: 20),

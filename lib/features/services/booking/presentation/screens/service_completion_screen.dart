@@ -8,7 +8,7 @@ class ServiceCompletionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Phase3ServiceScaffold(
+    return const Phase3ServiceScaffold(
       titleAr: 'إكمال الخدمة',
       titleEn: 'Service Completion',
       subtitleAr: 'أكد إنجاز الخدمة وقيّم التجربة.',

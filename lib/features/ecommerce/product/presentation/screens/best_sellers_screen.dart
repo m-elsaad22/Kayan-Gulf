@@ -8,7 +8,7 @@ class BestSellersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Phase4CommerceScaffold(
+    return const Phase4CommerceScaffold(
       titleAr: 'الأكثر مبيعاً',
       titleEn: 'Best Sellers',
       subtitleAr: 'منتجات يثق بها عملاء كيان.',

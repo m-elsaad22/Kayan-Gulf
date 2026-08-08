@@ -52,15 +52,15 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
       child: KayanEntryScaffold(
         smallHero: true,
         heroHeight: 220,
-        hero: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
+        hero: const Padding(
+          padding: EdgeInsets.fromLTRB(24, 24, 24, 32),
           child: Column(
             children: [
-              const KayanBrandLogo(size: 64),
-              const SizedBox(height: 14),
+              KayanBrandLogo(size: 64),
+              SizedBox(height: 14),
               KayanEntryTitle(before: 'دخول ', highlight: 'الإدارة'),
-              const SizedBox(height: 8),
-              const KayanEntrySubtitle('لوحة تحكم كيان — CMS'),
+              SizedBox(height: 8),
+              KayanEntrySubtitle('لوحة تحكم كيان — CMS'),
             ],
           ),
         ),

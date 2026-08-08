@@ -7,7 +7,6 @@ import '../../../../core/theme/kayan_design_tokens.dart';
 import '../../../../routing/app_routes.dart';
 import '../../../../shared/providers/locale_provider.dart';
 import '../../../../shared/widgets/design/kayan_design_widgets.dart';
-import '../../../../shared/widgets/design/kayan_entry_widgets.dart';
 import '../../../ecommerce/product/presentation/providers/product_providers.dart';
 
 class FavoritesScreen extends ConsumerWidget {

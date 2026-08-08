@@ -14,7 +14,7 @@ kayan/
 │   │   ├── main.dart            ← نقطة الدخول الرئيسية
 │   │   ├── app.dart             ← MaterialApp + Router
 │   │   ├── core/                ← ثيم + ألوان + DI
-│   │   │   └── theme/           ← app_colors, app_gradients, etc.
+│   │   │   └── theme/           ← kayan_design_tokens, app_theme, etc.
 │   │   └── features/            ← 43 شاشة منظمة بـ Clean Architecture
 │   │       ├── auth/            ← OTP + Phone + Profile Setup
 │   │       ├── home/            ← الرئيسية
@@ -168,9 +168,8 @@ mobile/
 │   ├── app.dart
 │   ├── core/
 │   │   └── theme/
-│   │       ├── app_colors.dart
-│   │       ├── app_gradients.dart
-│   │       ├── app_text_styles.dart
+│   │       ├── kayan_design_tokens.dart
+│   │       ├── dynamic_theme.dart
 │   │       ├── app_border_radius.dart
 │   │       ├── app_spacing.dart
 │   │       └── app_theme.dart

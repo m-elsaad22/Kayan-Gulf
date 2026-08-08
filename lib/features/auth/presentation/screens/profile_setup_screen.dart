@@ -71,7 +71,7 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
                         color: KayanDesignTokens.surface,
                         border: Border.all(color: KayanDesignTokens.border, width: 2),
                       ),
-                      child: Icon(Icons.person_rounded, size: 48, color: KayanDesignTokens.muted),
+                      child: const Icon(Icons.person_rounded, size: 48, color: KayanDesignTokens.muted),
                     ),
                     Positioned(
                       bottom: 0,
@@ -79,7 +79,7 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
                       child: Container(
                         width: 30,
                         height: 30,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           gradient: KayanDesignTokens.gradGold,
                           shape: BoxShape.circle,
                         ),

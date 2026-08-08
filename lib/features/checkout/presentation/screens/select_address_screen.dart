@@ -58,7 +58,7 @@ class _SelectAddressScreenState extends ConsumerState<SelectAddressScreen> {
                               ),
                               child: Row(
                                 children: [
-                                  Icon(Icons.location_on_outlined, color: KayanDesignTokens.kBlue),
+                                  const Icon(Icons.location_on_outlined, color: KayanDesignTokens.kBlue),
                                   const SizedBox(width: 12),
                                   Expanded(
                                     child: Column(

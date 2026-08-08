@@ -404,7 +404,7 @@ class _ColorWheel extends StatelessWidget {
 
   void _handle(Offset local, BuildContext context) {
     const size = 200.0;
-    final center = const Offset(size / 2, size / 2);
+    const center = Offset(size / 2, size / 2);
     final delta = local - center;
     final dist = delta.distance.clamp(0.0, size / 2);
     final angle = math.atan2(delta.dy, delta.dx);

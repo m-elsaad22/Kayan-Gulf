@@ -8,7 +8,6 @@ import '../../../../routing/app_routes.dart';
 import '../../../../shared/providers/locale_provider.dart';
 import '../../../../shared/providers/theme_provider.dart';
 import '../../../../shared/widgets/design/kayan_design_widgets.dart';
-import '../../../../shared/widgets/design/kayan_entry_widgets.dart';
 import '../../../profile/presentation/widgets/kayan_profile_widgets.dart';
 
 class SettingsLightScreen extends ConsumerStatefulWidget {

@@ -8,7 +8,7 @@ class UrgentServiceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Phase3ServiceScaffold(
+    return const Phase3ServiceScaffold(
       titleAr: 'خدمة عاجلة',
       titleEn: 'Urgent Service',
       subtitleAr: 'اطلب فني بشكل أسرع للحالات الطارئة.',

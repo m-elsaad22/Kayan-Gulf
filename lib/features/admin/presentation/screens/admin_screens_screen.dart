@@ -56,7 +56,7 @@ class _AdminScreensScreenState extends State<AdminScreensScreen> {
                     title: Text('${e.number}. ${e.nameAr}', style: KayanDesignTokens.cairo(fontSize: 13, fontWeight: FontWeight.w700)),
                     subtitle: Text(e.section, style: KayanDesignTokens.cairo(fontSize: 11, color: KayanDesignTokens.muted)),
                     value: _visibility[key] ?? true,
-                    activeColor: KayanDesignTokens.kBlue,
+                    activeThumbColor: KayanDesignTokens.kBlue,
                     onChanged: (v) => setState(() => _visibility[key] = v),
                   ),
                 );

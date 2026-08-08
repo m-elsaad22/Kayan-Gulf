@@ -8,7 +8,7 @@ class ReturnDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Phase4CommerceScaffold(
+    return const Phase4CommerceScaffold(
       titleAr: 'تفاصيل الإرجاع',
       titleEn: 'Return Details',
       subtitleAr: 'أضف سبب الإرجاع والصور والملاحظات.',

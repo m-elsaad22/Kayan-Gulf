@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/kayan_design_tokens.dart';
 import '../../../../shared/providers/locale_provider.dart';
-import '../../../../shared/widgets/design/kayan_design_widgets.dart';
 
 /// Matches design/html/99-or-tracking.html
 class DeliveryTrackingScreen extends ConsumerWidget {

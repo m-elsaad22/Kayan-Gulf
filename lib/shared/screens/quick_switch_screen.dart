@@ -7,7 +7,6 @@ import '../../core/theme/kayan_design_tokens.dart';
 import '../../routing/app_routes.dart';
 import '../providers/locale_provider.dart';
 import '../widgets/design/kayan_design_widgets.dart';
-import '../widgets/design/kayan_entry_widgets.dart';
 
 class QuickSwitchScreen extends ConsumerWidget {
   const QuickSwitchScreen({super.key});

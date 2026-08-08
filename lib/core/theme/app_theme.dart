@@ -115,7 +115,6 @@ abstract class AppTheme {
       colorScheme: scheme,
       scaffoldBackgroundColor: isDark ? KayanDesignTokens.kBlueDeep : KayanDesignTokens.bg,
       canvasColor: surface,
-      dialogBackgroundColor: surface,
       primaryColor: scheme.primary,
       textTheme: textTheme,
       appBarTheme: AppBarTheme(

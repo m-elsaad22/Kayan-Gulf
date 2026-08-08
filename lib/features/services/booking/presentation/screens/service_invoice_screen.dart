@@ -8,7 +8,7 @@ class ServiceInvoiceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Phase3ServiceScaffold(
+    return const Phase3ServiceScaffold(
       titleAr: 'فاتورة الخدمة',
       titleEn: 'Service Invoice',
       subtitleAr: 'تفاصيل تكلفة الخدمة والمواد والضريبة.',

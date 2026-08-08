@@ -8,7 +8,7 @@ class ExtraMaterialsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Phase3ServiceScaffold(
+    return const Phase3ServiceScaffold(
       titleAr: 'مواد إضافية',
       titleEn: 'Extra Materials',
       subtitleAr: 'أضف مواد أو قطع غيار مطلوبة للخدمة.',

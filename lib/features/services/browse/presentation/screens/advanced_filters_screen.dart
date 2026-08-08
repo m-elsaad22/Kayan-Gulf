@@ -8,7 +8,7 @@ class AdvancedFiltersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Phase3ServiceScaffold(
+    return const Phase3ServiceScaffold(
       titleAr: 'فلترة متقدمة',
       titleEn: 'Advanced Filters',
       subtitleAr: 'تحكم دقيق في نتائج الخدمات حسب السعر والتقييم والمدينة.',

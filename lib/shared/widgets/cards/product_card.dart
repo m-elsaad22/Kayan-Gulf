@@ -169,7 +169,7 @@ class _ProductCardState extends State<ProductCard> {
                       Text('${p.price.toStringAsFixed(0)} ر.س', style: KayanDesignTokens.cairo(fontSize: 14, fontWeight: FontWeight.w900, color: KayanDesignTokens.oOrange)),
                       if (p.originalPrice != null) ...[
                         const SizedBox(width: 6),
-                        Text('${p.originalPrice!.toStringAsFixed(0)}', style: KayanDesignTokens.cairo(fontSize: 11, color: KayanDesignTokens.muted).copyWith(decoration: TextDecoration.lineThrough)),
+                        Text(p.originalPrice!.toStringAsFixed(0), style: KayanDesignTokens.cairo(fontSize: 11, color: KayanDesignTokens.muted).copyWith(decoration: TextDecoration.lineThrough)),
                       ],
                     ],
                   ),

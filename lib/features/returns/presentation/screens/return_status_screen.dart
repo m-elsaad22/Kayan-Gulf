@@ -8,7 +8,7 @@ class ReturnStatusScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Phase4CommerceScaffold(
+    return const Phase4CommerceScaffold(
       titleAr: 'حالة الإرجاع',
       titleEn: 'Return Status',
       subtitleAr: 'تابع مراحل معالجة طلب الإرجاع.',

@@ -56,7 +56,7 @@ class KayanProfileMenuTile extends StatelessWidget {
                 ],
               ),
             ),
-            trailing ?? Icon(Icons.arrow_back_ios_new_rounded, size: 12, color: KayanDesignTokens.muted),
+            trailing ?? const Icon(Icons.arrow_back_ios_new_rounded, size: 12, color: KayanDesignTokens.muted),
           ],
         ),
       ),

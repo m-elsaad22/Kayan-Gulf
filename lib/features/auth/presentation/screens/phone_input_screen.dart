@@ -150,7 +150,7 @@ class _PhoneInputScreenState extends ConsumerState<PhoneInputScreen> {
                       Text(_selected.flag, style: const TextStyle(fontSize: 18)),
                       const SizedBox(width: 6),
                       Text(_selected.code, style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800)),
-                      Icon(Icons.keyboard_arrow_down_rounded, color: KayanDesignTokens.muted, size: 20),
+                      const Icon(Icons.keyboard_arrow_down_rounded, color: KayanDesignTokens.muted, size: 20),
                     ],
                   ),
                 ),

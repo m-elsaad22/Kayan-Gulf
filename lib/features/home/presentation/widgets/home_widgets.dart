@@ -347,10 +347,10 @@ class _CategoryItem extends StatelessWidget {
               duration: const Duration(milliseconds: 150),
               width:    60, height: 60,
               decoration: BoxDecoration(
-                color:        _color.withOpacity(0.12),
+                color:        _color.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(14),
                 border:       Border.all(
-                  color: _color.withOpacity(0.25), width: 1,
+                  color: _color.withValues(alpha: 0.25), width: 1,
                 ),
               ),
               child: category.iconUrl != null
@@ -430,7 +430,7 @@ class FlashDealSection extends StatelessWidget {
         gradient:     KayanDesignTokens.gradOrange,
         borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
         border:       Border.all(
-          color: KayanDesignTokens.danger.withOpacity(0.2), width: 1,
+          color: KayanDesignTokens.danger.withValues(alpha: 0.2), width: 1,
         ),
       ),
       child: Column(
@@ -747,7 +747,7 @@ class _AdCard extends StatelessWidget {
           ),
           boxShadow: ad.isBoosted ? [
             BoxShadow(
-              color:      KayanDesignTokens.oOrange.withOpacity(0.1),
+              color:      KayanDesignTokens.oOrange.withValues(alpha: 0.1),
               blurRadius: 10,
             ),
           ] : [],
@@ -791,7 +791,7 @@ class _AdCard extends StatelessWidget {
                       margin: const EdgeInsets.only(bottom: 3),
                       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
                       decoration: BoxDecoration(
-                        color:        KayanDesignTokens.oOrange.withOpacity(0.15),
+                        color:        KayanDesignTokens.oOrange.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text('مميز ⭐',
@@ -865,11 +865,11 @@ class EmergencyStrip extends StatelessWidget {
           horizontal: 20, vertical: 16,
         ),
         decoration: BoxDecoration(
-          gradient:     LinearGradient(colors: [KayanDesignTokens.danger, Color(0xFFB71C1C)]),
+          gradient:     const LinearGradient(colors: [KayanDesignTokens.danger, Color(0xFFB71C1C)]),
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
-              color:      KayanDesignTokens.danger.withOpacity(0.3),
+              color:      KayanDesignTokens.danger.withValues(alpha: 0.3),
               blurRadius: 16,
               offset:     const Offset(0, 4),
             ),

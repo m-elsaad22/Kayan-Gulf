@@ -18,7 +18,7 @@ class ProfileHomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ar = ref.watch(isArabicProvider);
     final name = ar ? 'محمود السعد' : 'Mahmoud Alsaad';
-    final phone = '+966 50 123 4567';
+    const phone = '+966 50 123 4567';
     final initial = name.isNotEmpty ? name.trim()[0] : 'ك';
 
     return Scaffold(
@@ -66,7 +66,7 @@ class ProfileHomeScreen extends ConsumerWidget {
                                 gradient: KayanDesignTokens.gradGold,
                                 borderRadius: BorderRadius.circular(99),
                               ),
-                              child: Text(ar ? 'عضو ذهبي' : 'Gold member', style: KayanDesignTokens.cairo(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFF402C00))),
+                              child: Text(ar ? 'عضو ذهبي' : 'Gold member', style: KayanDesignTokens.cairo(fontSize: 10, fontWeight: FontWeight.w800, color: const Color(0xFF402C00))),
                             ),
                           ],
                         ),

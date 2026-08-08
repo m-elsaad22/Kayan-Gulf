@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../../../../../core/theme/kayan_design_tokens.dart';
 import '../../../../../shared/widgets/design/kayan_design_widgets.dart';
-import '../../../../../shared/widgets/design/kayan_entry_widgets.dart';
 
 class Phase3ServiceScaffold extends StatelessWidget {
   const Phase3ServiceScaffold({

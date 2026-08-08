@@ -8,7 +8,7 @@ class AddCardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Phase3ServiceScaffold(
+    return const Phase3ServiceScaffold(
       titleAr: 'إضافة بطاقة',
       titleEn: 'Add Card',
       subtitleAr: 'احفظ بطاقة دفع آمنة لاستخدامها لاحقاً.',

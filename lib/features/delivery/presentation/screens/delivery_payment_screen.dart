@@ -50,7 +50,7 @@ class _DeliveryPaymentScreenState extends ConsumerState<DeliveryPaymentScreen> {
               child: Container(
                 margin: const EdgeInsets.only(bottom: 10),
                 padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 15),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   border: Border(bottom: BorderSide(color: KayanDesignTokens.border)),
                 ),
                 child: Row(
@@ -62,7 +62,7 @@ class _DeliveryPaymentScreenState extends ConsumerState<DeliveryPaymentScreen> {
                         color: KayanDesignTokens.bg,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Icon(Icons.payments_rounded, color: KayanDesignTokens.kBlue),
+                      child: const Icon(Icons.payments_rounded, color: KayanDesignTokens.kBlue),
                     ),
                     const SizedBox(width: 14),
                     Expanded(child: Text(methods[i], style: KayanDesignTokens.cairo(fontWeight: FontWeight.w700, color: KayanDesignTokens.kBlueDeep))),

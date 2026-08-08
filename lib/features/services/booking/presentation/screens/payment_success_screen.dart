@@ -8,7 +8,7 @@ class PaymentSuccessScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Phase3ServiceScaffold(
+    return const Phase3ServiceScaffold(
       titleAr: 'نجاح الدفع',
       titleEn: 'Payment Success',
       subtitleAr: 'تم تأكيد الدفع وحجز الخدمة بنجاح.',

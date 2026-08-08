@@ -167,11 +167,10 @@ class AuthGuardState {
   });
 
   const AuthGuardState.authenticated({
-    required String userId,
+    required String this.userId,
     required bool profileComplete,
   })  : isAuthenticated = true,
-        isProfileComplete = profileComplete,
-        userId = userId;
+        isProfileComplete = profileComplete;
 
   const AuthGuardState.unauthenticated()
       : isAuthenticated = false,

@@ -8,7 +8,7 @@ class ServiceQrScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Phase3ServiceScaffold(
+    return const Phase3ServiceScaffold(
       titleAr: 'رمز الخدمة',
       titleEn: 'Service QR',
       subtitleAr: 'رمز آمن للتحقق من الحجز والفني.',

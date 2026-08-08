@@ -165,7 +165,7 @@ class CheckoutNotifier extends AutoDisposeNotifier<CheckoutState> {
     await Future.delayed(const Duration(seconds: 2));
 
     // 95% success rate for demo
-    final success = true;
+    const success = true;
 
     if (success) {
       final orderId = 'KYN-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}';
