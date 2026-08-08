@@ -34,6 +34,8 @@ import 'main_shell.dart';
 import '../shared/providers/auth_provider.dart';
 import '../shared/services/local_storage_service.dart';
 import '../core/theme/app_colors.dart';
+import '../core/theme/kayan_design_tokens.dart';
+import '../shared/widgets/design/kayan_entry_widgets.dart';
 import '../core/theme/app_text_styles.dart';
 
 // ─── Feature Screen Imports ───────────────────────────────────
@@ -2217,33 +2219,20 @@ class _RouterErrorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bgScaffold,
+      backgroundColor: KayanDesignTokens.bg,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(32),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.error_outline_rounded,
-                  size: 64, color: AppColors.error),
+              const Icon(Icons.error_outline_rounded, size: 64, color: KayanDesignTokens.danger),
               const SizedBox(height: 20),
-              Text('Page not found',
-                  style: AppTextStyles.titleLarge,
-                  textAlign: TextAlign.center),
+              Text('Page not found', style: KayanDesignTokens.cairo(fontSize: 20, fontWeight: FontWeight.w800), textAlign: TextAlign.center),
               const SizedBox(height: 8),
-              Text(error,
-                  style: AppTextStyles.bodySmall,
-                  textAlign: TextAlign.center,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis),
+              Text(error, style: KayanDesignTokens.cairo(fontSize: 12, color: KayanDesignTokens.muted), textAlign: TextAlign.center, maxLines: 3, overflow: TextOverflow.ellipsis),
               const SizedBox(height: 32),
-              SizedBox(
-                width: 200,
-                child: ElevatedButton(
-                  onPressed: () => context.go(AppRoutes.home),
-                  child: const Text('Go to Home'),
-                ),
-              ),
+              KayanCtaButton(label: 'Go to Home', variant: KayanCtaVariant.blue, onPressed: () => context.go(AppRoutes.home)),
             ],
           ),
         ),
@@ -2258,26 +2247,18 @@ class _NotFoundScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bgScaffold,
+      backgroundColor: KayanDesignTokens.bg,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('404',
-                style: AppTextStyles.displaySmall.copyWith(
-                  color: AppColors.royalBlue.withOpacity(0.4),
-                  fontWeight: FontWeight.w800,
-                )),
+            Text('404', style: KayanDesignTokens.cairo(fontSize: 56, fontWeight: FontWeight.w900, color: KayanDesignTokens.kBlue.withValues(alpha: 0.35))),
             const SizedBox(height: 12),
-            Text('الصفحة غير موجودة',
-                style: AppTextStyles.arabicTitleLarge),
+            Text('الصفحة غير موجودة', style: KayanDesignTokens.cairo(fontSize: 18, fontWeight: FontWeight.w800)),
             const SizedBox(height: 4),
-            Text('Page not found', style: AppTextStyles.bodySmall),
+            Text('Page not found', style: KayanDesignTokens.cairo(color: KayanDesignTokens.muted)),
             const SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: () => context.go(AppRoutes.home),
-              child: const Text('الصفحة الرئيسية'),
-            ),
+            KayanCtaButton(label: 'الصفحة الرئيسية', variant: KayanCtaVariant.blue, onPressed: () => context.go(AppRoutes.home)),
           ],
         ),
       ),
@@ -2291,7 +2272,7 @@ class _NoInternetScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bgScaffold,
+      backgroundColor: KayanDesignTokens.bg,
       body: NoInternetWidget(
         isArabic: true,
         onRetry: () => context.go(AppRoutes.dashboard),
@@ -2306,36 +2287,24 @@ class _MaintenanceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bgScaffold,
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [AppColors.royalNavy, AppColors.bgCard, AppColors.deepBlue],
-          ),
-        ),
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(32),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 104,
-                  height: 104,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(colors: [AppColors.metallicGold, AppColors.goldLight]),
-                  ),
-                  child: const Icon(Icons.engineering_rounded, color: AppColors.bgPrimary, size: 52),
-                ),
-                const SizedBox(height: 24),
-                Text('تحديثات فاخرة قيد التنفيذ', style: AppTextStyles.arabicTitleLarge, textAlign: TextAlign.center),
-                const SizedBox(height: 8),
-                Text('KAYAN is being refined. Please try again shortly.', style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary), textAlign: TextAlign.center),
-              ],
-            ),
+      backgroundColor: KayanDesignTokens.bg,
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 100,
+                height: 100,
+                decoration: const BoxDecoration(gradient: KayanDesignTokens.gradBlue, shape: BoxShape.circle),
+                child: const Icon(Icons.engineering_rounded, color: Colors.white, size: 48),
+              ),
+              const SizedBox(height: 24),
+              Text('تحديثات قيد التنفيذ', style: KayanDesignTokens.cairo(fontSize: 20, fontWeight: FontWeight.w900), textAlign: TextAlign.center),
+              const SizedBox(height: 8),
+              Text('KAYAN is being refined. Please try again shortly.', style: KayanDesignTokens.cairo(color: KayanDesignTokens.muted), textAlign: TextAlign.center),
+            ],
           ),
         ),
       ),
