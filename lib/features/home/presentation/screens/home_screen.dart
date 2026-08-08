@@ -22,10 +22,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/data/mock_data_catalog.dart';
 import '../../../../core/theme/kayan_design_tokens.dart';
 import '../../../../routing/app_routes.dart';
 import '../../../../shared/providers/auth_provider.dart';
 import '../../../../shared/providers/locale_provider.dart';
+import '../../../ecommerce/product/presentation/providers/product_providers.dart';
 import '../../../../shared/widgets/loaders/shimmer_loader.dart';
 import '../providers/home_providers.dart';
 import '../widgets/home_widgets.dart';
@@ -68,6 +70,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final isArabic  = ref.watch(isArabicProvider);
     final authState = ref.watch(authStateProvider);
     final homeAsync = ref.watch(homeDataProvider);
+    final cartBadgeCount = ref.watch(cartItemCountProvider);
+    final displayName = authState.isAuthenticated
+        ? MockDataCatalog.signedInUser.name
+        : null;
 
     return Scaffold(
       backgroundColor: KayanDesignTokens.bg,
@@ -77,7 +83,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       appBar: _HomeAppBar(
         isScrolled: _isScrolled,
         isArabic:   isArabic,
-        userName:   authState.userId != null ? 'محمود' : null, // TODO: real name
+        userName:   displayName,
+        cartBadgeCount: cartBadgeCount,
         onSearch:   () => context.push(AppRoutes.search),
         onCart:     () => context.push(AppRoutes.cart),
         onNotif:    () => context.push(AppRoutes.notifications),
@@ -304,6 +311,7 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool       isScrolled;
   final bool       isArabic;
   final String?    userName;
+  final int        cartBadgeCount;
   final VoidCallback onSearch;
   final VoidCallback onCart;
   final VoidCallback onNotif;
@@ -312,6 +320,7 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.isScrolled,
     required this.isArabic,
     this.userName,
+    this.cartBadgeCount = 0,
     required this.onSearch,
     required this.onCart,
     required this.onNotif,
@@ -388,7 +397,6 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                   _AppBarIconButton(
                     icon:    Icons.notifications_outlined,
                     onTap:   onNotif,
-                    badgeCount: 3, // TODO: real count
                   ),
                   const SizedBox(width: 8),
 
@@ -396,7 +404,7 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                   _AppBarIconButton(
                     icon:    Icons.shopping_cart_outlined,
                     onTap:   onCart,
-                    badgeCount: 2, // TODO: real count
+                    badgeCount: cartBadgeCount > 0 ? cartBadgeCount : null,
                   ),
                 ],
               ),
