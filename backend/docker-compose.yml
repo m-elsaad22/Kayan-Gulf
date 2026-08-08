@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: kayan
+      POSTGRES_PASSWORD: kayan
+      POSTGRES_DB: kayan
+    ports:
+      - '5432:5432'
+    volumes:
+      - kayan_pg:/var/lib/postgresql/data
+
+  api:
+    build: .
+    ports:
+      - '3000:3000'
+    environment:
+      DATABASE_URL: postgresql://kayan:kayan@db:5432/kayan
+      PORT: 3000
+      NODE_ENV: production
+      JWT_ACCESS_SECRET: change-me-access-secret-min-32-chars
+      JWT_REFRESH_SECRET: change-me-refresh-secret-min-32-chars
+      JWT_ACCESS_TTL: 15m
+      JWT_REFRESH_TTL: 30d
+      OTP_PROVIDER: dev
+      OTP_STRICT: 'false'
+    depends_on:
+      - db
+
+volumes:
+  kayan_pg:
