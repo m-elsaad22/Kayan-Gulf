@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/data/mock/mock_products.dart';
 import '../../../../core/services/admin_data_service.dart';
-import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/theme/kayan_design_tokens.dart';
 import '../widgets/admin_scaffold.dart';
 
 class AdminCategoriesScreen extends StatefulWidget {
@@ -99,21 +99,24 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
         itemCount: _categories.length,
         itemBuilder: (_, i) {
           final c = _categories[i];
-          return Card(
+          return Container(
+            margin: const EdgeInsets.only(bottom: 8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
+              border: Border.all(color: KayanDesignTokens.border),
+            ),
             child: ListTile(
-              title: Text(c.nameAr, style: AppTextStyles.arabicTitleSmall),
-              subtitle: Text('${c.nameEn}\n${c.subcategories.join(' • ')}'),
+              title: Text(c.nameAr, style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800)),
+              subtitle: Text('${c.nameEn}\n${c.subcategories.join(' • ')}', style: KayanDesignTokens.cairo(fontSize: 12, color: KayanDesignTokens.muted)),
               isThreeLine: c.subcategories.isNotEmpty,
               onTap: () => _openForm(c),
               trailing: IconButton(
-                icon: const Icon(Icons.delete_outline),
+                icon: const Icon(Icons.delete_outline, color: KayanDesignTokens.danger),
                 onPressed: () async {
-                  final list = List<MockProductCategory>.from(_categories)
-                    ..removeAt(i);
+                  final list = List<MockProductCategory>.from(_categories)..removeAt(i);
                   await AdminDataService.instance.saveCategories(list);
-                  setState(
-                    () => _categories = AdminDataService.instance.getCategories(),
-                  );
+                  setState(() => _categories = AdminDataService.instance.getCategories());
                 },
               ),
             ),

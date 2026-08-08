@@ -227,6 +227,12 @@ import '../features/ecommerce/product/presentation/screens/product_detail_screen
 import '../features/services/tracking/presentation/screens/live_tracking_screen.dart';
 import '../features/profile/presentation/screens/profile_screen.dart';
 import '../features/settings/presentation/screens/settings_screen.dart';
+// Utility screens
+import '../shared/screens/advanced_search_results_screen.dart';
+import '../shared/screens/map_location_picker_screen.dart';
+import '../shared/screens/call_screen.dart';
+import '../features/services/browse/presentation/screens/search_services_screen.dart';
+import '../features/ecommerce/search/presentation/screens/product_filters_screen.dart';
 
 // ──────────────────────────────────────────────────────────────
 // NAVIGATOR KEYS
@@ -966,6 +972,56 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildSlidePage(
           key: state.pageKey,
           child: const SettingsScreen(),
+        ),
+      ),
+
+      // ════════════════════════════════════════════════════
+      // UTILITY SCREENS (search, map, call, filters)
+      // ════════════════════════════════════════════════════
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.advancedSearch,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const AdvancedSearchResultsScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.mapPicker,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const MapLocationPickerScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.callScreen,
+        pageBuilder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return _buildFadePage(
+            key: state.pageKey,
+            child: CallScreen(
+              name: extra?['name'] as String?,
+              avatar: extra?['avatar'] as String?,
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.searchServices,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const SearchServicesScreen(),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.shopFilters,
+        pageBuilder: (context, state) => _buildSlidePage(
+          key: state.pageKey,
+          child: const ProductFiltersScreen(),
         ),
       ),
 

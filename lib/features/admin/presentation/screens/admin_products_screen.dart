@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/data/mock/mock_products.dart';
 import '../../../../core/services/admin_data_service.dart';
-import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/theme/kayan_design_tokens.dart';
 import '../../../../shared/widgets/delete_confirm_dialog.dart';
 import '../widgets/admin_scaffold.dart';
 
@@ -170,7 +170,12 @@ class _AdminProductsScreenState extends State<AdminProductsScreen> {
               .where((c) => c.id == p.categoryId)
               .map((c) => c.nameAr)
               .firstOrNull;
-          return Card(
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(KayanDesignTokens.radiusM),
+              border: Border.all(color: KayanDesignTokens.border),
+            ),
             child: ListTile(
               leading: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
@@ -181,8 +186,8 @@ class _AdminProductsScreenState extends State<AdminProductsScreen> {
                   fit: BoxFit.cover,
                 ),
               ),
-              title: Text(p.titleAr, style: AppTextStyles.arabicBodyMedium),
-              subtitle: Text('${cat ?? p.categoryId} • ${p.salePrice.toInt()} ر.س'),
+              title: Text(p.titleAr, style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800)),
+              subtitle: Text('${cat ?? p.categoryId} • ${p.salePrice.toInt()} ر.س', style: KayanDesignTokens.cairo(fontSize: 12, color: KayanDesignTokens.muted)),
               trailing: PopupMenuButton<String>(
                 onSelected: (v) {
                   if (v == 'edit') _openForm(p);
