@@ -74,4 +74,55 @@ class MockClassifiedsRepository implements ClassifiedsRepository {
         .toList();
     return featured.isEmpty ? MockDataCatalog.featuredAds() : featured;
   }
+
+  @override
+  Future<AdModel> createAd({
+    required String title,
+    required String city,
+    required String categorySlug,
+    String? description,
+    double? price,
+    bool isFree = false,
+    bool isNegotiable = false,
+    String? district,
+    String condition = 'good',
+    List<String> imageUrls = const [],
+  }) async {
+    await Future.delayed(const Duration(milliseconds: 400));
+    return AdModel(
+      id: 'ad-${DateTime.now().millisecondsSinceEpoch}',
+      slug: 'ad-${DateTime.now().millisecondsSinceEpoch}',
+      title: title,
+      description: description,
+      price: isFree ? null : price,
+      isFree: isFree,
+      isNegotiable: isNegotiable,
+      city: city,
+      district: district ?? '',
+      categoryId: categorySlug,
+      categorySlug: categorySlug,
+      condition: AdCondition.values.firstWhere(
+        (c) => c.name == condition,
+        orElse: () => AdCondition.good,
+      ),
+      imageUrls: imageUrls,
+      createdAt: DateTime.now(),
+    );
+  }
+
+  @override
+  Future<MyAdModel> updateAdStatus(String id, String status) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    final mine = MockDataCatalog.myAds;
+    final match = mine.firstWhere(
+      (m) => m.ad.id == id,
+      orElse: () => mine.first,
+    );
+    return MyAdModel(
+      ad: match.ad,
+      status: status,
+      daysLeft: match.daysLeft,
+      canBoost: status == 'ACTIVE',
+    );
+  }
 }

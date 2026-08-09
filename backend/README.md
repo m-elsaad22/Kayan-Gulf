@@ -19,6 +19,9 @@ NestJS + Prisma REST API matching Flutter remote repositories:
 | `POST /v1/payments/intent` | `RemoteOrderRepository.createPaymentIntent` |
 | `POST /v1/devices/fcm` | `RemoteDeviceRepository.registerFcmToken` |
 | `POST /v1/notifications/push/me` | FCM push to current user |
+| `GET /v1/services…` | `RemoteServiceRepository` |
+| `GET/POST /v1/bookings` | bookings lifecycle |
+| `GET/POST /v1/classifieds…` | `RemoteClassifiedsRepository` |
 
 OTP: set `OTP_PROVIDER=unifonic|twilio|dev` — see [docs/OTP_AND_PUSH.md](../docs/OTP_AND_PUSH.md).
 

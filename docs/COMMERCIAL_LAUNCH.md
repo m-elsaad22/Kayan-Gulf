@@ -57,10 +57,12 @@ Alternatives considered: Firebase-only (limits commerce/orders), Laravel (fine i
 - Flutter: optional Firebase bootstrap (`KAYAN_ENABLE_FIREBASE`), Analytics, FCM sync after login
 - Docs: `docs/OTP_AND_PUSH.md`, updated `lib/core/config/README_FIREBASE.md`
 
-### Phase 4 — Services + Classifieds APIs
+### Phase 4 — Services + Classifieds APIs ✅
 
-- Wire existing remote repos for services & ads
-- Booking + ad lifecycle
+- Services: `GET /services`, `/services/categories`, `/services/:slug`
+- Bookings: `GET/POST /bookings`, `PATCH /bookings/:id/status` (JWT)
+- Classifieds: categories, ads list/detail/featured, `my-ads`, create + status
+- Flutter repos extended with create booking / create ad / status updates
 
 ### Phase 5 — Web admin (not in-app)
 

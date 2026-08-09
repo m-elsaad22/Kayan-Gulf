@@ -23,6 +23,8 @@ model User {
   orders             Order[]
   payments           Payment[]
   deviceTokens       DeviceToken[]
+  bookings           Booking[]
+  classifiedAds      ClassifiedAd[]
 }
 
 model DeviceToken {
@@ -62,16 +64,19 @@ model OtpCode {
 }
 
 model Category {
-  id          String    @id @default(cuid())
-  slug        String    @unique
-  nameAr      String
-  nameEn      String
-  iconUrl     String?
-  color       String?
-  sortOrder   Int       @default(0)
-  isEmergency Boolean   @default(false)
-  kind        String    // ecommerce | service
-  products    Product[]
+  id            String         @id @default(cuid())
+  slug          String         @unique
+  nameAr        String
+  nameEn        String
+  iconUrl       String?
+  emoji         String?
+  color         String?
+  sortOrder     Int            @default(0)
+  isEmergency   Boolean        @default(false)
+  kind          String         // ecommerce | service | classified
+  products      Product[]
+  services      Service[]
+  classifiedAds ClassifiedAd[]
 }
 
 model Banner {
@@ -135,31 +140,88 @@ model ProductImage {
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
-model ServiceCard {
-  id             String  @id @default(cuid())
-  slug           String  @unique
-  nameAr         String
-  nameEn         String
-  basePrice      Float
-  imageUrl       String?
-  rating         Float   @default(0)
-  totalBookings  Int     @default(0)
-  categoryNameAr String?
-  isEmergency    Boolean @default(false)
-  pricingType    String  @default("FIXED")
-  isFeatured     Boolean @default(true)
+model Service {
+  id                   String    @id @default(cuid())
+  slug                 String    @unique
+  nameAr               String
+  nameEn               String
+  descriptionAr        String?
+  descriptionEn        String?
+  basePrice            Float
+  discountedPrice      Float?
+  pricingType          String    @default("FIXED")
+  currency             String    @default("SAR")
+  imageUrl             String?
+  galleryUrlsJson      String    @default("[]")
+  rating               Float     @default(0)
+  totalRatings         Int       @default(0)
+  totalBookings        Int       @default(0)
+  isEmergency          Boolean   @default(false)
+  isAvailable          Boolean   @default(true)
+  isFeatured           Boolean   @default(true)
+  estimatedDurationMin Int       @default(60)
+  featuresJson         String    @default("[]")
+  whatToExpectJson     String    @default("[]")
+  faqsJson             String    @default("[]")
+  categoryId           String?
+  category             Category? @relation(fields: [categoryId], references: [id])
+  bookings             Booking[]
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  @@index([categoryId])
+  @@index([isFeatured])
 }
 
-model AdCard {
-  id          String   @id @default(cuid())
-  slug        String   @unique
-  title       String
-  price       Float?
-  thumbnailUrl String?
-  city        String
-  isBoosted   Boolean  @default(false)
-  isFree      Boolean  @default(false)
-  createdAt   DateTime @default(now())
+model Booking {
+  id            String   @id @default(cuid())
+  bookingNumber String   @unique
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  serviceId     String
+  service       Service  @relation(fields: [serviceId], references: [id])
+  price         Float
+  currency      String   @default("SAR")
+  scheduledAt   DateTime
+  status        String   @default("CONFIRMED") // PENDING|CONFIRMED|IN_PROGRESS|COMPLETED|CANCELLED
+  addressLine   String
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+model ClassifiedAd {
+  id             String    @id @default(cuid())
+  slug           String    @unique
+  title          String
+  description    String?
+  price          Float?
+  isFree         Boolean   @default(false)
+  isNegotiable   Boolean   @default(false)
+  city           String
+  district       String    @default("")
+  condition      String    @default("good") // newItem|likeNew|good|acceptable|forParts
+  imageUrlsJson  String    @default("[]")
+  viewCount      Int       @default(0)
+  favoriteCount  Int       @default(0)
+  isBoosted      Boolean   @default(false)
+  isFeatured     Boolean   @default(false)
+  status         String    @default("ACTIVE") // ACTIVE|PAUSED|SOLD|EXPIRED
+  expiresAt      DateTime?
+  categoryId     String?
+  category       Category? @relation(fields: [categoryId], references: [id])
+  ownerId        String?
+  owner          User?     @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([categoryId])
+  @@index([ownerId])
+  @@index([status])
+  @@index([isFeatured])
 }
 
 model Address {

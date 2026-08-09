@@ -7,6 +7,7 @@ async function main() {
   await prisma.payment.deleteMany();
   await prisma.orderItem.deleteMany();
   await prisma.order.deleteMany();
+  await prisma.booking.deleteMany();
   await prisma.cartItem.deleteMany();
   await prisma.cart.deleteMany();
   await prisma.address.deleteMany();
@@ -15,11 +16,11 @@ async function main() {
   await prisma.otpCode.deleteMany();
   await prisma.productImage.deleteMany();
   await prisma.product.deleteMany();
+  await prisma.classifiedAd.deleteMany();
+  await prisma.service.deleteMany();
   await prisma.vendor.deleteMany();
   await prisma.category.deleteMany();
   await prisma.banner.deleteMany();
-  await prisma.serviceCard.deleteMany();
-  await prisma.adCard.deleteMany();
   await prisma.user.deleteMany();
 
   const passwordHash = await bcrypt.hash('password123', 10);
@@ -87,18 +88,19 @@ async function main() {
   }
 
   const services = [
-    { slug: 'plumbing', nameAr: 'سباكة', nameEn: 'Plumbing', color: '#3B82F6' },
+    { slug: 'plumbing', nameAr: 'سباكة', nameEn: 'Plumbing', color: '#3B82F6', emoji: '🔧' },
     {
       slug: 'electrical',
       nameAr: 'كهرباء',
       nameEn: 'Electrical',
       color: '#F59E0B',
+      emoji: '⚡',
       isEmergency: true,
     },
-    { slug: 'ac', nameAr: 'تكييف', nameEn: 'AC', color: '#06B6D4' },
-    { slug: 'cleaning', nameAr: 'تنظيف', nameEn: 'Cleaning', color: '#10B981' },
-    { slug: 'painting', nameAr: 'دهان', nameEn: 'Painting', color: '#8B5CF6' },
-    { slug: 'movers', nameAr: 'نقل عفش', nameEn: 'Movers', color: '#F97316' },
+    { slug: 'ac', nameAr: 'تكييف', nameEn: 'AC', color: '#06B6D4', emoji: '❄️' },
+    { slug: 'cleaning', nameAr: 'تنظيف', nameEn: 'Cleaning', color: '#10B981', emoji: '🧹' },
+    { slug: 'painting', nameAr: 'دهان', nameEn: 'Painting', color: '#8B5CF6', emoji: '🎨' },
+    { slug: 'movers', nameAr: 'نقل عفش', nameEn: 'Movers', color: '#F97316', emoji: '📦' },
   ];
 
   for (const [i, c] of services.entries()) {
@@ -108,8 +110,30 @@ async function main() {
         nameAr: c.nameAr,
         nameEn: c.nameEn,
         color: c.color,
+        emoji: c.emoji,
         isEmergency: c.isEmergency ?? false,
         kind: 'service',
+        sortOrder: i,
+      },
+    });
+  }
+
+  const classifiedCats = [
+    { slug: 'cl-electronics', nameAr: 'إلكترونيات', nameEn: 'Electronics', emoji: '📱' },
+    { slug: 'vehicles', nameAr: 'سيارات', nameEn: 'Vehicles', emoji: '🚗' },
+    { slug: 'realestate', nameAr: 'عقارات', nameEn: 'Real Estate', emoji: '🏠' },
+    { slug: 'furniture', nameAr: 'أثاث', nameEn: 'Furniture', emoji: '🛋️' },
+    { slug: 'cl-sports', nameAr: 'رياضة', nameEn: 'Sports', emoji: '⚽' },
+    { slug: 'books', nameAr: 'كتب', nameEn: 'Books', emoji: '📚' },
+  ];
+  for (const [i, c] of classifiedCats.entries()) {
+    await prisma.category.create({
+      data: {
+        slug: c.slug,
+        nameAr: c.nameAr,
+        nameEn: c.nameEn,
+        emoji: c.emoji,
+        kind: 'classified',
         sortOrder: i,
       },
     });
@@ -238,84 +262,215 @@ async function main() {
     });
   }
 
-  await prisma.serviceCard.createMany({
-    data: [
-      {
-        slug: 'ac-install',
-        nameAr: 'تركيب تكييف',
-        nameEn: 'AC Installation',
-        basePrice: 150,
-        imageUrl: 'https://picsum.photos/300/200?random=40',
-        rating: 4.5,
-        totalBookings: 220,
-        categoryNameAr: 'تكييف',
-      },
-      {
-        slug: 'drain-clean',
-        nameAr: 'تسليك مجاري',
-        nameEn: 'Drain Cleaning',
-        basePrice: 80,
-        imageUrl: 'https://picsum.photos/300/200?random=41',
-        rating: 4.4,
-        totalBookings: 180,
-        categoryNameAr: 'سباكة',
-        isEmergency: true,
-      },
-      {
-        slug: 'house-paint',
-        nameAr: 'دهان منزل',
-        nameEn: 'House Painting',
-        basePrice: 500,
-        imageUrl: 'https://picsum.photos/300/200?random=42',
-        rating: 4.6,
-        totalBookings: 90,
-        categoryNameAr: 'دهان',
-      },
-      {
-        slug: 'deep-clean',
-        nameAr: 'نظافة شاملة',
-        nameEn: 'Deep Cleaning',
-        basePrice: 200,
-        imageUrl: 'https://picsum.photos/300/200?random=43',
-        rating: 4.7,
-        totalBookings: 310,
-        categoryNameAr: 'تنظيف',
-      },
-    ],
+  const acCat = await prisma.category.findUniqueOrThrow({ where: { slug: 'ac' } });
+  const plumbingCat = await prisma.category.findUniqueOrThrow({
+    where: { slug: 'plumbing' },
+  });
+  const paintingCat = await prisma.category.findUniqueOrThrow({
+    where: { slug: 'painting' },
+  });
+  const cleaningCat = await prisma.category.findUniqueOrThrow({
+    where: { slug: 'cleaning' },
   });
 
-  await prisma.adCard.createMany({
-    data: [
-      {
-        slug: 'ad-iphone',
-        title: 'آيفون ١٥ برو',
-        price: 3200,
-        thumbnailUrl: 'https://picsum.photos/300/200?random=50',
-        city: 'الرياض',
-        isBoosted: true,
+  const serviceSeeds = [
+    {
+      slug: 'ac-install',
+      nameAr: 'تركيب وصيانة تكييف سبليت',
+      nameEn: 'Split AC Installation & Service',
+      basePrice: 150,
+      discountedPrice: 120,
+      imageUrl: 'https://picsum.photos/300/200?random=40',
+      rating: 4.8,
+      totalRatings: 312,
+      totalBookings: 1840,
+      categoryId: acCat.id,
+      estimatedDurationMin: 120,
+    },
+    {
+      slug: 'drain-clean',
+      nameAr: 'تسليك مجاري',
+      nameEn: 'Drain Cleaning',
+      basePrice: 80,
+      discountedPrice: null as number | null,
+      imageUrl: 'https://picsum.photos/300/200?random=41',
+      rating: 4.4,
+      totalRatings: 90,
+      totalBookings: 180,
+      categoryId: plumbingCat.id,
+      isEmergency: true,
+      estimatedDurationMin: 60,
+    },
+    {
+      slug: 'house-paint',
+      nameAr: 'دهان منزل',
+      nameEn: 'House Painting',
+      basePrice: 500,
+      discountedPrice: null as number | null,
+      imageUrl: 'https://picsum.photos/300/200?random=42',
+      rating: 4.6,
+      totalRatings: 64,
+      totalBookings: 90,
+      categoryId: paintingCat.id,
+      estimatedDurationMin: 240,
+    },
+    {
+      slug: 'deep-clean',
+      nameAr: 'نظافة شاملة',
+      nameEn: 'Deep Cleaning',
+      basePrice: 200,
+      discountedPrice: null as number | null,
+      imageUrl: 'https://picsum.photos/300/200?random=43',
+      rating: 4.7,
+      totalRatings: 140,
+      totalBookings: 310,
+      categoryId: cleaningCat.id,
+      estimatedDurationMin: 180,
+    },
+  ];
+
+  for (const s of serviceSeeds) {
+    await prisma.service.create({
+      data: {
+        slug: s.slug,
+        nameAr: s.nameAr,
+        nameEn: s.nameEn,
+        descriptionAr: `خدمة ${s.nameAr} احترافية في السعودية والخليج.`,
+        descriptionEn: `Professional ${s.nameEn} across KSA and the Gulf.`,
+        basePrice: s.basePrice,
+        discountedPrice: s.discountedPrice,
+        imageUrl: s.imageUrl,
+        galleryUrlsJson: JSON.stringify([
+          s.imageUrl,
+          `https://picsum.photos/600/400?random=${s.slug.length + 90}`,
+        ]),
+        rating: s.rating,
+        totalRatings: s.totalRatings,
+        totalBookings: s.totalBookings,
+        isEmergency: s.isEmergency ?? false,
+        estimatedDurationMin: s.estimatedDurationMin,
+        categoryId: s.categoryId,
+        featuresJson: JSON.stringify([
+          {
+            icon: '✅',
+            textAr: 'فنيون معتمدون',
+            textEn: 'Certified technicians',
+          },
+          { icon: '🛡️', textAr: 'ضمان سنة', textEn: '1-year warranty' },
+        ]),
+        whatToExpectJson: JSON.stringify([
+          'سيتواصل الفني قبل الوصول',
+          'تنفيذ الخدمة وفحص النتيجة',
+        ]),
+        faqsJson: JSON.stringify([
+          {
+            questionAr: 'هل السعر شامل؟',
+            questionEn: 'Is price inclusive?',
+            answerAr: 'نعم، شامل العمالة.',
+            answerEn: 'Yes, labor included.',
+          },
+        ]),
+        isFeatured: true,
       },
-      {
-        slug: 'ad-camry',
-        title: 'سيارة كامري',
-        price: 45000,
-        thumbnailUrl: 'https://picsum.photos/300/200?random=51',
-        city: 'جدة',
+    });
+  }
+
+  const clElectronics = await prisma.category.findUniqueOrThrow({
+    where: { slug: 'cl-electronics' },
+  });
+  const vehicles = await prisma.category.findUniqueOrThrow({
+    where: { slug: 'vehicles' },
+  });
+  const realestate = await prisma.category.findUniqueOrThrow({
+    where: { slug: 'realestate' },
+  });
+  const furniture = await prisma.category.findUniqueOrThrow({
+    where: { slug: 'furniture' },
+  });
+
+  const adSeeds = [
+    {
+      slug: 'iphone-15-pro-max',
+      title: 'آيفون 15 برو ماكس 256GB',
+      price: 3200,
+      city: 'الرياض',
+      district: 'حي النخيل',
+      categoryId: clElectronics.id,
+      isBoosted: true,
+      isFeatured: true,
+      condition: 'likeNew',
+    },
+    {
+      slug: 'camry-2022',
+      title: 'تويوتا كامري 2022',
+      price: 95000,
+      city: 'جدة',
+      district: 'حي الروضة',
+      categoryId: vehicles.id,
+      isNegotiable: true,
+      condition: 'likeNew',
+    },
+    {
+      slug: 'apartment-olaya',
+      title: 'شقة للإيجار - حي العليا',
+      price: 3500,
+      city: 'الرياض',
+      district: 'حي العليا',
+      categoryId: realestate.id,
+      condition: 'newItem',
+    },
+    {
+      slug: 'sofa-new',
+      title: 'أريكة جديدة',
+      price: 800,
+      city: 'دبي',
+      district: 'مارينا',
+      categoryId: furniture.id,
+      condition: 'newItem',
+    },
+  ];
+
+  for (const [i, a] of adSeeds.entries()) {
+    await prisma.classifiedAd.create({
+      data: {
+        slug: a.slug,
+        title: a.title,
+        description: `${a.title} — إعلان عبر كيان.`,
+        price: a.price,
+        city: a.city,
+        district: a.district,
+        categoryId: a.categoryId,
+        condition: a.condition,
+        isBoosted: a.isBoosted ?? false,
+        isFeatured: a.isFeatured ?? false,
+        isNegotiable: a.isNegotiable ?? false,
+        imageUrlsJson: JSON.stringify([
+          `https://picsum.photos/600/500?random=${50 + i}`,
+          `https://picsum.photos/600/500?random=${60 + i}`,
+        ]),
+        ownerId: demoUser.id,
+        status: 'ACTIVE',
+        viewCount: 100 + i * 40,
+        favoriteCount: 10 + i,
+        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
       },
-      {
-        slug: 'ad-apartment',
-        title: 'شقة للإيجار',
-        price: 3500,
-        thumbnailUrl: 'https://picsum.photos/300/200?random=52',
-        city: 'أبوظبي',
-      },
-      {
-        slug: 'ad-sofa',
-        title: 'أريكة جديدة',
-        price: 800,
-        thumbnailUrl: 'https://picsum.photos/300/200?random=53',
-        city: 'دبي',
-      },
-    ],
+    });
+  }
+
+  const acService = await prisma.service.findUniqueOrThrow({
+    where: { slug: 'ac-install' },
+  });
+  await prisma.booking.create({
+    data: {
+      bookingNumber: 'BK-5829401',
+      userId: demoUser.id,
+      serviceId: acService.id,
+      price: 120,
+      scheduledAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      status: 'CONFIRMED',
+      addressLine: 'حي النخيل، الرياض',
+      notes: 'غرفة النوم',
+    },
   });
 
   // eslint-disable-next-line no-console

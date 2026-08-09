@@ -11,4 +11,13 @@ abstract class ServiceRepository {
   Future<List<BookingModel>> getBookings({String? status});
 
   Future<BookingModel> getBooking(String id);
+
+  Future<BookingModel> createBooking({
+    required String serviceId,
+    required DateTime scheduledAt,
+    required String addressLine,
+    String? notes,
+  });
+
+  Future<BookingModel> updateBookingStatus(String id, String status);
 }

@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { toHomeAdCardJson } from '../classifieds/classifieds.mapper';
 import { PrismaService } from '../prisma/prisma.service';
 import { toProductCardJson } from '../products/product.mapper';
+import { toServiceCardJson } from '../services/services.mapper';
 
 @Injectable()
 export class HomeService {
@@ -47,11 +49,14 @@ export class HomeService {
         take: 12,
         orderBy: { createdAt: 'desc' },
       }),
-      this.prisma.serviceCard.findMany({
-        where: { isFeatured: true },
+      this.prisma.service.findMany({
+        where: { isFeatured: true, isAvailable: true },
+        include: { category: true },
         take: 8,
+        orderBy: { rating: 'desc' },
       }),
-      this.prisma.adCard.findMany({
+      this.prisma.classifiedAd.findMany({
+        where: { status: 'ACTIVE' },
         orderBy: { createdAt: 'desc' },
         take: 12,
       }),
@@ -92,32 +97,8 @@ export class HomeService {
       flashDeals: flashDealProducts.map(toProductCardJson),
       featuredProducts: featuredProducts.map(toProductCardJson),
       recommendations: recommendations.map(toProductCardJson),
-      featuredServices: featuredServices.map((s) => ({
-        id: s.id,
-        slug: s.slug,
-        nameAr: s.nameAr,
-        name: s.nameEn,
-        basePrice: s.basePrice,
-        imageUrl: s.imageUrl,
-        rating: s.rating,
-        totalBookings: s.totalBookings,
-        category: s.categoryNameAr
-          ? { nameAr: s.categoryNameAr }
-          : null,
-        isEmergency: s.isEmergency,
-        pricingType: s.pricingType,
-      })),
-      recentAds: recentAds.map((a) => ({
-        id: a.id,
-        slug: a.slug,
-        title: a.title,
-        price: a.price,
-        thumbnailUrl: a.thumbnailUrl,
-        city: a.city,
-        createdAt: a.createdAt.toISOString(),
-        isBoosted: a.isBoosted,
-        isFree: a.isFree,
-      })),
+      featuredServices: featuredServices.map(toServiceCardJson),
+      recentAds: recentAds.map(toHomeAdCardJson),
     };
   }
 }

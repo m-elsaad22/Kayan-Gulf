@@ -12,4 +12,19 @@ abstract class ClassifiedsRepository {
   Future<List<MyAdModel>> getMyAds();
 
   Future<List<AdModel>> getFeaturedAds();
+
+  Future<AdModel> createAd({
+    required String title,
+    required String city,
+    required String categorySlug,
+    String? description,
+    double? price,
+    bool isFree = false,
+    bool isNegotiable = false,
+    String? district,
+    String condition = 'good',
+    List<String> imageUrls = const [],
+  });
+
+  Future<MyAdModel> updateAdStatus(String id, String status);
 }

@@ -97,8 +97,10 @@ Remote repositories expect JSON REST endpoints under the configured base URL. Im
 - **Addresses** — `GET|POST /addresses`, `PATCH|DELETE /addresses/:id`
 - **Orders** — `POST /orders`, `GET /orders`, `GET /orders/:id`, `GET /orders/:id/tracking`
 - **Payments** — `POST /payments/intent`, `POST /payments/confirm`, `POST /webhooks/payments`
-- **Services** — `GET /services`, `GET /services/:slug`, `GET /bookings`
-- **Classifieds** — `GET /ads`, `GET /ads/:slug`, `GET /ads/featured`, category filters
+- **Devices / Push** — `POST /devices/fcm`, `DELETE /devices/fcm`, `POST /notifications/push/me`
+- **Services** — `GET /services/categories`, `GET /services`, `GET /services/:slug`
+- **Bookings** — `GET/POST /bookings`, `GET /bookings/:id`, `PATCH /bookings/:id/status`
+- **Classifieds** — `GET /classifieds/categories`, `GET /classifieds/ads`, `GET /classifieds/ads/featured`, `GET /classifieds/ads/:slug`, `GET /classifieds/my-ads`, `POST /classifieds/ads`, `PATCH /classifieds/ads/:id/status`
 
 Exact field names should match the models in each feature’s `data/models/` directory. Use the mock repositories and `MockDataCatalog` as the reference for expected domain shapes.
 
