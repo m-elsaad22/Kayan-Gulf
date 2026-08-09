@@ -73,14 +73,23 @@ lib/
 |---------|---------|
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | طبقات التطبيق، Repository pattern، Riverpod، الاختبارات |
 | [docs/API_SWITCH.md](docs/API_SWITCH.md) | التبديل من Mock إلى API حقيقي (`KAYAN_USE_MOCK_DATA`, `KAYAN_API_BASE_URL`) |
+| [docs/COMMERCIAL_LAUNCH.md](docs/COMMERCIAL_LAUNCH.md) | خطة التشغيل التجاري + Stack الـ Backend |
+| [docs/OTP_AND_PUSH.md](docs/OTP_AND_PUSH.md) | OTP (Unifonic/Twilio) + FCM push |
+| [backend/README.md](backend/README.md) | NestJS API (Auth, Catalog, Cart, Orders, Push) |
 | [RELEASES.md](RELEASES.md) | روابط تحميل إصدارات المراحل (ZIP + APK) |
 
 ### التبديل السريع إلى API حقيقي
 
 ```bash
+# Backend محلي (Phase 1)
+cd backend && npm install && npx prisma migrate dev && npm run seed && npm run start:dev
+
+# التطبيق ضد الـ API
+./scripts/run_api_mode.sh
+# أو:
 flutter run \
   --dart-define=KAYAN_USE_MOCK_DATA=false \
-  --dart-define=KAYAN_API_BASE_URL=https://your-api.example.com/v1
+  --dart-define=KAYAN_API_BASE_URL=http://127.0.0.1:3000/v1
 ```
 
 الوضع الافتراضي (`KAYAN_USE_MOCK_DATA=true`) يستخدم بيانات محلية عبر `MockDataCatalog` — لا حاجة لخادم خلفي للتطوير أو العروض التوضيحية.

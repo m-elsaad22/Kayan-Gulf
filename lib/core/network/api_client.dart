@@ -53,4 +53,31 @@ class ApiClient {
       throw ApiException.fromDio(error);
     }
   }
+
+  Future<Map<String, dynamic>> patchJson(
+    String path, {
+    Map<String, dynamic>? body,
+  }) async {
+    try {
+      final response = await _dio.patch<Map<String, dynamic>>(path, data: body);
+      return response.data ?? {};
+    } on DioException catch (error) {
+      throw ApiException.fromDio(error);
+    }
+  }
+
+  Future<Map<String, dynamic>> deleteJson(
+    String path, {
+    Map<String, dynamic>? body,
+  }) async {
+    try {
+      final response = await _dio.delete<Map<String, dynamic>>(
+        path,
+        data: body,
+      );
+      return response.data ?? {};
+    } on DioException catch (error) {
+      throw ApiException.fromDio(error);
+    }
+  }
 }

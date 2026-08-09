@@ -41,4 +41,45 @@ class MockServiceRepository implements ServiceRepository {
       orElse: () => MockDataCatalog.bookings.first,
     );
   }
+
+  @override
+  Future<BookingModel> createBooking({
+    required String serviceId,
+    required DateTime scheduledAt,
+    required String addressLine,
+    String? notes,
+  }) async {
+    await Future.delayed(const Duration(milliseconds: 400));
+    return BookingModel(
+      id: 'b-${DateTime.now().millisecondsSinceEpoch}',
+      bookingNumber: 'BK-${DateTime.now().millisecondsSinceEpoch.toString().substring(6)}',
+      serviceNameAr: 'خدمة محلية',
+      serviceNameEn: 'Local service',
+      serviceId: serviceId,
+      price: 120,
+      scheduledAt: scheduledAt,
+      status: 'CONFIRMED',
+      addressLine: addressLine,
+      notes: notes,
+    );
+  }
+
+  @override
+  Future<BookingModel> updateBookingStatus(String id, String status) async {
+    final booking = await getBooking(id);
+    return BookingModel(
+      id: booking.id,
+      bookingNumber: booking.bookingNumber,
+      serviceNameAr: booking.serviceNameAr,
+      serviceNameEn: booking.serviceNameEn,
+      serviceId: booking.serviceId,
+      price: booking.price,
+      currency: booking.currency,
+      scheduledAt: booking.scheduledAt,
+      status: status,
+      addressLine: booking.addressLine,
+      notes: booking.notes,
+      technician: booking.technician,
+    );
+  }
 }
