@@ -64,10 +64,13 @@ Alternatives considered: Firebase-only (limits commerce/orders), Laravel (fine i
 - Classifieds: categories, ads list/detail/featured, `my-ads`, create + status
 - Flutter repos extended with create booking / create ad / status updates
 
-### Phase 5 — Web admin (not in-app)
+### Phase 5 — Web admin (not in-app) ✅
 
-- Separate Next.js / Nest admin UI
-- Role-based access (replace device-local admin)
+- User `role`: `user` | `admin` (JWT + `AdminGuard`)
+- Admin APIs under `/v1/admin/*` (stats, users, products, orders, services, bookings, ads)
+- Next.js app in `/admin` → http://127.0.0.1:3001
+- Seed admin: `admin@kayan.app` / `kayan@admin`
+- In-app local CMS remains demo-only; production ops use the web panel
 
 ### Phase 6 — Store release
 

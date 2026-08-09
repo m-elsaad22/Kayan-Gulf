@@ -17,6 +17,7 @@ export type AuthResultDto = {
   refreshToken: string;
   isProfileComplete: boolean;
   isNewUser: boolean;
+  role: string;
 };
 
 @Injectable()
@@ -42,12 +43,12 @@ export class AuthService {
     let isNewUser = false;
     if (!user) {
       user = await this.prisma.user.create({
-        data: { phone, isProfileComplete: false },
+        data: { phone, isProfileComplete: false, role: 'user' },
       });
       isNewUser = true;
     }
 
-    return this.issueTokens(user.id, user.isProfileComplete, isNewUser);
+    return this.issueTokens(user, isNewUser);
   }
 
   async login(dto: LoginDto): Promise<AuthResultDto> {
@@ -61,7 +62,7 @@ export class AuthService {
     if (!ok) {
       throw new UnauthorizedException('invalid_credentials');
     }
-    return this.issueTokens(user.id, user.isProfileComplete, false);
+    return this.issueTokens(user, false);
   }
 
   async signUp(dto: SignUpDto): Promise<AuthResultDto> {
@@ -81,10 +82,11 @@ export class AuthService {
         phone: dto.phone,
         passwordHash,
         isProfileComplete: false,
+        role: 'user',
       },
     });
 
-    return this.issueTokens(user.id, false, true);
+    return this.issueTokens(user, true);
   }
 
   async refresh(refreshToken: string): Promise<AuthResultDto> {
@@ -98,11 +100,7 @@ export class AuthService {
     }
 
     await this.prisma.refreshToken.delete({ where: { id: stored.id } });
-    return this.issueTokens(
-      stored.user.id,
-      stored.user.isProfileComplete,
-      false,
-    );
+    return this.issueTokens(stored.user, false);
   }
 
   async logout(refreshToken?: string): Promise<{ ok: true }> {
@@ -114,15 +112,18 @@ export class AuthService {
   }
 
   private async issueTokens(
-    userId: string,
-    isProfileComplete: boolean,
+    user: {
+      id: string;
+      isProfileComplete: boolean;
+      role: string;
+    },
     isNewUser: boolean,
   ): Promise<AuthResultDto> {
     const accessTtl = this.config.get<string>('JWT_ACCESS_TTL') ?? '15m';
     const refreshTtl = this.config.get<string>('JWT_REFRESH_TTL') ?? '30d';
 
     const accessToken = await this.jwt.signAsync(
-      { sub: userId },
+      { sub: user.id, role: user.role },
       {
         secret: this.config.getOrThrow<string>('JWT_ACCESS_SECRET'),
         expiresIn: accessTtl as `${number}${'s' | 'm' | 'h' | 'd'}`,
@@ -137,17 +138,18 @@ export class AuthService {
     await this.prisma.refreshToken.create({
       data: {
         token: this.hashToken(refreshToken),
-        userId,
+        userId: user.id,
         expiresAt,
       },
     });
 
     return {
-      userId,
+      userId: user.id,
       accessToken,
       refreshToken,
-      isProfileComplete,
+      isProfileComplete: user.isProfileComplete,
       isNewUser,
+      role: user.role,
     };
   }
 

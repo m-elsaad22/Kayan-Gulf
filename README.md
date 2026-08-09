@@ -75,7 +75,8 @@ lib/
 | [docs/API_SWITCH.md](docs/API_SWITCH.md) | التبديل من Mock إلى API حقيقي (`KAYAN_USE_MOCK_DATA`, `KAYAN_API_BASE_URL`) |
 | [docs/COMMERCIAL_LAUNCH.md](docs/COMMERCIAL_LAUNCH.md) | خطة التشغيل التجاري + Stack الـ Backend |
 | [docs/OTP_AND_PUSH.md](docs/OTP_AND_PUSH.md) | OTP (Unifonic/Twilio) + FCM push |
-| [backend/README.md](backend/README.md) | NestJS API (Auth, Catalog, Cart, Orders, Push) |
+| [backend/README.md](backend/README.md) | NestJS API (Auth, Catalog, Cart, Orders, Push, Admin) |
+| [admin/README.md](admin/README.md) | لوحة إدارة ويب (Next.js) — Phase 5 |
 | [RELEASES.md](RELEASES.md) | روابط تحميل إصدارات المراحل (ZIP + APK) |
 
 ### التبديل السريع إلى API حقيقي
@@ -129,7 +130,8 @@ flutter run \
 | 1 | افتح **الملف الشخصي** (Profile) |
 | 2 | انقر **5 مرات بسرعة** على نص **رقم الإصدار** في أسفل الشاشة |
 | 3 | ستُفتح شاشة تسجيل الدخول للمشرف |
-| 4 | أدخل بيانات الدخول: **اسم المستخدم:** `admin` — **كلمة المرور:** `kayan@admin` |
+| 4 | أدخل بيانات الدخول: **اسم المستخدم:** `admin` — **كلمة المرور:** `kayan@admin` (عرض تجريبي محلي فقط) |
+| — | للإنتاج استخدم لوحة الويب: [admin/README.md](admin/README.md) → `admin@kayan.app` / `kayan@admin` |
 
 **English:** Profile → tap the **version text 5 times quickly** → Admin Login → `admin` / `kayan@admin`
 

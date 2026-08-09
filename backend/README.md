@@ -22,6 +22,9 @@ NestJS + Prisma REST API matching Flutter remote repositories:
 | `GET /v1/services…` | `RemoteServiceRepository` |
 | `GET/POST /v1/bookings` | bookings lifecycle |
 | `GET/POST /v1/classifieds…` | `RemoteClassifiedsRepository` |
+| `GET /v1/admin/*` | Web admin (role=`admin` required) |
+
+Admin seed: `admin@kayan.app` / `kayan@admin` — UI in [`/admin`](../admin/README.md).
 
 OTP: set `OTP_PROVIDER=unifonic|twilio|dev` — see [docs/OTP_AND_PUSH.md](../docs/OTP_AND_PUSH.md).
 

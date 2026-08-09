@@ -24,6 +24,7 @@ async function main() {
   await prisma.user.deleteMany();
 
   const passwordHash = await bcrypt.hash('password123', 10);
+  const adminHash = await bcrypt.hash('kayan@admin', 10);
   const demoUser = await prisma.user.create({
     data: {
       email: 'demo@kayan.app',
@@ -31,6 +32,18 @@ async function main() {
       name: 'Demo User',
       passwordHash,
       isProfileComplete: true,
+      role: 'user',
+    },
+  });
+
+  await prisma.user.create({
+    data: {
+      email: 'admin@kayan.app',
+      phone: '+966500000000',
+      name: 'KAYAN Admin',
+      passwordHash: adminHash,
+      isProfileComplete: true,
+      role: 'admin',
     },
   });
 
@@ -474,7 +487,11 @@ async function main() {
   });
 
   // eslint-disable-next-line no-console
-  console.log('Seed complete: demo@kayan.app / password123');
+  console.log('Seed complete:');
+  // eslint-disable-next-line no-console
+  console.log('  user:  demo@kayan.app / password123');
+  // eslint-disable-next-line no-console
+  console.log('  admin: admin@kayan.app / kayan@admin');
 }
 
 main()

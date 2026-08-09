@@ -23,7 +23,8 @@ Do **not** commit `.android-sdk/` or `dist/` (local build artifacts).
 |---------|-----------|--------------|
 | Flutter app (web) | **Yes** (recommended) | `flutter run -d chrome --web-port=8080 --web-browser-flag="--no-sandbox"` |
 | Flutter app (APK) | Optional | `flutter build apk --release --android-skip-build-dependency-validation` with `ANDROID_HOME=/workspace/.android-sdk` |
-| NestJS API (`backend/`) | Optional (Phase 1 commercial) | `cd backend && npm install && npx prisma migrate dev && npm run seed && npm run start:dev` → `http://127.0.0.1:3000/v1` |
+| NestJS API (`backend/`) | Optional (commercial) | `cd backend && npm install && npx prisma migrate dev && npm run seed && npm run start:dev` → `http://127.0.0.1:3000/v1` |
+| Web admin (`admin/`) | Optional (Phase 5) | `cd admin && npm install && npm run dev` → `http://127.0.0.1:3001` (`admin@kayan.app` / `kayan@admin`) |
 | Android emulator | No | **No KVM** in Cloud VM — use Chrome/web |
 | Firebase | No | Mock providers; Firebase not initialized in `main.dart` |
 
