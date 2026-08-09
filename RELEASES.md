@@ -58,3 +58,7 @@ chmod +x scripts/package_phase_zip.sh
 الملف الناتج: `dist/kayan-phase-4-shop-1.0.0.zip`
 
 أو عبر GitHub Actions: workflow **Phase Release ZIP** (يدوي).
+
+## Google Play (AAB)
+
+للإصدار التجاري على المتجر استخدم `./scripts/build_play_bundle.sh` (يتطلب keystore و`KAYAN_API_BASE_URL`). التفاصيل: [docs/PLAY_STORE.md](docs/PLAY_STORE.md). الـ AAB لا يُرفع كـ ZIP مرحلة؛ يُرفع من Play Console أو من artifact لـ workflow **Build Play Store AAB**.

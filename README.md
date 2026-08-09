@@ -75,6 +75,9 @@ lib/
 | [docs/API_SWITCH.md](docs/API_SWITCH.md) | التبديل من Mock إلى API حقيقي (`KAYAN_USE_MOCK_DATA`, `KAYAN_API_BASE_URL`) |
 | [docs/COMMERCIAL_LAUNCH.md](docs/COMMERCIAL_LAUNCH.md) | خطة التشغيل التجاري + Stack الـ Backend |
 | [docs/OTP_AND_PUSH.md](docs/OTP_AND_PUSH.md) | OTP (Unifonic/Twilio) + FCM push |
+| [docs/WEB_ADMIN.md](docs/WEB_ADMIN.md) | لوحة الإدارة (API + Next.js) |
+| [docs/PLAY_STORE.md](docs/PLAY_STORE.md) | توقيع Android + AAB + قائمة Play (AR/EN) — Phase 6 |
+| [docs/IOS_RELEASE.md](docs/IOS_RELEASE.md) | ملاحظات TestFlight / App Store لاحقاً |
 | [backend/README.md](backend/README.md) | NestJS API (Auth, Catalog, Cart, Orders, Push, Admin) |
 | [admin/README.md](admin/README.md) | لوحة إدارة ويب (Next.js) — Phase 5 |
 | [RELEASES.md](RELEASES.md) | روابط تحميل إصدارات المراحل (ZIP + APK) |

@@ -72,12 +72,19 @@ Alternatives considered: Firebase-only (limits commerce/orders), Laravel (fine i
 - Seed admin: `admin@kayan.app` / `kayan@admin`
 - In-app local CMS remains demo-only; production ops use the web panel
 
-### Phase 6 — Store release
+### Phase 6 — Store release ✅
 
-- Google Play (AAB, signing, store listing AR/EN)
-- iOS later (Apple Developer, TestFlight)
+- Google Play AAB pipeline: `scripts/create_upload_keystore.sh`, `scripts/build_play_bundle.sh`, `scripts/verify_release_config.sh`
+- Signing via `android/key.properties` (example tracked; real file gitignored) + `secrets/*.jks`
+- `android/app/build.gradle`: Play-standard keystore props; `versionCode` / `versionName` from Flutter
+- Docs: `docs/PLAY_STORE.md` (listing AR/EN, Data safety, checklist), `docs/IOS_RELEASE.md` (TestFlight later)
+- Optional CI: `.github/workflows/build_play_aab.yml` (`workflow_dispatch` + signing secrets)
 
 ---
+
+## Commercial MVP complete
+
+Phases 1–6 cover API, commerce, OTP/push, services/classifieds, web admin, and Play release tooling. Remaining go-live work is operational (host API, real OTP/payment keys, Play Console submit) — not further monorepo phases unless you extend scope (deep iOS, live Tap/HyperPay, etc.).
 
 ## Phase 1–2 runbook
 

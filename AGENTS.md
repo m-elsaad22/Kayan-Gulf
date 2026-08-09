@@ -60,6 +60,17 @@ flutter run -d chrome --web-port=8080 --web-browser-flag="--no-sandbox"
 # Output: dist/kayan-phase-4-shop-1.0.0.zip
 ```
 
+**Play Store AAB** (requires local keystore — see `docs/PLAY_STORE.md`):
+
+```bash
+./scripts/create_upload_keystore.sh
+cp android/key.properties.example android/key.properties  # fill secrets
+export KAYAN_API_BASE_URL=https://api.your-domain.com/v1
+./scripts/verify_release_config.sh
+./scripts/build_play_bundle.sh
+# Output: dist/kayan-play-YYYYMMDD.aab
+```
+
 See `RELEASES.md` for GitHub download links.
 
 ### Known gotchas

@@ -12,6 +12,7 @@ build/
 
 # Android
 android/local.properties
+android/key.properties
 android/.gradle/
 android/captures/
 android/app/google-services.json
@@ -20,6 +21,7 @@ android/app/src/main/AndroidManifest.xml.bak
 *.jks
 *.apk
 *.aab
+secrets/
 
 # iOS
 ios/Flutter/Flutter.framework

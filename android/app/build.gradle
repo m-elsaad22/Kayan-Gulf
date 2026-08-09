@@ -12,10 +12,21 @@ if (localPropertiesFile.exists()) {
     }
 }
 
-def hasReleaseSigning = localProperties.getProperty("storeFile") &&
-        localProperties.getProperty("storePassword") &&
-        localProperties.getProperty("keyAlias") &&
-        localProperties.getProperty("keyPassword")
+// Prefer android/key.properties (Play Store standard); fall back to local.properties.
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file("key.properties")
+if (keystorePropertiesFile.exists()) {
+    keystorePropertiesFile.withReader("UTF-8") { reader ->
+        keystoreProperties.load(reader)
+    }
+} else {
+    keystoreProperties = localProperties
+}
+
+def hasReleaseSigning = keystoreProperties.getProperty("storeFile") &&
+        keystoreProperties.getProperty("storePassword") &&
+        keystoreProperties.getProperty("keyAlias") &&
+        keystoreProperties.getProperty("keyPassword")
 
 android {
     namespace "sa.kayan.app"
@@ -39,32 +50,27 @@ android {
         applicationId "sa.kayan.app"
         minSdkVersion flutter.minSdkVersion
         targetSdk 36
-        versionCode localProperties.getProperty("flutter.versionCode")?.toInteger() ?: 1
-        versionName localProperties.getProperty("flutter.versionName") ?: "1.0.0"
+        // Prefer Flutter --build-name / --build-number (from pubspec) over local.properties.
+        versionCode flutter.versionCode
+        versionName flutter.versionName
         multiDexEnabled true
         manifestPlaceholders = [
             MAPS_API_KEY: localProperties.getProperty("MAPS_API_KEY") ?: ""
         ]
     }
 
-    // ── Signing Config ────────────────────────────────────────
-    // للنشر على Google Play اتبع الخطوات التالية:
-    //   1. أنشئ keystore:
-    //      keytool -genkey -v -keystore kayan-release.jks -keyalg RSA -keysize 2048 -validity 10000 -alias kayan
-    //   2. أضف في local.properties (لا ترفعه لـ Git):
-    //      storeFile=../kayan-release.jks
-    //      storePassword=YOUR_STORE_PASSWORD
-    //      keyAlias=kayan
-    //      keyPassword=YOUR_KEY_PASSWORD
-    //   3. The release build automatically uses these values when present.
-    //
+    // ── Signing Config (Google Play) ──────────────────────────
+    // 1. ./scripts/create_upload_keystore.sh
+    // 2. cp android/key.properties.example android/key.properties  (fill secrets)
+    // 3. ./scripts/build_play_bundle.sh
+    // See docs/PLAY_STORE.md
     signingConfigs {
         release {
             if (hasReleaseSigning) {
-                storeFile     file(localProperties.getProperty("storeFile"))
-                storePassword localProperties.getProperty("storePassword")
-                keyAlias      localProperties.getProperty("keyAlias")
-                keyPassword   localProperties.getProperty("keyPassword")
+                storeFile     file(keystoreProperties.getProperty("storeFile"))
+                storePassword keystoreProperties.getProperty("storePassword")
+                keyAlias      keystoreProperties.getProperty("keyAlias")
+                keyPassword   keystoreProperties.getProperty("keyPassword")
             }
         }
     }

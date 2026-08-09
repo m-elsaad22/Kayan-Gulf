@@ -1,0 +1,90 @@
+name: Build Play Store AAB
+
+# Signed AAB for Google Play. Requires repository secrets (see docs/PLAY_STORE.md).
+on:
+  workflow_dispatch:
+    inputs:
+      api_base_url:
+        description: "Override KAYAN_API_BASE_URL (optional; falls back to secret)"
+        required: false
+        type: string
+      enable_firebase:
+        description: "KAYAN_ENABLE_FIREBASE"
+        required: false
+        default: "false"
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  build-aab:
+    name: Build signed release AAB
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Require signing secrets
+        env:
+          KEYSTORE_B64: ${{ secrets.KAYAN_UPLOAD_KEYSTORE_BASE64 }}
+          KEY_PROPS: ${{ secrets.KAYAN_KEY_PROPERTIES }}
+          API_URL_SECRET: ${{ secrets.KAYAN_API_BASE_URL }}
+          API_URL_INPUT: ${{ inputs.api_base_url }}
+        run: |
+          if [ -z "$KEYSTORE_B64" ] || [ -z "$KEY_PROPS" ]; then
+            echo "Missing KAYAN_UPLOAD_KEYSTORE_BASE64 or KAYAN_KEY_PROPERTIES secrets." >&2
+            exit 1
+          fi
+          API_URL="${API_URL_INPUT:-$API_URL_SECRET}"
+          if [ -z "$API_URL" ]; then
+            echo "Set workflow input api_base_url or secret KAYAN_API_BASE_URL." >&2
+            exit 1
+          fi
+          echo "API_URL=$API_URL" >> "$GITHUB_ENV"
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install upload keystore + key.properties
+        env:
+          KEYSTORE_B64: ${{ secrets.KAYAN_UPLOAD_KEYSTORE_BASE64 }}
+          KEY_PROPS: ${{ secrets.KAYAN_KEY_PROPERTIES }}
+        run: |
+          mkdir -p secrets
+          echo "$KEYSTORE_B64" | base64 -d > secrets/kayan-upload.jks
+          # CI uses a path relative to android/app (same as example).
+          printf '%s\n' "$KEY_PROPS" > android/key.properties
+          if ! grep -q '^storeFile=' android/key.properties; then
+            echo 'storeFile=../../secrets/kayan-upload.jks' >> android/key.properties
+          fi
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build App Bundle
+        env:
+          KAYAN_API_BASE_URL: ${{ env.API_URL }}
+          KAYAN_ENABLE_FIREBASE: ${{ inputs.enable_firebase }}
+        run: |
+          chmod +x scripts/build_play_bundle.sh
+          ./scripts/build_play_bundle.sh
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kayan-play-aab
+          path: dist/kayan-play-*.aab
+          if-no-files-found: error
+          retention-days: 30
