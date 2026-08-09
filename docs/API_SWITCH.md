@@ -80,6 +80,7 @@ Add the same `--dart-define` flags to your build step, for example:
 | `authRepositoryProvider` | `MockAuthRepository` | `RemoteAuthRepository` |
 | `cartRepositoryProvider` | `MockCartRepository` | `RemoteCartRepository` |
 | `orderRepositoryProvider` | `MockOrderRepository` | `RemoteOrderRepository` |
+| `deviceRepositoryProvider` | `MockDeviceRepository` | `RemoteDeviceRepository` |
 | `serviceRepositoryProvider` | `MockServiceRepository` | `RemoteServiceRepository` |
 | `classifiedsRepositoryProvider` | `MockClassifiedsRepository` | `RemoteClassifiedsRepository` |
 

@@ -22,6 +22,21 @@ model User {
   cart               Cart?
   orders             Order[]
   payments           Payment[]
+  deviceTokens       DeviceToken[]
+}
+
+model DeviceToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String
+  platform  String   @default("android") // android | ios | web
+  locale    String?  // ar | en
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, token])
+  @@index([token])
 }
 
 model RefreshToken {

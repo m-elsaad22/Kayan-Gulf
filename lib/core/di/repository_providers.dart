@@ -17,6 +17,9 @@ import '../../features/ecommerce/orders/data/repositories/remote_order_repositor
 import '../../features/ecommerce/product/data/repositories/mock_product_repository.dart';
 import '../../features/ecommerce/product/data/repositories/product_repository.dart';
 import '../../features/ecommerce/product/data/repositories/remote_product_repository.dart';
+import '../../features/notifications/data/repositories/device_repository.dart';
+import '../../features/notifications/data/repositories/mock_device_repository.dart';
+import '../../features/notifications/data/repositories/remote_device_repository.dart';
 import '../../features/services/data/repositories/mock_service_repository.dart';
 import '../../features/services/data/repositories/remote_service_repository.dart';
 import '../../features/services/data/repositories/service_repository.dart';
@@ -59,6 +62,13 @@ final orderRepositoryProvider = Provider<OrderRepository>((ref) {
     return MockOrderRepository();
   }
   return RemoteOrderRepository(ref.watch(apiClientProvider));
+});
+
+final deviceRepositoryProvider = Provider<DeviceRepository>((ref) {
+  if (AppConfig.useMockData) {
+    return MockDeviceRepository();
+  }
+  return RemoteDeviceRepository(ref.watch(apiClientProvider));
 });
 
 final serviceRepositoryProvider = Provider<ServiceRepository>((ref) {

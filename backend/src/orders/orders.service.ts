@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { CartService } from '../cart/cart.service';
@@ -9,13 +10,17 @@ import {
   computeSummary,
   statusLabels,
 } from '../common/pricing';
+import { NotificationsService } from '../notifications/notifications.service';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class OrdersService {
+  private readonly logger = new Logger(OrdersService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly cart: CartService,
+    private readonly notifications: NotificationsService,
   ) {}
 
   async create(
@@ -110,6 +115,16 @@ export class OrdersService {
 
       return created;
     });
+
+    void this.notifications
+      .pushToUser(userId, {
+        title: 'تم استلام طلبك',
+        body: `طلب ${order.id} قيد المعالجة`,
+        data: { orderId: order.id, type: 'order_created' },
+      })
+      .catch((err) =>
+        this.logger.warn(`order push failed for ${order.id}: ${err}`),
+      );
 
     return this.toJson(order);
   }

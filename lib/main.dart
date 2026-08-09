@@ -10,10 +10,12 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import 'app.dart';
 import 'core/di/providers.dart';
+import 'core/firebase/firebase_bootstrap.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/kayan_motion.dart';
 import 'core/services/admin_data_service.dart';
 import 'features/super_admin/services/design_engine_service.dart';
+import 'shared/services/analytics_service.dart';
 import 'shared/services/local_storage_service.dart';
 import 'shared/services/notification_service.dart';
 
@@ -32,6 +34,8 @@ void main() {
     await LocalStorageService.initialize();
     await AdminDataService.instance.initialize();
     await DesignEngineService.instance.initialize();
+    await FirebaseBootstrap.initialize();
+    await AnalyticsService.initialize();
     await NotificationService.initialize();
 
     runApp(

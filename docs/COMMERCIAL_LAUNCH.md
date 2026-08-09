@@ -6,7 +6,7 @@ Assumptions for Phase 1 (fill these when you have them):
 |------|-----------------|-------|
 | Primary market | **Saudi Arabia** | SAR, RTL, Gulf cities in seed |
 | Domain | TBD → local `http://127.0.0.1:3000/v1` | Point DNS later to API host |
-| OTP | **Dev stub** + Unifonic-ready adapter | Swap env to Unifonic/Twilio/Firebase Auth |
+| OTP | **dev** / Unifonic / Twilio | Set `OTP_PROVIDER` + credentials |
 | Payments | Deferred (Phase 2) | Recommend **Tap** or **HyperPay** for KSA |
 | Server / VPS | Not required for Phase 1 | Docker Compose provided for deploy |
 
@@ -50,11 +50,12 @@ Alternatives considered: Firebase-only (limits commerce/orders), Laravel (fine i
   - COD / mock card → immediate; others → `redirectUrl` + webhook
 - Flutter: `CartRepository` + `OrderRepository` (mock + remote)
 
-### Phase 3 — Real OTP + notifications
+### Phase 3 — Real OTP + notifications ✅
 
-- Production SMS (Unifonic recommended for GCC)
-- Firebase Cloud Messaging + Analytics
-- Optional Firebase Auth phone as alternative
+- OTP providers: `dev` | `unifonic` | `twilio` (rate limit + cooldown)
+- Device token API + FCM push (`firebase-admin` or log mode)
+- Flutter: optional Firebase bootstrap (`KAYAN_ENABLE_FIREBASE`), Analytics, FCM sync after login
+- Docs: `docs/OTP_AND_PUSH.md`, updated `lib/core/config/README_FIREBASE.md`
 
 ### Phase 4 — Services + Classifieds APIs
 

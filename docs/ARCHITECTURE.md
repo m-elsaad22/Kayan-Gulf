@@ -35,6 +35,7 @@ All network-backed features expose an abstract repository and two implementation
 | Auth | `AuthRepository` | `MockAuthRepository` | `RemoteAuthRepository` |
 | Cart | `CartRepository` | `MockCartRepository` | `RemoteCartRepository` |
 | Orders | `OrderRepository` | `MockOrderRepository` | `RemoteOrderRepository` |
+| Devices | `DeviceRepository` | `MockDeviceRepository` | `RemoteDeviceRepository` |
 | Services | `ServiceRepository` | `MockServiceRepository` | `RemoteServiceRepository` |
 | Classifieds | `ClassifiedsRepository` | `MockClassifiedsRepository` | `RemoteClassifiedsRepository` |
 

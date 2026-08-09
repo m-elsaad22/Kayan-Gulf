@@ -1,22 +1,39 @@
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
+import { DevOtpProvider } from './otp/dev-otp.provider';
+import { OtpSmsProvider } from './otp/otp-provider';
+import { TwilioOtpProvider } from './otp/twilio-otp.provider';
+import { UnifonicOtpProvider } from './otp/unifonic-otp.provider';
 
 /**
- * OTP provider abstraction.
- * Phase 1: `dev` (logs code; accepts any 6 digits unless OTP_STRICT=true).
- * Phase 3: wire Unifonic / Twilio via OTP_PROVIDER.
+ * OTP orchestration.
+ * Providers: `dev` | `unifonic` | `twilio`
+ *
+ * - `dev`: logs SMS; accepts any 6-digit code unless OTP_STRICT=true
+ * - production providers: always verify against stored code
  */
 @Injectable()
 export class OtpService {
   private readonly logger = new Logger(OtpService.name);
+  private readonly provider: OtpSmsProvider;
 
   constructor(
     private readonly prisma: PrismaService,
     private readonly config: ConfigService,
-  ) {}
+  ) {
+    this.provider = this.buildProvider();
+    this.logger.log(`OTP provider: ${this.provider.name}`);
+  }
 
-  async send(phone: string): Promise<void> {
+  async send(phone: string): Promise<{ ok: true; provider: string }> {
+    await this.enforceRateLimit(phone);
+
     const code = this.generateCode();
     const ttl = Number(this.config.get('OTP_TTL_MINUTES') ?? 10);
     const expiresAt = new Date(Date.now() + ttl * 60_000);
@@ -25,34 +42,39 @@ export class OtpService {
       data: { phone, code, expiresAt },
     });
 
-    const provider = this.config.get<string>('OTP_PROVIDER') ?? 'dev';
-    if (provider === 'dev') {
-      this.logger.log(`[dev OTP] phone=${phone} code=${code}`);
-      return;
+    const message =
+      this.config.get<string>('OTP_MESSAGE_TEMPLATE')?.replace('{code}', code) ??
+      `رمز كيان: ${code}\nKAYAN code: ${code}`;
+
+    try {
+      await this.provider.sendSms(phone, message);
+    } catch (err) {
+      this.logger.error(`SMS send failed via ${this.provider.name}`, err);
+      throw new HttpException(
+        {
+          statusCode: HttpStatus.BAD_GATEWAY,
+          message: 'otp_send_failed',
+          provider: this.provider.name,
+        },
+        HttpStatus.BAD_GATEWAY,
+      );
     }
 
-    // Placeholders for Phase 3 — keep interface stable.
-    if (provider === 'unifonic') {
-      this.logger.warn(
-        'OTP_PROVIDER=unifonic configured but SMS send not implemented yet; code stored only.',
-      );
-      return;
-    }
-    if (provider === 'twilio') {
-      this.logger.warn(
-        'OTP_PROVIDER=twilio configured but SMS send not implemented yet; code stored only.',
-      );
-      return;
-    }
-
-    throw new Error(`Unsupported OTP_PROVIDER: ${provider}`);
+    return { ok: true, provider: this.provider.name };
   }
 
   async verify(phone: string, code: string): Promise<boolean> {
-    const strict = (this.config.get<string>('OTP_STRICT') ?? 'false') === 'true';
-    const provider = this.config.get<string>('OTP_PROVIDER') ?? 'dev';
+    const providerName = this.provider.name;
+    const strict =
+      (this.config.get<string>('OTP_STRICT') ??
+        (providerName === 'dev' ? 'false' : 'true')) === 'true';
 
-    if (!strict && provider === 'dev' && /^\d{6}$/.test(code) && code !== '000000') {
+    if (
+      !strict &&
+      providerName === 'dev' &&
+      /^\d{6}$/.test(code) &&
+      code !== '000000'
+    ) {
       return true;
     }
 
@@ -73,6 +95,57 @@ export class OtpService {
       data: { consumed: true },
     });
     return true;
+  }
+
+  private async enforceRateLimit(phone: string): Promise<void> {
+    const maxPerHour = Number(this.config.get('OTP_MAX_PER_HOUR') ?? 5);
+    const since = new Date(Date.now() - 60 * 60_000);
+    const count = await this.prisma.otpCode.count({
+      where: { phone, createdAt: { gte: since } },
+    });
+    if (count >= maxPerHour) {
+      throw new HttpException(
+        { statusCode: HttpStatus.TOO_MANY_REQUESTS, message: 'otp_rate_limited' },
+        HttpStatus.TOO_MANY_REQUESTS,
+      );
+    }
+
+    const cooldownSec = Number(this.config.get('OTP_COOLDOWN_SECONDS') ?? 30);
+    const latest = await this.prisma.otpCode.findFirst({
+      where: { phone },
+      orderBy: { createdAt: 'desc' },
+    });
+    if (
+      latest &&
+      Date.now() - latest.createdAt.getTime() < cooldownSec * 1000
+    ) {
+      throw new HttpException(
+        { statusCode: HttpStatus.TOO_MANY_REQUESTS, message: 'otp_cooldown' },
+        HttpStatus.TOO_MANY_REQUESTS,
+      );
+    }
+  }
+
+  private buildProvider(): OtpSmsProvider {
+    const name = (this.config.get<string>('OTP_PROVIDER') ?? 'dev').toLowerCase();
+    switch (name) {
+      case 'unifonic':
+        return new UnifonicOtpProvider(
+          this.config.get<string>('UNIFONIC_APP_SID') ?? '',
+          this.config.get<string>('UNIFONIC_SENDER_ID') ?? 'KAYAN',
+          this.config.get<string>('UNIFONIC_BASE_URL') ??
+            'https://el.cloud.unifonic.com',
+        );
+      case 'twilio':
+        return new TwilioOtpProvider(
+          this.config.get<string>('TWILIO_ACCOUNT_SID') ?? '',
+          this.config.get<string>('TWILIO_AUTH_TOKEN') ?? '',
+          this.config.get<string>('TWILIO_FROM_NUMBER') ?? '',
+        );
+      case 'dev':
+      default:
+        return new DevOtpProvider();
+    }
   }
 
   private generateCode(): string {

@@ -74,7 +74,8 @@ lib/
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | طبقات التطبيق، Repository pattern، Riverpod، الاختبارات |
 | [docs/API_SWITCH.md](docs/API_SWITCH.md) | التبديل من Mock إلى API حقيقي (`KAYAN_USE_MOCK_DATA`, `KAYAN_API_BASE_URL`) |
 | [docs/COMMERCIAL_LAUNCH.md](docs/COMMERCIAL_LAUNCH.md) | خطة التشغيل التجاري + Stack الـ Backend |
-| [backend/README.md](backend/README.md) | NestJS API (Phase 1: Auth + Home + Products) |
+| [docs/OTP_AND_PUSH.md](docs/OTP_AND_PUSH.md) | OTP (Unifonic/Twilio) + FCM push |
+| [backend/README.md](backend/README.md) | NestJS API (Auth, Catalog, Cart, Orders, Push) |
 | [RELEASES.md](RELEASES.md) | روابط تحميل إصدارات المراحل (ZIP + APK) |
 
 ### التبديل السريع إلى API حقيقي

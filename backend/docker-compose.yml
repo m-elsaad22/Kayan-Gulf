@@ -24,6 +24,9 @@ services:
       JWT_REFRESH_TTL: 30d
       OTP_PROVIDER: dev
       OTP_STRICT: 'false'
+      OTP_MAX_PER_HOUR: '5'
+      OTP_COOLDOWN_SECONDS: '30'
+      # FIREBASE_SERVICE_ACCOUNT_PATH: /app/secrets/firebase-service-account.json
     depends_on:
       - db
 

@@ -10,6 +10,7 @@ async function main() {
   await prisma.cartItem.deleteMany();
   await prisma.cart.deleteMany();
   await prisma.address.deleteMany();
+  await prisma.deviceToken.deleteMany();
   await prisma.refreshToken.deleteMany();
   await prisma.otpCode.deleteMany();
   await prisma.productImage.deleteMany();

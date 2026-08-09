@@ -28,9 +28,8 @@ export class AuthService {
     private readonly otp: OtpService,
   ) {}
 
-  async sendOtp(phone: string): Promise<{ ok: true }> {
-    await this.otp.send(phone);
-    return { ok: true };
+  async sendOtp(phone: string): Promise<{ ok: true; provider: string }> {
+    return this.otp.send(phone);
   }
 
   async verifyOtp(phone: string, code: string): Promise<AuthResultDto> {
