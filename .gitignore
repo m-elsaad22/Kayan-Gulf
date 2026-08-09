@@ -57,3 +57,21 @@ lcov.info
 *.ipa
 *.dSYM.zip
 *.dSYM
+dist/
+.android-sdk/
+
+# Backend local DB / generated
+backend/prisma/*.db
+backend/prisma/*.db-journal
+backend/shadow.db
+backend/generated/
+
+# Admin (Next.js)
+admin/node_modules/
+admin/.next/
+admin/out/
+admin/.env.local
+
+backend/shadow.db
+backend/*.db
+!backend/prisma/migrations/
