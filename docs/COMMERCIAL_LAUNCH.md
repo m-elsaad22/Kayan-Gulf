@@ -1,0 +1,123 @@
+# KAYAN — Commercial Launch Plan (MVP)
+
+Assumptions for Phase 1 (fill these when you have them):
+
+| Item | Assumed default | Notes |
+|------|-----------------|-------|
+| Primary market | **Saudi Arabia** | SAR, RTL, Gulf cities in seed |
+| Domain | TBD → local `http://127.0.0.1:3000/v1` | Point DNS later to API host |
+| OTP | **Dev stub** + Unifonic-ready adapter | Swap env to Unifonic/Twilio/Firebase Auth |
+| Payments | Deferred (Phase 2) | Recommend **Tap** or **HyperPay** for KSA |
+| Server / VPS | Not required for Phase 1 | Docker Compose provided for deploy |
+
+---
+
+## Recommended backend stack
+
+| Layer | Choice | Why |
+|-------|--------|-----|
+| API | **NestJS** (TypeScript) | Matches modular Flutter features; strong DI; JWT ecosystem |
+| ORM | **Prisma** | Fast schema iteration; SQLite for local, PostgreSQL for prod |
+| Auth | JWT access + refresh | Matches `AuthInterceptor` Bearer flow |
+| OTP | Provider interface | `OTP_PROVIDER=dev\|unifonic\|twilio` |
+| Deploy | Docker Compose (API + Postgres) | One-command staging/prod |
+
+Alternatives considered: Firebase-only (limits commerce/orders), Laravel (fine if team is PHP-first). NestJS is the default for this monorepo.
+
+---
+
+## Execution order (MVP commercial)
+
+### Phase 1 — Core API + app wiring ✅ (this PR)
+
+1. NestJS API under `/backend` with global prefix `/v1`
+2. Endpoints matching Flutter remote repos:
+   - Auth: OTP send/verify, email login/signup, refresh, logout
+   - Home: `GET /home`
+   - Products: `GET /products`, `GET /products/:slug`
+3. Seed catalog compatible with Dart `fromJson` shapes
+4. Run Flutter with:
+   ```bash
+   --dart-define=KAYAN_USE_MOCK_DATA=false
+   --dart-define=KAYAN_API_BASE_URL=http://127.0.0.1:3000/v1
+   ```
+
+### Phase 2 — Commerce checkout ✅
+
+- Cart / orders / addresses API (`/v1/cart`, `/v1/orders`, `/v1/addresses`)
+- KSA VAT 15% + free shipping ≥ 200 SAR; coupons `KAYAN10` / `KAYAN50`
+- Payment adapter stub: `PAYMENT_PROVIDER=mock|tap|hyperpay|paymob`
+  - COD / mock card → immediate; others → `redirectUrl` + webhook
+- Flutter: `CartRepository` + `OrderRepository` (mock + remote)
+
+### Phase 3 — Real OTP + notifications
+
+- Production SMS (Unifonic recommended for GCC)
+- Firebase Cloud Messaging + Analytics
+- Optional Firebase Auth phone as alternative
+
+### Phase 4 — Services + Classifieds APIs
+
+- Wire existing remote repos for services & ads
+- Booking + ad lifecycle
+
+### Phase 5 — Web admin (not in-app)
+
+- Separate Next.js / Nest admin UI
+- Role-based access (replace device-local admin)
+
+### Phase 6 — Store release
+
+- Google Play (AAB, signing, store listing AR/EN)
+- iOS later (Apple Developer, TestFlight)
+
+---
+
+## Phase 1–2 runbook
+
+```bash
+# Backend
+cd backend
+cp .env.example .env
+npm install
+npx prisma migrate dev
+npm run seed
+npm run start:dev
+# → http://127.0.0.1:3000/v1/health
+
+# Flutter against local API
+./scripts/run_api_mode.sh
+# or
+flutter run -d chrome --web-port=8080 \
+  --dart-define=KAYAN_USE_MOCK_DATA=false \
+  --dart-define=KAYAN_API_BASE_URL=http://127.0.0.1:3000/v1
+```
+
+### Phase 2 checkout smoke (curl)
+
+```bash
+TOKEN=$(curl -s -X POST http://127.0.0.1:3000/v1/auth/login \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"demo@kayan.app","password":"password123"}' | jq -r .accessToken)
+PRODUCT=$(curl -s http://127.0.0.1:3000/v1/products | jq -r '.items[0].id')
+ADDR=$(curl -s http://127.0.0.1:3000/v1/addresses -H "Authorization: Bearer $TOKEN" | jq -r '.items[0].id')
+curl -s -X POST http://127.0.0.1:3000/v1/cart/items \
+  -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+  -d "{\"productId\":\"$PRODUCT\",\"quantity\":1}"
+ORDER=$(curl -s -X POST http://127.0.0.1:3000/v1/orders \
+  -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+  -d "{\"addressId\":\"$ADDR\",\"paymentMethod\":\"cod\",\"agreeToTerms\":true}" | jq -r .id)
+curl -s -X POST http://127.0.0.1:3000/v1/payments/intent \
+  -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+  -d "{\"orderId\":\"$ORDER\",\"paymentMethod\":\"cod\"}"
+```
+
+Production APK (when domain is ready):
+
+```bash
+flutter build apk --release \
+  --dart-define=KAYAN_USE_MOCK_DATA=false \
+  --dart-define=KAYAN_API_BASE_URL=https://api.my-domain.com/v1
+```
+
+Default `AppConfig.useMockData` stays `true` so demos/tests keep working without a backend.

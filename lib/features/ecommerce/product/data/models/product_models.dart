@@ -295,6 +295,20 @@ class CartItemModel {
     selectedSize:  selectedSize,
     maxStock:      maxStock,
   );
+
+  factory CartItemModel.fromJson(Map<String, dynamic> j) => CartItemModel(
+        cartItemId: j['cartItemId'] as String,
+        productId: j['productId'] as String,
+        slug: j['slug'] as String,
+        nameAr: j['nameAr'] as String,
+        nameEn: j['nameEn'] as String? ?? '',
+        imageUrl: j['imageUrl'] as String?,
+        unitPrice: (j['unitPrice'] as num).toDouble(),
+        quantity: j['quantity'] as int? ?? 1,
+        selectedColor: j['selectedColor'] as String?,
+        selectedSize: j['selectedSize'] as String?,
+        maxStock: j['maxStock'] as int? ?? 99,
+      );
 }
 
 // ── Cart Summary ──────────────────────────────────────────────
@@ -323,4 +337,37 @@ class CartSummary {
 
   bool get hasCoupon => couponCode != null && couponCode!.isNotEmpty;
   bool get isFreeShipping => shipping == 0;
+
+  factory CartSummary.fromJson(Map<String, dynamic> j) => CartSummary(
+        subtotal: (j['subtotal'] as num).toDouble(),
+        discount: (j['discount'] as num?)?.toDouble() ?? 0,
+        shipping: (j['shipping'] as num?)?.toDouble() ?? 0,
+        vat: (j['vat'] as num).toDouble(),
+        total: (j['total'] as num).toDouble(),
+        currency: j['currency'] as String? ?? 'SAR',
+        couponCode: j['couponCode'] as String?,
+        couponDiscount: (j['couponDiscount'] as num?)?.toDouble() ?? 0,
+        itemCount: j['itemCount'] as int? ?? 0,
+      );
+}
+
+/// Server cart envelope: `{ items, summary }`.
+class CartSnapshot {
+  final List<CartItemModel> items;
+  final CartSummary summary;
+
+  const CartSnapshot({required this.items, required this.summary});
+
+  factory CartSnapshot.fromJson(Map<String, dynamic> j) {
+    final summaryJson = j['summary'] as Map<String, dynamic>?;
+    if (summaryJson == null) {
+      throw FormatException('cart response missing summary');
+    }
+    return CartSnapshot(
+      items: (j['items'] as List? ?? [])
+          .map((e) => CartItemModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      summary: CartSummary.fromJson(summaryJson),
+    );
+  }
 }
