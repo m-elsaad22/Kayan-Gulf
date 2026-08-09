@@ -8,9 +8,18 @@ import '../../features/auth/data/repositories/remote_auth_repository.dart';
 import '../../features/classifieds/data/repositories/classifieds_repository.dart';
 import '../../features/classifieds/data/repositories/mock_classifieds_repository.dart';
 import '../../features/classifieds/data/repositories/remote_classifieds_repository.dart';
+import '../../features/ecommerce/cart/data/repositories/cart_repository.dart';
+import '../../features/ecommerce/cart/data/repositories/mock_cart_repository.dart';
+import '../../features/ecommerce/cart/data/repositories/remote_cart_repository.dart';
+import '../../features/ecommerce/orders/data/repositories/mock_order_repository.dart';
+import '../../features/ecommerce/orders/data/repositories/order_repository.dart';
+import '../../features/ecommerce/orders/data/repositories/remote_order_repository.dart';
 import '../../features/ecommerce/product/data/repositories/mock_product_repository.dart';
 import '../../features/ecommerce/product/data/repositories/product_repository.dart';
 import '../../features/ecommerce/product/data/repositories/remote_product_repository.dart';
+import '../../features/notifications/data/repositories/device_repository.dart';
+import '../../features/notifications/data/repositories/mock_device_repository.dart';
+import '../../features/notifications/data/repositories/remote_device_repository.dart';
 import '../../features/services/data/repositories/mock_service_repository.dart';
 import '../../features/services/data/repositories/remote_service_repository.dart';
 import '../../features/services/data/repositories/service_repository.dart';
@@ -39,6 +48,27 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
     return const MockAuthRepository();
   }
   return RemoteAuthRepository(ref.watch(apiClientProvider));
+});
+
+final cartRepositoryProvider = Provider<CartRepository>((ref) {
+  if (AppConfig.useMockData) {
+    return MockCartRepository();
+  }
+  return RemoteCartRepository(ref.watch(apiClientProvider));
+});
+
+final orderRepositoryProvider = Provider<OrderRepository>((ref) {
+  if (AppConfig.useMockData) {
+    return MockOrderRepository();
+  }
+  return RemoteOrderRepository(ref.watch(apiClientProvider));
+});
+
+final deviceRepositoryProvider = Provider<DeviceRepository>((ref) {
+  if (AppConfig.useMockData) {
+    return MockDeviceRepository();
+  }
+  return RemoteDeviceRepository(ref.watch(apiClientProvider));
 });
 
 final serviceRepositoryProvider = Provider<ServiceRepository>((ref) {

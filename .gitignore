@@ -57,3 +57,10 @@ lcov.info
 *.ipa
 *.dSYM.zip
 *.dSYM
+dist/
+.android-sdk/
+
+# Backend local DB / generated
+backend/prisma/*.db
+backend/prisma/*.db-journal
+backend/generated/
