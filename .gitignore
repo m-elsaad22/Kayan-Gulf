@@ -64,3 +64,7 @@ dist/
 backend/prisma/*.db
 backend/prisma/*.db-journal
 backend/generated/
+
+backend/shadow.db
+backend/*.db
+!backend/prisma/migrations/
