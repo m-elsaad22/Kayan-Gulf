@@ -11,5 +11,12 @@ abstract final class AppConfig {
     defaultValue: true,
   );
 
+  /// When true, initialize Firebase (requires `lib/firebase_options.dart`
+  /// from `flutterfire configure` and real `google-services.json`).
+  static const bool enableFirebase = bool.fromEnvironment(
+    'KAYAN_ENABLE_FIREBASE',
+    defaultValue: false,
+  );
+
   static const Duration networkTimeout = Duration(seconds: 20);
 }

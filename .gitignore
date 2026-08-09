@@ -12,6 +12,7 @@ build/
 
 # Android
 android/local.properties
+android/key.properties
 android/.gradle/
 android/captures/
 android/app/google-services.json
@@ -20,6 +21,7 @@ android/app/src/main/AndroidManifest.xml.bak
 *.jks
 *.apk
 *.aab
+secrets/
 
 # iOS
 ios/Flutter/Flutter.framework
@@ -57,3 +59,21 @@ lcov.info
 *.ipa
 *.dSYM.zip
 *.dSYM
+dist/
+.android-sdk/
+
+# Backend local DB / generated
+backend/prisma/*.db
+backend/prisma/*.db-journal
+backend/shadow.db
+backend/generated/
+
+# Admin (Next.js)
+admin/node_modules/
+admin/.next/
+admin/out/
+admin/.env.local
+
+backend/shadow.db
+backend/*.db
+!backend/prisma/migrations/

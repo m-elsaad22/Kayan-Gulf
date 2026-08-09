@@ -9,10 +9,12 @@
 //   - Logout
 // ============================================================
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/di/repository_providers.dart';
 import '../../features/auth/data/models/auth_models.dart';
 import '../services/local_storage_service.dart';
+import '../services/notification_service.dart';
 
 // ──────────────────────────────────────────────────────────────
 // LIGHTWEIGHT AUTH STATE (used by router guard)
@@ -113,6 +115,7 @@ class AuthNotifier extends Notifier<AuthGuardState> {
       refreshToken: result.refreshToken,
       isProfileComplete: result.isProfileComplete,
     );
+    await _syncDeviceToken();
   }
 
   Future<void> _completeMockAuth(String userId) async {
@@ -157,9 +160,31 @@ class AuthNotifier extends Notifier<AuthGuardState> {
 
   // Called on logout
   Future<void> logout() async {
+    final token = LocalStorageService.fcmToken;
+    if (token != null && token.isNotEmpty) {
+      try {
+        await ref.read(deviceRepositoryProvider).unregisterFcmToken(token);
+      } catch (e) {
+        if (kDebugMode) debugPrint('FCM unregister failed: $e');
+      }
+    }
     await ref.read(authRepositoryProvider).logout();
     LocalStorageService.clearAuth();
     state = const AuthGuardState.unauthenticated();
+  }
+
+  Future<void> _syncDeviceToken() async {
+    final token =
+        LocalStorageService.fcmToken ?? await NotificationService.getToken();
+    if (token == null || token.isEmpty) return;
+    try {
+      await ref.read(deviceRepositoryProvider).registerFcmToken(
+            token: token,
+            platform: NotificationService.platformName(),
+          );
+    } catch (e) {
+      if (kDebugMode) debugPrint('FCM register failed: $e');
+    }
   }
 }
 

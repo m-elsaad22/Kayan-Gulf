@@ -79,6 +79,31 @@ class DeliveryAddress {
   });
 
   String get fullAddress => '$streetLine1، $district، $city';
+
+  factory DeliveryAddress.fromJson(Map<String, dynamic> j) => DeliveryAddress(
+        id: j['id'] as String,
+        label: j['label'] as String,
+        recipientName: j['recipientName'] as String,
+        phone: j['phone'] as String,
+        country: j['country'] as String? ?? 'SA',
+        city: j['city'] as String,
+        district: j['district'] as String,
+        streetLine1: j['streetLine1'] as String,
+        streetLine2: j['streetLine2'] as String?,
+        isDefault: j['isDefault'] as bool? ?? false,
+      );
+
+  Map<String, dynamic> toJson() => {
+        'label': label,
+        'recipientName': recipientName,
+        'phone': phone,
+        'country': country,
+        'city': city,
+        'district': district,
+        'streetLine1': streetLine1,
+        if (streetLine2 != null) 'streetLine2': streetLine2,
+        'isDefault': isDefault,
+      };
 }
 
 // ──────────────────────────────────────────────────────────────

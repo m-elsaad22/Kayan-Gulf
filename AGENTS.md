@@ -23,8 +23,12 @@ Do **not** commit `.android-sdk/` or `dist/` (local build artifacts).
 |---------|-----------|--------------|
 | Flutter app (web) | **Yes** (recommended) | `flutter run -d chrome --web-port=8080 --web-browser-flag="--no-sandbox"` |
 | Flutter app (APK) | Optional | `flutter build apk --release --android-skip-build-dependency-validation` with `ANDROID_HOME=/workspace/.android-sdk` |
+| NestJS API (`backend/`) | Optional (commercial) | `cd backend && npm install && npx prisma migrate dev && npm run seed && npm run start:dev` → `http://127.0.0.1:3000/v1` |
+| Web admin (`admin/`) | Optional (Phase 5) | `cd admin && npm install && npm run dev` → `http://127.0.0.1:3001` (`admin@kayan.app` / `kayan@admin`) |
 | Android emulator | No | **No KVM** in Cloud VM — use Chrome/web |
-| Backend / Firebase | No | Mock providers; Firebase not initialized in `main.dart` |
+| Firebase | No | Mock providers; Firebase not initialized in `main.dart` |
+
+Against the local API: `./scripts/run_api_mode.sh` (`KAYAN_USE_MOCK_DATA=false`). See `docs/COMMERCIAL_LAUNCH.md`.
 
 Use **tmux** for long-running `flutter run` (e.g. session `kayan-web-dev`). App URL after web start: `http://127.0.0.1:8080`.
 
@@ -54,6 +58,17 @@ flutter run -d chrome --web-port=8080 --web-browser-flag="--no-sandbox"
 ```bash
 ./scripts/package_phase_zip.sh phase-4-shop 1.0.0
 # Output: dist/kayan-phase-4-shop-1.0.0.zip
+```
+
+**Play Store AAB** (requires local keystore — see `docs/PLAY_STORE.md`):
+
+```bash
+./scripts/create_upload_keystore.sh
+cp android/key.properties.example android/key.properties  # fill secrets
+export KAYAN_API_BASE_URL=https://api.your-domain.com/v1
+./scripts/verify_release_config.sh
+./scripts/build_play_bundle.sh
+# Output: dist/kayan-play-YYYYMMDD.aab
 ```
 
 See `RELEASES.md` for GitHub download links.

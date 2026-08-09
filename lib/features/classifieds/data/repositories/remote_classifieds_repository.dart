@@ -54,4 +54,45 @@ class RemoteClassifiedsRepository implements ClassifiedsRepository {
         .map((e) => AdModel.fromJson(e as Map<String, dynamic>))
         .toList();
   }
+
+  @override
+  Future<AdModel> createAd({
+    required String title,
+    required String city,
+    required String categorySlug,
+    String? description,
+    double? price,
+    bool isFree = false,
+    bool isNegotiable = false,
+    String? district,
+    String condition = 'good',
+    List<String> imageUrls = const [],
+  }) async {
+    final json = await _client.postJson(
+      '/classifieds/ads',
+      body: {
+        'title': title,
+        'city': city,
+        'categorySlug': categorySlug,
+        if (description != null) 'description': description,
+        if (price != null) 'price': price,
+        'isFree': isFree,
+        'isNegotiable': isNegotiable,
+        if (district != null) 'district': district,
+        'condition': condition,
+        'imageUrls': imageUrls,
+      },
+    );
+    final data = json['ad'] as Map<String, dynamic>? ?? json;
+    return AdModel.fromJson(data);
+  }
+
+  @override
+  Future<MyAdModel> updateAdStatus(String id, String status) async {
+    final json = await _client.patchJson(
+      '/classifieds/ads/$id/status',
+      body: {'status': status},
+    );
+    return MyAdModel.fromJson(json);
+  }
 }
