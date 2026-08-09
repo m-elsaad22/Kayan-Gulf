@@ -42,12 +42,13 @@ Alternatives considered: Firebase-only (limits commerce/orders), Laravel (fine i
    --dart-define=KAYAN_API_BASE_URL=http://127.0.0.1:3000/v1
    ```
 
-### Phase 2 — Commerce checkout
+### Phase 2 — Commerce checkout ✅
 
-- Cart / orders API
-- Addresses + shipping zones (KSA cities)
-- Payment gateway (Tap / HyperPay / Paymob)
-- Webhooks + order status
+- Cart / orders / addresses API (`/v1/cart`, `/v1/orders`, `/v1/addresses`)
+- KSA VAT 15% + free shipping ≥ 200 SAR; coupons `KAYAN10` / `KAYAN50`
+- Payment adapter stub: `PAYMENT_PROVIDER=mock|tap|hyperpay|paymob`
+  - COD / mock card → immediate; others → `redirectUrl` + webhook
+- Flutter: `CartRepository` + `OrderRepository` (mock + remote)
 
 ### Phase 3 — Real OTP + notifications
 
@@ -72,7 +73,7 @@ Alternatives considered: Firebase-only (limits commerce/orders), Laravel (fine i
 
 ---
 
-## Phase 1 runbook
+## Phase 1–2 runbook
 
 ```bash
 # Backend
@@ -90,6 +91,25 @@ npm run start:dev
 flutter run -d chrome --web-port=8080 \
   --dart-define=KAYAN_USE_MOCK_DATA=false \
   --dart-define=KAYAN_API_BASE_URL=http://127.0.0.1:3000/v1
+```
+
+### Phase 2 checkout smoke (curl)
+
+```bash
+TOKEN=$(curl -s -X POST http://127.0.0.1:3000/v1/auth/login \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"demo@kayan.app","password":"password123"}' | jq -r .accessToken)
+PRODUCT=$(curl -s http://127.0.0.1:3000/v1/products | jq -r '.items[0].id')
+ADDR=$(curl -s http://127.0.0.1:3000/v1/addresses -H "Authorization: Bearer $TOKEN" | jq -r '.items[0].id')
+curl -s -X POST http://127.0.0.1:3000/v1/cart/items \
+  -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+  -d "{\"productId\":\"$PRODUCT\",\"quantity\":1}"
+ORDER=$(curl -s -X POST http://127.0.0.1:3000/v1/orders \
+  -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+  -d "{\"addressId\":\"$ADDR\",\"paymentMethod\":\"cod\",\"agreeToTerms\":true}" | jq -r .id)
+curl -s -X POST http://127.0.0.1:3000/v1/payments/intent \
+  -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+  -d "{\"orderId\":\"$ORDER\",\"paymentMethod\":\"cod\"}"
 ```
 
 Production APK (when domain is ready):

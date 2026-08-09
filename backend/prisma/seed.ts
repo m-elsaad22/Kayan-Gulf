@@ -4,6 +4,12 @@ import * as bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 async function main() {
+  await prisma.payment.deleteMany();
+  await prisma.orderItem.deleteMany();
+  await prisma.order.deleteMany();
+  await prisma.cartItem.deleteMany();
+  await prisma.cart.deleteMany();
+  await prisma.address.deleteMany();
   await prisma.refreshToken.deleteMany();
   await prisma.otpCode.deleteMany();
   await prisma.productImage.deleteMany();
@@ -16,13 +22,28 @@ async function main() {
   await prisma.user.deleteMany();
 
   const passwordHash = await bcrypt.hash('password123', 10);
-  await prisma.user.create({
+  const demoUser = await prisma.user.create({
     data: {
       email: 'demo@kayan.app',
       phone: '+966500000001',
       name: 'Demo User',
       passwordHash,
       isProfileComplete: true,
+    },
+  });
+
+  await prisma.address.create({
+    data: {
+      userId: demoUser.id,
+      label: 'المنزل',
+      recipientName: 'Demo User',
+      phone: '+966500000001',
+      country: 'SA',
+      city: 'الرياض',
+      district: 'العليا',
+      streetLine1: 'طريق الملك فهد',
+      streetLine2: 'مبنى كيان',
+      isDefault: true,
     },
   });
 

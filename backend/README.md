@@ -13,6 +13,10 @@ NestJS + Prisma REST API matching Flutter remote repositories:
 | `GET /v1/home` | `RemoteHomeRepository.getHomeData` |
 | `GET /v1/products` | `RemoteProductRepository.getProducts` |
 | `GET /v1/products/:slug` | `RemoteProductRepository.getProductDetail` |
+| `GET/POST… /v1/cart` | `RemoteCartRepository` |
+| `GET/POST… /v1/addresses` | `RemoteOrderRepository` (addresses) |
+| `POST/GET /v1/orders` | `RemoteOrderRepository` |
+| `POST /v1/payments/intent` | `RemoteOrderRepository.createPaymentIntent` |
 
 ## Quick start (SQLite)
 

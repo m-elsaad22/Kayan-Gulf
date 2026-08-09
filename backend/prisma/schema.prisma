@@ -18,6 +18,10 @@ model User {
   updatedAt          DateTime       @updatedAt
   refreshTokens      RefreshToken[]
   otpCodes           OtpCode[]
+  addresses          Address[]
+  cart               Cart?
+  orders             Order[]
+  payments           Payment[]
 }
 
 model RefreshToken {
@@ -99,6 +103,7 @@ model Product {
   vendorId       String?
   vendor         Vendor?        @relation(fields: [vendorId], references: [id])
   images         ProductImage[]
+  cartItems      CartItem[]
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
 
@@ -140,4 +145,109 @@ model AdCard {
   isBoosted   Boolean  @default(false)
   isFree      Boolean  @default(false)
   createdAt   DateTime @default(now())
+}
+
+model Address {
+  id            String  @id @default(cuid())
+  userId        String
+  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label         String
+  recipientName String
+  phone         String
+  country       String  @default("SA")
+  city          String
+  district      String
+  streetLine1   String
+  streetLine2   String?
+  isDefault     Boolean @default(false)
+  orders        Order[]
+
+  @@index([userId])
+}
+
+model Cart {
+  id             String     @id @default(cuid())
+  userId         String     @unique
+  user           User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  couponCode     String?
+  couponDiscount Float      @default(0)
+  items          CartItem[]
+  updatedAt      DateTime   @updatedAt
+  createdAt      DateTime   @default(now())
+}
+
+model CartItem {
+  id            String  @id @default(cuid())
+  cartId        String
+  cart          Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  productId     String
+  product       Product @relation(fields: [productId], references: [id])
+  quantity      Int     @default(1)
+  selectedColor String?
+  selectedSize  String?
+
+  @@index([cartId])
+  @@index([cartId, productId])
+}
+
+model Order {
+  id             String      @id // KYN-...
+  userId         String
+  user           User        @relation(fields: [userId], references: [id])
+  addressId      String?
+  address        Address?    @relation(fields: [addressId], references: [id])
+  status         String      @default("pending") // pending|paid|shipping|delivered|cancelled
+  paymentMethod  String
+  couponCode     String?
+  subtotal       Float
+  discount       Float       @default(0)
+  shipping       Float       @default(0)
+  vat            Float       @default(0)
+  total          Float
+  currency       String      @default("SAR")
+  titleAr        String?
+  titleEn        String?
+  items          OrderItem[]
+  payments       Payment[]
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+model OrderItem {
+  id            String  @id @default(cuid())
+  orderId       String
+  order         Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId     String
+  slug          String
+  nameAr        String
+  nameEn        String
+  imageUrl      String?
+  unitPrice     Float
+  quantity      Int
+  selectedColor String?
+  selectedSize  String?
+}
+
+model Payment {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  provider    String   // cod|tap|hyperpay|mock_card|wallet|tabby|tamara|applepay
+  method      String
+  status      String   @default("pending") // pending|authorized|paid|failed|refunded
+  amount      Float
+  currency    String   @default("SAR")
+  providerRef String?
+  redirectUrl String?
+  rawJson     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([orderId])
+  @@index([userId])
 }

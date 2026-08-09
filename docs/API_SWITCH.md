@@ -78,6 +78,8 @@ Add the same `--dart-define` flags to your build step, for example:
 | `homeRepositoryProvider` | `MockHomeRepository` | `RemoteHomeRepository` |
 | `productRepositoryProvider` | `MockProductRepository` | `RemoteProductRepository` |
 | `authRepositoryProvider` | `MockAuthRepository` | `RemoteAuthRepository` |
+| `cartRepositoryProvider` | `MockCartRepository` | `RemoteCartRepository` |
+| `orderRepositoryProvider` | `MockOrderRepository` | `RemoteOrderRepository` |
 | `serviceRepositoryProvider` | `MockServiceRepository` | `RemoteServiceRepository` |
 | `classifiedsRepositoryProvider` | `MockClassifiedsRepository` | `RemoteClassifiedsRepository` |
 
@@ -90,6 +92,10 @@ Remote repositories expect JSON REST endpoints under the configured base URL. Im
 - **Home** — `GET /home` → banners, categories, flash deals, featured products, recent ads
 - **Products** — `GET /products`, `GET /products/:slug`, query params for search/sort/filter
 - **Auth** — `POST /auth/otp/send`, `POST /auth/otp/verify`, `POST /auth/login`, `POST /auth/signup`
+- **Cart** — `GET /cart`, `POST /cart/items`, `PATCH /cart/items/:id`, `DELETE /cart/items/:id`, coupon endpoints
+- **Addresses** — `GET|POST /addresses`, `PATCH|DELETE /addresses/:id`
+- **Orders** — `POST /orders`, `GET /orders`, `GET /orders/:id`, `GET /orders/:id/tracking`
+- **Payments** — `POST /payments/intent`, `POST /payments/confirm`, `POST /webhooks/payments`
 - **Services** — `GET /services`, `GET /services/:slug`, `GET /bookings`
 - **Classifieds** — `GET /ads`, `GET /ads/:slug`, `GET /ads/featured`, category filters
 
