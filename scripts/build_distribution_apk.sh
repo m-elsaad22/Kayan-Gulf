@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Build a distributable release APK for end users (sideload / direct download).
 # Default: mock data ON + remote kill-switch on rukn-eltatawer.com
+# For REAL production (API + mock off), use scripts/build_production_apk.sh instead.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
