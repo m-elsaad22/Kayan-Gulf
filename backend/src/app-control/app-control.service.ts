@@ -11,6 +11,11 @@ export type AppControlDto = {
   forceUpdate: boolean;
   supportUrl: string;
   websiteUrl: string;
+  privacyUrl: string;
+  termsUrl: string;
+  whatsappUrl: string;
+  phoneUrl: string;
+  appDownloadUrl: string;
   apkUrl: string | null;
   playStoreUrl: string | null;
   updatedAt: string;
@@ -27,6 +32,11 @@ export type UpdateAppControlInput = Partial<{
   forceUpdate: boolean;
   supportUrl: string;
   websiteUrl: string;
+  privacyUrl: string;
+  termsUrl: string;
+  whatsappUrl: string;
+  phoneUrl: string;
+  appDownloadUrl: string;
   apkUrl: string | null;
   playStoreUrl: string | null;
 }>;
@@ -85,6 +95,11 @@ export class AppControlService {
     forceUpdate: boolean;
     supportUrl: string;
     websiteUrl: string;
+    privacyUrl: string;
+    termsUrl: string;
+    whatsappUrl: string;
+    phoneUrl: string;
+    appDownloadUrl: string;
     apkUrl: string | null;
     playStoreUrl: string | null;
     updatedAt: Date;
@@ -99,6 +114,11 @@ export class AppControlService {
       forceUpdate: row.forceUpdate,
       supportUrl: row.supportUrl,
       websiteUrl: row.websiteUrl,
+      privacyUrl: row.privacyUrl,
+      termsUrl: row.termsUrl,
+      whatsappUrl: row.whatsappUrl,
+      phoneUrl: row.phoneUrl,
+      appDownloadUrl: row.appDownloadUrl,
       apkUrl: row.apkUrl,
       playStoreUrl: row.playStoreUrl,
       updatedAt: row.updatedAt.toISOString(),

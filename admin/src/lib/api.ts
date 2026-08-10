@@ -188,6 +188,11 @@ export type AppControl = {
   forceUpdate: boolean;
   supportUrl: string;
   websiteUrl: string;
+  privacyUrl: string;
+  termsUrl: string;
+  whatsappUrl: string;
+  phoneUrl: string;
+  appDownloadUrl: string;
   apkUrl: string | null;
   playStoreUrl: string | null;
   updatedAt: string;

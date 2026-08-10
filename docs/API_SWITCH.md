@@ -7,7 +7,7 @@ By default the app ships with **mock repositories** (`AppConfig.useMockData = tr
 | Variable | Default | Purpose |
 |----------|---------|---------|
 | `KAYAN_USE_MOCK_DATA` | `true` | `false` enables remote repositories |
-| `KAYAN_API_BASE_URL` | `https://api.kayan.gulf/v1` | REST API base URL |
+| `KAYAN_API_BASE_URL` | `https://api.rukn-eltatawer.com/v1` (planned; set explicitly when DNS exists) | REST API base URL |
 
 Configuration is defined in `lib/core/config/app_config.dart` and read via `String.fromEnvironment` / `bool.fromEnvironment` at **compile time**.
 

@@ -65,6 +65,11 @@ async function main() {
       forceUpdate: false,
       supportUrl: 'https://www.rukn-eltatawer.com/',
       websiteUrl: 'https://www.rukn-eltatawer.com/',
+      privacyUrl: 'https://www.rukn-eltatawer.com/privacy',
+      termsUrl: 'https://www.rukn-eltatawer.com/terms',
+      whatsappUrl: '',
+      phoneUrl: '',
+      appDownloadUrl: 'https://www.rukn-eltatawer.com/kayan/',
     },
   });
 

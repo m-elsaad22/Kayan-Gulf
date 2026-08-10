@@ -44,14 +44,21 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <!-- Deep Links -->
+            <!--
+              Android App Links for Rukn El Tatawer website.
+              NOT live until assetlinks.json is published on the site and verified.
+              Without verification, the OS opens the normal website (correct fallback).
+            -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" android:host="kayan.sa" />
-                <data android:scheme="https" android:host="kayan.ae" />
+                <data android:scheme="https" android:host="www.rukn-eltatawer.com" android:pathPrefix="/services" />
+                <data android:scheme="https" android:host="www.rukn-eltatawer.com" android:pathPrefix="/kayan" />
+                <data android:scheme="https" android:host="rukn-eltatawer.com" android:pathPrefix="/services" />
+                <data android:scheme="https" android:host="rukn-eltatawer.com" android:pathPrefix="/kayan" />
             </intent-filter>
+            <!-- Custom scheme (always works without Digital Asset Links) -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />

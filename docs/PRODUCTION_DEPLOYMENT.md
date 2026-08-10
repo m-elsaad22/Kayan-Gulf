@@ -1,79 +1,72 @@
-# KAYAN Gulf — Production Deployment
+# Production Deployment — KAYAN / Rukn El Tatawer
+
+**This document describes how to deploy later.** Nothing here is assumed already live.
+
+Official website (exists): https://www.rukn-eltatawer.com/
+
+Planned (not created until you provision them):
+
+- API: `https://api.rukn-eltatawer.com/v1`
+- Admin: `https://admin.rukn-eltatawer.com`
 
 ## Architecture
 
 ```
-Flutter APK  --HTTPS-->  NestJS API (/v1)  -->  PostgreSQL
-                              |
-                              +--> Admin (Next.js)
-                              +--> FCM (optional)
-                              +--> OTP (Unifonic/Twilio)
-                              +--> Payments (Tap when keys present)
-
-Emergency fallback (kill-switch only):
-cPanel status.json / status.php on https://www.rukn-eltatawer.com/kayan/
+Flutter → NestJS /v1 → PostgreSQL
+Next.js Admin → NestJS /v1
+WordPress (rukn-eltatawer.com) → marketing + emergency /kayan/status.json
 ```
 
-**Authority rule:** the NestJS API owns identity, prices, orders, and app control. Flutter is a client.
+## 1. API server
 
-## Prerequisites
-
-- Node.js 20+
-- PostgreSQL 14+
-- Domain + TLS certificates
-- Android upload keystore (`android/key.properties`)
-- Google OAuth Web + Android clients (see `GOOGLE_SIGN_IN_SETUP.md`)
-
-## Backend
+Node 20+, PostgreSQL 14+, TLS terminator.
 
 ```bash
 cd backend
-cp .env.example .env   # if present; otherwise set env vars from ENVIRONMENT_VARIABLES.md
-npm ci
+cp .env.example .env   # fill production secrets — never commit
 npx prisma migrate deploy
-npm run seed           # optional demo data — skip on real prod if undesired
-npm run build
+npm ci && npm run build
 NODE_ENV=production npm run start:prod
 ```
 
-Docker:
+Or `docker compose up -d --build` with strong `.env`.
 
-```bash
-docker compose up -d --build
-```
-
-Use `docker-compose.dev.yml` only for local OTP=dev.
-
-## Admin
+## 2. Admin
 
 ```bash
 cd admin
-npm ci
-NEXT_PUBLIC_KAYAN_API_BASE_URL=https://api.YOUR_DOMAIN/v1 npm run build
-npm start
+NEXT_PUBLIC_KAYAN_API_BASE_URL=https://api.rukn-eltatawer.com/v1 npm ci && npm run build && npm start
 ```
 
-Default seed admin: `admin@kayan.app` / `kayan@admin` (role `super_admin`). **Change immediately.**
-
-## Flutter production APK
+## 3. Flutter production binary
 
 ```bash
-export KAYAN_API_BASE_URL=https://api.YOUR_DOMAIN/v1
+export KAYAN_API_BASE_URL=https://api.rukn-eltatawer.com/v1
 export KAYAN_GOOGLE_SERVER_CLIENT_ID=YOUR_WEB_CLIENT_ID.apps.googleusercontent.com
+./scripts/verify_release_config.sh
 ./scripts/build_production_apk.sh
+# optional Play:
+./scripts/build_play_bundle.sh
 ```
 
-Do **not** use `build_distribution_apk.sh` for production — that script defaults to mock data for cPanel demos.
+Script refuses localhost / `kayan.gulf` / missing HTTPS.
 
-## App control
+## 4. cPanel emergency fallback
 
-1. Primary: Admin → **تحكم التطبيق** → `PATCH /v1/admin/app-control`
-2. Public poll: `GET /v1/app/status`
-3. Fallback: upload `hosting/cpanel/kayan/*` to cPanel `public_html/kayan/`
+Upload `hosting/cpanel/kayan/*` → `public_html/kayan/`.  
+Primary AppControl remains Admin → DB → API. See `CPANEL_DEPLOYMENT.md`.
 
-## Health checks
+## 5. DNS (future)
 
-- `GET /v1/health`
-- `GET /v1/app/status`
-- Admin login + users list
-- Flutter splash reaches home only when `enabled=true` and version ≥ `minVersion`
+| Host | Target |
+|------|--------|
+| `api.rukn-eltatawer.com` | NestJS |
+| `admin.rukn-eltatawer.com` | Next.js |
+| `www.rukn-eltatawer.com` | Existing WordPress (unchanged) |
+
+## Health checks (after deploy)
+
+- `GET https://api…/v1/health`
+- `GET https://api…/v1/app/status`
+- Admin login
+- Flutter splash with production dart-defines

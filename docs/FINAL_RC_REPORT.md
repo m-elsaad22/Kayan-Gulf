@@ -49,7 +49,7 @@ Branch: `cursor/final-production-release-candidate-eef0`
 - `/workspace/dist/kayan-production-20260810.apk`
 - `/opt/cursor/artifacts/kayan-production-20260810.apk`
 
-Configured with `KAYAN_USE_MOCK_DATA=false` and `KAYAN_API_BASE_URL=https://api.kayan.gulf/v1` (placeholder host until real API DNS exists).
+Sample RC APK used a temporary host; current integration branch forbids `api.kayan.gulf` and targets planned `https://api.rukn-eltatawer.com/v1` once DNS exists.
 
 ## G. Final AAB path
 
@@ -123,4 +123,4 @@ https://github.com/m-elsaad22/Kayan-Gulf/pull/57
 - No live production API hostname/credentials in this environment
 - Google Cloud OAuth clients / SHA fingerprints cannot be created from the repo alone
 - SMS (Unifonic) and card acquiring (Tap/HyperPay) need merchant credentials
-- Sample production APK points at placeholder `https://api.kayan.gulf/v1` until DNS exists
+- Production binaries must pass real `KAYAN_API_BASE_URL` (planned: `api.rukn-eltatawer.com`) — see follow-up Rukn integration PR

@@ -79,6 +79,26 @@ class UpdateAppControlDto {
 
   @IsOptional()
   @IsString()
+  privacyUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  termsUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  whatsappUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  phoneUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  appDownloadUrl?: string;
+
+  @IsOptional()
+  @IsString()
   apkUrl?: string | null;
 
   @IsOptional()

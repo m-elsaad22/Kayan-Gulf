@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'app.dart';
+import 'core/config/production_assert.dart';
 import 'core/di/providers.dart';
 import 'core/firebase/firebase_bootstrap.dart';
 import 'core/theme/app_theme.dart';
@@ -22,6 +23,7 @@ import 'shared/services/notification_service.dart';
 void main() {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
+    assertProductionClientConfig();
     KayanMotion.prepareHighRefreshPipeline();
 
     SystemChrome.setSystemUIOverlayStyle(AppTheme.systemUiLight);

@@ -1,64 +1,40 @@
-# Google Sign-In Setup (KAYAN Gulf)
+# Google Sign-In Setup (manual — credentials not in repo)
 
-## Goal
+**Code is ready** (Flutter obtains ID token; Nest verifies issuer/audience/`sub` and stores `googleSub`).  
+**Production Google Console is NOT configured until you complete the steps below.**
 
-Real Google OAuth: Flutter obtains an **ID token**; NestJS verifies it with Google `tokeninfo`, checks **audience**, and persists `googleSub`.
+## Values you will enter later
 
-Never trust client-supplied email / googleId in production.
+| Item | Where |
+|------|--------|
+| Android package name | `sa.kayan.app` (Firebase / Google Cloud Android OAuth client) |
+| Debug SHA-1 | Local debug keystore → Android OAuth client |
+| Release / upload SHA-1 | `secrets/kayan-upload.jks` or your Play upload key |
+| Play App Signing SHA-1 | Play Console → App integrity → App signing key certificate |
+| Web Client ID | Google Cloud → OAuth 2.0 Web client |
 
-## 1. Firebase / Google Cloud
-
-1. Create (or reuse) a Firebase project for `sa.kayan.app`.
-2. Add an Android app with package name **`sa.kayan.app`**.
-3. Add SHA-1 (and SHA-256) fingerprints:
-   - Debug keystore (local)
-   - Upload keystore (`secrets/kayan-upload.jks` or Play upload key)
-   - **Play App Signing** certificate from Play Console (required after Play enrollment)
-4. Enable **Google** sign-in provider in Firebase Authentication (optional for token issuance; still recommended).
-5. In Google Cloud Console → APIs & Services → Credentials:
-   - **Android** OAuth client (package + SHA-1)
-   - **Web** OAuth client (used as `serverClientId` / audience)
-
-## 2. Flutter
-
-Pass the **Web client ID** at build time:
+## Flutter
 
 ```bash
---dart-define=KAYAN_GOOGLE_SERVER_CLIENT_ID=XXXX.apps.googleusercontent.com
+--dart-define=KAYAN_GOOGLE_SERVER_CLIENT_ID=<WEB_CLIENT_ID>.apps.googleusercontent.com
 ```
 
-`GoogleAuthService` uses `google_sign_in` v7 `authenticate()` and requests an ID token.
-
-## 3. Backend
-
-Set either:
+## NestJS
 
 ```bash
-GOOGLE_WEB_CLIENT_ID=XXXX.apps.googleusercontent.com
-# or comma-separated:
-GOOGLE_CLIENT_IDS=WEB_ID,ANDROID_ID
+GOOGLE_WEB_CLIENT_ID=<WEB_CLIENT_ID>.apps.googleusercontent.com
+# or
+GOOGLE_CLIENT_IDS=web-id,android-id
 ```
 
-Production boot refuses to start without these unless `GOOGLE_AUTH_REQUIRED=false`.
+Production boot requires these unless `GOOGLE_AUTH_REQUIRED=false`.
 
-Endpoint: `POST /v1/auth/google` with `{ "idToken": "..." }`.
+## Verification rules (already in code)
 
-Verified fields used: `sub`, `email`, `email_verified`, `aud`/`azp`, `iss`.
+- `idToken` required in production
+- `iss` = accounts.google.com
+- `aud` / `azp` ∈ configured client IDs
+- `email_verified`
+- Identity from token `sub` → `User.googleSub`
 
-## 4. Account rules
-
-| Case | Behavior |
-|------|----------|
-| New `googleSub` | Create user (`authProvider=google`) |
-| Existing `googleSub` | Login |
-| Email exists, no `googleSub` | Link Google to that account |
-| Email exists with different `googleSub` | Reject `google_account_mismatch` |
-| Suspended / deleted | Reject |
-
-## 5. Manual checklist
-
-- [ ] SHA-1 uploaded for debug + release + Play signing
-- [ ] Web client ID in Flutter dart-define
-- [ ] Same Web client ID (or allowed list) in API env
-- [ ] Test on a real device (emulators may lack Google Play Services)
-- [ ] Confirm backend stores `User.googleSub`
+Do not trust client-supplied email/googleId in production.

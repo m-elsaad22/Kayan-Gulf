@@ -25,9 +25,11 @@ class ServiceReview { final String id; final String? userName,comment; final dou
 
 class ServiceFaq { final String questionAr,questionEn,answerAr,answerEn; const ServiceFaq({required this.questionAr,required this.questionEn,required this.answerAr,required this.answerEn}); }
 
-class ServiceDetailModel { final String id,slug,nameAr,nameEn; final String? descriptionAr,descriptionEn,imageUrl,categoryNameAr,categorySlug; final List<String> galleryUrls; final double basePrice,rating; final double? discountedPrice; final String pricingType,currency; final int totalRatings,totalBookings,estimatedDurationMin; final bool isEmergency,isAvailable; final List<TechnicianModel> technicians; final List<ServiceFeature> features; final List<ServiceReview> reviews; final List<ServiceFaq> faqs; final List<String> whatToExpect;
-  const ServiceDetailModel({required this.id,required this.slug,required this.nameAr,required this.nameEn,this.descriptionAr,this.descriptionEn,required this.basePrice,this.discountedPrice,this.pricingType='FIXED',this.currency='SAR',this.imageUrl,this.galleryUrls=const[],this.rating=0,this.totalRatings=0,this.totalBookings=0,this.isEmergency=false,this.isAvailable=true,this.categoryNameAr,this.categorySlug,this.estimatedDurationMin=60,this.technicians=const[],this.features=const[],this.reviews=const[],this.faqs=const[],this.whatToExpect=const[]});
+class ServiceDetailModel { final String id,slug,nameAr,nameEn; final String? descriptionAr,descriptionEn,imageUrl,categoryNameAr,categorySlug,websiteUrl; final List<String> galleryUrls; final List<String> availableCities; final double basePrice,rating; final double? discountedPrice; final String pricingType,currency; final int totalRatings,totalBookings,estimatedDurationMin; final bool isEmergency,isAvailable; final List<TechnicianModel> technicians; final List<ServiceFeature> features; final List<ServiceReview> reviews; final List<ServiceFaq> faqs; final List<String> whatToExpect;
+  const ServiceDetailModel({required this.id,required this.slug,required this.nameAr,required this.nameEn,this.descriptionAr,this.descriptionEn,required this.basePrice,this.discountedPrice,this.pricingType='FIXED',this.currency='SAR',this.imageUrl,this.galleryUrls=const[],this.rating=0,this.totalRatings=0,this.totalBookings=0,this.isEmergency=false,this.isAvailable=true,this.categoryNameAr,this.categorySlug,this.estimatedDurationMin=60,this.websiteUrl,this.availableCities=const[],this.technicians=const[],this.features=const[],this.reviews=const[],this.faqs=const[],this.whatToExpect=const[]});
   bool get hasDiscount=>discountedPrice!=null&&discountedPrice!<basePrice; double get finalPrice=>discountedPrice??basePrice;
+  /// Optional WordPress/SEO page for this service — never hardcode mappings in UI.
+  bool get hasWebsitePage => (websiteUrl ?? '').trim().isNotEmpty;
   factory ServiceDetailModel.fromJson(Map<String,dynamic> j)=>ServiceDetailModel(
     id:j['id'] as String,
     slug:j['slug'] as String,
@@ -45,10 +47,12 @@ class ServiceDetailModel { final String id,slug,nameAr,nameEn; final String? des
     totalRatings:j['totalRatings'] as int? ?? 0,
     totalBookings:j['totalBookings'] as int? ?? 0,
     isEmergency:j['isEmergency'] as bool? ?? false,
-    isAvailable:j['isAvailable'] as bool? ?? true,
-    categoryNameAr:j['categoryNameAr'] as String?,
+    isAvailable:j['isAvailable'] as bool? ?? j['active'] as bool? ?? true,
+    categoryNameAr:j['categoryNameAr'] as String? ?? j['category'] as String?,
     categorySlug:j['categorySlug'] as String?,
     estimatedDurationMin:j['estimatedDurationMin'] as int? ?? 60,
+    websiteUrl:j['websiteUrl'] as String?,
+    availableCities:(j['availableCities'] as List?)?.cast<String>() ?? const [],
   ); }
 
 class TimeSlot { final String id; final DateTime startTime,endTime; final bool isAvailable;

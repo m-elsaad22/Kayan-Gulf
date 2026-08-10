@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../core/config/rukn_brand.dart';
 import '../../../../core/theme/kayan_design_tokens.dart';
 import '../../../../routing/app_routes.dart';
 import '../../../../shared/widgets/design/kayan_design_widgets.dart';
@@ -55,7 +57,25 @@ class _ContactSupportScreenState extends State<ContactSupportScreen> {
                           child: _ContactChip(
                             icon: Icons.phone_outlined,
                             label: 'اتصال',
-                            onTap: () {},
+                            onTap: () async {
+                              final tel = RuknBrand.phoneUri();
+                              if (tel != null) {
+                                await launchUrl(tel);
+                                return;
+                              }
+                              final wa = RuknBrand.whatsappUri();
+                              if (wa != null) {
+                                await launchUrl(
+                                  wa,
+                                  mode: LaunchMode.externalApplication,
+                                );
+                                return;
+                              }
+                              await launchUrl(
+                                RuknBrand.supportUri(),
+                                mode: LaunchMode.externalApplication,
+                              );
+                            },
                           ),
                         ),
                       ],
