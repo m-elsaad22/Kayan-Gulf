@@ -52,3 +52,20 @@ export class LogoutDto {
   @IsString()
   refreshToken?: string;
 }
+
+export class GoogleLoginDto {
+  @IsEmail()
+  email!: string;
+
+  @IsOptional()
+  @IsString()
+  idToken?: string;
+
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @IsOptional()
+  @IsString()
+  googleId?: string;
+}

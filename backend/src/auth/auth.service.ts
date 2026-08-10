@@ -8,7 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { createHash, randomBytes } from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
-import { LoginDto, SignUpDto } from './dto/auth.dto';
+import { LoginDto, SignUpDto, GoogleLoginDto } from './dto/auth.dto';
 import { OtpService } from './otp.service';
 
 export type AuthResultDto = {
@@ -63,6 +63,78 @@ export class AuthService {
       throw new UnauthorizedException('invalid_credentials');
     }
     return this.issueTokens(user, false);
+  }
+
+  /**
+   * Gmail / Google Sign-In.
+   * Prefer verifying `idToken` via Google tokeninfo when present.
+   * Falls back to email-only upsert only when NODE_ENV !== production
+   * (distribution mock builds use Flutter mock repo instead).
+   */
+  async loginWithGoogle(dto: GoogleLoginDto): Promise<AuthResultDto> {
+    const email = dto.email.toLowerCase().trim();
+    let verifiedEmail = email;
+    let googleSub = dto.googleId?.trim() || null;
+
+    if (dto.idToken) {
+      const info = await this.verifyGoogleIdToken(dto.idToken);
+      verifiedEmail = (info.email ?? email).toLowerCase();
+      googleSub = info.sub ?? googleSub;
+      if (!info.email_verified && info.email_verified !== undefined) {
+        throw new UnauthorizedException('google_email_unverified');
+      }
+    } else if ((process.env.NODE_ENV ?? 'development') === 'production') {
+      throw new UnauthorizedException('google_id_token_required');
+    }
+
+    let user = await this.prisma.user.findUnique({
+      where: { email: verifiedEmail },
+    });
+    let isNewUser = false;
+    if (!user) {
+      user = await this.prisma.user.create({
+        data: {
+          email: verifiedEmail,
+          name: dto.name ?? verifiedEmail.split('@')[0],
+          isProfileComplete: true,
+          role: 'user',
+          // Marker so password login still requires a real password.
+          passwordHash: null,
+        },
+      });
+      isNewUser = true;
+    } else if (!user.name && dto.name) {
+      user = await this.prisma.user.update({
+        where: { id: user.id },
+        data: { name: dto.name },
+      });
+    }
+
+    void googleSub;
+    return this.issueTokens(user, isNewUser);
+  }
+
+  private async verifyGoogleIdToken(idToken: string): Promise<{
+    email?: string;
+    email_verified?: boolean;
+    sub?: string;
+  }> {
+    const url = `https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(idToken)}`;
+    const res = await fetch(url);
+    if (!res.ok) {
+      throw new UnauthorizedException('invalid_google_token');
+    }
+    const json = (await res.json()) as {
+      email?: string;
+      email_verified?: string | boolean;
+      sub?: string;
+    };
+    return {
+      email: json.email,
+      email_verified:
+        json.email_verified === true || json.email_verified === 'true',
+      sub: json.sub,
+    };
   }
 
   async signUp(dto: SignUpDto): Promise<AuthResultDto> {

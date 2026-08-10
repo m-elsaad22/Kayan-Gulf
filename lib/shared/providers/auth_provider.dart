@@ -12,6 +12,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/di/repository_providers.dart';
+import '../../core/services/google_auth_service.dart';
 import '../../features/auth/data/models/auth_models.dart';
 import '../services/local_storage_service.dart';
 import '../services/notification_service.dart';
@@ -82,9 +83,25 @@ class AuthNotifier extends Notifier<AuthGuardState> {
     await _completeAuth(result);
   }
 
-  Future<void> loginWithGoogle() async => _completeMockAuth('google-user');
-  Future<void> loginWithApple() async => _completeMockAuth('apple-user');
-  Future<void> loginWithFacebook() async => _completeMockAuth('facebook-user');
+  Future<void> loginWithGoogle() async {
+    final google = await GoogleAuthService.signIn();
+    if (google == null) {
+      throw Exception('google_cancelled');
+    }
+    final result = await ref.read(authRepositoryProvider).loginWithGoogle(
+          email: google.email,
+          idToken: google.idToken,
+          displayName: google.displayName,
+          googleId: google.id,
+        );
+    await _completeAuth(result);
+  }
+
+  Future<void> loginWithApple() async =>
+      throw Exception('apple_sign_in_not_enabled');
+
+  Future<void> loginWithFacebook() async =>
+      throw Exception('facebook_sign_in_not_enabled');
 
   Future<void> signUp({
     required String name,
@@ -116,16 +133,6 @@ class AuthNotifier extends Notifier<AuthGuardState> {
       isProfileComplete: result.isProfileComplete,
     );
     await _syncDeviceToken();
-  }
-
-  Future<void> _completeMockAuth(String userId) async {
-    await LocalStorageService.markOnboardingSeen();
-    await setAuthenticated(
-      userId: userId,
-      accessToken: 'mock-access-$userId',
-      refreshToken: 'mock-refresh-$userId',
-      isProfileComplete: true,
-    );
   }
 
   // Called after successful OTP verification

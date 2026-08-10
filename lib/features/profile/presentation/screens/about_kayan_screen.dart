@@ -2,7 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../core/config/app_config.dart';
 import '../../../../core/theme/kayan_design_tokens.dart';
 import '../../../../shared/providers/locale_provider.dart';
 import '../../../../shared/widgets/design/kayan_design_widgets.dart';
@@ -54,6 +56,27 @@ class AboutKayanScreen extends ConsumerWidget {
                   title: ar ? 'الإصدار 1.0.0' : 'Version 1.0.0',
                   subtitle: ar ? 'صُمم للسوق الخليجي' : 'Built for the GCC market',
                   gradient: KayanDesignTokens.gradGold,
+                ),
+                const SizedBox(height: 16),
+                ListTile(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    side: const BorderSide(color: KayanDesignTokens.border),
+                  ),
+                  leading: const Icon(Icons.language_rounded, color: KayanDesignTokens.kBlue),
+                  title: Text(
+                    ar ? 'ركن التطور' : 'Rukn Eltatawer',
+                    style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800),
+                  ),
+                  subtitle: Text(
+                    AppConfig.publisherUrl,
+                    style: KayanDesignTokens.cairo(fontSize: 12, color: KayanDesignTokens.muted),
+                  ),
+                  trailing: const Icon(Icons.open_in_new_rounded, size: 18),
+                  onTap: () async {
+                    final uri = Uri.parse(AppConfig.publisherUrl);
+                    await launchUrl(uri, mode: LaunchMode.externalApplication);
+                  },
                 ),
               ],
             ),

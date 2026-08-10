@@ -47,6 +47,30 @@ class MockAuthRepository implements AuthRepository {
   }
 
   @override
+  Future<AuthResult> loginWithGoogle({
+    required String email,
+    String? idToken,
+    String? displayName,
+    String? googleId,
+  }) async {
+    await Future.delayed(const Duration(milliseconds: 400));
+    final normalized = email.trim().toLowerCase();
+    if (normalized.isEmpty || !normalized.contains('@')) {
+      throw Exception('invalid_google_email');
+    }
+    final userId = googleId?.isNotEmpty == true
+        ? 'google-$googleId'
+        : 'gmail-${normalized.hashCode.abs()}';
+    return AuthResult(
+      userId: userId,
+      accessToken: 'mock-google-$userId',
+      refreshToken: 'mock-google-refresh-$userId',
+      isProfileComplete: true,
+      isNewUser: false,
+    );
+  }
+
+  @override
   Future<AuthResult> signUp({
     required String name,
     required String email,
