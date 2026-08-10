@@ -1,4 +1,4 @@
-import '../../../../checkout/presentation/providers/checkout_providers.dart';
+import '../../../../checkout/domain/checkout_models.dart';
 import '../models/order_models.dart';
 import 'order_repository.dart';
 

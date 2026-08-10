@@ -8,6 +8,14 @@ abstract class AuthRepository {
 
   Future<AuthResult> loginWithEmail(String email, String password);
 
+  /// Gmail / Google Sign-In. Mock accepts any Google account; API verifies idToken when provided.
+  Future<AuthResult> loginWithGoogle({
+    required String email,
+    String? idToken,
+    String? displayName,
+    String? googleId,
+  });
+
   Future<AuthResult> signUp({
     required String name,
     required String email,

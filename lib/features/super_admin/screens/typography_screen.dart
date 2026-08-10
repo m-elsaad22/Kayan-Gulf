@@ -127,7 +127,7 @@ class _TypographyScreenState extends State<TypographyScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   DropdownButtonFormField<String>(
-                    initialValue: _typo.arabicFont,
+                    value: _typo.arabicFont,
                     decoration: const InputDecoration(labelText: 'خط عربي', filled: true),
                     items: TypographySettings.arabicFonts
                         .map((f) => DropdownMenuItem(value: f, child: Text(f)))
@@ -136,7 +136,7 @@ class _TypographyScreenState extends State<TypographyScreen> {
                   ),
                   const SizedBox(height: 12),
                   DropdownButtonFormField<String>(
-                    initialValue: _typo.englishFont,
+                    value: _typo.englishFont,
                     decoration: const InputDecoration(labelText: 'خط إنجليزي', filled: true),
                     items: TypographySettings.englishFonts
                         .map((f) => DropdownMenuItem(value: f, child: Text(f)))

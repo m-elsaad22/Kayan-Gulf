@@ -71,6 +71,17 @@ export KAYAN_API_BASE_URL=https://api.your-domain.com/v1
 # Output: dist/kayan-play-YYYYMMDD.aab
 ```
 
+**Distribution APK + cPanel kill-switch** (Rukn Eltatawer):
+
+```bash
+# 1) Upload hosting/cpanel/kayan/ to public_html/kayan/ first (enabled:true)
+# 2) Build APK
+./scripts/build_distribution_apk.sh
+# Output: dist/kayan-rukn-YYYYMMDD.apk
+# Docs: docs/DISTRIBUTION_CPANEL.md
+# Local run without remote status: --dart-define=KAYAN_REQUIRE_REMOTE_STATUS=false
+```
+
 See `RELEASES.md` for GitHub download links.
 
 ### Known gotchas

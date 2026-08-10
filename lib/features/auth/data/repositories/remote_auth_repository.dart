@@ -33,6 +33,25 @@ class RemoteAuthRepository implements AuthRepository {
   }
 
   @override
+  Future<AuthResult> loginWithGoogle({
+    required String email,
+    String? idToken,
+    String? displayName,
+    String? googleId,
+  }) async {
+    final json = await _client.postJson(
+      '/auth/google',
+      body: {
+        'email': email,
+        if (idToken != null && idToken.isNotEmpty) 'idToken': idToken,
+        if (displayName != null) 'name': displayName,
+        if (googleId != null) 'googleId': googleId,
+      },
+    );
+    return AuthResult.fromJson(json);
+  }
+
+  @override
   Future<AuthResult> signUp({
     required String name,
     required String email,

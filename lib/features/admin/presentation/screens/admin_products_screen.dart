@@ -55,7 +55,7 @@ class _AdminProductsScreenState extends State<AdminProductsScreen> {
                   decoration: const InputDecoration(labelText: 'اسم المنتج'),
                 ),
                 DropdownButtonFormField<String>(
-                  initialValue: categoryId,
+                  value: categoryId,
                   items: categories
                       .map(
                         (c) => DropdownMenuItem(

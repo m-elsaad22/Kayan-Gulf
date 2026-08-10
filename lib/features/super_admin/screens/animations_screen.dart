@@ -124,7 +124,7 @@ class _AnimationsScreenState extends State<AnimationsScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   DropdownButtonFormField<String>(
-                    initialValue: _motion.transitionType,
+                    value: _motion.transitionType,
                     decoration: const InputDecoration(labelText: 'نوع الانتقال', filled: true),
                     items: MotionSettings.transitionTypes
                         .map((t) => DropdownMenuItem(value: t, child: Text(t)))
@@ -145,7 +145,7 @@ class _AnimationsScreenState extends State<AnimationsScreen>
                     }),
                   ),
                   DropdownButtonFormField<String>(
-                    initialValue: _motion.curveName,
+                    value: _motion.curveName,
                     decoration: const InputDecoration(labelText: 'منحنى الحركة', filled: true),
                     items: MotionSettings.curveNames
                         .map((c) => DropdownMenuItem(value: c, child: Text(c)))
@@ -154,7 +154,7 @@ class _AnimationsScreenState extends State<AnimationsScreen>
                   ),
                   const SizedBox(height: 12),
                   DropdownButtonFormField<String>(
-                    initialValue: _motion.hoverEffect,
+                    value: _motion.hoverEffect,
                     decoration: const InputDecoration(labelText: 'Hover (ويب)', filled: true),
                     items: MotionSettings.hoverEffects
                         .map((e) => DropdownMenuItem(value: e, child: Text(e)))
@@ -162,7 +162,7 @@ class _AnimationsScreenState extends State<AnimationsScreen>
                     onChanged: (v) => setState(() => _motion = _motion.copyWith(hoverEffect: v)),
                   ),
                   DropdownButtonFormField<String>(
-                    initialValue: _motion.hapticFeedback,
+                    value: _motion.hapticFeedback,
                     decoration: const InputDecoration(labelText: 'ردود فعل لمسية', filled: true),
                     items: MotionSettings.hapticModes
                         .map((h) => DropdownMenuItem(value: h, child: Text(h)))
@@ -170,7 +170,7 @@ class _AnimationsScreenState extends State<AnimationsScreen>
                     onChanged: (v) => setState(() => _motion = _motion.copyWith(hapticFeedback: v)),
                   ),
                   DropdownButtonFormField<String>(
-                    initialValue: _motion.scrollEffect,
+                    value: _motion.scrollEffect,
                     decoration: const InputDecoration(labelText: 'تأثير التمرير', filled: true),
                     items: MotionSettings.scrollEffects
                         .map((s) => DropdownMenuItem(value: s, child: Text(s)))

@@ -1,9 +1,11 @@
-// Login — matches design/html/08-login-1.html
+// Login — Gmail primary, phone OTP kept for later Unifonic subscription
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../core/config/app_config.dart';
 import '../../../../core/theme/kayan_design_tokens.dart';
 import '../../../../routing/app_routes.dart';
 import '../../../../shared/providers/auth_provider.dart';
@@ -24,6 +26,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _loading = false;
   bool _remember = true;
   int _tabIndex = 0;
+  String? _error;
 
   @override
   void dispose() {
@@ -35,10 +38,32 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Future<void> _run(Future<void> Function() action) async {
     HapticFeedback.selectionClick();
-    setState(() => _loading = true);
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
     try {
       await action();
       if (mounted) context.go(AppRoutes.dashboard);
+    } catch (e) {
+      if (!mounted) return;
+      final ar = ref.read(isArabicProvider);
+      final msg = e.toString();
+      String friendly;
+      if (msg.contains('google_cancelled')) {
+        friendly = ar ? 'تم إلغاء تسجيل الدخول بجوجل' : 'Google sign-in cancelled';
+      } else if (msg.contains('google_sign_in') || msg.contains('PlatformException')) {
+        friendly = ar
+            ? 'تعذر فتح جوجل. استخدم بريد Gmail وكلمة المرور بالأعلى، أو أضف SHA-1 في Google Cloud.'
+            : 'Google Sign-In failed. Use Gmail + password above, or configure SHA-1 in Google Cloud.';
+      } else if (msg.contains('apple_sign_in') || msg.contains('facebook_sign_in')) {
+        friendly = ar ? 'هذه الطريقة غير مفعّلة حاليًا' : 'This sign-in method is not enabled yet';
+      } else if (msg.contains('invalid_credentials')) {
+        friendly = ar ? 'البريد أو كلمة المرور غير صحيحة' : 'Invalid email or password';
+      } else {
+        friendly = ar ? 'تعذر تسجيل الدخول. حاول مرة أخرى.' : 'Sign-in failed. Please try again.';
+      }
+      setState(() => _error = friendly);
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -77,7 +102,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 const SizedBox(height: 14),
                 KayanEntryTitle(before: ar ? 'تسجيل ' : 'Sign ', highlight: ar ? 'الدخول' : 'in'),
                 const SizedBox(height: 8),
-                KayanEntrySubtitle(ar ? 'أهلاً بعودتك، سجّل دخولك للمتابعة' : 'Welcome back, sign in to continue'),
+                KayanEntrySubtitle(
+                  ar
+                      ? 'سجّل بجيميل الآن — الجوال OTP لاحقًا بعد تفعيل الخدمة'
+                      : 'Sign in with Gmail now — phone OTP after SMS is activated',
+                ),
               ],
             ),
           ),
@@ -87,13 +116,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            KayanSocialButton(
+              label: ar ? 'المتابعة باستخدام Gmail' : 'Continue with Gmail',
+              icon: Icons.g_mobiledata_rounded,
+              onTap: () {
+                if (_loading) return;
+                _run(() => auth.loginWithGoogle());
+              },
+            ),
+            const SizedBox(height: 14),
+            KayanOrDivider(label: ar ? 'أو بالبريد وكلمة المرور' : 'OR email & password'),
+            const SizedBox(height: 14),
             _AuthTabs(index: _tabIndex, isArabic: ar, onChanged: (i) => setState(() => _tabIndex = i)),
             const SizedBox(height: 18),
             if (_tabIndex == 0) ...[
               KayanDesignTextField(
-                label: ar ? 'البريد الإلكتروني أو رقم الجوال' : 'Email or phone',
+                label: ar ? 'بريد Gmail / الإلكتروني' : 'Gmail / Email',
                 controller: _emailCtrl,
-                hint: 'example@email.com',
+                hint: 'name@gmail.com',
                 icon: Icons.email_outlined,
                 keyboardType: TextInputType.emailAddress,
               ),
@@ -105,7 +145,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 icon: Icons.lock_outline_rounded,
                 obscureText: true,
               ),
-            ] else
+            ] else ...[
               KayanDesignTextField(
                 label: ar ? 'رقم الجوال' : 'Phone number',
                 controller: _phoneCtrl,
@@ -113,6 +153,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 icon: Icons.phone_iphone_rounded,
                 keyboardType: TextInputType.phone,
               ),
+              const SizedBox(height: 8),
+              Text(
+                ar
+                    ? 'OTP عبر SMS سيعمل بعد الاشتراك في Unifonic. حاليًا للتجربة المحلية فقط.'
+                    : 'SMS OTP will work after Unifonic subscription. Local demo only for now.',
+                style: KayanDesignTokens.cairo(fontSize: 12, color: KayanDesignTokens.muted, height: 1.5),
+              ),
+            ],
             const SizedBox(height: 12),
             if (_tabIndex == 0)
               Row(
@@ -132,6 +180,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                 ],
               ),
+            if (_error != null) ...[
+              const SizedBox(height: 8),
+              Text(
+                _error!,
+                style: KayanDesignTokens.cairo(fontSize: 12.5, color: Colors.red.shade700, height: 1.5),
+              ),
+            ],
             const SizedBox(height: 18),
             KayanCtaButton(
               label: ar ? 'تسجيل الدخول' : 'Login',
@@ -143,20 +198,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ? _run(() => auth.loginWithEmail(_emailCtrl.text.trim(), _passwordCtrl.text))
                       : context.push(AppRoutes.otpVerify, extra: _phoneCtrl.text.trim()),
             ),
-            const SizedBox(height: 20),
-            KayanOrDivider(label: ar ? 'أو' : 'OR'),
-            const SizedBox(height: 16),
-            KayanSocialButton(label: 'Google', icon: Icons.g_mobiledata_rounded, onTap: () => _run(() => auth.loginWithGoogle())),
-            const SizedBox(height: 10),
-            KayanSocialButton(label: 'Apple', icon: Icons.apple_rounded, onTap: () => _run(() => auth.loginWithApple())),
-            const SizedBox(height: 10),
-            KayanSocialButton(label: 'Facebook', icon: Icons.facebook_rounded, onTap: () => _run(() => auth.loginWithFacebook())),
             const SizedBox(height: 16),
             TextButton(
               onPressed: () => context.push(AppRoutes.signup),
               child: Text(
                 ar ? 'ليس لديك حساب؟ سجل الآن' : 'No account? Sign up',
                 style: KayanDesignTokens.cairo(fontWeight: FontWeight.w700, color: KayanDesignTokens.kBlue),
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                final uri = Uri.parse(AppConfig.publisherUrl);
+                if (await canLaunchUrl(uri)) {
+                  await launchUrl(uri, mode: LaunchMode.externalApplication);
+                }
+              },
+              child: Text(
+                ar ? 'ركن التطور — الموقع' : 'Rukn Eltatawer website',
+                style: KayanDesignTokens.cairo(fontSize: 12.5, color: KayanDesignTokens.muted),
               ),
             ),
           ],
@@ -175,7 +234,7 @@ class _AuthTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final labels = [isArabic ? 'بريد إلكتروني' : 'Email', isArabic ? 'رقم الجوال' : 'Phone'];
+    final labels = [isArabic ? 'Gmail / بريد' : 'Gmail / Email', isArabic ? 'رقم الجوال' : 'Phone'];
     return Row(
       children: List.generate(labels.length, (i) {
         final selected = index == i;
