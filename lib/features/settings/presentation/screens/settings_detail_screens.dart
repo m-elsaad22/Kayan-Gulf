@@ -422,7 +422,7 @@ class _SwitchRow extends StatelessWidget {
             value: value,
             onChanged: onChanged,
             activeTrackColor: KayanDesignTokens.kBlue.withValues(alpha: 0.35),
-            activeThumbColor: KayanDesignTokens.kBlue,
+            activeColor: KayanDesignTokens.kBlue,
           ),
         ],
       ),

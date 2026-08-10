@@ -1,4 +1,4 @@
-import '../../../checkout/presentation/providers/checkout_providers.dart';
+import '../../../../checkout/domain/checkout_models.dart';
 
 class OrderLineModel {
   final String productId;

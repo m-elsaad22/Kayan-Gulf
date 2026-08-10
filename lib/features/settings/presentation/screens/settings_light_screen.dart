@@ -97,7 +97,7 @@ class _SettingsLightScreenState extends ConsumerState<SettingsLightScreen> {
             value: value,
             onChanged: onChanged,
             activeTrackColor: KayanDesignTokens.kBlue.withValues(alpha: 0.35),
-            activeThumbColor: KayanDesignTokens.kBlue,
+            activeColor: KayanDesignTokens.kBlue,
           ),
         ],
       ),

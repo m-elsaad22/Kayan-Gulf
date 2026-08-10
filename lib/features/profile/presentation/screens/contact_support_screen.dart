@@ -64,7 +64,7 @@ class _ContactSupportScreenState extends State<ContactSupportScreen> {
                     Text('أرسل رسالة', style: KayanDesignTokens.cairo(fontWeight: FontWeight.w800, fontSize: 16)),
                     const SizedBox(height: 12),
                     DropdownButtonFormField<String>(
-                      initialValue: _topic,
+                      value: _topic,
                       decoration: InputDecoration(
                         labelText: 'نوع الاستفسار',
                         border: OutlineInputBorder(
