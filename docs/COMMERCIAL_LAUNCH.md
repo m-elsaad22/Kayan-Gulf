@@ -84,7 +84,13 @@ Alternatives considered: Firebase-only (limits commerce/orders), Laravel (fine i
 
 ## Commercial MVP complete
 
-Phases 1–6 cover API, commerce, OTP/push, services/classifieds, web admin, and Play release tooling. Remaining go-live work is operational (host API, real OTP/payment keys, Play Console submit) — not further monorepo phases unless you extend scope (deep iOS, live Tap/HyperPay, etc.).
+Phases 1–6 cover API, commerce, OTP/push, services/classifieds, web admin, and Play release tooling.
+
+### Production critical hardening (follow-up)
+
+See **[docs/PRODUCTION.md](PRODUCTION.md)** for Postgres-only DB, Docker entrypoint fix, production boot guards, payment webhook HMAC, SecureStorage tokens, and API-wired checkout/cart.
+
+Remaining go-live work is mostly operational (host API + TLS, real Unifonic/Tap keys, Play Console submit) plus High items listed in that doc.
 
 ## Phase 1–2 runbook
 

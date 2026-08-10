@@ -77,6 +77,7 @@ lib/
 | [docs/OTP_AND_PUSH.md](docs/OTP_AND_PUSH.md) | OTP (Unifonic/Twilio) + FCM push |
 | [docs/WEB_ADMIN.md](docs/WEB_ADMIN.md) | لوحة الإدارة (API + Next.js) |
 | [docs/PLAY_STORE.md](docs/PLAY_STORE.md) | توقيع Android + AAB + قائمة Play (AR/EN) — Phase 6 |
+| [docs/PRODUCTION.md](docs/PRODUCTION.md) | تشغيل إنتاج: Postgres، Docker، OTP، مدفوعات، حراسة الإقلاع |
 | [docs/IOS_RELEASE.md](docs/IOS_RELEASE.md) | ملاحظات TestFlight / App Store لاحقاً |
 | [backend/README.md](backend/README.md) | NestJS API (Auth, Catalog, Cart, Orders, Push, Admin) |
 | [admin/README.md](admin/README.md) | لوحة إدارة ويب (Next.js) — Phase 5 |

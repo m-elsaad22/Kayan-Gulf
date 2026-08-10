@@ -9,6 +9,7 @@ import '../../../../shared/providers/locale_provider.dart';
 import '../../../../shared/widgets/design/kayan_design_widgets.dart';
 import '../../../../shared/widgets/design/kayan_entry_widgets.dart';
 import '../../../ecommerce/product/presentation/providers/product_providers.dart';
+import '../providers/checkout_providers.dart';
 
 class PaymentScreen extends ConsumerStatefulWidget {
   const PaymentScreen({super.key, this.paymentData = const {}});
@@ -20,15 +21,35 @@ class PaymentScreen extends ConsumerStatefulWidget {
 }
 
 class _PaymentScreenState extends ConsumerState<PaymentScreen> {
-  int _payMethod = 0;
+  int _payMethod = 2;
   bool _processing = false;
+  String? _error;
+
+  PaymentMethod get _selected => switch (_payMethod) {
+        0 => PaymentMethod.card,
+        1 => PaymentMethod.wallet,
+        _ => PaymentMethod.cod,
+      };
 
   Future<void> _pay() async {
-    setState(() => _processing = true);
-    await Future.delayed(const Duration(seconds: 1));
+    setState(() {
+      _processing = true;
+      _error = null;
+    });
+    final checkout = ref.read(checkoutProvider.notifier);
+    final ok = await checkout.placeOrder(method: _selected);
     if (!mounted) return;
-    ref.read(cartProvider.notifier).clear();
-    final orderId = 'KYN-${DateTime.now().millisecondsSinceEpoch % 10000000}';
+    if (!ok) {
+      setState(() {
+        _processing = false;
+        _error = ref.read(checkoutProvider).errorMessage ?? 'failed';
+      });
+      return;
+    }
+    final orderId = ref.read(checkoutProvider).orderId ??
+        'KYN-${DateTime.now().millisecondsSinceEpoch % 10000000}';
+    await ref.read(cartProvider.notifier).clear();
+    if (!mounted) return;
     context.pushReplacement(AppRoutes.orderSuccessPath(orderId));
   }
 
@@ -36,8 +57,14 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
   Widget build(BuildContext context) {
     final ar = ref.watch(isArabicProvider);
     final summary = ref.watch(cartProvider).summary;
-    final options = ar ? ['بطاقة بنكية', 'محفظة كيان', 'الدفع عند الاستلام'] : ['Card', 'KAYAN Wallet', 'Cash on delivery'];
-    final icons = [Icons.credit_card_rounded, Icons.account_balance_wallet_rounded, Icons.payments_rounded];
+    final options = ar
+        ? ['بطاقة بنكية', 'محفظة كيان', 'الدفع عند الاستلام']
+        : ['Card', 'KAYAN Wallet', 'Cash on delivery'];
+    final icons = [
+      Icons.credit_card_rounded,
+      Icons.account_balance_wallet_rounded,
+      Icons.payments_rounded,
+    ];
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -47,24 +74,54 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              KayanLightTopBar(title: ar ? 'الدفع' : 'Payment', onBack: () => context.pop()),
+              KayanLightTopBar(
+                title: ar ? 'الدفع' : 'Payment',
+                onBack: () => context.pop(),
+              ),
               const SizedBox(height: 14),
               KayanOfferBanner(
                 title: ar ? 'ملخص الطلب' : 'Order summary',
-                subtitle: '${summary.itemCount} ${ar ? 'منتجات' : 'items'} · ${summary.total.toStringAsFixed(0)} ${ar ? 'ر.س' : 'SAR'}',
+                subtitle:
+                    '${summary.itemCount} ${ar ? 'منتجات' : 'items'} · ${summary.total.toStringAsFixed(0)} ${ar ? 'ر.س' : 'SAR'}',
                 gradient: KayanDesignTokens.gradOrange,
               ),
               const SizedBox(height: 16),
-              Text(ar ? 'طريقة الدفع' : 'Payment method', style: KayanDesignTokens.cairo(fontSize: 13, fontWeight: FontWeight.w700, color: KayanDesignTokens.text2)),
+              Text(
+                ar ? 'طريقة الدفع' : 'Payment method',
+                style: KayanDesignTokens.cairo(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  color: KayanDesignTokens.text2,
+                ),
+              ),
               const SizedBox(height: 8),
               Expanded(
                 child: ListView(
-                  children: List.generate(options.length, (i) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: KayanPayOptionRow(icon: icons[i], label: options[i], selected: _payMethod == i, onTap: () => setState(() => _payMethod = i)),
-                    );
-                  }),
+                  children: [
+                    ...List.generate(options.length, (i) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: KayanPayOptionRow(
+                          icon: icons[i],
+                          label: options[i],
+                          selected: _payMethod == i,
+                          onTap: () => setState(() => _payMethod = i),
+                        ),
+                      );
+                    }),
+                    if (_error != null) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        ar
+                            ? 'تعذر إتمام الطلب. تحقق من الجلسة وعنوان التوصيل.'
+                            : 'Checkout failed. Check session and delivery address.',
+                        style: KayanDesignTokens.cairo(
+                          fontSize: 12,
+                          color: Colors.red.shade700,
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ),
               KayanCtaButton(

@@ -1,8 +1,11 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { assertProductionConfig } from './common/production-guard';
 
 async function bootstrap() {
+  assertProductionConfig();
+
   const app = await NestFactory.create(AppModule);
 
   app.setGlobalPrefix('v1');
@@ -17,8 +20,10 @@ async function bootstrap() {
   const origins = process.env.CORS_ORIGINS?.split(',')
     .map((o) => o.trim())
     .filter(Boolean);
+  const isProd = (process.env.NODE_ENV ?? 'development') === 'production';
   app.enableCors({
-    origin: origins?.length ? origins : true,
+    // Production: only listed origins. Dev: reflect any origin when unset.
+    origin: origins?.length ? origins : isProd ? false : true,
     credentials: true,
   });
 
