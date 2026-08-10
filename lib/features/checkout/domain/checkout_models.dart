@@ -1,3 +1,5 @@
+library;
+
 /// Shared checkout models (kept free of Riverpod to avoid import cycles).
 
 enum PaymentMethod {

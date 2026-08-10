@@ -4,7 +4,7 @@ import 'package:kayan/features/services/data/repositories/mock_service_repositor
 
 void main() {
   test('MockServiceRepository creates booking', () async {
-    final repo = MockServiceRepository();
+    const repo = MockServiceRepository();
     final booking = await repo.createBooking(
       serviceId: 'svc-1',
       scheduledAt: DateTime.now().add(const Duration(days: 1)),
@@ -15,7 +15,7 @@ void main() {
   });
 
   test('MockClassifiedsRepository creates ad', () async {
-    final repo = MockClassifiedsRepository();
+    const repo = MockClassifiedsRepository();
     final ad = await repo.createAd(
       title: 'جهاز تجريبي',
       city: 'جدة',

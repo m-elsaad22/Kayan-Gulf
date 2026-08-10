@@ -361,7 +361,7 @@ class CartSnapshot {
   factory CartSnapshot.fromJson(Map<String, dynamic> j) {
     final summaryJson = j['summary'] as Map<String, dynamic>?;
     if (summaryJson == null) {
-      throw FormatException('cart response missing summary');
+      throw const FormatException('cart response missing summary');
     }
     return CartSnapshot(
       items: (j['items'] as List? ?? [])
