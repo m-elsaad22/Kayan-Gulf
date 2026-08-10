@@ -11,6 +11,10 @@ By default the app ships with **mock repositories** (`AppConfig.useMockData = tr
 
 Configuration is defined in `lib/core/config/app_config.dart` and read via `String.fromEnvironment` / `bool.fromEnvironment` at **compile time**.
 
+> **Phase 1 commercial API** lives in `/backend` (NestJS). Local base URL: `http://127.0.0.1:3000/v1`.  
+> Convenience scripts: `scripts/run_api_mode.sh`, `scripts/build_api_release.sh`.  
+> Roadmap: [COMMERCIAL_LAUNCH.md](./COMMERCIAL_LAUNCH.md).
+
 ## Run with mock data (default)
 
 ```bash
@@ -21,7 +25,20 @@ flutter build apk --release
 
 ## Run against a real backend
 
-### Debug / profile
+### Local NestJS API (Phase 1)
+
+```bash
+# Terminal 1
+cd backend && cp .env.example .env && npm install
+npx prisma migrate dev --name init && npm run seed && npm run start:dev
+
+# Terminal 2
+./scripts/run_api_mode.sh
+# → --dart-define=KAYAN_USE_MOCK_DATA=false
+# → --dart-define=KAYAN_API_BASE_URL=http://127.0.0.1:3000/v1
+```
+
+### Debug / profile (staging)
 
 ```bash
 flutter run \
@@ -29,13 +46,18 @@ flutter run \
   --dart-define=KAYAN_API_BASE_URL=https://staging.api.example.com/v1
 ```
 
-### Release APK
+### Release APK (production)
 
 ```bash
+KAYAN_API_BASE_URL=https://api.my-domain.com/v1 ./scripts/build_api_release.sh
+
+# or manually:
 flutter build apk --release \
   --dart-define=KAYAN_USE_MOCK_DATA=false \
-  --dart-define=KAYAN_API_BASE_URL=https://api.example.com/v1
+  --dart-define=KAYAN_API_BASE_URL=https://api.my-domain.com/v1
 ```
+
+Default `KAYAN_USE_MOCK_DATA` remains `true` so demos and CI tests work without a backend.
 
 ### CI / GitHub Actions
 
@@ -56,6 +78,9 @@ Add the same `--dart-define` flags to your build step, for example:
 | `homeRepositoryProvider` | `MockHomeRepository` | `RemoteHomeRepository` |
 | `productRepositoryProvider` | `MockProductRepository` | `RemoteProductRepository` |
 | `authRepositoryProvider` | `MockAuthRepository` | `RemoteAuthRepository` |
+| `cartRepositoryProvider` | `MockCartRepository` | `RemoteCartRepository` |
+| `orderRepositoryProvider` | `MockOrderRepository` | `RemoteOrderRepository` |
+| `deviceRepositoryProvider` | `MockDeviceRepository` | `RemoteDeviceRepository` |
 | `serviceRepositoryProvider` | `MockServiceRepository` | `RemoteServiceRepository` |
 | `classifiedsRepositoryProvider` | `MockClassifiedsRepository` | `RemoteClassifiedsRepository` |
 
@@ -68,8 +93,14 @@ Remote repositories expect JSON REST endpoints under the configured base URL. Im
 - **Home** — `GET /home` → banners, categories, flash deals, featured products, recent ads
 - **Products** — `GET /products`, `GET /products/:slug`, query params for search/sort/filter
 - **Auth** — `POST /auth/otp/send`, `POST /auth/otp/verify`, `POST /auth/login`, `POST /auth/signup`
-- **Services** — `GET /services`, `GET /services/:slug`, `GET /bookings`
-- **Classifieds** — `GET /ads`, `GET /ads/:slug`, `GET /ads/featured`, category filters
+- **Cart** — `GET /cart`, `POST /cart/items`, `PATCH /cart/items/:id`, `DELETE /cart/items/:id`, coupon endpoints
+- **Addresses** — `GET|POST /addresses`, `PATCH|DELETE /addresses/:id`
+- **Orders** — `POST /orders`, `GET /orders`, `GET /orders/:id`, `GET /orders/:id/tracking`
+- **Payments** — `POST /payments/intent`, `POST /payments/confirm`, `POST /webhooks/payments`
+- **Devices / Push** — `POST /devices/fcm`, `DELETE /devices/fcm`, `POST /notifications/push/me`
+- **Services** — `GET /services/categories`, `GET /services`, `GET /services/:slug`
+- **Bookings** — `GET/POST /bookings`, `GET /bookings/:id`, `PATCH /bookings/:id/status`
+- **Classifieds** — `GET /classifieds/categories`, `GET /classifieds/ads`, `GET /classifieds/ads/featured`, `GET /classifieds/ads/:slug`, `GET /classifieds/my-ads`, `POST /classifieds/ads`, `PATCH /classifieds/ads/:id/status`
 
 Exact field names should match the models in each feature’s `data/models/` directory. Use the mock repositories and `MockDataCatalog` as the reference for expected domain shapes.
 

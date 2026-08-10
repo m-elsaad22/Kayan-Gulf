@@ -57,4 +57,32 @@ class RemoteServiceRepository implements ServiceRepository {
     final data = json['booking'] as Map<String, dynamic>? ?? json;
     return BookingModel.fromJson(data);
   }
+
+  @override
+  Future<BookingModel> createBooking({
+    required String serviceId,
+    required DateTime scheduledAt,
+    required String addressLine,
+    String? notes,
+  }) async {
+    final json = await _client.postJson(
+      '/bookings',
+      body: {
+        'serviceId': serviceId,
+        'scheduledAt': scheduledAt.toIso8601String(),
+        'addressLine': addressLine,
+        if (notes != null) 'notes': notes,
+      },
+    );
+    return BookingModel.fromJson(json);
+  }
+
+  @override
+  Future<BookingModel> updateBookingStatus(String id, String status) async {
+    final json = await _client.patchJson(
+      '/bookings/$id/status',
+      body: {'status': status},
+    );
+    return BookingModel.fromJson(json);
+  }
 }

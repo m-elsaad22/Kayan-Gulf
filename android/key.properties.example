@@ -1,0 +1,10 @@
+# Copy to android/key.properties (NEVER commit the real file).
+# Generate a keystore first:
+#   ./scripts/create_upload_keystore.sh
+#
+# Paths are relative to android/app/ when used as storeFile=...
+
+storePassword=CHANGE_ME_STORE_PASSWORD
+keyPassword=CHANGE_ME_KEY_PASSWORD
+keyAlias=kayan
+storeFile=../../secrets/kayan-upload.jks

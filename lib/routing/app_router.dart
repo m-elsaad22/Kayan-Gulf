@@ -28,9 +28,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'app_routes.dart';
 import 'main_shell.dart';
+import '../core/config/app_config.dart';
+import '../core/services/app_status_service.dart';
 import '../shared/providers/auth_provider.dart';
 import '../shared/services/local_storage_service.dart';
 import '../core/theme/kayan_design_tokens.dart';
@@ -283,6 +286,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       String? go(String target) {
         if (matched == target) return null;
         return target;
+      }
+
+      // Remote kill-switch (cPanel status.json / status.php)
+      if (AppStatusService.isBlocked &&
+          matched != AppRoutes.maintenance) {
+        return go(AppRoutes.maintenance);
       }
 
       // Always allow splash
@@ -2278,6 +2287,26 @@ class _MaintenanceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final status = AppStatusService.lastStatus;
+    final ar = Localizations.localeOf(context).languageCode == 'ar';
+    final updateRequired = status?.updateRequired == true;
+    final maintenance = status?.maintenanceMode == true;
+    final message = ar
+        ? (status?.messageAr ?? 'التطبيق متوقف من لوحة التحكم.')
+        : (status?.messageEn ?? 'The app is disabled by the publisher.');
+    final support = status?.supportUrl ?? AppConfig.publisherUrl;
+    final title = updateRequired
+        ? (ar ? 'تحديث مطلوب' : 'Update required')
+        : maintenance
+            ? (ar ? 'صيانة' : 'Maintenance')
+            : (ar ? 'التطبيق غير متاح' : 'App unavailable');
+    final icon = updateRequired
+        ? Icons.system_update_rounded
+        : maintenance
+            ? Icons.construction_rounded
+            : Icons.block_rounded;
+    final storeUrl = status?.playStoreUrl ?? status?.apkUrl ?? support;
+
     return Scaffold(
       backgroundColor: KayanDesignTokens.bg,
       body: Center(
@@ -2289,13 +2318,60 @@ class _MaintenanceScreen extends StatelessWidget {
               Container(
                 width: 100,
                 height: 100,
-                decoration: const BoxDecoration(gradient: KayanDesignTokens.gradBlue, shape: BoxShape.circle),
-                child: const Icon(Icons.engineering_rounded, color: Colors.white, size: 48),
+                decoration: const BoxDecoration(
+                  gradient: KayanDesignTokens.gradBlue,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, color: Colors.white, size: 48),
               ),
               const SizedBox(height: 24),
-              Text('تحديثات قيد التنفيذ', style: KayanDesignTokens.cairo(fontSize: 20, fontWeight: FontWeight.w900), textAlign: TextAlign.center),
+              Text(
+                title,
+                style: KayanDesignTokens.cairo(fontSize: 20, fontWeight: FontWeight.w900),
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: 8),
-              Text('KAYAN is being refined. Please try again shortly.', style: KayanDesignTokens.cairo(color: KayanDesignTokens.muted), textAlign: TextAlign.center),
+              Text(
+                message,
+                style: KayanDesignTokens.cairo(color: KayanDesignTokens.muted, height: 1.6),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              if (updateRequired)
+                KayanCtaButton(
+                  label: ar ? 'تحديث الآن' : 'Update now',
+                  variant: KayanCtaVariant.blue,
+                  onPressed: () async {
+                    final uri = Uri.parse(storeUrl);
+                    await launchUrl(uri, mode: LaunchMode.externalApplication);
+                  },
+                )
+              else
+                KayanCtaButton(
+                  label: ar ? 'إعادة المحاولة' : 'Try again',
+                  variant: KayanCtaVariant.blue,
+                  onPressed: () async {
+                    final next = await AppStatusService.check(force: true);
+                    if (!context.mounted) return;
+                    if (!next.isBlocked) {
+                      context.go(AppRoutes.splash);
+                    }
+                  },
+                ),
+              const SizedBox(height: 12),
+              TextButton(
+                onPressed: () async {
+                  final uri = Uri.parse(support);
+                  await launchUrl(uri, mode: LaunchMode.externalApplication);
+                },
+                child: Text(
+                  ar ? 'زيارة موقع ركن التطور' : 'Visit Rukn Eltatawer',
+                  style: KayanDesignTokens.cairo(
+                    fontWeight: FontWeight.w700,
+                    color: KayanDesignTokens.kBlue,
+                  ),
+                ),
+              ),
             ],
           ),
         ),

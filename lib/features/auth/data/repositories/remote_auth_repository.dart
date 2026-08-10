@@ -1,4 +1,5 @@
 import '../../../../core/network/api_client.dart';
+import '../../../../shared/services/local_storage_service.dart';
 import '../../data/models/auth_models.dart';
 import 'auth_repository.dart';
 
@@ -27,6 +28,25 @@ class RemoteAuthRepository implements AuthRepository {
     final json = await _client.postJson(
       '/auth/login',
       body: {'email': email, 'password': password},
+    );
+    return AuthResult.fromJson(json);
+  }
+
+  @override
+  Future<AuthResult> loginWithGoogle({
+    required String email,
+    String? idToken,
+    String? displayName,
+    String? googleId,
+  }) async {
+    final json = await _client.postJson(
+      '/auth/google',
+      body: {
+        'email': email,
+        if (idToken != null && idToken.isNotEmpty) 'idToken': idToken,
+        if (displayName != null) 'name': displayName,
+        if (googleId != null) 'googleId': googleId,
+      },
     );
     return AuthResult.fromJson(json);
   }
@@ -61,6 +81,12 @@ class RemoteAuthRepository implements AuthRepository {
 
   @override
   Future<void> logout() async {
-    await _client.postJson('/auth/logout');
+    final refresh = LocalStorageService.refreshToken;
+    await _client.postJson(
+      '/auth/logout',
+      body: {
+        if (refresh != null && refresh.isNotEmpty) 'refreshToken': refresh,
+      },
+    );
   }
 }

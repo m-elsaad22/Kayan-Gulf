@@ -9,10 +9,13 @@
 //   - Logout
 // ============================================================
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/di/repository_providers.dart';
+import '../../core/services/google_auth_service.dart';
 import '../../features/auth/data/models/auth_models.dart';
 import '../services/local_storage_service.dart';
+import '../services/notification_service.dart';
 
 // ──────────────────────────────────────────────────────────────
 // LIGHTWEIGHT AUTH STATE (used by router guard)
@@ -80,9 +83,25 @@ class AuthNotifier extends Notifier<AuthGuardState> {
     await _completeAuth(result);
   }
 
-  Future<void> loginWithGoogle() async => _completeMockAuth('google-user');
-  Future<void> loginWithApple() async => _completeMockAuth('apple-user');
-  Future<void> loginWithFacebook() async => _completeMockAuth('facebook-user');
+  Future<void> loginWithGoogle() async {
+    final google = await GoogleAuthService.signIn();
+    if (google == null) {
+      throw Exception('google_cancelled');
+    }
+    final result = await ref.read(authRepositoryProvider).loginWithGoogle(
+          email: google.email,
+          idToken: google.idToken,
+          displayName: google.displayName,
+          googleId: google.id,
+        );
+    await _completeAuth(result);
+  }
+
+  Future<void> loginWithApple() async =>
+      throw Exception('apple_sign_in_not_enabled');
+
+  Future<void> loginWithFacebook() async =>
+      throw Exception('facebook_sign_in_not_enabled');
 
   Future<void> signUp({
     required String name,
@@ -107,39 +126,30 @@ class AuthNotifier extends Notifier<AuthGuardState> {
 
   Future<void> _completeAuth(AuthResult result) async {
     await LocalStorageService.markOnboardingSeen();
-    setAuthenticated(
+    await setAuthenticated(
       userId: result.userId,
       accessToken: result.accessToken,
       refreshToken: result.refreshToken,
       isProfileComplete: result.isProfileComplete,
     );
-  }
-
-  Future<void> _completeMockAuth(String userId) async {
-    await LocalStorageService.markOnboardingSeen();
-    setAuthenticated(
-      userId: userId,
-      accessToken: 'mock-access-$userId',
-      refreshToken: 'mock-refresh-$userId',
-      isProfileComplete: true,
-    );
+    await _syncDeviceToken();
   }
 
   // Called after successful OTP verification
-  void setAuthenticated({
+  Future<void> setAuthenticated({
     required String userId,
     required String accessToken,
     required String refreshToken,
     required bool isProfileComplete,
-  }) {
-    LocalStorageService.saveAuth(
-      userId:         userId,
-      accessToken:    accessToken,
-      refreshToken:   refreshToken,
+  }) async {
+    await LocalStorageService.saveAuth(
+      userId: userId,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
       profileComplete: isProfileComplete,
     );
     state = AuthGuardState.authenticated(
-      userId:         userId,
+      userId: userId,
       profileComplete: isProfileComplete,
     );
   }
@@ -157,9 +167,31 @@ class AuthNotifier extends Notifier<AuthGuardState> {
 
   // Called on logout
   Future<void> logout() async {
+    final token = LocalStorageService.fcmToken;
+    if (token != null && token.isNotEmpty) {
+      try {
+        await ref.read(deviceRepositoryProvider).unregisterFcmToken(token);
+      } catch (e) {
+        if (kDebugMode) debugPrint('FCM unregister failed: $e');
+      }
+    }
     await ref.read(authRepositoryProvider).logout();
-    LocalStorageService.clearAuth();
+    await LocalStorageService.clearAuth();
     state = const AuthGuardState.unauthenticated();
+  }
+
+  Future<void> _syncDeviceToken() async {
+    final token =
+        LocalStorageService.fcmToken ?? await NotificationService.getToken();
+    if (token == null || token.isEmpty) return;
+    try {
+      await ref.read(deviceRepositoryProvider).registerFcmToken(
+            token: token,
+            platform: NotificationService.platformName(),
+          );
+    } catch (e) {
+      if (kDebugMode) debugPrint('FCM register failed: $e');
+    }
   }
 }
 

@@ -73,14 +73,29 @@ lib/
 |---------|---------|
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | طبقات التطبيق، Repository pattern، Riverpod، الاختبارات |
 | [docs/API_SWITCH.md](docs/API_SWITCH.md) | التبديل من Mock إلى API حقيقي (`KAYAN_USE_MOCK_DATA`, `KAYAN_API_BASE_URL`) |
+| [docs/COMMERCIAL_LAUNCH.md](docs/COMMERCIAL_LAUNCH.md) | خطة التشغيل التجاري + Stack الـ Backend |
+| [docs/OTP_AND_PUSH.md](docs/OTP_AND_PUSH.md) | OTP (Unifonic/Twilio) + FCM push |
+| [docs/WEB_ADMIN.md](docs/WEB_ADMIN.md) | لوحة الإدارة (API + Next.js) |
+| [docs/PLAY_STORE.md](docs/PLAY_STORE.md) | توقيع Android + AAB + قائمة Play (AR/EN) — Phase 6 |
+| [docs/PRODUCTION.md](docs/PRODUCTION.md) | تشغيل إنتاج: Postgres، Docker، OTP، مدفوعات، حراسة الإقلاع |
+| [docs/DISTRIBUTION_CPANEL.md](docs/DISTRIBUTION_CPANEL.md) | APK توزيعي + إيقاف من cPanel + ربط ركن التطور |
+| [docs/IOS_RELEASE.md](docs/IOS_RELEASE.md) | ملاحظات TestFlight / App Store لاحقاً |
+| [backend/README.md](backend/README.md) | NestJS API (Auth, Catalog, Cart, Orders, Push, Admin) |
+| [admin/README.md](admin/README.md) | لوحة إدارة ويب (Next.js) — Phase 5 |
 | [RELEASES.md](RELEASES.md) | روابط تحميل إصدارات المراحل (ZIP + APK) |
 
 ### التبديل السريع إلى API حقيقي
 
 ```bash
+# Backend محلي (Phase 1)
+cd backend && npm install && npx prisma migrate dev && npm run seed && npm run start:dev
+
+# التطبيق ضد الـ API
+./scripts/run_api_mode.sh
+# أو:
 flutter run \
   --dart-define=KAYAN_USE_MOCK_DATA=false \
-  --dart-define=KAYAN_API_BASE_URL=https://your-api.example.com/v1
+  --dart-define=KAYAN_API_BASE_URL=http://127.0.0.1:3000/v1
 ```
 
 الوضع الافتراضي (`KAYAN_USE_MOCK_DATA=true`) يستخدم بيانات محلية عبر `MockDataCatalog` — لا حاجة لخادم خلفي للتطوير أو العروض التوضيحية.
@@ -120,7 +135,8 @@ flutter run \
 | 1 | افتح **الملف الشخصي** (Profile) |
 | 2 | انقر **5 مرات بسرعة** على نص **رقم الإصدار** في أسفل الشاشة |
 | 3 | ستُفتح شاشة تسجيل الدخول للمشرف |
-| 4 | أدخل بيانات الدخول: **اسم المستخدم:** `admin` — **كلمة المرور:** `kayan@admin` |
+| 4 | أدخل بيانات الدخول: **اسم المستخدم:** `admin` — **كلمة المرور:** `kayan@admin` (عرض تجريبي محلي فقط) |
+| — | للإنتاج استخدم لوحة الويب: [admin/README.md](admin/README.md) → `admin@kayan.app` / `kayan@admin` |
 
 **English:** Profile → tap the **version text 5 times quickly** → Admin Login → `admin` / `kayan@admin`
 

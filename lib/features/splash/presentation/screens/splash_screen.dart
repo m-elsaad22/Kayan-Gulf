@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/services/app_status_service.dart';
 import '../../../../routing/app_routes.dart';
 import '../../../../core/theme/kayan_design_tokens.dart';
 import '../../../../shared/providers/auth_provider.dart';
@@ -20,9 +21,20 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(milliseconds: 2400), () {
-      if (mounted) _navigate();
-    });
+    _boot();
+  }
+
+  Future<void> _boot() async {
+    final minDelay = Future<void>.delayed(const Duration(milliseconds: 1600));
+    final status = await AppStatusService.check(force: true);
+    await minDelay;
+    if (!mounted) return;
+
+    if (status.isBlocked) {
+      context.go(AppRoutes.maintenance);
+      return;
+    }
+    _navigate();
   }
 
   void _navigate() {
