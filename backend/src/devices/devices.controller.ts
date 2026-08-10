@@ -16,6 +16,14 @@ class RegisterDeviceDto {
   @IsOptional()
   @IsString()
   locale?: string;
+
+  @IsOptional()
+  @IsString()
+  appVersion?: string;
+
+  @IsOptional()
+  @IsString()
+  deviceName?: string;
 }
 
 class UnregisterDeviceDto {

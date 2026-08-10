@@ -72,10 +72,11 @@ export KAYAN_API_BASE_URL=https://api.your-domain.com/v1
 
 Requires a signed-in user with a delivery address (seed creates one for `demo@kayan.app`).
 
-## Still not full commercial (High / later)
+## Final RC follow-ups (see also PRODUCTION_DEPLOYMENT.md)
 
-- HyperPay / Paymob createIntent still rejected (not implemented)
-- Firebase FlutterFire options / google-services plugin still missing
-- Social login still mock
-- Classifieds post / service booking UI may still be partially demo
-- Helmet / global throttler not added yet
+- Google Sign-In verifies `idToken` + audience; stores `googleSub` (manual OAuth console setup still required)
+- App control: Admin → DB → `GET /v1/app/status` (cPanel JSON is emergency fallback)
+- Helmet + `@nestjs/throttler` enabled
+- Production APK: `./scripts/build_production_apk.sh` (mock **off**)
+- HyperPay / Paymob still not production-complete
+- Firebase FlutterFire options / google-services plugin still optional until FCM launch

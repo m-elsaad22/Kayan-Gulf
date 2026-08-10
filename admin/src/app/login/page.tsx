@@ -3,6 +3,7 @@
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { login, setSession } from '@/lib/api';
+import { isAdminRole } from '@/lib/roles';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -17,7 +18,7 @@ export default function LoginPage() {
     setError(null);
     try {
       const res = await login(email.trim(), password);
-      if (res.role !== 'admin') {
+      if (!isAdminRole(res.role)) {
         throw new Error('admin_required');
       }
       setSession(res.accessToken, res.role);

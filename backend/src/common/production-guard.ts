@@ -55,6 +55,17 @@ export function assertProductionConfig(env: NodeJS.ProcessEnv = process.env): vo
     errors.push('PAYMENT_ALLOW_CLIENT_CONFIRM cannot be true in production');
   }
 
+  const googleIds = (
+    env.GOOGLE_CLIENT_IDS ??
+    env.GOOGLE_WEB_CLIENT_ID ??
+    ''
+  ).trim();
+  if (!googleIds && (env.GOOGLE_AUTH_REQUIRED ?? 'true').toLowerCase() === 'true') {
+    errors.push(
+      'GOOGLE_CLIENT_IDS or GOOGLE_WEB_CLIENT_ID required in production (set GOOGLE_AUTH_REQUIRED=false only if Google login is disabled)',
+    );
+  }
+
   if (errors.length) {
     throw new Error(
       `Production config invalid:\n- ${errors.join('\n- ')}\nRefusing to start.`,

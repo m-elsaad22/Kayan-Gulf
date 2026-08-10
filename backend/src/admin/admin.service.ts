@@ -1,35 +1,37 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { AppControlService, UpdateAppControlInput } from '../app-control/app-control.service';
 import { toProductCardJson } from '../products/product.mapper';
 import { toServiceDetailJson } from '../services/services.mapper';
 import { toMyAdJson } from '../classifieds/classifieds.mapper';
+import { isPrivilegedAdmin } from '../auth/admin.guard';
+
+const USER_ROLES = ['user', 'support', 'moderator', 'admin', 'super_admin'] as const;
+const USER_STATUSES = ['active', 'suspended', 'deleted'] as const;
 
 @Injectable()
 export class AdminService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly appControl: AppControlService,
+  ) {}
 
   async stats() {
-    const [
-      users,
-      products,
-      orders,
-      services,
-      bookings,
-      ads,
-      banners,
-    ] = await Promise.all([
-      this.prisma.user.count(),
-      this.prisma.product.count(),
-      this.prisma.order.count(),
-      this.prisma.service.count(),
-      this.prisma.booking.count(),
-      this.prisma.classifiedAd.count(),
-      this.prisma.banner.count(),
-    ]);
+    const [users, products, orders, services, bookings, ads, banners] =
+      await Promise.all([
+        this.prisma.user.count({ where: { status: { not: 'deleted' } } }),
+        this.prisma.product.count(),
+        this.prisma.order.count(),
+        this.prisma.service.count(),
+        this.prisma.booking.count(),
+        this.prisma.classifiedAd.count(),
+        this.prisma.banner.count(),
+      ]);
 
     const recentOrders = await this.prisma.order.findMany({
       take: 5,
@@ -61,25 +63,261 @@ export class AdminService {
     };
   }
 
-  async listUsers() {
+  async listUsers(query?: { q?: string; status?: string; role?: string }) {
+    const where: Record<string, unknown> = {};
+    if (query?.status) where.status = query.status;
+    if (query?.role) where.role = query.role;
+    if (query?.q?.trim()) {
+      const q = query.q.trim();
+      where.OR = [
+        { email: { contains: q, mode: 'insensitive' } },
+        { phone: { contains: q } },
+        { name: { contains: q, mode: 'insensitive' } },
+      ];
+    }
+
     const users = await this.prisma.user.findMany({
+      where,
       orderBy: { createdAt: 'desc' },
+      take: 200,
       select: {
         id: true,
         email: true,
         phone: true,
         name: true,
         role: true,
+        status: true,
+        authProvider: true,
+        googleSub: true,
         isProfileComplete: true,
+        lastLoginAt: true,
         createdAt: true,
+        deletedAt: true,
+        _count: {
+          select: {
+            orders: true,
+            bookings: true,
+            deviceTokens: true,
+            classifiedAds: true,
+          },
+        },
       },
     });
     return {
       items: users.map((u) => ({
-        ...u,
+        id: u.id,
+        email: u.email,
+        phone: u.phone,
+        name: u.name,
+        role: u.role,
+        status: u.status,
+        authProvider: u.authProvider,
+        hasGoogle: !!u.googleSub,
+        isProfileComplete: u.isProfileComplete,
+        lastLoginAt: u.lastLoginAt?.toISOString() ?? null,
         createdAt: u.createdAt.toISOString(),
+        deletedAt: u.deletedAt?.toISOString() ?? null,
+        counts: {
+          orders: u._count.orders,
+          bookings: u._count.bookings,
+          devices: u._count.deviceTokens,
+          ads: u._count.classifiedAds,
+        },
       })),
     };
+  }
+
+  async getUser(id: string) {
+    const u = await this.prisma.user.findUnique({
+      where: { id },
+      include: {
+        deviceTokens: { orderBy: { lastSeenAt: 'desc' } },
+        orders: { take: 20, orderBy: { createdAt: 'desc' } },
+        bookings: { take: 20, orderBy: { createdAt: 'desc' } },
+        classifiedAds: { take: 20, orderBy: { createdAt: 'desc' } },
+      },
+    });
+    if (!u) throw new NotFoundException('user_not_found');
+    return {
+      id: u.id,
+      email: u.email,
+      phone: u.phone,
+      name: u.name,
+      avatarUrl: u.avatarUrl,
+      role: u.role,
+      status: u.status,
+      authProvider: u.authProvider,
+      googleSub: u.googleSub,
+      isProfileComplete: u.isProfileComplete,
+      lastLoginAt: u.lastLoginAt?.toISOString() ?? null,
+      createdAt: u.createdAt.toISOString(),
+      deletedAt: u.deletedAt?.toISOString() ?? null,
+      devices: u.deviceTokens.map((d) => ({
+        id: d.id,
+        platform: d.platform,
+        appVersion: d.appVersion,
+        deviceName: d.deviceName,
+        status: d.status,
+        lastSeenAt: d.lastSeenAt.toISOString(),
+        createdAt: d.createdAt.toISOString(),
+      })),
+      orders: u.orders.map((o) => ({
+        id: o.id,
+        status: o.status,
+        total: o.total,
+        createdAt: o.createdAt.toISOString(),
+      })),
+      bookings: u.bookings.map((b) => ({
+        id: b.id,
+        bookingNumber: b.bookingNumber,
+        status: b.status,
+        scheduledAt: b.scheduledAt.toISOString(),
+      })),
+      ads: u.classifiedAds.map((a) => ({
+        id: a.id,
+        title: a.title,
+        status: a.status,
+      })),
+    };
+  }
+
+  async updateUser(
+    id: string,
+    input: { role?: string; status?: string; name?: string },
+    actor: { userId: string; role: string },
+  ) {
+    const existing = await this.prisma.user.findUnique({ where: { id } });
+    if (!existing) throw new NotFoundException('user_not_found');
+
+    if (input.role !== undefined) {
+      if (!isPrivilegedAdmin(actor.role)) {
+        throw new ForbiddenException('privileged_admin_required');
+      }
+      if (!USER_ROLES.includes(input.role as (typeof USER_ROLES)[number])) {
+        throw new BadRequestException('invalid_role');
+      }
+      if (
+        existing.role === 'super_admin' &&
+        input.role !== 'super_admin' &&
+        actor.role !== 'super_admin'
+      ) {
+        throw new ForbiddenException('cannot_demote_super_admin');
+      }
+    }
+
+    if (input.status !== undefined) {
+      if (!isPrivilegedAdmin(actor.role)) {
+        throw new ForbiddenException('privileged_admin_required');
+      }
+      if (
+        !USER_STATUSES.includes(input.status as (typeof USER_STATUSES)[number])
+      ) {
+        throw new BadRequestException('invalid_status');
+      }
+    }
+
+    const data: {
+      role?: string;
+      status?: string;
+      name?: string;
+      deletedAt?: Date | null;
+    } = {};
+    if (input.role !== undefined) data.role = input.role;
+    if (input.name !== undefined) data.name = input.name;
+    if (input.status !== undefined) {
+      data.status = input.status;
+      data.deletedAt = input.status === 'deleted' ? new Date() : null;
+    }
+
+    const updated = await this.prisma.user.update({
+      where: { id },
+      data,
+    });
+
+    await this.prisma.auditLog.create({
+      data: {
+        actorId: actor.userId,
+        action: 'user.update',
+        resource: 'User',
+        resourceId: id,
+        metaJson: JSON.stringify(input),
+        success: true,
+      },
+    });
+
+    // Soft-delete / suspend → revoke refresh tokens
+    if (input.status === 'suspended' || input.status === 'deleted') {
+      await this.prisma.refreshToken.deleteMany({ where: { userId: id } });
+    }
+
+    return {
+      id: updated.id,
+      role: updated.role,
+      status: updated.status,
+      name: updated.name,
+    };
+  }
+
+  async setDeviceStatus(
+    userId: string,
+    deviceId: string,
+    status: string,
+    actorId: string,
+  ) {
+    if (!['active', 'inactive'].includes(status)) {
+      throw new BadRequestException('invalid_device_status');
+    }
+    const device = await this.prisma.deviceToken.findFirst({
+      where: { id: deviceId, userId },
+    });
+    if (!device) throw new NotFoundException('device_not_found');
+    const updated = await this.prisma.deviceToken.update({
+      where: { id: deviceId },
+      data: { status },
+    });
+    await this.prisma.auditLog.create({
+      data: {
+        actorId,
+        action: 'device.status',
+        resource: 'DeviceToken',
+        resourceId: deviceId,
+        metaJson: JSON.stringify({ status }),
+        success: true,
+      },
+    });
+    return {
+      id: updated.id,
+      status: updated.status,
+    };
+  }
+
+  async listAuditLogs(take = 50) {
+    const rows = await this.prisma.auditLog.findMany({
+      orderBy: { createdAt: 'desc' },
+      take,
+      include: { actor: { select: { email: true, name: true } } },
+    });
+    return {
+      items: rows.map((r) => ({
+        id: r.id,
+        action: r.action,
+        resource: r.resource,
+        resourceId: r.resourceId,
+        success: r.success,
+        actorEmail: r.actor?.email ?? null,
+        actorName: r.actor?.name ?? null,
+        createdAt: r.createdAt.toISOString(),
+        metaJson: r.metaJson,
+      })),
+    };
+  }
+
+  getAppControl() {
+    return this.appControl.getPublicStatus();
+  }
+
+  updateAppControl(input: UpdateAppControlInput, actorId: string) {
+    return this.appControl.update(input, actorId);
   }
 
   async listProducts() {

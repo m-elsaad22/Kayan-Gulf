@@ -21,6 +21,8 @@ async function main() {
   await prisma.vendor.deleteMany();
   await prisma.category.deleteMany();
   await prisma.banner.deleteMany();
+  await prisma.auditLog.deleteMany();
+  await prisma.appControl.deleteMany();
   await prisma.user.deleteMany();
 
   const passwordHash = await bcrypt.hash('password123', 10);
@@ -33,6 +35,8 @@ async function main() {
       passwordHash,
       isProfileComplete: true,
       role: 'user',
+      authProvider: 'password',
+      status: 'active',
     },
   });
 
@@ -43,7 +47,24 @@ async function main() {
       name: 'KAYAN Admin',
       passwordHash: adminHash,
       isProfileComplete: true,
-      role: 'admin',
+      role: 'super_admin',
+      authProvider: 'password',
+      status: 'active',
+    },
+  });
+
+  await prisma.appControl.create({
+    data: {
+      id: 'default',
+      enabled: true,
+      maintenanceMode: false,
+      messageAr: 'التطبيق يعمل بشكل طبيعي.',
+      messageEn: 'The app is running normally.',
+      minVersion: '1.0.0',
+      latestVersion: '1.0.0',
+      forceUpdate: false,
+      supportUrl: 'https://www.rukn-eltatawer.com/',
+      websiteUrl: 'https://www.rukn-eltatawer.com/',
     },
   });
 

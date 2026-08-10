@@ -13,8 +13,14 @@ model User {
   email              String?        @unique
   passwordHash       String?
   name               String?
-  role               String         @default("user") // user | admin
+  avatarUrl          String?
+  googleSub          String?        @unique
+  authProvider       String         @default("password") // password | google | phone
+  role               String         @default("user") // user | support | moderator | admin | super_admin
+  status             String         @default("active") // active | suspended | deleted
   isProfileComplete  Boolean        @default(false)
+  lastLoginAt        DateTime?
+  deletedAt          DateTime?
   createdAt          DateTime       @default(now())
   updatedAt          DateTime       @updatedAt
   refreshTokens      RefreshToken[]
@@ -26,20 +32,65 @@ model User {
   deviceTokens       DeviceToken[]
   bookings           Booking[]
   classifiedAds      ClassifiedAd[]
+  auditLogs          AuditLog[]     @relation("AuditActor")
+
+  @@index([status])
+  @@index([role])
 }
 
 model DeviceToken {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  token     String
-  platform  String   @default("android") // android | ios | web
-  locale    String?  // ar | en
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token      String
+  platform   String   @default("android") // android | ios | web
+  locale     String? // ar | en
+  appVersion String?
+  deviceName String?
+  status     String   @default("active") // active | inactive
+  lastSeenAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@unique([userId, token])
   @@index([token])
+  @@index([status])
+}
+
+/// Singleton remote application control (id = "default").
+model AppControl {
+  id              String   @id @default("default")
+  enabled         Boolean  @default(true)
+  maintenanceMode Boolean  @default(false)
+  messageAr       String   @default("التطبيق متوقف مؤقتًا.")
+  messageEn       String   @default("The app is temporarily unavailable.")
+  minVersion      String   @default("1.0.0")
+  latestVersion   String   @default("1.0.0")
+  forceUpdate     Boolean  @default(false)
+  supportUrl      String   @default("https://www.rukn-eltatawer.com/")
+  websiteUrl      String   @default("https://www.rukn-eltatawer.com/")
+  apkUrl          String?
+  playStoreUrl    String?
+  updatedById     String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?
+  actor      User?    @relation("AuditActor", fields: [actorId], references: [id], onDelete: SetNull)
+  action     String
+  resource   String
+  resourceId String?
+  metaJson   String?
+  ip         String?
+  success    Boolean  @default(true)
+  createdAt  DateTime @default(now())
+
+  @@index([action])
+  @@index([createdAt])
+  @@index([actorId])
 }
 
 model RefreshToken {

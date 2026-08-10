@@ -23,8 +23,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const user = await this.prisma.user.findUnique({
       where: { id: payload.sub },
     });
-    if (!user) {
+    if (!user || user.deletedAt || user.status === 'deleted') {
       throw new UnauthorizedException('invalid_token');
+    }
+    if (user.status === 'suspended') {
+      throw new UnauthorizedException('account_suspended');
+    }
+    if (user.status !== 'active') {
+      throw new UnauthorizedException('account_inactive');
     }
     return {
       userId: user.id,

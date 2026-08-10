@@ -30,7 +30,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     await minDelay;
     if (!mounted) return;
 
-    if (!status.enabled) {
+    if (status.isBlocked) {
       context.go(AppRoutes.maintenance);
       return;
     }

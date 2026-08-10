@@ -69,7 +69,32 @@ export async function login(email: string, password: string) {
 
 export const adminApi = {
   stats: () => request<AdminStats>('/admin/stats'),
-  users: () => request<{ items: AdminUser[] }>('/admin/users'),
+  users: (params?: { q?: string; status?: string; role?: string }) => {
+    const qs = new URLSearchParams();
+    if (params?.q) qs.set('q', params.q);
+    if (params?.status) qs.set('status', params.status);
+    if (params?.role) qs.set('role', params.role);
+    const suffix = qs.toString() ? `?${qs}` : '';
+    return request<{ items: AdminUser[] }>(`/admin/users${suffix}`);
+  },
+  user: (id: string) => request<AdminUserDetail>(`/admin/users/${id}`),
+  updateUser: (id: string, body: { role?: string; status?: string; name?: string }) =>
+    request(`/admin/users/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    }),
+  setDeviceStatus: (userId: string, deviceId: string, status: string) =>
+    request(`/admin/users/${userId}/devices/${deviceId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status }),
+    }),
+  appControl: () => request<AppControl>('/admin/app-control'),
+  updateAppControl: (body: Partial<AppControl>) =>
+    request<AppControl>('/admin/app-control', {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    }),
+  auditLogs: () => request<{ items: AuditLogItem[] }>('/admin/audit-logs'),
   products: () => request<{ items: AdminProduct[] }>('/admin/products'),
   orders: () => request<{ items: AdminOrder[] }>('/admin/orders'),
   services: () => request<{ items: AdminService[] }>('/admin/services'),
@@ -118,7 +143,65 @@ export type AdminUser = {
   phone: string | null;
   name: string | null;
   role: string;
+  status: string;
+  authProvider: string;
+  hasGoogle: boolean;
   isProfileComplete: boolean;
+  lastLoginAt: string | null;
+  createdAt: string;
+  counts: {
+    orders: number;
+    bookings: number;
+    devices: number;
+    ads: number;
+  };
+};
+
+export type AdminUserDetail = AdminUser & {
+  avatarUrl: string | null;
+  googleSub: string | null;
+  devices: Array<{
+    id: string;
+    platform: string;
+    appVersion: string | null;
+    deviceName: string | null;
+    status: string;
+    lastSeenAt: string;
+  }>;
+  orders: Array<{ id: string; status: string; total: number; createdAt: string }>;
+  bookings: Array<{
+    id: string;
+    bookingNumber: string;
+    status: string;
+    scheduledAt: string;
+  }>;
+  ads: Array<{ id: string; title: string; status: string }>;
+};
+
+export type AppControl = {
+  enabled: boolean;
+  maintenanceMode: boolean;
+  messageAr: string;
+  messageEn: string;
+  minVersion: string;
+  latestVersion: string;
+  forceUpdate: boolean;
+  supportUrl: string;
+  websiteUrl: string;
+  apkUrl: string | null;
+  playStoreUrl: string | null;
+  updatedAt: string;
+  source?: string;
+};
+
+export type AuditLogItem = {
+  id: string;
+  action: string;
+  resource: string;
+  resourceId: string | null;
+  success: boolean;
+  actorEmail: string | null;
+  actorName: string | null;
   createdAt: string;
 };
 

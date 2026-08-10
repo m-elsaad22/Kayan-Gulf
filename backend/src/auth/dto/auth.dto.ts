@@ -1,4 +1,10 @@
-import { IsEmail, IsOptional, IsString, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsOptional,
+  IsString,
+  MinLength,
+  ValidateIf,
+} from 'class-validator';
 
 export class SendOtpDto {
   @IsString()
@@ -54,8 +60,10 @@ export class LogoutDto {
 }
 
 export class GoogleLoginDto {
+  /** Optional client hint — never trusted when idToken is present. */
+  @ValidateIf((o: GoogleLoginDto) => !o.idToken)
   @IsEmail()
-  email!: string;
+  email?: string;
 
   @IsOptional()
   @IsString()
@@ -65,6 +73,7 @@ export class GoogleLoginDto {
   @IsString()
   name?: string;
 
+  /** Ignored when idToken verifies successfully. */
   @IsOptional()
   @IsString()
   googleId?: string;

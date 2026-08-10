@@ -1,4 +1,10 @@
 /// Runtime configuration for API, distribution, and remote control.
+///
+/// Production release builds should set:
+/// - `KAYAN_USE_MOCK_DATA=false`
+/// - `KAYAN_API_BASE_URL=https://<your-api>/v1`
+/// - `KAYAN_GOOGLE_SERVER_CLIENT_ID=<web-client-id>`
+/// - `KAYAN_REQUIRE_REMOTE_STATUS=true`
 abstract final class AppConfig {
   static const String apiBaseUrl = String.fromEnvironment(
     'KAYAN_API_BASE_URL',
@@ -6,7 +12,8 @@ abstract final class AppConfig {
   );
 
   /// When true, repositories return local mock data instead of HTTP calls.
-  /// Distribution APKs for cPanel-only hosting typically use `true`.
+  /// Production / Play Store builds MUST set this to false via dart-define.
+  /// Sideload “demo” APKs may keep true (see build_distribution_apk.sh).
   static const bool useMockData = bool.fromEnvironment(
     'KAYAN_USE_MOCK_DATA',
     defaultValue: true,
@@ -18,8 +25,7 @@ abstract final class AppConfig {
     defaultValue: false,
   );
 
-  /// Remote kill-switch JSON/PHP on cPanel (e.g. rukn-eltatawer.com).
-  /// If unreachable or `enabled: false`, the app stops (fail-closed).
+  /// Emergency cPanel fallback JSON/PHP (not primary authority).
   static const String statusUrl = String.fromEnvironment(
     'KAYAN_STATUS_URL',
     defaultValue: 'https://www.rukn-eltatawer.com/kayan/status.json',
@@ -31,7 +37,7 @@ abstract final class AppConfig {
     defaultValue: 'https://www.rukn-eltatawer.com/',
   );
 
-  /// Optional Google OAuth Web client ID (server) for idToken on Android/iOS.
+  /// Google OAuth Web client ID (server) — required for idToken on Android.
   static const String googleServerClientId = String.fromEnvironment(
     'KAYAN_GOOGLE_SERVER_CLIENT_ID',
     defaultValue: '',
@@ -42,6 +48,15 @@ abstract final class AppConfig {
     'KAYAN_REQUIRE_REMOTE_STATUS',
     defaultValue: true,
   );
+
+  /// Environment label for diagnostics: development | staging | production
+  static const String environment = String.fromEnvironment(
+    'KAYAN_ENV',
+    defaultValue: 'development',
+  );
+
+  static bool get isProductionBuild =>
+      environment == 'production' || (!useMockData && !apiBaseUrl.contains('127.0.0.1'));
 
   static const Duration networkTimeout = Duration(seconds: 20);
 }

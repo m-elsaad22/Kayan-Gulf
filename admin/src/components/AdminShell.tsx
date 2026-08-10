@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { clearSession, getRole, getToken } from '@/lib/api';
+import { isAdminRole } from '@/lib/roles';
 
 const links = [
   { href: '/dashboard', label: 'لوحة التحكم' },
@@ -13,6 +14,8 @@ const links = [
   { href: '/bookings', label: 'الحجوزات' },
   { href: '/ads', label: 'الإعلانات' },
   { href: '/users', label: 'المستخدمون' },
+  { href: '/app-control', label: 'تحكم التطبيق' },
+  { href: '/audit', label: 'سجل التدقيق' },
 ];
 
 export function AdminShell({
@@ -29,7 +32,7 @@ export function AdminShell({
   useEffect(() => {
     const token = getToken();
     const role = getRole();
-    if (!token || role !== 'admin') {
+    if (!token || !isAdminRole(role)) {
       router.replace('/login');
       return;
     }

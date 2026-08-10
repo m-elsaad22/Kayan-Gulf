@@ -1,8 +1,12 @@
 {
   "enabled": true,
+  "maintenanceMode": false,
+  "forceUpdate": false,
   "messageAr": "التطبيق يعمل بشكل طبيعي.",
   "messageEn": "The app is running normally.",
   "supportUrl": "https://www.rukn-eltatawer.com/",
   "website": "https://www.rukn-eltatawer.com/",
-  "minVersion": "1.0.0"
+  "websiteUrl": "https://www.rukn-eltatawer.com/",
+  "minVersion": "1.0.0",
+  "latestVersion": "1.0.0"
 }

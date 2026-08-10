@@ -2,11 +2,19 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { assertProductionConfig } from './common/production-guard';
+import helmet from 'helmet';
 
 async function bootstrap() {
   assertProductionConfig();
 
   const app = await NestFactory.create(AppModule);
+
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
+    }),
+  );
 
   app.setGlobalPrefix('v1');
   app.useGlobalPipes(

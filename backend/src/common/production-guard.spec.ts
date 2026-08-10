@@ -9,6 +9,7 @@ describe('assertProductionConfig', () => {
     OTP_STRICT: 'true',
     CORS_ORIGINS: 'https://admin.example.com',
     PAYMENT_PROVIDER: 'mock',
+    GOOGLE_CLIENT_IDS: '123456789-abc.apps.googleusercontent.com',
   };
 
   it('allows a valid production config', () => {

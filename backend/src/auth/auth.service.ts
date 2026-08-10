@@ -43,11 +43,17 @@ export class AuthService {
     let isNewUser = false;
     if (!user) {
       user = await this.prisma.user.create({
-        data: { phone, isProfileComplete: false, role: 'user' },
+        data: {
+          phone,
+          isProfileComplete: false,
+          role: 'user',
+          authProvider: 'phone',
+          status: 'active',
+        },
       });
       isNewUser = true;
     }
-
+    this.assertUserActive(user);
     return this.issueTokens(user, isNewUser);
   }
 
@@ -58,6 +64,7 @@ export class AuthService {
     if (!user?.passwordHash) {
       throw new UnauthorizedException('invalid_credentials');
     }
+    this.assertUserActive(user);
     const ok = await bcrypt.compare(dto.password, user.passwordHash);
     if (!ok) {
       throw new UnauthorizedException('invalid_credentials');
@@ -66,51 +73,111 @@ export class AuthService {
   }
 
   /**
-   * Gmail / Google Sign-In.
-   * Prefer verifying `idToken` via Google tokeninfo when present.
-   * Falls back to email-only upsert only when NODE_ENV !== production
-   * (distribution mock builds use Flutter mock repo instead).
+   * Real Google Sign-In: idToken is verified with Google tokeninfo.
+   * Identity is derived only from the verified token (sub + email).
+   * Client-supplied email/googleId are never trusted in production.
    */
   async loginWithGoogle(dto: GoogleLoginDto): Promise<AuthResultDto> {
-    const email = dto.email.toLowerCase().trim();
-    let verifiedEmail = email;
-    let googleSub = dto.googleId?.trim() || null;
+    const isProd = (process.env.NODE_ENV ?? 'development') === 'production';
 
-    if (dto.idToken) {
-      const info = await this.verifyGoogleIdToken(dto.idToken);
-      verifiedEmail = (info.email ?? email).toLowerCase();
-      googleSub = info.sub ?? googleSub;
-      if (!info.email_verified && info.email_verified !== undefined) {
-        throw new UnauthorizedException('google_email_unverified');
+    if (!dto.idToken) {
+      if (isProd) {
+        throw new UnauthorizedException('google_id_token_required');
       }
-    } else if ((process.env.NODE_ENV ?? 'development') === 'production') {
-      throw new UnauthorizedException('google_id_token_required');
+      // Dev-only fallback (never used by production APK).
+      const email = (dto.email ?? '').toLowerCase().trim();
+      if (!email) {
+        throw new UnauthorizedException('google_id_token_required');
+      }
+      return this.upsertGoogleUser({
+        email,
+        googleSub: dto.googleId?.trim() || `dev-${email}`,
+        name: dto.name,
+        avatarUrl: null,
+      });
     }
 
+    const info = await this.verifyGoogleIdToken(dto.idToken);
+    if (!info.email || !info.sub) {
+      throw new UnauthorizedException('invalid_google_token');
+    }
+    if (info.email_verified === false) {
+      throw new UnauthorizedException('google_email_unverified');
+    }
+
+    return this.upsertGoogleUser({
+      email: info.email.toLowerCase(),
+      googleSub: info.sub,
+      name: info.name ?? dto.name,
+      avatarUrl: info.picture ?? null,
+    });
+  }
+
+  private async upsertGoogleUser(input: {
+    email: string;
+    googleSub: string;
+    name?: string | null;
+    avatarUrl?: string | null;
+  }): Promise<AuthResultDto> {
     let user = await this.prisma.user.findUnique({
-      where: { email: verifiedEmail },
+      where: { googleSub: input.googleSub },
     });
     let isNewUser = false;
+
     if (!user) {
-      user = await this.prisma.user.create({
-        data: {
-          email: verifiedEmail,
-          name: dto.name ?? verifiedEmail.split('@')[0],
-          isProfileComplete: true,
-          role: 'user',
-          // Marker so password login still requires a real password.
-          passwordHash: null,
-        },
+      const byEmail = await this.prisma.user.findUnique({
+        where: { email: input.email },
       });
-      isNewUser = true;
-    } else if (!user.name && dto.name) {
-      user = await this.prisma.user.update({
-        where: { id: user.id },
-        data: { name: dto.name },
-      });
+      if (byEmail) {
+        // Secure linking: only attach Google when the account has no googleSub yet.
+        if (byEmail.googleSub && byEmail.googleSub !== input.googleSub) {
+          throw new UnauthorizedException('google_account_mismatch');
+        }
+        this.assertUserActive(byEmail);
+        user = await this.prisma.user.update({
+          where: { id: byEmail.id },
+          data: {
+            googleSub: input.googleSub,
+            authProvider:
+              byEmail.authProvider === 'password'
+                ? 'password'
+                : 'google',
+            avatarUrl: byEmail.avatarUrl ?? input.avatarUrl,
+            name: byEmail.name ?? input.name ?? undefined,
+            isProfileComplete: true,
+          },
+        });
+      } else {
+        user = await this.prisma.user.create({
+          data: {
+            email: input.email,
+            googleSub: input.googleSub,
+            name: input.name ?? input.email.split('@')[0],
+            avatarUrl: input.avatarUrl,
+            authProvider: 'google',
+            isProfileComplete: true,
+            role: 'user',
+            status: 'active',
+            passwordHash: null,
+          },
+        });
+        isNewUser = true;
+      }
+    } else {
+      this.assertUserActive(user);
+      if (user.email && user.email !== input.email) {
+        // Email on Google account changed — keep sub as source of truth.
+        user = await this.prisma.user.update({
+          where: { id: user.id },
+          data: {
+            email: input.email,
+            avatarUrl: input.avatarUrl ?? user.avatarUrl,
+            name: user.name ?? input.name ?? undefined,
+          },
+        });
+      }
     }
 
-    void googleSub;
     return this.issueTokens(user, isNewUser);
   }
 
@@ -118,6 +185,11 @@ export class AuthService {
     email?: string;
     email_verified?: boolean;
     sub?: string;
+    name?: string;
+    picture?: string;
+    aud?: string;
+    azp?: string;
+    iss?: string;
   }> {
     const url = `https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(idToken)}`;
     const res = await fetch(url);
@@ -128,13 +200,61 @@ export class AuthService {
       email?: string;
       email_verified?: string | boolean;
       sub?: string;
+      name?: string;
+      picture?: string;
+      aud?: string;
+      azp?: string;
+      iss?: string;
+      error?: string;
+      error_description?: string;
     };
+
+    if (json.error) {
+      throw new UnauthorizedException('invalid_google_token');
+    }
+
+    const issuer = json.iss ?? '';
+    if (
+      issuer &&
+      issuer !== 'accounts.google.com' &&
+      issuer !== 'https://accounts.google.com'
+    ) {
+      throw new UnauthorizedException('invalid_google_issuer');
+    }
+
+    const allowed = this.allowedGoogleAudiences();
+    if (allowed.length) {
+      const aud = json.aud ?? '';
+      const azp = json.azp ?? '';
+      if (!allowed.includes(aud) && !allowed.includes(azp)) {
+        throw new UnauthorizedException('invalid_google_audience');
+      }
+    } else if ((process.env.NODE_ENV ?? 'development') === 'production') {
+      throw new UnauthorizedException('google_client_ids_not_configured');
+    }
+
     return {
       email: json.email,
       email_verified:
         json.email_verified === true || json.email_verified === 'true',
       sub: json.sub,
+      name: json.name,
+      picture: json.picture,
+      aud: json.aud,
+      azp: json.azp,
+      iss: json.iss,
     };
+  }
+
+  private allowedGoogleAudiences(): string[] {
+    const raw =
+      this.config.get<string>('GOOGLE_CLIENT_IDS') ??
+      this.config.get<string>('GOOGLE_WEB_CLIENT_ID') ??
+      '';
+    return raw
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
   }
 
   async signUp(dto: SignUpDto): Promise<AuthResultDto> {
@@ -155,6 +275,8 @@ export class AuthService {
         passwordHash,
         isProfileComplete: false,
         role: 'user',
+        authProvider: 'password',
+        status: 'active',
       },
     });
 
@@ -171,6 +293,7 @@ export class AuthService {
       throw new UnauthorizedException('invalid_refresh_token');
     }
 
+    this.assertUserActive(stored.user);
     await this.prisma.refreshToken.delete({ where: { id: stored.id } });
     return this.issueTokens(stored.user, false);
   }
@@ -181,6 +304,18 @@ export class AuthService {
       await this.prisma.refreshToken.deleteMany({ where: { token: hash } });
     }
     return { ok: true };
+  }
+
+  private assertUserActive(user: {
+    status?: string;
+    deletedAt?: Date | null;
+  }): void {
+    if (user.deletedAt || user.status === 'deleted') {
+      throw new UnauthorizedException('account_deleted');
+    }
+    if (user.status === 'suspended') {
+      throw new UnauthorizedException('account_suspended');
+    }
   }
 
   private async issueTokens(
@@ -207,13 +342,19 @@ export class AuthService {
       Date.now() + this.parseDurationMs(refreshTtl, 30 * 24 * 60 * 60 * 1000),
     );
 
-    await this.prisma.refreshToken.create({
-      data: {
-        token: this.hashToken(refreshToken),
-        userId: user.id,
-        expiresAt,
-      },
-    });
+    await this.prisma.$transaction([
+      this.prisma.refreshToken.create({
+        data: {
+          token: this.hashToken(refreshToken),
+          userId: user.id,
+          expiresAt,
+        },
+      }),
+      this.prisma.user.update({
+        where: { id: user.id },
+        data: { lastLoginAt: new Date() },
+      }),
+    ]);
 
     return {
       userId: user.id,
