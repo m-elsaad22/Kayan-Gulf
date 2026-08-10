@@ -1,63 +1,29 @@
-# رفع تحكم التطبيق على cPanel — ركن التطور
+# cPanel package — Rukn El Tatawer (emergency AppControl)
 
-الهدف: التطبيق على جوالات العملاء يتحقق عند كل فتح من ملف على موقعك.  
-إذا أوقفت الملف أو حذفته، **يتوقف التطبيق عند الجميع**.
+Upload contents of `kayan/` to `public_html/kayan/` on **https://www.rukn-eltatawer.com/**
 
-## 1) ارفع الملفات
+This is an **emergency fallback**. Primary control = NestJS Admin AppControl.
 
-من هذا المستودع انسخ المجلد:
+## Before upload
 
-```
-hosting/cpanel/kayan/
-  status.json
-  status.php
-```
+1. Edit `kayan/status.php` — set `$secret` to a long random value (`CHANGE_ME_CPANEL_SECRET` must not ship).
+2. Confirm `status.json` has `enabled: true` for launch.
+3. Do **not** put the PHP secret in the Flutter app.
 
-إلى استضافة الموقع:
+## After upload (manual verification)
 
-```
-public_html/kayan/status.json
-public_html/kayan/status.php
-```
-
-على نطاق: **https://www.rukn-eltatawer.com/**
-
-تحقق من المتصفح:
 - https://www.rukn-eltatawer.com/kayan/status.json
 - https://www.rukn-eltatawer.com/kayan/status.php
 
-يجب أن ترى `"enabled": true`.
+These URLs are **not** live until you upload.
 
-## 2) إيقاف التطبيق عن الجميع
+## Optional App Links
 
-**طريقة أ:** عدّل `status.json`:
+See `kayan/.well-known/assetlinks.json.example` → publish under site root `.well-known/assetlinks.json`.
 
-```json
-{ "enabled": false, "messageAr": "التطبيق متوقف مؤقتًا.", ... }
-```
+## Flutter dart-defines
 
-**طريقة ب:** احذف مجلد `kayan/` أو الملف — التطبيق مصمَّم **fail-closed** (عدم الوصول = إيقاف).
-
-**طريقة ج (PHP):** بعد تغيير `$secret` داخل `status.php`:
-
-```
-https://www.rukn-eltatawer.com/kayan/status.php?key=YOUR_SECRET&action=off
-https://www.rukn-eltatawer.com/kayan/status.php?key=YOUR_SECRET&action=on
-```
-
-## 3) ربط التطبيق بالموقع
-
-الـ APK التوزيعي يُبنى بهذه الروابط افتراضيًا:
-
-| المفتاح | القيمة |
-|---------|--------|
+| Define | Typical value |
+|--------|----------------|
 | `KAYAN_STATUS_URL` | `https://www.rukn-eltatawer.com/kayan/status.json` |
-| `KAYAN_PUBLISHER_URL` | `https://www.rukn-eltatawer.com/` |
-
-يمكن استخدام `status.php` بدلًا من `status.json` إذا فضّلت التحكم بـ PHP.
-
-## 4) ملاحظات مهمة
-
-- هذا **ليس** استضافة لـ NestJS API على cPanel (Node أصعب). الـ APK التوزيعي يعمل ببيانات محلية (mock) + تسجيل Gmail على الجهاز، والتحكم بالإيقاف من الموقع.
-- لتشغيل API حقيقي لاحقًا تحتاج VPS/Node أو استضافة تدعم Node، ثم أعد بناء الـ APK بـ `KAYAN_USE_MOCK_DATA=false`.
-- زر Google يحتاج إعداد SHA-1 في Google Cloud لـ `sa.kayan.app`؛ بديل فوري: تبويب **Gmail / بريد + كلمة مرور**.
+| `KAYAN_WEBSITE_URL` / `KAYAN_PUBLISHER_URL` | `https://www.rukn-eltatawer.com/` |

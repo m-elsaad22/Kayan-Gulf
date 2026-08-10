@@ -1,40 +1,36 @@
-# cPanel Deployment (Emergency App Control Fallback)
+# cPanel Emergency AppControl Fallback
 
-Primary app control is **Admin → Database → API**.  
-cPanel hosting is the **emergency fallback** when the API is unreachable.
+**Primary:** Admin → PostgreSQL `AppControl` → `GET /v1/app/status` → Flutter  
 
-## Upload
+**Emergency only:** static files on the existing WordPress/cPanel site.
 
-Copy repo files to `public_html/kayan/`:
+## Upload (manual — not done by this repo)
 
-- `hosting/cpanel/kayan/status.json`
-- `hosting/cpanel/kayan/status.php`
-- See `hosting/cpanel/README.md`
+Copy `hosting/cpanel/kayan/` → `public_html/kayan/` on https://www.rukn-eltatawer.com/
 
-Public URL example:
+Planned URLs after upload:
 
-`https://www.rukn-eltatawer.com/kayan/status.json`
+- `https://www.rukn-eltatawer.com/kayan/status.json`
+- `https://www.rukn-eltatawer.com/kayan/status.php`
 
-## Flutter behavior
+**Do not claim these are live until you upload them.**
 
-1. Call `GET {API}/app/status`
-2. On failure → fetch `KAYAN_STATUS_URL` (cPanel)
-3. On both failures → use last-known-good cache (6h grace)
-4. Otherwise fail-closed (block app)
+## Secret
 
-## Operator kill-switch (emergency)
+In `status.php`, change:
 
-Edit `status.json`:
-
-```json
-{ "enabled": false, "messageAr": "...", "messageEn": "..." }
+```php
+$secret = 'CHANGE_ME_CPANEL_SECRET';
 ```
 
-Or use `status.php?key=SECRET&action=off` after changing the PHP `$secret`.
+Never put this secret in Flutter, GitHub Actions secrets for the app binary, or Admin JS.
 
-**Rotate `CHANGE_ME_CPANEL_SECRET` before production upload.**
+## App Links (optional, later)
 
-## Important
+Template: `hosting/cpanel/kayan/.well-known/assetlinks.json.example`  
 
-cPanel PHP/JSON **cannot** replace NestJS for auth, orders, or payments.  
-Host the API on a Node-capable VPS / container host.
+Publish as `https://www.rukn-eltatawer.com/.well-known/assetlinks.json` with your release/Play SHA-256. Until verified, the website opens normally when the app is missing — correct behavior.
+
+## WordPress
+
+Do not replace WordPress with NestJS. Do not connect Flutter to WordPress MySQL.

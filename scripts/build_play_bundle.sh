@@ -33,14 +33,30 @@ BUILD_NAME="${BUILD_NAME:-}"
 BUILD_NUMBER="${BUILD_NUMBER:-}"
 FIREBASE_FLAG="${KAYAN_ENABLE_FIREBASE:-false}"
 
+if [[ "$API_URL" == *"kayan.gulf"* ]] || [[ "$API_URL" == *"127.0.0.1"* ]] || [[ "$API_URL" == *"localhost"* ]]; then
+  echo "Error: refuse placeholder/dev API host for Play bundle: $API_URL" >&2
+  exit 1
+fi
+
+WEBSITE_URL="${KAYAN_WEBSITE_URL:-https://www.rukn-eltatawer.com/}"
+STATUS_URL="${KAYAN_STATUS_URL:-https://www.rukn-eltatawer.com/kayan/status.json}"
+
 ARGS=(
   build appbundle
   --release
   --android-skip-build-dependency-validation
+  --dart-define=KAYAN_ENV=production
   --dart-define=KAYAN_USE_MOCK_DATA=false
   --dart-define=KAYAN_API_BASE_URL="$API_URL"
   --dart-define=KAYAN_ENABLE_FIREBASE="$FIREBASE_FLAG"
+  --dart-define=KAYAN_WEBSITE_URL="$WEBSITE_URL"
+  --dart-define=KAYAN_PUBLISHER_URL="$WEBSITE_URL"
+  --dart-define=KAYAN_STATUS_URL="$STATUS_URL"
+  --dart-define=KAYAN_REQUIRE_REMOTE_STATUS=true
 )
+if [[ -n "${KAYAN_GOOGLE_SERVER_CLIENT_ID:-}" ]]; then
+  ARGS+=(--dart-define=KAYAN_GOOGLE_SERVER_CLIENT_ID="$KAYAN_GOOGLE_SERVER_CLIENT_ID")
+fi
 
 if [[ -n "$BUILD_NAME" ]]; then
   ARGS+=(--build-name="$BUILD_NAME")

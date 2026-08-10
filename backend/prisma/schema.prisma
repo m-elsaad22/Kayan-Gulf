@@ -69,6 +69,11 @@ model AppControl {
   forceUpdate     Boolean  @default(false)
   supportUrl      String   @default("https://www.rukn-eltatawer.com/")
   websiteUrl      String   @default("https://www.rukn-eltatawer.com/")
+  privacyUrl      String   @default("https://www.rukn-eltatawer.com/privacy")
+  termsUrl        String   @default("https://www.rukn-eltatawer.com/terms")
+  whatsappUrl     String   @default("")
+  phoneUrl        String   @default("")
+  appDownloadUrl  String   @default("https://www.rukn-eltatawer.com/kayan/")
   apkUrl          String?
   playStoreUrl    String?
   updatedById     String?
@@ -215,6 +220,9 @@ model Service {
   featuresJson         String    @default("[]")
   whatToExpectJson     String    @default("[]")
   faqsJson             String    @default("[]")
+  /// Optional public WordPress / SEO page (informational). Requests stay in NestJS.
+  websiteUrl           String?
+  availableCitiesJson  String    @default("[]")
   categoryId           String?
   category             Category? @relation(fields: [categoryId], references: [id])
   bookings             Booking[]
@@ -223,6 +231,7 @@ model Service {
 
   @@index([categoryId])
   @@index([isFeatured])
+  @@index([isAvailable])
 }
 
 model Booking {

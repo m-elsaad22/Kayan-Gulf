@@ -123,8 +123,8 @@ class AdminSettings {
     this.featuredProductIds = const [],
     this.welcomeOfferText = 'خصم 15% على أول طلب',
     this.welcomeOfferCode = 'KAYAN15',
-    this.contactPhone = '+966 9200 12345',
-    this.contactEmail = 'support@kayan.sa',
+    this.contactPhone = '',
+    this.contactEmail = 'info@rukn-eltatawer.com',
   });
 
   Map<String, dynamic> toJson() => {
@@ -152,8 +152,9 @@ class AdminSettings {
         welcomeOfferText:
             j['welcomeOfferText'] as String? ?? 'خصم 15% على أول طلب',
         welcomeOfferCode: j['welcomeOfferCode'] as String? ?? 'KAYAN15',
-        contactPhone: j['contactPhone'] as String? ?? '+966 9200 12345',
-        contactEmail: j['contactEmail'] as String? ?? 'support@kayan.sa',
+        contactPhone: j['contactPhone'] as String? ?? '',
+        contactEmail:
+            j['contactEmail'] as String? ?? 'info@rukn-eltatawer.com',
       );
 
   AdminSettings copyWith({

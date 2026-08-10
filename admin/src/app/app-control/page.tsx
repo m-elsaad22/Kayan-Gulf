@@ -34,6 +34,11 @@ export default function AppControlPage() {
         latestVersion: form.latestVersion,
         supportUrl: form.supportUrl,
         websiteUrl: form.websiteUrl,
+        privacyUrl: form.privacyUrl,
+        termsUrl: form.termsUrl,
+        whatsappUrl: form.whatsappUrl,
+        phoneUrl: form.phoneUrl,
+        appDownloadUrl: form.appDownloadUrl,
         apkUrl: form.apkUrl,
         playStoreUrl: form.playStoreUrl,
       });
@@ -139,6 +144,48 @@ export default function AppControlPage() {
             value={form.websiteUrl}
             disabled={!privileged}
             onChange={(e) => setForm({ ...form, websiteUrl: e.target.value })}
+          />
+        </div>
+        <div className="field">
+          <label>privacyUrl</label>
+          <input
+            value={form.privacyUrl ?? ''}
+            disabled={!privileged}
+            onChange={(e) => setForm({ ...form, privacyUrl: e.target.value })}
+          />
+        </div>
+        <div className="field">
+          <label>termsUrl</label>
+          <input
+            value={form.termsUrl ?? ''}
+            disabled={!privileged}
+            onChange={(e) => setForm({ ...form, termsUrl: e.target.value })}
+          />
+        </div>
+        <div className="field">
+          <label>whatsappUrl</label>
+          <input
+            value={form.whatsappUrl ?? ''}
+            disabled={!privileged}
+            onChange={(e) => setForm({ ...form, whatsappUrl: e.target.value })}
+          />
+        </div>
+        <div className="field">
+          <label>phoneUrl</label>
+          <input
+            value={form.phoneUrl ?? ''}
+            disabled={!privileged}
+            onChange={(e) => setForm({ ...form, phoneUrl: e.target.value })}
+          />
+        </div>
+        <div className="field">
+          <label>appDownloadUrl</label>
+          <input
+            value={form.appDownloadUrl ?? ''}
+            disabled={!privileged}
+            onChange={(e) =>
+              setForm({ ...form, appDownloadUrl: e.target.value })
+            }
           />
         </div>
         <div className="field">

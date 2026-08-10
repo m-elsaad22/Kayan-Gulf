@@ -49,7 +49,11 @@ export function toServiceDetailJson(
     isAvailable: s.isAvailable,
     categoryNameAr: s.category?.nameAr ?? null,
     categorySlug: s.category?.slug ?? null,
+    category: s.category?.slug ?? null,
     estimatedDurationMin: s.estimatedDurationMin,
+    websiteUrl: s.websiteUrl ?? null,
+    availableCities: parseJsonArray<string>(s.availableCitiesJson),
+    active: s.isAvailable,
     features: parseJsonArray(s.featuresJson),
     whatToExpect: parseJsonArray<string>(s.whatToExpectJson),
     faqs: parseJsonArray(s.faqsJson),
@@ -73,5 +77,8 @@ export function toServiceCardJson(
     category: s.category ? { nameAr: s.category.nameAr } : null,
     isEmergency: s.isEmergency,
     pricingType: s.pricingType,
+    websiteUrl: s.websiteUrl ?? null,
+    availableCities: parseJsonArray<string>(s.availableCitiesJson),
+    active: s.isAvailable,
   };
 }

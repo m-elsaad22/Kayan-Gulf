@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
+    <!-- HTTPS-only for production hosts. Cleartext remains disabled app-wide. -->
     <domain-config cleartextTrafficPermitted="false">
-        <domain includeSubdomains="true">kayan.sa</domain>
-        <domain includeSubdomains="true">api.kayan.sa</domain>
+        <domain includeSubdomains="true">rukn-eltatawer.com</domain>
+        <domain includeSubdomains="true">api.rukn-eltatawer.com</domain>
     </domain-config>
     <debug-overrides>
         <trust-anchors>

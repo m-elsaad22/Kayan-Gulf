@@ -24,6 +24,8 @@ check "KAYAN_API_BASE_URL set" test -n "${KAYAN_API_BASE_URL:-}"
 if [[ -n "${KAYAN_API_BASE_URL:-}" ]]; then
   check "KAYAN_API_BASE_URL uses https" [[ "$KAYAN_API_BASE_URL" == https://* ]]
   check "KAYAN_API_BASE_URL not placeholder kayan.gulf" [[ "$KAYAN_API_BASE_URL" != *kayan.gulf* ]]
+  check "KAYAN_API_BASE_URL not localhost" [[ "$KAYAN_API_BASE_URL" != *localhost* && "$KAYAN_API_BASE_URL" != *127.0.0.1* && "$KAYAN_API_BASE_URL" != *10.0.2.2* ]]
+  check "KAYAN_USE_MOCK_DATA false for release" [[ "${KAYAN_USE_MOCK_DATA:-false}" == "false" ]]
 fi
 check "Flutter on PATH" command -v flutter >/dev/null
 check "no google-services.json committed" ! git ls-files --error-unmatch android/app/google-services.json >/dev/null 2>&1

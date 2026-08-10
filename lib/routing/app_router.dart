@@ -33,6 +33,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'app_routes.dart';
 import 'main_shell.dart';
 import '../core/config/app_config.dart';
+import '../core/deep_links/rukn_deep_links.dart';
 import '../core/services/app_status_service.dart';
 import '../shared/providers/auth_provider.dart';
 import '../shared/services/local_storage_service.dart';
@@ -288,10 +289,19 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         return target;
       }
 
-      // Remote kill-switch (cPanel status.json / status.php)
+      // Remote kill-switch (API primary; cPanel emergency fallback)
       if (AppStatusService.isBlocked &&
           matched != AppRoutes.maintenance) {
         return go(AppRoutes.maintenance);
+      }
+
+      // Rukn website / custom-scheme deep links → in-app routes (App Links ready;
+      // verification requires published assetlinks.json — not assumed live).
+      final deepTarget = RuknDeepLinks.mapUri(state.uri);
+      if (deepTarget != null &&
+          deepTarget != matched &&
+          deepTarget != location) {
+        return deepTarget;
       }
 
       // Always allow splash
