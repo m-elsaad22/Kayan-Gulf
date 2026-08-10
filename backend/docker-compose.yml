@@ -1,34 +1,57 @@
+# Staging / production-shaped stack.
+# Copy .env.example → .env and set strong secrets before `docker compose up`.
+# Local quick-start (dev OTP) is NOT the default — set OTP_PROVIDER explicitly.
+
 services:
   db:
     image: postgres:16-alpine
     environment:
-      POSTGRES_USER: kayan
-      POSTGRES_PASSWORD: kayan
-      POSTGRES_DB: kayan
+      POSTGRES_USER: ${POSTGRES_USER:-kayan}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-kayan}
     ports:
-      - '5432:5432'
+      - '${POSTGRES_PORT:-5432}:5432'
     volumes:
       - kayan_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB']
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   api:
     build: .
     ports:
-      - '3000:3000'
+      - '${PORT:-3000}:3000'
     environment:
-      DATABASE_URL: postgresql://kayan:kayan@db:5432/kayan
-      PORT: 3000
-      NODE_ENV: production
-      JWT_ACCESS_SECRET: change-me-access-secret-min-32-chars
-      JWT_REFRESH_SECRET: change-me-refresh-secret-min-32-chars
-      JWT_ACCESS_TTL: 15m
-      JWT_REFRESH_TTL: 30d
-      OTP_PROVIDER: dev
-      OTP_STRICT: 'false'
-      OTP_MAX_PER_HOUR: '5'
-      OTP_COOLDOWN_SECONDS: '30'
-      # FIREBASE_SERVICE_ACCOUNT_PATH: /app/secrets/firebase-service-account.json
+      DATABASE_URL: postgresql://${POSTGRES_USER:-kayan}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-kayan}
+      PORT: ${PORT:-3000}
+      NODE_ENV: ${NODE_ENV:-production}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:?Set JWT_ACCESS_SECRET}
+      JWT_ACCESS_TTL: ${JWT_ACCESS_TTL:-15m}
+      JWT_REFRESH_TTL: ${JWT_REFRESH_TTL:-30d}
+      OTP_PROVIDER: ${OTP_PROVIDER:?Set OTP_PROVIDER=unifonic|twilio}
+      OTP_STRICT: ${OTP_STRICT:-true}
+      OTP_MAX_PER_HOUR: ${OTP_MAX_PER_HOUR:-5}
+      OTP_COOLDOWN_SECONDS: ${OTP_COOLDOWN_SECONDS:-30}
+      UNIFONIC_APP_SID: ${UNIFONIC_APP_SID:-}
+      UNIFONIC_SENDER_ID: ${UNIFONIC_SENDER_ID:-KAYAN}
+      UNIFONIC_BASE_URL: ${UNIFONIC_BASE_URL:-}
+      TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID:-}
+      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN:-}
+      TWILIO_FROM_NUMBER: ${TWILIO_FROM_NUMBER:-}
+      CORS_ORIGINS: ${CORS_ORIGINS:?Set CORS_ORIGINS}
+      PAYMENT_PROVIDER: ${PAYMENT_PROVIDER:-mock}
+      PAYMENT_WEBHOOK_SECRET: ${PAYMENT_WEBHOOK_SECRET:-}
+      PAYMENT_REDIRECT_BASE: ${PAYMENT_REDIRECT_BASE:-}
+      TAP_SECRET_KEY: ${TAP_SECRET_KEY:-}
+      HYPERPAY_ENTITY_ID: ${HYPERPAY_ENTITY_ID:-}
+      PAYMOB_API_KEY: ${PAYMOB_API_KEY:-}
+      FIREBASE_SERVICE_ACCOUNT_PATH: ${FIREBASE_SERVICE_ACCOUNT_PATH:-}
+      FIREBASE_SERVICE_ACCOUNT_JSON: ${FIREBASE_SERVICE_ACCOUNT_JSON:-}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
 volumes:
   kayan_pg:

@@ -3,7 +3,9 @@
 // lib/features/ecommerce/product/presentation/providers/product_providers.dart
 // ============================================================
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../../core/config/app_config.dart';
 import '../../../../../core/di/repository_providers.dart';
 import '../../../../../features/home/data/models/home_models.dart';
 import '../../data/models/product_models.dart';
@@ -81,6 +83,9 @@ class CartState {
   final bool     isApplyingCoupon;
   final String?  couponError;
   final bool     isLoading;
+  final String?  lastError;
+  /// Prefer server totals when cart is synced with API.
+  final CartSummary? serverSummary;
 
   const CartState({
     this.items            = const [],
@@ -89,9 +94,12 @@ class CartState {
     this.isApplyingCoupon = false,
     this.couponError,
     this.isLoading        = false,
+    this.lastError,
+    this.serverSummary,
   });
 
   CartSummary get summary {
+    if (serverSummary != null) return serverSummary!;
     final subtotal = items.fold(0.0, (s, i) => s + i.totalPrice);
     const vatRate  = 0.15; // 15% Saudi VAT
     final afterCoupon = (subtotal - couponDiscount).clamp(0, double.infinity);
@@ -117,7 +125,11 @@ class CartState {
     bool?                isApplyingCoupon,
     String?              couponError,
     bool?                isLoading,
+    String?              lastError,
+    CartSummary?         serverSummary,
     bool                 clearCouponError = false,
+    bool                 clearLastError = false,
+    bool                 clearServerSummary = false,
   }) => CartState(
     items:            items             ?? this.items,
     couponCode:       couponCode        ?? this.couponCode,
@@ -125,6 +137,10 @@ class CartState {
     isApplyingCoupon: isApplyingCoupon  ?? this.isApplyingCoupon,
     couponError:      clearCouponError  ? null : (couponError ?? this.couponError),
     isLoading:        isLoading         ?? this.isLoading,
+    lastError:        clearLastError    ? null : (lastError ?? this.lastError),
+    serverSummary:    clearServerSummary
+        ? null
+        : (serverSummary ?? this.serverSummary),
   );
 }
 
@@ -134,77 +150,161 @@ class CartState {
 
 class CartNotifier extends Notifier<CartState> {
   @override
-  CartState build() => CartState(items: _mockCartItems());
-
-  // Add item
-  void addItem(CartItemModel item) {
-    final idx = state.items.indexWhere((i) => i.productId == item.productId);
-    if (idx >= 0) {
-      final updated = List<CartItemModel>.from(state.items);
-      final existing = updated[idx];
-      final newQty = (existing.quantity + item.quantity)
-          .clamp(1, existing.maxStock);
-      updated[idx] = existing.copyWith(quantity: newQty);
-      state = state.copyWith(items: updated);
-    } else {
-      state = state.copyWith(items: [...state.items, item]);
+  CartState build() {
+    if (!AppConfig.useMockData) {
+      Future.microtask(load);
+      return const CartState(isLoading: true);
     }
+    return CartState(items: _mockCartItems());
   }
 
-  // Update quantity
-  void updateQuantity(String cartItemId, int qty) {
-    final updated = state.items.map((i) =>
-        i.cartItemId == cartItemId
-            ? i.copyWith(quantity: qty.clamp(1, i.maxStock))
-            : i).toList();
-    state = state.copyWith(items: updated);
-  }
-
-  // Remove item
-  void removeItem(String cartItemId) {
-    state = state.copyWith(
-      items: state.items.where((i) => i.cartItemId != cartItemId).toList(),
+  void _applySnapshot(CartSnapshot snap) {
+    state = CartState(
+      items: snap.items,
+      couponCode: snap.summary.couponCode,
+      couponDiscount: snap.summary.couponDiscount,
+      serverSummary: snap.summary,
     );
   }
 
-  // Apply coupon
+  Future<void> load() async {
+    if (AppConfig.useMockData) return;
+    state = state.copyWith(isLoading: true, clearLastError: true);
+    try {
+      final snap = await ref.read(cartRepositoryProvider).getCart();
+      _applySnapshot(snap);
+    } catch (e) {
+      if (kDebugMode) debugPrint('cart load failed: $e');
+      state = state.copyWith(
+        isLoading: false,
+        lastError: e.toString(),
+        items: const [],
+        clearServerSummary: true,
+      );
+    }
+  }
+
+  Future<void> addItem(CartItemModel item) async {
+    if (AppConfig.useMockData) {
+      final idx = state.items.indexWhere((i) => i.productId == item.productId);
+      if (idx >= 0) {
+        final updated = List<CartItemModel>.from(state.items);
+        final existing = updated[idx];
+        final newQty =
+            (existing.quantity + item.quantity).clamp(1, existing.maxStock);
+        updated[idx] = existing.copyWith(quantity: newQty);
+        state = state.copyWith(items: updated);
+      } else {
+        state = state.copyWith(items: [...state.items, item]);
+      }
+      return;
+    }
+
+    try {
+      final snap = await ref.read(cartRepositoryProvider).addItem(
+            productId: item.productId,
+            quantity: item.quantity,
+            selectedColor: item.selectedColor,
+            selectedSize: item.selectedSize,
+          );
+      _applySnapshot(snap);
+    } catch (e) {
+      state = state.copyWith(lastError: e.toString());
+      rethrow;
+    }
+  }
+
+  Future<void> updateQuantity(String cartItemId, int qty) async {
+    if (AppConfig.useMockData) {
+      final updated = state.items
+          .map(
+            (i) => i.cartItemId == cartItemId
+                ? i.copyWith(quantity: qty.clamp(1, i.maxStock))
+                : i,
+          )
+          .toList();
+      state = state.copyWith(items: updated);
+      return;
+    }
+    final snap =
+        await ref.read(cartRepositoryProvider).updateQuantity(cartItemId, qty);
+    _applySnapshot(snap);
+  }
+
+  Future<void> removeItem(String cartItemId) async {
+    if (AppConfig.useMockData) {
+      state = state.copyWith(
+        items: state.items.where((i) => i.cartItemId != cartItemId).toList(),
+      );
+      return;
+    }
+    final snap = await ref.read(cartRepositoryProvider).removeItem(cartItemId);
+    _applySnapshot(snap);
+  }
+
   Future<void> applyCoupon(String code) async {
     state = state.copyWith(isApplyingCoupon: true, clearCouponError: true);
-    await Future.delayed(const Duration(seconds: 1));
+    if (AppConfig.useMockData) {
+      await Future.delayed(const Duration(seconds: 1));
+      if (code.toUpperCase() == 'KAYAN10') {
+        final discount = state.summary.subtotal * 0.10;
+        state = state.copyWith(
+          isApplyingCoupon: false,
+          couponCode: code.toUpperCase(),
+          couponDiscount: discount,
+        );
+      } else if (code.toUpperCase() == 'KAYAN50') {
+        state = state.copyWith(
+          isApplyingCoupon: false,
+          couponCode: code.toUpperCase(),
+          couponDiscount: 50,
+        );
+      } else {
+        state = state.copyWith(
+          isApplyingCoupon: false,
+          couponError: 'كود الخصم غير صحيح أو منتهي الصلاحية',
+        );
+      }
+      return;
+    }
 
-    // Mock: KAYAN10 = 10%, KAYAN50 = fixed 50 SAR
-    if (code.toUpperCase() == 'KAYAN10') {
-      final discount = state.summary.subtotal * 0.10;
+    try {
+      final snap = await ref.read(cartRepositoryProvider).applyCoupon(code);
+      _applySnapshot(snap);
+      state = state.copyWith(isApplyingCoupon: false);
+    } catch (e) {
       state = state.copyWith(
         isApplyingCoupon: false,
-        couponCode:       code.toUpperCase(),
-        couponDiscount:   discount,
-      );
-    } else if (code.toUpperCase() == 'KAYAN50') {
-      state = state.copyWith(
-        isApplyingCoupon: false,
-        couponCode:       code.toUpperCase(),
-        couponDiscount:   50,
-      );
-    } else {
-      state = state.copyWith(
-        isApplyingCoupon: false,
-        couponError:      'كود الخصم غير صحيح أو منتهي الصلاحية',
+        couponError: 'كود الخصم غير صحيح أو منتهي الصلاحية',
       );
     }
   }
 
-  // Remove coupon
-  void removeCoupon() {
-    state = state.copyWith(
-      couponCode:     '',
-      couponDiscount: 0,
-      clearCouponError: true,
-    );
+  Future<void> removeCoupon() async {
+    if (AppConfig.useMockData) {
+      state = state.copyWith(
+        couponCode: '',
+        couponDiscount: 0,
+        clearCouponError: true,
+      );
+      return;
+    }
+    final snap = await ref.read(cartRepositoryProvider).removeCoupon();
+    _applySnapshot(snap);
   }
 
-  // Clear cart after checkout
-  void clear() => state = const CartState();
+  Future<void> clear() async {
+    if (AppConfig.useMockData) {
+      state = const CartState();
+      return;
+    }
+    try {
+      final snap = await ref.read(cartRepositoryProvider).clear();
+      _applySnapshot(snap);
+    } catch (_) {
+      state = const CartState();
+    }
+  }
 }
 
 final cartProvider =

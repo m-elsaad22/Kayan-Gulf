@@ -1,4 +1,5 @@
 import '../../../../core/network/api_client.dart';
+import '../../../../shared/services/local_storage_service.dart';
 import '../../data/models/auth_models.dart';
 import 'auth_repository.dart';
 
@@ -61,6 +62,12 @@ class RemoteAuthRepository implements AuthRepository {
 
   @override
   Future<void> logout() async {
-    await _client.postJson('/auth/logout');
+    final refresh = LocalStorageService.refreshToken;
+    await _client.postJson(
+      '/auth/logout',
+      body: {
+        if (refresh != null && refresh.isNotEmpty) 'refreshToken': refresh,
+      },
+    );
   }
 }

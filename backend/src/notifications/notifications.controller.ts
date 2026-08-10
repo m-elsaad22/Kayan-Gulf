@@ -6,6 +6,7 @@ import {
   IsString,
   MinLength,
 } from 'class-validator';
+import { AdminGuard } from '../auth/admin.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AuthUser, CurrentUser } from '../common/current-user.decorator';
 import { NotificationsService } from './notifications.service';
@@ -50,8 +51,9 @@ export class NotificationsController {
     return this.notifications.pushToUser(user.userId, dto);
   }
 
-  /** Internal/testing: push to explicit tokens (still requires auth). */
+  /** Admin-only: push to explicit device tokens. */
   @Post('push')
+  @UseGuards(AdminGuard)
   pushTokens(@Body() dto: PushTokensDto) {
     return this.notifications.pushToTokens(dto);
   }

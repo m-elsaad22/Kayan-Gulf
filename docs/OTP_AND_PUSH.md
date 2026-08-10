@@ -5,8 +5,12 @@
 | `OTP_PROVIDER` | Behavior |
 |----------------|----------|
 | `dev` (default) | Logs SMS; accepts any 6-digit code except `000000` unless `OTP_STRICT=true` |
-| `unifonic` | Sends via Unifonic REST; verifies stored code only |
-| `twilio` | Sends via Twilio Messages API; verifies stored code only |
+| `unifonic` | Sends via Unifonic REST; verifies **hashed** stored code only |
+| `twilio` | Sends via Twilio Messages API; verifies **hashed** stored code only |
+
+Codes are stored as SHA-256 hashes (never plaintext). Generation uses `crypto.randomInt`.
+
+Production (`NODE_ENV=production`) **refuses** `OTP_PROVIDER=dev` and requires `OTP_STRICT=true` — see `docs/PRODUCTION.md`.
 
 ### Unifonic (recommended for GCC)
 
@@ -40,7 +44,7 @@ TWILIO_FROM_NUMBER=+1…
 | `POST /v1/devices/fcm` | Bearer | Register device token |
 | `DELETE /v1/devices/fcm` | Bearer | Unregister |
 | `POST /v1/notifications/push/me` | Bearer | Push to current user's devices |
-| `POST /v1/notifications/push` | Bearer | Push to explicit token list |
+| `POST /v1/notifications/push` | Bearer + **admin** | Push to explicit token list |
 
 Order creation triggers a push attempt (`order_created`) in log or FCM admin mode.
 

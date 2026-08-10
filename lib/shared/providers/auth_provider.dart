@@ -109,7 +109,7 @@ class AuthNotifier extends Notifier<AuthGuardState> {
 
   Future<void> _completeAuth(AuthResult result) async {
     await LocalStorageService.markOnboardingSeen();
-    setAuthenticated(
+    await setAuthenticated(
       userId: result.userId,
       accessToken: result.accessToken,
       refreshToken: result.refreshToken,
@@ -120,7 +120,7 @@ class AuthNotifier extends Notifier<AuthGuardState> {
 
   Future<void> _completeMockAuth(String userId) async {
     await LocalStorageService.markOnboardingSeen();
-    setAuthenticated(
+    await setAuthenticated(
       userId: userId,
       accessToken: 'mock-access-$userId',
       refreshToken: 'mock-refresh-$userId',
@@ -129,20 +129,20 @@ class AuthNotifier extends Notifier<AuthGuardState> {
   }
 
   // Called after successful OTP verification
-  void setAuthenticated({
+  Future<void> setAuthenticated({
     required String userId,
     required String accessToken,
     required String refreshToken,
     required bool isProfileComplete,
-  }) {
-    LocalStorageService.saveAuth(
-      userId:         userId,
-      accessToken:    accessToken,
-      refreshToken:   refreshToken,
+  }) async {
+    await LocalStorageService.saveAuth(
+      userId: userId,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
       profileComplete: isProfileComplete,
     );
     state = AuthGuardState.authenticated(
-      userId:         userId,
+      userId: userId,
       profileComplete: isProfileComplete,
     );
   }
@@ -169,7 +169,7 @@ class AuthNotifier extends Notifier<AuthGuardState> {
       }
     }
     await ref.read(authRepositoryProvider).logout();
-    LocalStorageService.clearAuth();
+    await LocalStorageService.clearAuth();
     state = const AuthGuardState.unauthenticated();
   }
 

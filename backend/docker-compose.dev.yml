@@ -1,0 +1,43 @@
+# Local/dev Docker stack — OTP=dev allowed (NODE_ENV=development)
+# For production-shaped deploy use docker-compose.yml instead.
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: kayan
+      POSTGRES_PASSWORD: kayan
+      POSTGRES_DB: kayan
+    ports:
+      - '5432:5432'
+    volumes:
+      - kayan_pg_dev:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U kayan -d kayan']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    ports:
+      - '3000:3000'
+    environment:
+      DATABASE_URL: postgresql://kayan:kayan@db:5432/kayan
+      PORT: 3000
+      NODE_ENV: development
+      JWT_ACCESS_SECRET: dev-only-access-secret-min-32-chars!!
+      JWT_ACCESS_TTL: 15m
+      JWT_REFRESH_TTL: 30d
+      OTP_PROVIDER: dev
+      OTP_STRICT: 'false'
+      CORS_ORIGINS: http://127.0.0.1:3001,http://localhost:3001
+      PAYMENT_PROVIDER: mock
+      PAYMENT_ALLOW_CLIENT_CONFIRM: 'true'
+      PAYMENT_WEBHOOK_SECRET: dev-webhook-secret-change-me
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  kayan_pg_dev:

@@ -5,6 +5,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { createHash, randomInt } from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
 import { DevOtpProvider } from './otp/dev-otp.provider';
 import { OtpSmsProvider } from './otp/otp-provider';
@@ -15,8 +16,9 @@ import { UnifonicOtpProvider } from './otp/unifonic-otp.provider';
  * OTP orchestration.
  * Providers: `dev` | `unifonic` | `twilio`
  *
+ * Codes are stored as SHA-256 hashes (column `code`).
  * - `dev`: logs SMS; accepts any 6-digit code unless OTP_STRICT=true
- * - production providers: always verify against stored code
+ * - production providers: verify against stored hash only
  */
 @Injectable()
 export class OtpService {
@@ -35,11 +37,12 @@ export class OtpService {
     await this.enforceRateLimit(phone);
 
     const code = this.generateCode();
+    const codeHash = this.hashCode(code);
     const ttl = Number(this.config.get('OTP_TTL_MINUTES') ?? 10);
     const expiresAt = new Date(Date.now() + ttl * 60_000);
 
     await this.prisma.otpCode.create({
-      data: { phone, code, expiresAt },
+      data: { phone, code: codeHash, expiresAt },
     });
 
     const message =
@@ -78,10 +81,11 @@ export class OtpService {
       return true;
     }
 
+    const codeHash = this.hashCode(code);
     const record = await this.prisma.otpCode.findFirst({
       where: {
         phone,
-        code,
+        code: codeHash,
         consumed: false,
         expiresAt: { gt: new Date() },
       },
@@ -95,6 +99,10 @@ export class OtpService {
       data: { consumed: true },
     });
     return true;
+  }
+
+  private hashCode(code: string): string {
+    return createHash('sha256').update(code).digest('hex');
   }
 
   private async enforceRateLimit(phone: string): Promise<void> {
@@ -149,6 +157,6 @@ export class OtpService {
   }
 
   private generateCode(): string {
-    return String(Math.floor(100000 + Math.random() * 900000));
+    return String(randomInt(100000, 1000000));
   }
 }

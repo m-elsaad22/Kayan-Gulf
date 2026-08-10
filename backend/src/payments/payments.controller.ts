@@ -1,4 +1,10 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Headers,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { IsIn, IsOptional, IsString, MinLength } from 'class-validator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AuthUser, CurrentUser } from '../common/current-user.decorator';
@@ -52,7 +58,10 @@ export class PaymentsController {
   }
 
   @Post('webhooks/payments')
-  webhook(@Body() dto: WebhookDto) {
-    return this.payments.webhook(dto);
+  webhook(
+    @Body() dto: WebhookDto,
+    @Headers('x-kayan-signature') signature?: string,
+  ) {
+    return this.payments.webhook(dto, signature);
   }
 }

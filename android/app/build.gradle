@@ -80,7 +80,9 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
-            signingConfig = hasReleaseSigning ? signingConfigs.release : signingConfigs.debug
+            if (hasReleaseSigning) {
+                signingConfig signingConfigs.release
+            }
         }
         debug {
             applicationIdSuffix ".debug"
@@ -98,6 +100,20 @@ android {
 
     lint {
         disable "InvalidPackage"
+    }
+}
+
+// Fail release/bundle tasks when upload keystore is missing (never fall back to debug).
+gradle.taskGraph.whenReady { graph ->
+    def needsSigning = graph.allTasks.any { t ->
+        def n = t.name.toLowerCase()
+        n.contains("releas") && (n.contains("assemble") || n.contains("bundle") || n.contains("appbundle"))
+    }
+    if (needsSigning && !hasReleaseSigning) {
+        throw new GradleException(
+            "Missing android/key.properties (storeFile/storePassword/keyAlias/keyPassword). " +
+            "Copy key.properties.example and create an upload keystore — see docs/PLAY_STORE.md"
+        )
     }
 }
 

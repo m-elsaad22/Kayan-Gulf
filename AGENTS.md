@@ -85,11 +85,13 @@ See `RELEASES.md` for GitHub download links.
 
 5. **Outbound HTTPS:** `picsum.photos` and `google_fonts` need network for full UI.
 
-6. **Firebase / Maps / Stripe:** Optional for production; not required for mock-data dev (`README.md`, `lib/core/config/README_FIREBASE.md`).
+6. **Firebase / Maps / Stripe:** Optional for production; not required for mock-data dev (`README.md`, `lib/core/config/README_FIREBASE.md`). Production API runbook: `docs/PRODUCTION.md`.
 
-7. **Android SDK:** `android/app/build.gradle` uses `compileSdk 36` / `targetSdk 36`.
+7. **Android SDK:** `android/app/build.gradle` uses `compileSdk 36` / `targetSdk 36`. Release/AAB builds **fail** without `android/key.properties` (no debug signing fallback).
 
 8. **Branding:** After replacing `assets/images/kayan_icon.webp` / `kayan_logo.png`, run `python3 scripts/install_kayan_branding.py` then rebuild.
+
+9. **Production API:** PostgreSQL only. `docker compose` (prod) requires strong env; use `docker-compose.dev.yml` for local OTP=dev.
 
 ### Manual test flow (hello world)
 

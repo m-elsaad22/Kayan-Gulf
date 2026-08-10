@@ -21,6 +21,10 @@ check "applicationId sa.kayan.app" grep -q 'applicationId "sa.kayan.app"' androi
 check "key.properties exists" test -f android/key.properties
 check "key.properties.example tracked" test -f android/key.properties.example
 check "KAYAN_API_BASE_URL set" test -n "${KAYAN_API_BASE_URL:-}"
+if [[ -n "${KAYAN_API_BASE_URL:-}" ]]; then
+  check "KAYAN_API_BASE_URL uses https" [[ "$KAYAN_API_BASE_URL" == https://* ]]
+  check "KAYAN_API_BASE_URL not placeholder kayan.gulf" [[ "$KAYAN_API_BASE_URL" != *kayan.gulf* ]]
+fi
 check "Flutter on PATH" command -v flutter >/dev/null
 check "no google-services.json committed" ! git ls-files --error-unmatch android/app/google-services.json >/dev/null 2>&1
 
