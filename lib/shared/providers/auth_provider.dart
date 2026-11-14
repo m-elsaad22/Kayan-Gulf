@@ -80,9 +80,17 @@ class AuthNotifier extends Notifier<AuthGuardState> {
     await _completeAuth(result);
   }
 
-  Future<void> loginWithGoogle() async => _completeMockAuth('google-user');
-  Future<void> loginWithApple() async => _completeMockAuth('apple-user');
-  Future<void> loginWithFacebook() async => _completeMockAuth('facebook-user');
+  Future<void> loginWithGoogle() async {
+    throw Exception('google_not_configured');
+  }
+
+  Future<void> loginWithApple() async {
+    throw Exception('apple_not_configured');
+  }
+
+  Future<void> loginWithFacebook() async {
+    throw Exception('facebook_not_configured');
+  }
 
   Future<void> signUp({
     required String name,
@@ -112,16 +120,6 @@ class AuthNotifier extends Notifier<AuthGuardState> {
       accessToken: result.accessToken,
       refreshToken: result.refreshToken,
       isProfileComplete: result.isProfileComplete,
-    );
-  }
-
-  Future<void> _completeMockAuth(String userId) async {
-    await LocalStorageService.markOnboardingSeen();
-    setAuthenticated(
-      userId: userId,
-      accessToken: 'mock-access-$userId',
-      refreshToken: 'mock-refresh-$userId',
-      isProfileComplete: true,
     );
   }
 
