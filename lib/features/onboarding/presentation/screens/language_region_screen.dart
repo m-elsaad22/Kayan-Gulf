@@ -51,8 +51,10 @@ class _LanguageRegionScreenState extends ConsumerState<LanguageRegionScreen> {
       hero: const Padding(
         padding: EdgeInsets.fromLTRB(24, 16, 24, 40),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            KayanBrandLogo(size: 56),
+            Align(alignment: Alignment.center, child: KayanBrandLogo(size: 64)),
             SizedBox(height: 16),
             KayanEntryTitle(before: 'اختر ', highlight: 'لغتك ودولتك'),
           ],

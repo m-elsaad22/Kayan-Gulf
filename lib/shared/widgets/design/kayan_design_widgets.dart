@@ -138,6 +138,7 @@ class KayanHubCard extends StatelessWidget {
     required this.gradient,
     required this.icon,
     required this.onTap,
+    this.illustrationIcon,
   });
 
   final String title;
@@ -145,91 +146,118 @@ class KayanHubCard extends StatelessWidget {
   final LinearGradient gradient;
   final IconData icon;
   final VoidCallback onTap;
+  /// Optional large illustration icon (defaults to same as icon)
+  final IconData? illustrationIcon;
 
   @override
   Widget build(BuildContext context) {
+    final bigIcon = illustrationIcon ?? icon;
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 14),
-        constraints: const BoxConstraints(minHeight: 150),
+        margin: const EdgeInsets.only(bottom: 16),
+        height: 160,
         decoration: BoxDecoration(
           gradient: gradient,
           borderRadius: BorderRadius.circular(26),
           boxShadow: KayanDesignTokens.shadowM,
         ),
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: Opacity(
-                opacity: 0.14,
-                child: CustomPaint(painter: _DotPatternPainter()),
-              ),
-            ),
-            Positioned(
-              left: 16,
-              top: 16,
-              child: Container(
-                width: 34,
-                height: 34,
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.18),
-                  shape: BoxShape.circle,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(26),
+          child: Stack(
+            children: [
+              // Background dot pattern
+              Positioned.fill(
+                child: Opacity(
+                  opacity: 0.12,
+                  child: CustomPaint(painter: _DotPatternPainter()),
                 ),
-                child: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 13),
               ),
-            ),
-            Positioned(
-              right: 18,
-              top: 14,
-              child: Transform.rotate(
-                angle: -0.12,
+
+              // Large illustration icon — bottom-end corner (RTL-aware)
+              PositionedDirectional(
+                end: -10,
+                bottom: -18,
+                child: Opacity(
+                  opacity: 0.22,
+                  child: Icon(bigIcon, size: 160, color: Colors.white),
+                ),
+              ),
+
+              // Glowing circle behind illustration
+              PositionedDirectional(
+                end: 20,
+                top: 20,
                 child: Container(
-                  width: 58,
-                  height: 58,
+                  width: 90,
+                  height: 90,
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.22),
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: KayanDesignTokens.shadowS,
-                  ),
-                  child: Icon(icon, color: Colors.white, size: 26),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(22, 22, 22, 22),
-              child: Align(
-                alignment: AlignmentDirectional.centerStart,
-                child: FractionallySizedBox(
-                  widthFactor: 0.64,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        title,
-                        style: KayanDesignTokens.cairo(
-                          fontSize: 19,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      Text(
-                        subtitle,
-                        style: KayanDesignTokens.cairo(
-                          fontSize: 12.5,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white.withValues(alpha: 0.85),
-                          height: 1.6,
-                        ),
-                      ),
-                    ],
+                    shape: BoxShape.circle,
+                    color: Colors.white.withValues(alpha: 0.12),
                   ),
                 ),
               ),
-            ),
-          ],
+
+              // Content: title + subtitle + arrow — start side (RTL-aware)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 24, 24, 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Top row: title
+                    Text(
+                      title,
+                      style: KayanDesignTokens.cairo(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white,
+                      ),
+                    ),
+                    // Subtitle
+                    Text(
+                      subtitle,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: KayanDesignTokens.cairo(
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white.withValues(alpha: 0.88),
+                        height: 1.6,
+                      ),
+                    ),
+                    // Bottom: arrow button
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.22),
+                            borderRadius: BorderRadius.circular(99),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'اكتشف الآن',
+                                style: KayanDesignTokens.cairo(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 11),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -46,9 +46,41 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             password: _passwordCtrl.text,
           );
       if (mounted) context.go(AppRoutes.dashboard);
+    } catch (e) {
+      if (mounted) {
+        final ar = ref.read(isArabicProvider);
+        final msg = _errorMessage(e.toString(), ar);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(msg),
+            backgroundColor: Colors.red.shade700,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        );
+      }
     } finally {
       if (mounted) setState(() => _loading = false);
     }
+  }
+
+  String _errorMessage(String error, bool ar) {
+    if (error.contains('email_already_exists')) {
+      return ar ? 'البريد الإلكتروني مسجل مسبقاً' : 'Email already registered';
+    }
+    if (error.contains('invalid_email')) {
+      return ar ? 'البريد الإلكتروني غير صالح' : 'Invalid email address';
+    }
+    if (error.contains('invalid_phone')) {
+      return ar ? 'رقم الجوال غير صالح' : 'Invalid phone number';
+    }
+    if (error.contains('password_too_short')) {
+      return ar ? 'كلمة المرور قصيرة (6 أحرف على الأقل)' : 'Password too short (min 6 chars)';
+    }
+    if (error.contains('name_required')) {
+      return ar ? 'الرجاء إدخال الاسم' : 'Please enter your name';
+    }
+    return ar ? 'حدث خطأ، يرجى المحاولة مجدداً' : 'An error occurred, please try again';
   }
 
   @override
@@ -69,7 +101,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 onTap: () => context.pop(),
               ),
             ),
-            const KayanBrandLogo(size: 56),
+            const Align(alignment: Alignment.center, child: KayanBrandLogo(size: 64)),
             const SizedBox(height: 14),
             KayanEntryTitle(before: ar ? 'إنشاء ' : 'Create ', highlight: ar ? 'حساب جديد' : 'account'),
             const SizedBox(height: 8),
