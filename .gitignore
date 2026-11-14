@@ -57,3 +57,11 @@ lcov.info
 *.ipa
 *.dSYM.zip
 *.dSYM
+
+# Release distribution
+dist/
+build/debug-info/
+
+# Local SDK installs (do not commit)
+.android-sdk/
+.flutter-sdk/
