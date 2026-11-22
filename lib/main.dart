@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'app.dart';
 import 'core/di/providers.dart';
@@ -16,6 +17,9 @@ import 'core/services/admin_data_service.dart';
 import 'features/super_admin/services/design_engine_service.dart';
 import 'shared/services/local_storage_service.dart';
 import 'shared/services/notification_service.dart';
+
+/// Set to true once you replace google-services.json with your real Firebase config
+const _firebaseEnabled = bool.fromEnvironment('KAYAN_USE_FIREBASE_AUTH', defaultValue: false);
 
 void main() {
   runZonedGuarded(() async {
@@ -27,6 +31,16 @@ void main() {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+
+    // Initialize Firebase if enabled — requires real google-services.json
+    if (_firebaseEnabled) {
+      try {
+        await Firebase.initializeApp();
+        if (kDebugMode) debugPrint('✅ Firebase initialized');
+      } catch (e) {
+        if (kDebugMode) debugPrint('⚠️ Firebase init failed (using local auth): $e');
+      }
+    }
 
     await Hive.initFlutter();
     await LocalStorageService.initialize();

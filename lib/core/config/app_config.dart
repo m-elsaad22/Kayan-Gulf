@@ -11,5 +11,12 @@ abstract final class AppConfig {
     defaultValue: true,
   );
 
+  /// When true, use Firebase Auth (requires google-services.json).
+  /// Set to true after adding your google-services.json from Firebase Console.
+  static const bool useFirebaseAuth = bool.fromEnvironment(
+    'KAYAN_USE_FIREBASE_AUTH',
+    defaultValue: false,
+  );
+
   static const Duration networkTimeout = Duration(seconds: 20);
 }
