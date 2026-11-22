@@ -8,10 +8,8 @@ buildscript {
 
     dependencies {
         classpath "com.android.tools.build:gradle:$androidGradlePluginVersion"
-        // Google Services + Crashlytics plugins: only add these when building
-        // with a real google-services.json and KAYAN_USE_FIREBASE_AUTH=true
-        // classpath "com.google.gms:google-services:4.4.2"
-        // classpath "com.google.firebase:firebase-crashlytics-gradle:3.0.2"
+        classpath "com.google.gms:google-services:4.4.2"
+        classpath "com.google.firebase:firebase-crashlytics-gradle:3.0.2"
     }
 }
 
