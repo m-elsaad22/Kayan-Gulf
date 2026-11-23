@@ -39,9 +39,43 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     try {
       await action();
       if (mounted) context.go(AppRoutes.dashboard);
+    } catch (e) {
+      if (mounted) {
+        final ar = ref.read(isArabicProvider);
+        final msg = _errorMessage(e.toString(), ar);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(msg),
+            backgroundColor: Colors.red.shade700,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        );
+      }
     } finally {
       if (mounted) setState(() => _loading = false);
     }
+  }
+
+  String _errorMessage(String error, bool ar) {
+    if (error.contains('user_not_found')) {
+      return ar ? 'البريد الإلكتروني غير مسجل' : 'Email not registered';
+    }
+    if (error.contains('wrong_password')) {
+      return ar ? 'كلمة المرور غير صحيحة' : 'Wrong password';
+    }
+    if (error.contains('invalid_email')) {
+      return ar ? 'البريد الإلكتروني غير صالح' : 'Invalid email address';
+    }
+    if (error.contains('password_too_short')) {
+      return ar ? 'كلمة المرور قصيرة جداً (6 أحرف على الأقل)' : 'Password too short (min 6 chars)';
+    }
+    if (error.contains('google_not_configured') ||
+        error.contains('apple_not_configured') ||
+        error.contains('facebook_not_configured')) {
+      return ar ? 'هذا الخيار غير متاح حالياً' : 'This option is not available yet';
+    }
+    return ar ? 'حدث خطأ، يرجى المحاولة مجدداً' : 'An error occurred, please try again';
   }
 
   @override
@@ -72,8 +106,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 40, 24, 36),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const KayanBrandLogo(size: 56),
+                const Align(alignment: Alignment.center, child: KayanBrandLogo(size: 64)),
                 const SizedBox(height: 14),
                 KayanEntryTitle(before: ar ? 'تسجيل ' : 'Sign ', highlight: ar ? 'الدخول' : 'in'),
                 const SizedBox(height: 8),

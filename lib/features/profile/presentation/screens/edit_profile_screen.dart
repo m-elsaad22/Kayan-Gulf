@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/kayan_design_tokens.dart';
 import '../../../../shared/providers/locale_provider.dart';
+import '../../../../shared/services/local_storage_service.dart';
 import '../../../../shared/widgets/design/kayan_design_widgets.dart';
 import '../../../../shared/widgets/design/kayan_entry_widgets.dart';
 
@@ -16,10 +17,10 @@ class EditProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
-  final _nameCtrl = TextEditingController(text: 'محمود السعد');
-  final _emailCtrl = TextEditingController(text: 'mahmoud@example.com');
-  final _phoneCtrl = TextEditingController(text: '+966 50 123 4567');
-  final _bioCtrl = TextEditingController(text: 'مهتم بالتقنية والتسوق');
+  late final TextEditingController _nameCtrl  = TextEditingController(text: LocalStorageService.userName  ?? '');
+  late final TextEditingController _emailCtrl = TextEditingController(text: LocalStorageService.userEmail ?? '');
+  late final TextEditingController _phoneCtrl = TextEditingController(text: LocalStorageService.userPhone ?? '');
+  final _bioCtrl = TextEditingController();
   bool _saving = false;
 
   @override
@@ -33,7 +34,18 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
   Future<void> _save() async {
     setState(() => _saving = true);
-    await Future.delayed(const Duration(milliseconds: 800));
+    // Persist the edits to local storage
+    final uid   = LocalStorageService.userId ?? '';
+    final token = LocalStorageService.accessToken ?? '';
+    await LocalStorageService.saveAuth(
+      userId:          uid,
+      accessToken:     token,
+      refreshToken:    LocalStorageService.refreshToken ?? '',
+      profileComplete: true,
+      userName:        _nameCtrl.text.trim().isNotEmpty ? _nameCtrl.text.trim() : null,
+      userEmail:       _emailCtrl.text.trim().isNotEmpty ? _emailCtrl.text.trim() : null,
+      userPhone:       _phoneCtrl.text.trim().isNotEmpty ? _phoneCtrl.text.trim() : null,
+    );
     if (!mounted) return;
     setState(() => _saving = false);
     ScaffoldMessenger.of(context).showSnackBar(
@@ -67,7 +79,12 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                             height: 88,
                             decoration: const BoxDecoration(gradient: KayanDesignTokens.gradBlue, shape: BoxShape.circle),
                             alignment: Alignment.center,
-                            child: Text('م', style: KayanDesignTokens.cairo(fontSize: 32, fontWeight: FontWeight.w900, color: Colors.white)),
+                            child: Text(
+                              (LocalStorageService.userName ?? 'ك').trim().isNotEmpty
+                                  ? (LocalStorageService.userName ?? 'ك').trim()[0]
+                                  : 'ك',
+                              style: KayanDesignTokens.cairo(fontSize: 32, fontWeight: FontWeight.w900, color: Colors.white),
+                            ),
                           ),
                           Positioned(
                             bottom: 0,

@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../config/app_config.dart';
 import '../network/api_client.dart';
 import '../../features/auth/data/repositories/auth_repository.dart';
-import '../../features/auth/data/repositories/mock_auth_repository.dart';
+import '../../features/auth/data/repositories/hive_auth_repository.dart';
+import '../../features/auth/data/repositories/firebase_auth_repository.dart';
 import '../../features/auth/data/repositories/remote_auth_repository.dart';
 import '../../features/classifieds/data/repositories/classifieds_repository.dart';
 import '../../features/classifieds/data/repositories/mock_classifieds_repository.dart';
@@ -34,9 +35,16 @@ final productRepositoryProvider = Provider<ProductRepository>((ref) {
   return RemoteProductRepository(ref.watch(apiClientProvider));
 });
 
+// Auth repository selection:
+//   Firebase (cross-device): set KAYAN_USE_FIREBASE_AUTH=true + add google-services.json
+//   Hive (on-device):        default — works without any backend setup
+//   Remote API:              set useMockData=false + configure API URL
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
+  if (AppConfig.useFirebaseAuth) {
+    return FirebaseAuthRepository();
+  }
   if (AppConfig.useMockData) {
-    return const MockAuthRepository();
+    return HiveAuthRepository();
   }
   return RemoteAuthRepository(ref.watch(apiClientProvider));
 });

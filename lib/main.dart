@@ -7,8 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'app.dart';
+import 'firebase_options.dart';
 import 'core/di/providers.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/kayan_motion.dart';
@@ -16,6 +18,9 @@ import 'core/services/admin_data_service.dart';
 import 'features/super_admin/services/design_engine_service.dart';
 import 'shared/services/local_storage_service.dart';
 import 'shared/services/notification_service.dart';
+
+/// Set to true once you replace google-services.json with your real Firebase config
+const _firebaseEnabled = bool.fromEnvironment('KAYAN_USE_FIREBASE_AUTH', defaultValue: false);
 
 void main() {
   runZonedGuarded(() async {
@@ -27,6 +32,19 @@ void main() {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+
+    // Initialize Firebase if enabled
+    // Activated via: flutter build apk --dart-define=KAYAN_USE_FIREBASE_AUTH=true
+    if (_firebaseEnabled) {
+      try {
+        await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform,
+        );
+        if (kDebugMode) debugPrint('✅ Firebase initialized (project: gen-lang-client-0346607969)');
+      } catch (e) {
+        if (kDebugMode) debugPrint('⚠️ Firebase init failed (falling back to local auth): $e');
+      }
+    }
 
     await Hive.initFlutter();
     await LocalStorageService.initialize();

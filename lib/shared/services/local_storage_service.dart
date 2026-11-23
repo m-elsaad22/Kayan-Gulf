@@ -28,6 +28,9 @@ abstract class LocalStorageService {
   static const String _keyLangRegionDone = 'language_region_done';
   static const String _keyThemeMode     = 'theme_mode';
   static const String _keyFcmToken      = 'fcm_token';
+  static const String _keyUserName      = 'user_name';
+  static const String _keyUserEmail     = 'user_email';
+  static const String _keyUserPhone     = 'user_phone';
 
   static late Box<dynamic> _box;
   static const _secure = FlutterSecureStorage(
@@ -67,21 +70,31 @@ abstract class LocalStorageService {
   static String? get refreshToken => _box.get(_keyRefreshToken);
   static String? get userId       => _box.get(_keyUserId);
 
-  // Note: In real app, tokens should be in SecureStorage.
-  // Using Hive here for simplicity — swap to _secure.read() for production.
+  // User profile fields — populated on login/signup
+  static String? get userName  => _box.get(_keyUserName)  as String?;
+  static String? get userEmail => _box.get(_keyUserEmail) as String?;
+  static String? get userPhone => _box.get(_keyUserPhone) as String?;
+
   static Future<void> saveAuth({
     required String userId,
     required String accessToken,
     required String refreshToken,
     required bool profileComplete,
+    String? userName,
+    String? userEmail,
+    String? userPhone,
   }) async {
-    await Future.wait([
+    final writes = <Future>[
       _box.put(_keyUserId,       userId),
       _box.put(_keyAccessToken,  accessToken),
       _box.put(_keyRefreshToken, refreshToken),
       _box.put(_keyProfileDone,  profileComplete),
       _box.put(_keyGuestMode,    false),
-    ]);
+    ];
+    if (userName  != null) writes.add(_box.put(_keyUserName,  userName));
+    if (userEmail != null) writes.add(_box.put(_keyUserEmail, userEmail));
+    if (userPhone != null) writes.add(_box.put(_keyUserPhone, userPhone));
+    await Future.wait(writes);
   }
 
   static Future<void> clearAuth() async {
@@ -91,6 +104,9 @@ abstract class LocalStorageService {
       _box.delete(_keyRefreshToken),
       _box.delete(_keyProfileDone),
       _box.delete(_keyGuestMode),
+      _box.delete(_keyUserName),
+      _box.delete(_keyUserEmail),
+      _box.delete(_keyUserPhone),
     ]);
   }
 
