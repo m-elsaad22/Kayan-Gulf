@@ -5,6 +5,8 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../shared/services/local_storage_service.dart';
+
 // ──────────────────────────────────────────────────────────────
 // PAYMENT METHOD
 // ──────────────────────────────────────────────────────────────
@@ -134,13 +136,15 @@ class CheckoutState {
 
 class CheckoutNotifier extends AutoDisposeNotifier<CheckoutState> {
   @override
-  CheckoutState build() => CheckoutState(
-    // Pre-select default address
-    selectedAddress: _mockAddresses.firstWhere(
-      (a) => a.isDefault,
-      orElse: () => _mockAddresses.first,
-    ),
-  );
+  CheckoutState build() {
+    final addresses = _buildMockAddresses();
+    return CheckoutState(
+      selectedAddress: addresses.firstWhere(
+        (a) => a.isDefault,
+        orElse: () => addresses.first,
+      ),
+    );
+  }
 
   void selectAddress(DeliveryAddress address) {
     state = state.copyWith(selectedAddress: address);
@@ -189,39 +193,43 @@ final checkoutProvider =
 // ──────────────────────────────────────────────────────────────
 
 final savedAddressesProvider = Provider.autoDispose<List<DeliveryAddress>>(
-  (_) => _mockAddresses,
+  (_) => _buildMockAddresses(),
 );
 
-final _mockAddresses = [
-  const DeliveryAddress(
-    id:            'addr1',
-    label:         'المنزل 🏠',
-    recipientName: 'محمود السعد',
-    phone:         '+966 50 123 4567',
-    country:       'SA',
-    city:          'الرياض',
-    district:      'حي النخيل',
-    streetLine1:   'شارع الملك فهد، مبنى 24، شقة 5',
-    isDefault:     true,
-  ),
-  const DeliveryAddress(
-    id:            'addr2',
-    label:         'العمل 🏢',
-    recipientName: 'محمود السعد',
-    phone:         '+966 50 123 4567',
-    country:       'SA',
-    city:          'الرياض',
-    district:      'حي العليا',
-    streetLine1:   'برج المملكة، الطابق 15، مكتب 1503',
-  ),
-  const DeliveryAddress(
-    id:            'addr3',
-    label:         'دبي 🇦🇪',
-    recipientName: 'محمود السعد',
-    phone:         '+971 50 123 4567',
-    country:       'AE',
-    city:          'دبي',
-    district:      'الخليج التجاري',
-    streetLine1:   'برج داماك، الطابق 8، شقة 801',
-  ),
-];
+List<DeliveryAddress> _buildMockAddresses() {
+  final name  = LocalStorageService.userName  ?? 'مستخدم كيان';
+  final phone = LocalStorageService.userPhone ?? '+966 50 000 0000';
+  return [
+    DeliveryAddress(
+      id:            'addr1',
+      label:         'المنزل 🏠',
+      recipientName: name,
+      phone:         phone,
+      country:       'SA',
+      city:          'الرياض',
+      district:      'حي النخيل',
+      streetLine1:   'شارع الملك فهد، مبنى 24، شقة 5',
+      isDefault:     true,
+    ),
+    DeliveryAddress(
+      id:            'addr2',
+      label:         'العمل 🏢',
+      recipientName: name,
+      phone:         phone,
+      country:       'SA',
+      city:          'الرياض',
+      district:      'حي العليا',
+      streetLine1:   'برج المملكة، الطابق 15، مكتب 1503',
+    ),
+    DeliveryAddress(
+      id:            'addr3',
+      label:         'دبي 🇦🇪',
+      recipientName: name,
+      phone:         '+971 50 123 4567',
+      country:       'AE',
+      city:          'دبي',
+      district:      'الخليج التجاري',
+      streetLine1:   'برج داماك، الطابق 8، شقة 801',
+    ),
+  ];
+}

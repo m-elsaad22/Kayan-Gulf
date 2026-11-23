@@ -7,6 +7,7 @@ import '../../../../core/theme/kayan_design_tokens.dart';
 import '../../../../routing/app_routes.dart';
 import '../../../../shared/providers/auth_provider.dart';
 import '../../../../shared/providers/locale_provider.dart';
+import '../../../../shared/services/local_storage_service.dart';
 import '../../../../shared/widgets/design/kayan_design_widgets.dart';
 import '../../../../shared/widgets/design/kayan_entry_widgets.dart';
 import '../widgets/kayan_profile_widgets.dart';
@@ -17,8 +18,8 @@ class ProfileHomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ar = ref.watch(isArabicProvider);
-    final name = ar ? 'محمود السعد' : 'Mahmoud Alsaad';
-    const phone = '+966 50 123 4567';
+    final name  = LocalStorageService.userName  ?? (ar ? 'مستخدم كيان' : 'Kayan User');
+    final phone = LocalStorageService.userPhone ?? '';
     final initial = name.isNotEmpty ? name.trim()[0] : 'ك';
 
     return Scaffold(

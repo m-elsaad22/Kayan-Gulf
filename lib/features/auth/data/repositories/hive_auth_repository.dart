@@ -8,6 +8,7 @@ import 'dart:convert';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'auth_repository.dart';
 import '../models/auth_models.dart';
+import '../../../../shared/services/local_storage_service.dart';
 
 class HiveAuthRepository implements AuthRepository {
   static const _boxName = 'kayan_users';
@@ -53,10 +54,23 @@ class HiveAuthRepository implements AuthRepository {
       throw Exception('wrong_password');
     }
 
+    final userId = userData['id'] as String;
+
+    // Persist profile fields so screens can read them without re-querying Hive
+    await LocalStorageService.saveAuth(
+      userId:          userId,
+      accessToken:     'local-token-$userId',
+      refreshToken:    'local-refresh-$userId',
+      profileComplete: true,
+      userName:        userData['name']  as String?,
+      userEmail:       userData['email'] as String?,
+      userPhone:       userData['phone'] as String?,
+    );
+
     return AuthResult(
-      userId: userData['id'] as String,
-      accessToken: 'local-token-${userData['id']}',
-      refreshToken: 'local-refresh-${userData['id']}',
+      userId:          userId,
+      accessToken:     'local-token-$userId',
+      refreshToken:    'local-refresh-$userId',
       isProfileComplete: true,
     );
   }
@@ -93,11 +107,22 @@ class HiveAuthRepository implements AuthRepository {
       'createdAt': DateTime.now().toIso8601String(),
     });
 
+    // Persist profile fields so screens can read them without re-querying Hive
+    await LocalStorageService.saveAuth(
+      userId:          userId,
+      accessToken:     'local-token-$userId',
+      refreshToken:    'local-refresh-$userId',
+      profileComplete: true,
+      userName:        name.trim(),
+      userEmail:       key,
+      userPhone:       phone.trim(),
+    );
+
     return AuthResult(
-      userId: userId,
-      accessToken: 'local-token-$userId',
-      refreshToken: 'local-refresh-$userId',
-      isProfileComplete: true, // name, email, phone all provided at signup
+      userId:          userId,
+      accessToken:     'local-token-$userId',
+      refreshToken:    'local-refresh-$userId',
+      isProfileComplete: true,
       isNewUser: true,
     );
   }
